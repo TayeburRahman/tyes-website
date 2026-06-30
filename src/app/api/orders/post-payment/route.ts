@@ -46,7 +46,6 @@ export async function POST(req: Request) {
           email: clientEmail
         },
         issueDate: new Date().toISOString().split('T')[0],
-        seriesName: process.env.SMARTBILL_SERIES_NAME || undefined,
         isDraft: false,
         dueDate: new Date().toISOString().split('T')[0], // Same day
         deliveryDate: new Date().toISOString().split('T')[0],

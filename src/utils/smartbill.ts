@@ -79,12 +79,11 @@ export const generateSmartBillInvoice = async (invoiceData: SmartBillInvoiceRequ
     }
 
     const data = await response.json();
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
     return {
       series: data.series,
       number: data.number,
-      // The API doesn't directly return a PDF URL, it returns an endpoint you can call to get the PDF
-      // For simplicity, we'll construct the URL that the user can use to download the PDF through our backend
-      url: `/api/invoices/download?cui=${invoiceData.companyVatCode}&series=${data.series}&number=${data.number}`
+      url: `${baseUrl}/api/invoices/download?cui=${invoiceData.companyVatCode}&series=${data.series}&number=${data.number}`
     };
   } catch (error) {
     console.error("SmartBill generation error:", error);
