@@ -42,7 +42,8 @@ export const generateSmartBillInvoice = async (invoiceData: SmartBillInvoiceRequ
   const companyVatCode = process.env.SMARTBILL_COMPANY_VAT_CODE;
 
   if (!username || !token) {
-    console.warn("SmartBill credentials not found. Returning mock invoice.");
+    const sbKeys = Object.keys(process.env).filter(k => k.startsWith('SMARTBILL'));
+    console.warn("SmartBill credentials not found. Returning mock invoice.", { hasUsername: !!username, hasToken: !!token, keys: sbKeys });
     // Return mock data so the app can continue working without real credentials
     return {
       series: invoiceData.seriesName || process.env.SMARTBILL_SERIES_NAME || '',

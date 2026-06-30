@@ -23,10 +23,10 @@ const CheckoutForm = ({ onPaymentSuccess, stripeError }) => {
     setPayError(null);
     try {
       const { error: submitErr } = await elements.submit();
-      if (submitErr) { 
-        setPayError(submitErr.message); 
+      if (submitErr) {
+        setPayError(submitErr.message);
         setPaying(false);
-        return; 
+        return;
       }
 
       const { error: confirmErr } = await stripe.confirmPayment({
@@ -35,10 +35,10 @@ const CheckoutForm = ({ onPaymentSuccess, stripeError }) => {
         redirect: "if_required",
       });
 
-      if (confirmErr) { 
-        setPayError(confirmErr.message); 
+      if (confirmErr) {
+        setPayError(confirmErr.message);
         setPaying(false);
-        return; 
+        return;
       }
 
       // Payment confirmed — hand off to parent for uploads + DB insert
@@ -188,414 +188,442 @@ const navPages = [
 // NEW ORDER PAGE
 // ══════════════════════════════════════
 const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
-    const [step, setStep] = useState(1);
-    const [plan, setPlan] = useState("");
-    const [projectTitle, setProjectTitle] = useState("");
-    const [briefDesc, setBriefDesc] = useState("");
-    const [selectedStyles, setSelectedStyles] = useState([]);
-    const [productPhotos, setProductPhotos] = useState([]);
-    const [referencePhotos, setReferencePhotos] = useState([]);
-    const [fontFiles, setFontFiles] = useState([]);
-    const [documentFiles, setDocumentFiles] = useState([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [clientSecret, setClientSecret] = useState(null);
-    const [stripeError, setStripeError] = useState(null);
+  const [step, setStep] = useState(1);
+  const [plan, setPlan] = useState("");
+  const [projectTitle, setProjectTitle] = useState("");
+  const [briefDesc, setBriefDesc] = useState("");
+  const [selectedStyles, setSelectedStyles] = useState([]);
+  const [productPhotos, setProductPhotos] = useState([]);
+  const [referencePhotos, setReferencePhotos] = useState([]);
+  const [fontFiles, setFontFiles] = useState([]);
+  const [documentFiles, setDocumentFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [clientSecret, setClientSecret] = useState(null);
+  const [stripeError, setStripeError] = useState(null);
 
-    // Lazy-load Stripe only when this page mounts (prevents global badge on other tabs)
-    const stripePromiseRef = useRef(null);
-    if (!stripePromiseRef.current) {
-      stripePromiseRef.current = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-    }
-    const stripePromise = stripePromiseRef.current;
+  // Lazy-load Stripe only when this page mounts (prevents global badge on other tabs)
+  const stripePromiseRef = useRef(null);
+  if (!stripePromiseRef.current) {
+    stripePromiseRef.current = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+  }
+  const stripePromise = stripePromiseRef.current;
 
-    const plans = pricingPlans;
+  const plans = pricingPlans;
 
-    const toggleStyle = (style) => {
-      setSelectedStyles(prev => prev.includes(style) ? prev.filter(s => s !== style) : [...prev, style]);
-    };
+  const toggleStyle = (style) => {
+    setSelectedStyles(prev => prev.includes(style) ? prev.filter(s => s !== style) : [...prev, style]);
+  };
 
-    const removeFile = (type, index) => {
-      if (type === 'photo') setProductPhotos(prev => prev.filter((_, i) => i !== index));
-      else setDocumentFiles(prev => prev.filter((_, i) => i !== index));
-    };
+  const removeFile = (type, index) => {
+    if (type === 'photo') setProductPhotos(prev => prev.filter((_, i) => i !== index));
+    else setDocumentFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
-    const uploadToCloudinary = async (files) => {
-      const urls = [];
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "tyes_preset");
-        try {
-          const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`, {
-            method: "POST",
-            body: formData,
-          });
-          const data = await res.json();
-          if (res.ok && data.secure_url) {
-            urls.push(data.secure_url);
-          } else {
-            console.error("Cloudinary upload failed:", data);
-            throw new Error(data.error?.message || "Upload failed");
-          }
-        } catch (err) {
-          console.error("Cloudinary error:", err);
-          throw err;
-        }
-      }
-      return urls;
-    };
-
-    const handleSubmitOrder = async (stripeObj, elementsObj) => {
-      if (isSubmitting) return;
-      setIsSubmitting(true);
+  const uploadToCloudinary = async (files) => {
+    const urls = [];
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "tyes_preset");
       try {
-        const { data: { user: currentUser } } = await supabase.auth.getUser();
-        if (!currentUser) throw new Error("Please sign in to place an order.");
-
-        const selectedPlan = plans.find(p => p.id === plan);
-        if (!selectedPlan) throw new Error("Please select a plan first.");
-
-        // --- Upload files after payment confirmed (or for free orders) ---
-        let photoUrls = [];
-        let refUrls = [];
-        let fontUrls = [];
-
-        if (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
-          if (productPhotos.length > 0) {
-            addToast(`Uploading ${productPhotos.length} product photos...`, "info");
-            photoUrls = await uploadToCloudinary(productPhotos);
-          }
-          if (referencePhotos.length > 0) {
-            addToast(`Uploading ${referencePhotos.length} reference images...`, "info");
-            refUrls = await uploadToCloudinary(referencePhotos);
-          }
-          if (fontFiles.length > 0) {
-            addToast(`Uploading ${fontFiles.length} fonts/labels...`, "info");
-            fontUrls = await uploadToCloudinary(fontFiles);
-          }
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        if (res.ok && data.secure_url) {
+          urls.push(data.secure_url);
+        } else {
+          console.error("Cloudinary upload failed:", data);
+          throw new Error(data.error?.message || "Upload failed");
         }
-
-        const structuredItems = productPhotos.map((file, index) => ({
-          name: file.name,
-          mainImage: photoUrls[index] || "",
-          finishImage: "",
-          status: "pending"
-        }));
-
-        const { data: newOrder, error: insertError } = await supabase.from("orders").insert([{
-          user_id: currentUser.id,
-          customer_email: currentUser.email,
-          customer_name: clientInfo.name || currentUser.user_metadata?.first_name || "Client",
-          title: projectTitle || `New ${selectedPlan.name} Order`,
-          plan: selectedPlan.name,
-          images_count: selectedPlan.images || 0,
-          status: "pending",
-          revenue: selectedPlan.price || 0,
-          revisions: 0,
-          max_revisions: selectedPlan.max_revisions || 3,
-          progress: 0,
-          attachments: { photos: photoUrls },
-          reference_images: refUrls,
-          font_label_files: fontUrls,
-          items: structuredItems,
-          brief_description: briefDesc,
-          selected_styles: selectedStyles,
-          created_at: new Date().toISOString()
-        }]).select().single();
-
-        if (insertError) throw insertError;
-
-        // Trigger invoice generation and order confirmation email
-        try {
-          await fetch('/api/orders/post-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderId: newOrder.id })
-          });
-        } catch (postPaymentErr) {
-          console.error("Post payment processing error:", postPaymentErr);
-        }
-
-        fetchData();
-        setStep(1);
-        setPage("success");
       } catch (err) {
-        console.error("Submission error:", err);
-        addToast(err.message || "Failed to submit order", "error");
-      } finally {
-        setIsSubmitting(false);
+        console.error("Cloudinary error:", err);
+        throw err;
       }
-    };
+    }
+    return urls;
+  };
+
+  const handleSubmitOrder = async (stripeObj, elementsObj) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (!currentUser) throw new Error("Please sign in to place an order.");
+
+      const selectedPlan = plans.find(p => p.id === plan);
+      if (!selectedPlan) throw new Error("Please select a plan first.");
+
+      // --- Upload files after payment confirmed (or for free orders) ---
+      let photoUrls = [];
+      let refUrls = [];
+      let fontUrls = [];
+
+      if (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
+        if (productPhotos.length > 0) {
+          addToast(`Uploading ${productPhotos.length} product photos...`, "info");
+          photoUrls = await uploadToCloudinary(productPhotos);
+        }
+        if (referencePhotos.length > 0) {
+          addToast(`Uploading ${referencePhotos.length} reference images...`, "info");
+          refUrls = await uploadToCloudinary(referencePhotos);
+        }
+        if (fontFiles.length > 0) {
+          addToast(`Uploading ${fontFiles.length} fonts/labels...`, "info");
+          fontUrls = await uploadToCloudinary(fontFiles);
+        }
+      }
+
+      const structuredItems = productPhotos.map((file, index) => ({
+        name: file.name,
+        mainImage: photoUrls[index] || "",
+        finishImage: "",
+        status: "pending"
+      }));
+
+      const { data: newOrder, error: insertError } = await supabase.from("orders").insert([{
+        user_id: currentUser.id,
+        customer_email: currentUser.email,
+        customer_name: clientInfo.name || currentUser.user_metadata?.first_name || "Client",
+        title: projectTitle || `New ${selectedPlan.name} Order`,
+        plan: selectedPlan.name,
+        images_count: selectedPlan.images || 0,
+        status: "pending",
+        revenue: selectedPlan.price || 0,
+        revisions: 0,
+        max_revisions: selectedPlan.max_revisions || 3,
+        progress: 0,
+        attachments: { photos: photoUrls },
+        reference_images: refUrls,
+        font_label_files: fontUrls,
+        items: structuredItems,
+        brief_description: briefDesc,
+        selected_styles: selectedStyles,
+        created_at: new Date().toISOString()
+      }]).select().single();
+
+      if (insertError) throw insertError;
+
+      // Trigger invoice generation and order confirmation email
+      try {
+        await fetch('/api/orders/post-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: newOrder.id })
+        });
+      } catch (postPaymentErr) {
+        console.error("Post payment processing error:", postPaymentErr);
+      }
+
+      fetchData();
+      setStep(1);
+      setPage("success");
+    } catch (err) {
+      console.error("Submission error:", err);
+      addToast(err.message || "Failed to submit order", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
-    return (
-      <div style={{ width: "100%", display: "flex", justifyContent: "center", paddingBottom: 40 }}>
-        {isSubmitting && (
-          <div style={{ position: "fixed", inset: 0, zIndex: 99999, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", padding: "16px 32px", background: "rgba(17,24,39,0.95)", borderRadius: "100px", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 20px 40px rgba(0,0,0,0.5)", maxWidth: "90vw" }}>
-              <RefreshCw size={24} className="animate-spin" style={{ color: "#4ecdc4" }} />
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                <div style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Processing Order...</div>
-                <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>Please do not close this window</div>
+  return (
+    <div style={{ width: "100%", display: "flex", justifyContent: "center", paddingBottom: 40 }}>
+      {isSubmitting && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 99999, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", padding: "16px 32px", background: "rgba(17,24,39,0.95)", borderRadius: "100px", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 20px 40px rgba(0,0,0,0.5)", maxWidth: "90vw" }}>
+            <RefreshCw size={24} className="animate-spin" style={{ color: "#4ecdc4" }} />
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Processing Order...</div>
+              <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>Please do not close this window</div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div style={{ width: "100%", maxWidth: 1200 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 8px" }}>New Order</h1>
+        <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 32px" }}>Fill in your brief and we'll get started right away.</p>
+
+        <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>
+          {["Choose Plan", "Upload Brief", "Review & Submit"].map((s, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+              <div style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, background: step > i + 1 ? "#34d399" : step === i + 1 ? "linear-gradient(135deg,#4ecdc4,#2ab7a9)" : "rgba(255,255,255,0.06)", color: step >= i + 1 ? "#fff" : "#4b5563" }}>
+                {step > i + 1 ? <Check size={13} /> : i + 1}
+              </div>
+              <span style={{ fontSize: 12, color: step === i + 1 ? "#fff" : "#4b5563", fontWeight: step === i + 1 ? 600 : 400 }}>{s}</span>
+              {i < 2 && <div style={{ flex: 1, height: 1, background: step > i + 1 ? "#34d399" : "rgba(255,255,255,0.06)", margin: "0 8px" }} />}
+            </div>
+          ))}
+        </div>
+
+        {step === 1 && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
+            {plans.length === 0 ? (
+              <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#6b7280" }}>
+                <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 12px", opacity: 0.5 }} />
+                <p>Loading plans...</p>
+              </div>
+            ) : (
+              plans.map(p => (
+                <div key={p.id} onClick={() => setPlan(p.id)} style={{ background: plan === p.id ? "rgba(78,205,196,0.06)" : "rgba(255,255,255,0.03)", border: `2px solid ${plan === p.id ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)"}`, borderRadius: 16, padding: 24, cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
+                  {p.badge && <span style={{ position: "absolute", top: 12, right: 12, background: "rgba(78,205,196,0.15)", color: "#4ecdc4", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10 }}>{p.badge}</span>}
+                  <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", marginBottom: 4 }}>${p.price}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#e5e7eb", marginBottom: 4 }}>{p.name}</div>
+                  <div style={{ fontSize: 12, color: "#6b7280" }}>{p.images} image{p.images > 1 ? "s" : ""} · 3 revisions</div>
+                  {plan === p.id && <div style={{ position: "absolute", top: 12, left: 12 }}><Check size={16} color="#4ecdc4" /></div>}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {step === 2 && (
+          <div style={{ width: "100%" }}>
+            <InputField label="Project Title" value={projectTitle} onChange={setProjectTitle} placeholder="e.g. Summer Skincare Launch" required={true} />
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Brief / Mood Description <span style={{ color: "#ef4444" }}>*</span></label>
+              <textarea value={briefDesc} onChange={e => setBriefDesc(e.target.value)} placeholder="Describe the mood, style, angles you want..." rows={4} style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }} />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Style (click to select)</label>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {["Product Shot", "Editorial", "Lifestyle", "Flat Lay", "Minimal", "Mood Lighting", "Artistic"].map(s => (
+                  <button key={s} onClick={() => toggleStyle(s)} style={{ padding: "6px 14px", borderRadius: 20, border: `1px solid ${selectedStyles.includes(s) ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.08)"}`, background: selectedStyles.includes(s) ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.03)", color: selectedStyles.includes(s) ? "#4ecdc4" : "#9ca3af", fontSize: 12, cursor: "pointer", transition: "all 0.2s" }}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 20 }}>
+              {/* Product Photos */}
+              <div>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Product Photos <span style={{ color: "#ef4444" }}>*</span></label>
+                <div onClick={() => document.getElementById('photoInput').click()}
+                  style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
+                  <input type="file" id="photoInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => {
+                    const selectedPlan = plans.find(p => p.id === plan);
+                    const limit = selectedPlan ? selectedPlan.images : 0;
+                    const newFiles = Array.from(e.target.files);
+                    if (productPhotos.length + newFiles.length > limit) {
+                      addToast(`Plan limit: ${limit} photos`, "warning");
+                      return;
+                    }
+                    setProductPhotos(prev => [...prev, ...newFiles]);
+                  }} />
+                  <Camera size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
+                  <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Main Products</div>
+                  <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Required</div>
+                </div>
+                <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+                  {productPhotos.map((f, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
+                      <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
+                      <button onClick={() => setProductPhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Reference Images */}
+              <div>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Reference Images</label>
+                <div onClick={() => document.getElementById('refInput').click()}
+                  style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
+                  <input type="file" id="refInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => setReferencePhotos(prev => [...prev, ...Array.from(e.target.files)])} />
+                  <Image size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
+                  <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Style References</div>
+                  <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Mood, angles, etc.</div>
+                </div>
+                <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+                  {referencePhotos.map((f, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
+                      <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
+                      <button onClick={() => setReferencePhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Fonts / Label */}
+              <div>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Fonts / Label</label>
+                <div onClick={() => document.getElementById('fontInput').click()}
+                  style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
+                  <input type="file" id="fontInput" multiple style={{ display: "none" }} onChange={e => setFontFiles(prev => [...prev, ...Array.from(e.target.files)])} />
+                  <FileText size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
+                  <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Label Files</div>
+                  <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>PDF, PNG, OTF, etc.</div>
+                </div>
+                <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+                  {fontFiles.map((f, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
+                      <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
+                      <button onClick={() => setFontFiles(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         )}
-        <div style={{ width: "100%", maxWidth: 1200 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 8px" }}>New Order</h1>
-          <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 32px" }}>Fill in your brief and we'll get started right away.</p>
 
-          <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>
-            {["Choose Plan", "Upload Brief", "Review & Submit"].map((s, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, background: step > i + 1 ? "#34d399" : step === i + 1 ? "linear-gradient(135deg,#4ecdc4,#2ab7a9)" : "rgba(255,255,255,0.06)", color: step >= i + 1 ? "#fff" : "#4b5563" }}>
-                  {step > i + 1 ? <Check size={13} /> : i + 1}
+        {step === 3 && (() => {
+          const selectedPlan = plans.find(p => p.id === plan);
+          const isPaid = selectedPlan && selectedPlan.price > 0;
+          const orderSummary = [
+            { label: "Plan", val: selectedPlan?.name || "—" },
+            { label: "Project", val: projectTitle || "Untitled" },
+            { label: "Images", val: selectedPlan?.images || 0 },
+            { label: "Style", val: selectedStyles.join(", ") || "Not specified" },
+            { label: "Product Photos", val: `${productPhotos.length} files` },
+            { label: "Ref. Images", val: `${referencePhotos.length} files` },
+            { label: "Fonts / Labels", val: `${fontFiles.length} files` },
+            { label: "Revisions", val: "3 included" },
+          ];
+          return (
+            <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
+              {/* LEFT: Order Summary */}
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Order Summary</h3>
+                {orderSummary.map((r, i) => (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 14 }}>
+                    <span style={{ color: "#9ca3af" }}>{r.label}</span><span style={{ color: "#fff", fontWeight: 500 }}>{r.val}</span>
+                  </div>
+                ))}
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "16px 0", fontSize: 20 }}>
+                  <span style={{ color: "#9ca3af", fontWeight: 600 }}>Total</span>
+                  <span style={{ color: isPaid ? "#4ecdc4" : "#34d399", fontWeight: 800 }}>{isPaid ? `${selectedPlan.price}` : "Free"}</span>
                 </div>
-                <span style={{ fontSize: 12, color: step === i + 1 ? "#fff" : "#4b5563", fontWeight: step === i + 1 ? 600 : 400 }}>{s}</span>
-                {i < 2 && <div style={{ flex: 1, height: 1, background: step > i + 1 ? "#34d399" : "rgba(255,255,255,0.06)", margin: "0 8px" }} />}
-              </div>
-            ))}
-          </div>
-
-          {step === 1 && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
-              {plans.length === 0 ? (
-                <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#6b7280" }}>
-                  <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 12px", opacity: 0.5 }} />
-                  <p>Loading plans...</p>
-                </div>
-              ) : (
-                plans.map(p => (
-                  <div key={p.id} onClick={() => setPlan(p.id)} style={{ background: plan === p.id ? "rgba(78,205,196,0.06)" : "rgba(255,255,255,0.03)", border: `2px solid ${plan === p.id ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)"}`, borderRadius: 16, padding: 24, cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
-                    {p.badge && <span style={{ position: "absolute", top: 12, right: 12, background: "rgba(78,205,196,0.15)", color: "#4ecdc4", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10 }}>{p.badge}</span>}
-                    <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", marginBottom: 4 }}>${p.price}</div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: "#e5e7eb", marginBottom: 4 }}>{p.name}</div>
-                    <div style={{ fontSize: 12, color: "#6b7280" }}>{p.images} image{p.images > 1 ? "s" : ""} · 3 revisions</div>
-                    {plan === p.id && <div style={{ position: "absolute", top: 12, left: 12 }}><Check size={16} color="#4ecdc4" /></div>}
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {step === 2 && (
-            <div style={{ width: "100%" }}>
-              <InputField label="Project Title" value={projectTitle} onChange={setProjectTitle} placeholder="e.g. Summer Skincare Launch" required={true} />
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Brief / Mood Description <span style={{ color: "#ef4444" }}>*</span></label>
-                <textarea value={briefDesc} onChange={e => setBriefDesc(e.target.value)} placeholder="Describe the mood, style, angles you want..." rows={4} style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }} />
-              </div>
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Style (click to select)</label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  {["Product Shot", "Editorial", "Lifestyle", "Flat Lay", "Minimal", "Mood Lighting", "Artistic"].map(s => (
-                    <button key={s} onClick={() => toggleStyle(s)} style={{ padding: "6px 14px", borderRadius: 20, border: `1px solid ${selectedStyles.includes(s) ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.08)"}`, background: selectedStyles.includes(s) ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.03)", color: selectedStyles.includes(s) ? "#4ecdc4" : "#9ca3af", fontSize: 12, cursor: "pointer", transition: "all 0.2s" }}>{s}</button>
-                  ))}
-                </div>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 20 }}>
-                {/* Product Photos */}
-                <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Product Photos <span style={{ color: "#ef4444" }}>*</span></label>
-                  <div onClick={() => document.getElementById('photoInput').click()}
-                    style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
-                    <input type="file" id="photoInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => {
-                      const selectedPlan = plans.find(p => p.id === plan);
-                      const limit = selectedPlan ? selectedPlan.images : 0;
-                      const newFiles = Array.from(e.target.files);
-                      if (productPhotos.length + newFiles.length > limit) {
-                        addToast(`Plan limit: ${limit} photos`, "warning");
-                        return;
-                      }
-                      setProductPhotos(prev => [...prev, ...newFiles]);
-                    }} />
-                    <Camera size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
-                    <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Main Products</div>
-                    <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Required</div>
-                  </div>
-                  <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-                    {productPhotos.map((f, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
-                        <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
-                        <button onClick={() => setProductPhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Reference Images */}
-                <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Reference Images</label>
-                  <div onClick={() => document.getElementById('refInput').click()}
-                    style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
-                    <input type="file" id="refInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => setReferencePhotos(prev => [...prev, ...Array.from(e.target.files)])} />
-                    <Image size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
-                    <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Style References</div>
-                    <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Mood, angles, etc.</div>
-                  </div>
-                  <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-                    {referencePhotos.map((f, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
-                        <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
-                        <button onClick={() => setReferencePhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Fonts / Label */}
-                <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Fonts / Label</label>
-                  <div onClick={() => document.getElementById('fontInput').click()}
-                    style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
-                    <input type="file" id="fontInput" multiple style={{ display: "none" }} onChange={e => setFontFiles(prev => [...prev, ...Array.from(e.target.files)])} />
-                    <FileText size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
-                    <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Label Files</div>
-                    <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>PDF, PNG, OTF, etc.</div>
-                  </div>
-                  <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-                    {fontFiles.map((f, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
-                        <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
-                        <button onClick={() => setFontFiles(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (() => {
-            const selectedPlan = plans.find(p => p.id === plan);
-            const isPaid = selectedPlan && selectedPlan.price > 0;
-            const orderSummary = [
-              { label: "Plan", val: selectedPlan?.name || "—" },
-              { label: "Project", val: projectTitle || "Untitled" },
-              { label: "Images", val: selectedPlan?.images || 0 },
-              { label: "Style", val: selectedStyles.join(", ") || "Not specified" },
-              { label: "Product Photos", val: `${productPhotos.length} files` },
-              { label: "Ref. Images", val: `${referencePhotos.length} files` },
-              { label: "Fonts / Labels", val: `${fontFiles.length} files` },
-              { label: "Revisions", val: "3 included" },
-            ];
-            return (
-              <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
-                {/* LEFT: Order Summary */}
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Order Summary</h3>
-                  {orderSummary.map((r, i) => (
-                    <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 14 }}>
-                      <span style={{ color: "#9ca3af" }}>{r.label}</span><span style={{ color: "#fff", fontWeight: 500 }}>{r.val}</span>
-                    </div>
-                  ))}
-                  <div style={{ display: "flex", justifyContent: "space-between", padding: "16px 0", fontSize: 20 }}>
-                    <span style={{ color: "#9ca3af", fontWeight: 600 }}>Total</span>
-                    <span style={{ color: isPaid ? "#4ecdc4" : "#34d399", fontWeight: 800 }}>{isPaid ? `${selectedPlan.price}` : "Free"}</span>
-                  </div>
-                  {/* Free plan submit button */}
-                  {!isPaid && (
-                    <button
-                      onClick={() => handleSubmitOrder(null, null)}
-                      disabled={isSubmitting}
-                      style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
-                      {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
-                    </button>
-                  )}
-                </div>
-                {/* RIGHT: Payment form for paid plans */}
-                {isPaid && (
-                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
-                    <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Payment</h3>
-                    {clientSecret ? (
-                      <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#4ecdc4", colorBackground: "#111827", colorText: "#f9fafb", colorDanger: "#ef4444", fontFamily: '"Inter", -apple-system, sans-serif', borderRadius: "8px" } } }}>
-                        <CheckoutForm onPaymentSuccess={handleSubmitOrder} stripeError={stripeError} />
-                      </Elements>
-                    ) : stripeError ? (
-                      <div style={{ color: "#ef4444", fontSize: 13, padding: 16 }}>{stripeError}</div>
-                    ) : (
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#6b7280", fontSize: 13, padding: 16 }}>
-                        <RefreshCw size={14} className="animate-spin" /> Setting up secure payment...
-                      </div>
-                    )}
-                  </div>
+                {/* Free plan submit button */}
+                {!isPaid && (
+                  <button
+                    onClick={() => handleSubmitOrder(null, null)}
+                    disabled={isSubmitting}
+                    style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
+                    {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
+                  </button>
                 )}
               </div>
-            );
-          })()}
+              {/* RIGHT: Payment form for paid plans */}
+              {isPaid && (
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Payment</h3>
+                  {clientSecret ? (
+                    <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#4ecdc4", colorBackground: "#111827", colorText: "#f9fafb", colorDanger: "#ef4444", fontFamily: '"Inter", -apple-system, sans-serif', borderRadius: "8px" } } }}>
+                      <CheckoutForm onPaymentSuccess={handleSubmitOrder} stripeError={stripeError} />
+                    </Elements>
+                  ) : stripeError ? (
+                    <div style={{ color: "#ef4444", fontSize: 13, padding: 16 }}>{stripeError}</div>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#6b7280", fontSize: 13, padding: 16 }}>
+                      <RefreshCw size={14} className="animate-spin" /> Setting up secure payment...
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
-          <div style={{ display: "flex", gap: 10, marginTop: 32 }}>
-            {step > 1 && <button onClick={() => { setStep(step - 1); if (step === 3) { setClientSecret(null); setStripeError(null); } }} style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 13, cursor: "pointer", minWidth: 100 }}>Back</button>}
-            {step < 3 && (
-              <button
-                onClick={async () => {
-                  if (step === 1 && !plan) return;
-                  if (step === 2) {
-                    if (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0) return;
-                  }
-                  const nextStep = step + 1;
-                  setStep(nextStep);
-                  // Pre-fetch client secret when reaching Step 3 for paid plans
-                  if (nextStep === 3) {
-                    const selectedPlan = plans.find(p => p.id === plan);
-                    if (selectedPlan && selectedPlan.price > 0) {
-                      try {
-                        const res = await fetch('/api/stripe/payment-intent', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ price: selectedPlan.price, planName: selectedPlan.name })
-                        });
-                        const data = await res.json();
-                        if (data.clientSecret) setClientSecret(data.clientSecret);
-                        else setStripeError('Could not initialize payment. Please try again.');
-                      } catch (e) {
-                        setStripeError('Payment setup failed. Please try again.');
-                      }
+        <div style={{ display: "flex", gap: 10, marginTop: 32 }}>
+          {step > 1 && <button onClick={() => { setStep(step - 1); if (step === 3) { setClientSecret(null); setStripeError(null); } }} style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 13, cursor: "pointer", minWidth: 100 }}>Back</button>}
+          {step < 3 && (
+            <button
+              onClick={async () => {
+                if (step === 1 && !plan) return;
+                if (step === 2) {
+                  if (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0) return;
+                }
+                const nextStep = step + 1;
+                setStep(nextStep);
+                // Pre-fetch client secret when reaching Step 3 for paid plans
+                if (nextStep === 3) {
+                  const selectedPlan = plans.find(p => p.id === plan);
+                  if (selectedPlan && selectedPlan.price > 0) {
+                    try {
+                      const res = await fetch('/api/stripe/payment-intent', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ price: selectedPlan.price, planName: selectedPlan.name })
+                      });
+                      const data = await res.json();
+                      if (data.clientSecret) setClientSecret(data.clientSecret);
+                      else setStripeError('Could not initialize payment. Please try again.');
+                    } catch (e) {
+                      setStripeError('Payment setup failed. Please try again.');
                     }
                   }
-                }}
-                disabled={(step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))}
-                style={{
-                  padding: "12px 24px",
-                  borderRadius: 10,
-                  border: "none",
-                  background: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)",
-                  color: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "#4b5563" : "#fff",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "not-allowed" : "pointer",
-                  minWidth: 120,
-                  transition: "all 0.3s ease"
-                }}>
-                Continue
-              </button>
-            )}
-          </div>
+                }
+              }}
+              disabled={(step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))}
+              style={{
+                padding: "12px 24px",
+                borderRadius: 10,
+                border: "none",
+                background: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)",
+                color: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "#4b5563" : "#fff",
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "not-allowed" : "pointer",
+                minWidth: 120,
+                transition: "all 0.3s ease"
+              }}>
+              Continue
+            </button>
+          )}
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
+
+// ══════════════════════════════════════
+// TAWK.TO CHAT COMPONENT
+// ══════════════════════════════════════
+const TawkToChat = () => {
+  useEffect(() => {
+    if (window.Tawk_API) {
+      if (window.Tawk_API.showWidget) window.Tawk_API.showWidget();
+    } else {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/622aee3ba34c2456412a8539/1ftrr56e8';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      if (s0 && s0.parentNode) {
+        s0.parentNode.insertBefore(s1, s0);
+      } else {
+        document.head.appendChild(s1);
+      }
+    }
+    return () => {
+      if (window.Tawk_API && window.Tawk_API.hideWidget) {
+        window.Tawk_API.hideWidget();
+      }
+    };
+  }, []);
+  return null;
+};
 
 // ══════════════════════════════════════
 // SUCCESS PAGE
 // ══════════════════════════════════════
 const SuccessPage = ({ setPage }) => (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "40px 20px", textAlign: "center" }}>
-      <div style={{ width: 100, height: 100, borderRadius: "50%", background: "rgba(52,211,153,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
-        <CheckCircle size={50} color="#34d399" />
-      </div>
-      <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>Order Submitted Successfully!</h1>
-      <p style={{ fontSize: 16, color: "#9ca3af", maxWidth: 500, lineHeight: 1.6, marginBottom: 40 }}>
-        Thank you! Your payment was successful and your order is now confirmed. We are already processing your request and will notify you as soon as there are updates.
-      </p>
-      <button 
-        onClick={() => setPage("orders")}
-        style={{ padding: "14px 32px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", gap: 10, alignSelf: "center" }}
-      >
-        <Package size={18} /> View My Orders
-      </button>
+  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "40px 20px", textAlign: "center" }}>
+    <div style={{ width: 100, height: 100, borderRadius: "50%", background: "rgba(52,211,153,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
+      <CheckCircle size={50} color="#34d399" />
     </div>
-  );
+    <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>Order Submitted Successfully!</h1>
+    <p style={{ fontSize: 16, color: "#9ca3af", maxWidth: 500, lineHeight: 1.6, marginBottom: 40 }}>
+      Thank you! Your payment was successful and your order is now confirmed. We are already processing your request and will notify you as soon as there are updates.
+    </p>
+    <button
+      onClick={() => setPage("orders")}
+      style={{ padding: "14px 32px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", gap: 10, alignSelf: "center" }}
+    >
+      <Package size={18} /> View My Orders
+    </button>
+  </div>
+);
 
 export default function TyesClient() {
   const router = useRouter();
@@ -1157,7 +1185,7 @@ export default function TyesClient() {
     );
   };
 
-    // ══════════════════════════════════════
+  // ══════════════════════════════════════
   // MESSAGES PAGE
   // ══════════════════════════════════════
   const MessagesPage = () => {
@@ -1395,7 +1423,7 @@ export default function TyesClient() {
     );
   };
 
-  
+
 
   // ══════════════════════════════════════
   // RENDER
@@ -1693,6 +1721,7 @@ export default function TyesClient() {
           {renderPage()}
         </div>
       </div>
+      <TawkToChat />
     </div>
   );
 }
