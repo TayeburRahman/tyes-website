@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function POST(req: Request) {
   try {
-    const { price, planName } = await req.json();
+    const { price, planName, vatRate, viesConsultationId } = await req.json();
 
     if (!price || price <= 0) {
       return NextResponse.json({ error: 'Invalid price' }, { status: 400 });
@@ -16,6 +16,10 @@ export async function POST(req: Request) {
       currency: 'usd',
       description: `Tyes Studio – ${planName} Plan`,
       automatic_payment_methods: { enabled: true },
+      metadata: {
+        vatRate: vatRate ? vatRate.toString() : '0',
+        viesConsultationId: viesConsultationId || '',
+      }
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });

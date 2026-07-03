@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { generateSmartBillInvoice } from '@/utils/smartbill';
 import { sendOrderConfirmationEmail } from '@/utils/email';
-import { getVatInfo } from '@/utils/eu-vat-rates';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
@@ -28,15 +27,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // 2. Fetch user profile to resolve billing details + country
+    // 2. Fetch user profile to resolve billing details
     let companyName = order.customer_name || 'Client';
     let clientEmail = order.customer_email || '';
-    let clientCountryCode = 'RO'; // Default to Romania (seller country)
     let clientAddress = 'Adresa nespecificata';
     let clientCity = 'Bucuresti';
-    let clientCountry = 'Romania';
-    let clientVatCode = '';
-    let isTaxPayer = false;
+    
+    // We strictly use the VAT details stored on the order (single source of truth)
+    const clientCountryCode = order.vat_country || 'RO';
+    const clientVatCode = order.vat_number || '';
+    const isTaxPayer = !!clientVatCode;
+    const vatRate = parseFloat(order.vat_rate) || 21;
+    const vatMode = order.vat_mode || 'DOMESTIC';
+    const viesConsultationId = order.vies_consultation_id || '';
+    
+    // In SmartBill, the country name needs to be provided. We can just use the code or map it if needed,
+    // but the spec dictates language and taxName based on the vat_mode and rate.
+    let clientCountry = clientCountryCode; // Simplification, could map to full name if SmartBill requires it, but code usually works
 
     const { data: profile } = await supabase
       .from('profiles')
@@ -45,43 +52,33 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (profile) {
-      // Prefer profile data; fall back to order fields
       companyName = profile.company_name || profile.first_name
         ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
         : companyName;
       clientEmail = profile.email || clientEmail;
-
-      // Resolve country from profile, with RO as default
-      clientCountryCode = profile.country || 'RO';
-
       if (profile.registered_address) clientAddress = profile.registered_address;
-      if (profile.is_business && profile.vat_number) {
-        clientVatCode = profile.vat_number;
-        isTaxPayer = true;
-      }
-
-      // Use billing_email if set
       if (profile.billing_email) clientEmail = profile.billing_email;
     }
 
-    // 3. Resolve VAT rate dynamically from country code
-    const vatInfo = getVatInfo(clientCountryCode);
-    clientCountry = vatInfo.name;
-
-    // Determine if Reverse Charge applies (EU cross-border B2B)
-    const isReverseCharge = vatInfo.isEU && clientCountryCode !== 'RO' && isTaxPayer;
-    
-    let appliedVatRate = vatInfo.rate;
-    let appliedTaxName = vatInfo.taxName;
+    // 3. Resolve exact SmartBill fields from the order's VAT state
+    let appliedTaxName = 'Normala';
+    let invoiceLanguage = clientCountryCode === 'RO' ? 'RO' : 'EN';
     let invoiceMentions = '';
+    let isReverseCharge = false;
 
-    if (isReverseCharge) {
-      appliedVatRate = 0;
-      appliedTaxName = 'Scutita'; // or 'Taxare Inversa' depending on SmartBill config
-      invoiceMentions = 'Reverse charge — Art. 196 Directive 2006/112/ EC';
+    if (vatMode === 'EU_B2B_RC' || (vatMode === 'NON_EU' && vatRate === 0)) {
+      appliedTaxName = 'Taxare inversa';
+    }
+
+    if (vatMode === 'EU_B2B_RC') {
+      isReverseCharge = true;
+      invoiceMentions = 'Reverse charge — Art. 196 Directive 2006/112/EC';
+      if (viesConsultationId) {
+        invoiceMentions += ` (VIES Consultation ID: ${viesConsultationId})`;
+      }
       console.log(`[Invoice] Applied Reverse Charge for ${clientCountryCode} B2B`);
     } else {
-      console.log(`[Invoice] Country: ${clientCountryCode} → VAT: ${appliedVatRate}% (${appliedTaxName})`);
+      console.log(`[Invoice] Country: ${clientCountryCode} → VAT: ${vatRate}% (${appliedTaxName})`);
     }
 
     // 4. Generate SmartBill Invoice
@@ -105,13 +102,14 @@ export async function POST(req: Request) {
         dueDate: new Date().toISOString().split('T')[0],
         deliveryDate: new Date().toISOString().split('T')[0],
         mentions: invoiceMentions,
+        language: invoiceLanguage,
         products: [
           {
             name: `Pachet Servicii: ${order.plan}`,
             code: 'SRV-01',
-            isTaxIncluded: appliedVatRate > 0,
+            isTaxIncluded: vatRate > 0,
             taxName: appliedTaxName,
-            taxPercentage: appliedVatRate,
+            taxPercentage: vatRate,
             measuringUnitName: 'buc',
             currency: 'USD',
             quantity: 1,
@@ -122,27 +120,10 @@ export async function POST(req: Request) {
       };
 
       try {
-        // Attempt 1: Dynamic EU VAT
         invoiceData = await generateSmartBillInvoice(smartbillPayload);
       } catch (firstAttemptError: any) {
-        if (firstAttemptError.message && firstAttemptError.message.includes('Cota tva')) {
-          console.warn('[Invoice] SmartBill rejected the dynamic VAT rate. Falling back to .env settings...');
-          
-          const fallbackVatRate = parseInt(process.env.SMARTBILL_TAX_PERCENTAGE || '0', 10);
-          const fallbackTaxName = process.env.SMARTBILL_TAX_NAME || 'SFDD';
-          
-          smartbillPayload.products[0].isTaxIncluded = fallbackVatRate > 0;
-          smartbillPayload.products[0].taxPercentage = fallbackVatRate;
-          smartbillPayload.products[0].taxName = fallbackTaxName;
-          
-          // Update the applied VAT so the Email Receipt matches the fallback invoice!
-          appliedVatRate = fallbackVatRate; 
-          
-          // Attempt 2: Fallback VAT
-          invoiceData = await generateSmartBillInvoice(smartbillPayload);
-        } else {
-          throw firstAttemptError;
-        }
+        console.error('[Invoice] SmartBill error:', firstAttemptError.message);
+        throw firstAttemptError;
       }
 
       // Insert invoice into Supabase
@@ -187,7 +168,7 @@ export async function POST(req: Request) {
         issueDate: new Date().toISOString().split('T')[0],
         buyerAddress: clientAddress,
         buyerVatCode: clientVatCode || undefined,
-        vatRate: appliedVatRate,
+        vatRate: vatRate,
         isReverseCharge: isReverseCharge
       });
     } catch (emailError) {

@@ -93,3 +93,149 @@ export const EU_COUNTRIES_LIST = Object.values(EU_VAT_RATES).sort((a, b) =>
 export const ALL_COUNTRIES_LIST = Object.values(ALL_VAT_RATES).sort((a, b) =>
   a.name.localeCompare(b.name)
 );
+
+// ─── VAT Calculation Engine ───────────────────────────────────────────
+
+export interface VATCalculationResult {
+  vatRate: number;
+  taxName: string;
+  invoiceLanguage: 'RO' | 'EN';
+  isReverseCharge: boolean;
+  viesValid: boolean;
+  viesConsultationId?: string;
+  viesDown?: boolean;
+  vatMode: "DOMESTIC" | "EU_B2C" | "EU_B2B_RC" | "NON_EU";
+  viesStatus: "valid" | "invalid" | "unavailable";
+}
+
+/**
+ * Calculates VAT based on simplified rules:
+ * - RO -> 21%
+ * - Non-EU -> 0%
+ * - EU + Valid VAT -> 0% Reverse charge
+ * - EU + Invalid/No VAT -> 21%
+ */
+export async function calculateVAT(countryCode: string, isCompany: boolean, vatNumber?: string): Promise<VATCalculationResult> {
+  const code = countryCode?.toUpperCase() || 'RO';
+  const isEU = !!EU_VAT_RATES[code];
+
+  // Clean VAT number
+  let cleanVat = vatNumber ? vatNumber.replace(/[^a-zA-Z0-9]/g, '') : '';
+  
+  // Edge Case: foreign company holding a Romanian VAT code -> Treat as DOMESTIC
+  if (cleanVat.toUpperCase().startsWith('RO')) {
+    return {
+      vatRate: 21,
+      taxName: 'Normala',
+      invoiceLanguage: 'RO',
+      isReverseCharge: false,
+      viesValid: false,
+      vatMode: 'DOMESTIC',
+      viesStatus: 'invalid' // We don't bother checking VIES if it's domestic RO, or we just consider it domestic.
+    };
+  }
+
+  // 1. Romania -> always 21%, RO invoice
+  if (code === 'RO') {
+    return {
+      vatRate: 21,
+      taxName: 'Normala',
+      invoiceLanguage: 'RO',
+      isReverseCharge: false,
+      viesValid: false,
+      vatMode: 'DOMESTIC',
+      viesStatus: 'invalid'
+    };
+  }
+
+  // 2. Non-EU -> 0%, EN invoice
+  if (!isEU) {
+    return {
+      vatRate: 0,
+      taxName: 'Taxare inversa', // SmartBill accepts this for 0%
+      invoiceLanguage: 'EN',
+      isReverseCharge: false, // Export (not strict reverse charge, but we use EN invoice + 0%)
+      viesValid: false,
+      vatMode: 'NON_EU',
+      viesStatus: 'invalid'
+    };
+  }
+
+  // 3. EU Member States (excluding RO)
+  if (isCompany && cleanVat) {
+    if (cleanVat.toUpperCase().startsWith(code)) {
+      cleanVat = cleanVat.substring(code.length);
+    }
+
+    try {
+      const requesterCountry = 'RO'; // Default company country
+      const requesterVat = process.env.SMARTBILL_COMPANY_VAT_CODE || '32585141';
+
+      const soapBody = `<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:ec.europa.eu:taxud:vies:services:checkVat:types">
+        <soap:Body>
+          <urn:checkVatApprox>
+            <urn:countryCode>${code}</urn:countryCode>
+            <urn:vatNumber>${cleanVat}</urn:vatNumber>
+            <urn:requesterCountryCode>${requesterCountry}</urn:requesterCountryCode>
+            <urn:requesterVatNumber>${requesterVat}</urn:requesterVatNumber>
+          </urn:checkVatApprox>
+        </soap:Body>
+      </soap:Envelope>`;
+
+      const res = await fetch('https://ec.europa.eu/taxation_customs/vies/services/checkVatService', {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/xml;charset=UTF-8' },
+        body: soapBody,
+        signal: AbortSignal.timeout(8000)
+      });
+
+      if (!res.ok) {
+        throw new Error('VIES API returned ' + res.status);
+      }
+
+      const xml = await res.text();
+      const isValid = xml.includes('<valid>true</valid>') || xml.includes('<ns2:valid>true</ns2:valid>');
+      
+      const matchId = xml.match(/<(?:ns2:)?requestIdentifier>(.*?)<\/(?:ns2:)?requestIdentifier>/);
+      const requestIdentifier = matchId && matchId[1] ? matchId[1] : undefined;
+
+      if (isValid) {
+        // EU company with valid VAT -> 0% Reverse charge
+        return {
+          vatRate: 0,
+          taxName: 'Taxare inversa',
+          invoiceLanguage: 'EN',
+          isReverseCharge: true,
+          viesValid: true,
+          viesConsultationId: requestIdentifier,
+          vatMode: 'EU_B2B_RC',
+          viesStatus: 'valid'
+        };
+      }
+    } catch (err) {
+      console.error('VIES Validation Error:', err);
+      // Fall through to 21% if VIES is down, but set the viesDown flag so we can notify the user
+      return {
+        vatRate: 21,
+        taxName: 'Normala',
+        invoiceLanguage: 'EN',
+        isReverseCharge: false,
+        viesValid: false,
+        viesDown: true,
+        vatMode: 'EU_B2C',
+        viesStatus: 'unavailable'
+      };
+    }
+  }
+
+  // EU individual or invalid VAT or empty VAT -> 21%
+  return {
+    vatRate: 21,
+    taxName: 'Normala',
+    invoiceLanguage: 'EN',
+    isReverseCharge: false,
+    viesValid: false,
+    vatMode: 'EU_B2C',
+    viesStatus: 'invalid'
+  };
+}

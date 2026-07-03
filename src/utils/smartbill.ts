@@ -34,6 +34,7 @@ export interface SmartBillInvoiceRequest {
   products: SmartBillProduct[];
   mentions?: string;
   observations?: string;
+  language?: string;
 }
 
 export const generateSmartBillInvoice = async (invoiceData: SmartBillInvoiceRequest) => {

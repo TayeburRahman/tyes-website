@@ -265,6 +265,9 @@ const navPages = [
 // ══════════════════════════════════════
 const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
   const [step, setStep] = useState(1);
+  const [vatNumber, setVatNumber] = useState(clientInfo?.vat_number || "");
+  const [vatResult, setVatResult] = useState(null);
+  const [isValidatingVat, setIsValidatingVat] = useState(false);
   const [plan, setPlan] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
   const [briefDesc, setBriefDesc] = useState("");
@@ -285,6 +288,76 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const stripePromise = stripePromiseRef.current;
 
   const plans = pricingPlans;
+
+  // Real-time VAT validation and Stripe Intent generation
+  useEffect(() => {
+    if (step === 3) {
+      const selectedPlan = plans.find(p => p.id === plan);
+      if (!selectedPlan || selectedPlan.price <= 0) return;
+
+      let isMounted = true;
+      const setupCheckout = async () => {
+        setIsValidatingVat(true);
+        setStripeError(null);
+        let currentVatResult = vatResult;
+        
+        try {
+          // 1. Validate VAT
+          const vatRes = await fetch('/api/vat/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              countryCode: clientInfo?.country || 'RO',
+              isCompany: clientInfo?.is_business || !!vatNumber,
+              vatNumber: vatNumber
+            })
+          });
+          const vatData = await vatRes.json();
+          if (!vatRes.ok) throw new Error(vatData.error);
+          
+          if (isMounted) {
+            setVatResult(vatData);
+            currentVatResult = vatData;
+            if (vatData.viesDown) {
+              addToast("We couldn't verify your VAT number right now — VAT has been charged. Contact us for a corrected invoice once verification succeeds.", "warning");
+            } else if (vatData.viesValid) {
+              addToast("VAT number verified! 0% Reverse charge applied.", "success");
+            }
+          }
+
+          // 2. Setup Stripe Payment Intent with exact total
+          const totalAmount = selectedPlan.price + (selectedPlan.price * (currentVatResult.vatRate / 100));
+          
+          const piRes = await fetch('/api/stripe/payment-intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              price: totalAmount, 
+              planName: selectedPlan.name,
+              vatRate: currentVatResult.vatRate,
+              viesConsultationId: currentVatResult.viesConsultationId 
+            })
+          });
+          const piData = await piRes.json();
+          if (!piRes.ok) throw new Error(piData.error);
+          
+          if (isMounted && piData.clientSecret) {
+            setClientSecret(piData.clientSecret);
+          }
+        } catch (err) {
+          console.error(err);
+          if (isMounted) setStripeError(err.message || 'Checkout setup failed.');
+        } finally {
+          if (isMounted) setIsValidatingVat(false);
+        }
+      };
+
+      setupCheckout();
+
+      return () => { isMounted = false; };
+    }
+  }, [step, plan, plans]); // note: deliberately omits vatNumber to only trigger when explicitly asked
+
 
   const toggleStyle = (style) => {
     setSelectedStyles(prev => prev.includes(style) ? prev.filter(s => s !== style) : [...prev, style]);
@@ -376,6 +449,12 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         items: structuredItems,
         brief_description: briefDesc,
         selected_styles: selectedStyles,
+        vat_rate: vatResult ? vatResult.vatRate : 21,
+        vat_mode: vatResult ? vatResult.vatMode : (clientInfo?.country === 'RO' ? 'DOMESTIC' : 'NON_EU'),
+        vat_country: clientInfo?.country || 'RO',
+        vat_number: vatNumber || null,
+        vies_status: vatResult ? vatResult.viesStatus : 'unavailable',
+        vies_consultation_id: vatResult?.viesConsultationId || null,
         created_at: new Date().toISOString()
       }]).select().single();
 
@@ -546,6 +625,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           const selectedPlan = plans.find(p => p.id === plan);
           const isPaid = selectedPlan && selectedPlan.price > 0;
           const orderSummary = [
+
             { label: "Plan", val: selectedPlan?.name || "—" },
             { label: "Project", val: projectTitle || "Untitled" },
             { label: "Images", val: selectedPlan?.images || 0 },
@@ -554,7 +634,12 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             { label: "Ref. Images", val: `${referencePhotos.length} files` },
             { label: "Fonts / Labels", val: `${fontFiles.length} files` },
             { label: "Revisions", val: "3 included" },
+          
           ];
+          if (vatResult) {
+            orderSummary.push({ label: "Subtotal", val: `$${selectedPlan.price}` });
+            orderSummary.push({ label: `VAT (${vatResult.vatRate}%)`, val: `$${(selectedPlan.price * (vatResult.vatRate / 100)).toFixed(2)}` });
+          }
           return (
             <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
               {/* LEFT: Order Summary */}
@@ -569,6 +654,37 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   <span style={{ color: "#9ca3af", fontWeight: 600 }}>Total</span>
                   <span style={{ color: isPaid ? "#4ecdc4" : "#34d399", fontWeight: 800 }}>{isPaid ? `${selectedPlan.price}` : "Free"}</span>
                 </div>
+                
+                {isPaid && (
+                  <div style={{ marginTop: 24, padding: 16, background: "rgba(0,0,0,0.2)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.04)" }}>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Company VAT Number (Optional)</label>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <input 
+                        type="text" 
+                        value={vatNumber} 
+                        onChange={e => setVatNumber(e.target.value)} 
+                        placeholder="e.g. RO123456" 
+                        style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
+                      />
+                      <button 
+                        onClick={() => {
+                          setClientSecret(null);
+                          setStep(2); 
+                          setTimeout(() => setStep(3), 0); // Hack to trigger useEffect re-run
+                        }} 
+                        disabled={isValidatingVat}
+                        style={{ padding: "0 16px", borderRadius: 8, border: "none", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: isValidatingVat ? "not-allowed" : "pointer" }}
+                      >
+                        {isValidatingVat ? "Validating..." : "Update"}
+                      </button>
+                    </div>
+                    {vatResult && vatResult.viesDown && (
+                      <div style={{ color: "#fbbf24", fontSize: 11, marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                        <AlertCircle size={12} /> VIES validation service is down. 21% VAT applied.
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/* Free plan submit button */}
                 {!isPaid && (
                   <button
@@ -611,24 +727,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                 }
                 const nextStep = step + 1;
                 setStep(nextStep);
-                // Pre-fetch client secret when reaching Step 3 for paid plans
-                if (nextStep === 3) {
-                  const selectedPlan = plans.find(p => p.id === plan);
-                  if (selectedPlan && selectedPlan.price > 0) {
-                    try {
-                      const res = await fetch('/api/stripe/payment-intent', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ price: selectedPlan.price, planName: selectedPlan.name })
-                      });
-                      const data = await res.json();
-                      if (data.clientSecret) setClientSecret(data.clientSecret);
-                      else setStripeError('Could not initialize payment. Please try again.');
-                    } catch (e) {
-                      setStripeError('Payment setup failed. Please try again.');
-                    }
-                  }
-                }
+                // Client secret and VAT will be handled in step 3 useEffect
               }}
               disabled={(step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))}
               style={{
@@ -749,6 +848,8 @@ export default function TyesClient() {
           imagesDelivered: 0,
           freeTestUsed: true,
           country: resolvedCountry,
+          is_business: profile.is_business || false,
+          vat_number: profile.vat_number || "",
         });
         setCompanyName(fullName);
         setCompanyEmail(profile.email);
@@ -772,6 +873,8 @@ export default function TyesClient() {
           freeTestUsed: false,
           // Read country directly from auth metadata for users without a profiles row
           country: authUser.user_metadata?.country || null,
+          is_business: authUser.user_metadata?.is_business || false,
+          vat_number: authUser.user_metadata?.vat_number || "",
         });
         setCompanyName(fullName);
         setCompanyEmail(authUser.email);
