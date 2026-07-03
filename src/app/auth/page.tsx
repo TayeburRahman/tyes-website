@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
+import { EU_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 
 type Tab = "signin" | "signup" | "forgot" | "otp" | "forgot_otp";
 
@@ -48,8 +49,15 @@ export default function AuthPage() {
   const [tab, setTab] = useState<Tab>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [country, setCountry] = useState("RO");
+  const [countrySearch, setCountrySearch] = useState("");
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const [isBusiness, setIsBusiness] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const [vatNumber, setVatNumber] = useState("");
+  const [registeredAddress, setRegisteredAddress] = useState("");
+  const [billingEmail, setBillingEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [resetEmail, setResetEmail] = useState("");
   const [resetOtpCode, setResetOtpCode] = useState("");
@@ -110,8 +118,14 @@ export default function AuthPage() {
     if (e) e.preventDefault();
     console.log("Attempting Sign Up...");
     setError("");
-    if (!firstName || !email || !password) { addToast("Please fill in all required fields", "error"); return; }
+    if (!fullName || !email || !password) { addToast("Please fill in all required fields", "error"); return; }
     if (password !== confirmPassword) { addToast("Passwords do not match", "error"); return; }
+    
+    // Split full name
+    const nameParts = fullName.trim().split(" ");
+    const firstName = nameParts[0] || "";
+    const lastName = nameParts.slice(1).join(" ") || "";
+
     setLoading(true);
 
     try {
@@ -122,6 +136,12 @@ export default function AuthPage() {
           data: {
             first_name: firstName,
             last_name: lastName,
+            country: country,
+            is_business: isBusiness,
+            company_name: isBusiness ? companyName : null,
+            vat_number: isBusiness ? vatNumber : null,
+            registered_address: isBusiness ? registeredAddress : null,
+            billing_email: isBusiness ? billingEmail : null,
             role: "client", // New users start as clients by default
           },
         },
@@ -266,6 +286,14 @@ export default function AuthPage() {
         .auth-tab.active { background:#58b2ad; color:#fff; }
         .auth-link { color:#58b2ad; text-decoration:none; font-size:0.85rem; font-weight:500; }
         .auth-link:hover { text-decoration:underline; }
+        .auth-checkbox-container { display:flex; align-items:flex-start; gap:0.75rem; background:#6223e8; padding:1.25rem 1rem; border-radius:6px; margin-bottom:1rem; cursor:pointer; }
+        .auth-checkbox { width:1.2rem; height:1.2rem; cursor:pointer; margin-top:2px; accent-color:#fff; }
+        .auth-section-title { font-family:Montserrat,sans-serif; font-size:0.75rem; font-weight:700; color:#fff; background:#6223e8; padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em; }
+        .auth-label { font-family:Montserrat,sans-serif; font-size:0.8rem; font-weight:600; color:#fff; margin-bottom:0.4rem; display:block; }
+        .auth-input-container { margin-bottom:0.5rem; }
+        .auth-dropdown-scroll::-webkit-scrollbar { width: 6px; }
+        .auth-dropdown-scroll::-webkit-scrollbar-track { background: transparent; }
+        .auth-dropdown-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
       `}</style>
 
       <div style={{ width: "100%", maxWidth: 420, padding: "2rem" }}>
@@ -307,14 +335,102 @@ export default function AuthPage() {
         {/* Sign Up Form */}
         {tab === "signup" && (
           <form onSubmit={handleSignUp}>
-            <div style={{ display: "flex", gap: "0.75rem" }}>
-              <input className="auth-input" type="text" placeholder="First name" value={firstName} onChange={e => setFirstName(e.target.value)} style={{ flex: 1 }} required />
-              <input className="auth-input" type="text" placeholder="Last name" value={lastName} onChange={e => setLastName(e.target.value)} style={{ flex: 1 }} />
+            <div className="auth-input-container">
+              <label className="auth-label">Full name</label>
+              <input className="auth-input" style={{ marginBottom: 0 }} type="text" placeholder="Full name" value={fullName} onChange={e => setFullName(e.target.value)} required />
             </div>
-            <input className="auth-input" type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} required />
-            <input className="auth-input" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-            <input className="auth-input" type="password" placeholder="Confirm password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
-            <button type="submit" className="auth-btn" disabled={loading}>{loading ? "Creating account…" : "Create Account"}</button>
+            <div className="auth-input-container">
+              <label className="auth-label">Email</label>
+              <input className="auth-input" style={{ marginBottom: 0 }} type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} required />
+            </div>
+            <div className="auth-input-container" style={{ display: "flex", gap: "0.75rem" }}>
+              <div style={{ flex: 1 }}>
+                <label className="auth-label">Password</label>
+                <input className="auth-input" style={{ marginBottom: 0 }} type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label className="auth-label">Confirm Password</label>
+                <input className="auth-input" style={{ marginBottom: 0 }} type="password" placeholder="Confirm password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
+              </div>
+            </div>
+            <div className="auth-input-container" style={{ marginBottom: "1.5rem", position: "relative" }}>
+              <label className="auth-label">Country</label>
+              <div 
+                className="auth-input" 
+                style={{ marginBottom: 0, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+              >
+                <span>{EU_COUNTRIES_LIST.find(c => c.code === country)?.name || "Select country"}</span>
+                <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
+              </div>
+              
+              {isCountryDropdownOpen && (
+                <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 10, background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", marginTop: "4px", padding: "0.5rem", boxShadow: "0 10px 25px rgba(0,0,0,0.8)" }}>
+                  <input 
+                    type="text" 
+                    placeholder="Search country..." 
+                    value={countrySearch}
+                    onChange={e => setCountrySearch(e.target.value)}
+                    onClick={e => e.stopPropagation()}
+                    style={{ width: "100%", padding: "0.6rem", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff", outline: "none", marginBottom: "0.5rem", fontSize: "0.85rem", fontFamily: "Montserrat, sans-serif" }}
+                    autoFocus
+                  />
+                  <div className="auth-dropdown-scroll" style={{ maxHeight: "180px", overflowY: "auto", paddingRight: "4px" }}>
+                    {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
+                      <div 
+                        key={c.code}
+                        onClick={() => {
+                          setCountry(c.code);
+                          setIsCountryDropdownOpen(false);
+                          setCountrySearch("");
+                        }}
+                        style={{ padding: "0.6rem", cursor: "pointer", borderRadius: "4px", background: country === c.code ? "rgba(88,178,173,0.15)" : "transparent", color: country === c.code ? "#58b2ad" : "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem", transition: "background 0.2s" }}
+                        onMouseEnter={e => e.currentTarget.style.background = country === c.code ? "rgba(88,178,173,0.25)" : "rgba(255,255,255,0.05)"}
+                        onMouseLeave={e => e.currentTarget.style.background = country === c.code ? "rgba(88,178,173,0.15)" : "transparent"}
+                      >
+                        {c.name}
+                        {country === c.code && <span style={{ fontSize: "0.9rem" }}>✓</span>}
+                      </div>
+                    ))}
+                    {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).length === 0 && (
+                      <div style={{ padding: "0.6rem", color: "rgba(255,255,255,0.4)", textAlign: "center", fontSize: "0.85rem" }}>No countries found</div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="auth-checkbox-container" onClick={() => setIsBusiness(!isBusiness)}>
+              <input type="checkbox" className="auth-checkbox" checked={isBusiness} onChange={() => {}} />
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontWeight: 700, fontSize: "0.9rem" }}>I'm buying for a business</span>
+                <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.7)", marginTop: "2px" }}>Get invoices with company VAT for tax deduction.</span>
+              </div>
+            </div>
+
+            {isBusiness && (
+              <div style={{ marginTop: "1.5rem", marginBottom: "1rem" }}>
+                <div className="auth-section-title">BUSINESS DETAILS</div>
+                <div className="auth-input-container">
+                  <label className="auth-label">Company name</label>
+                  <input className="auth-input" style={{ marginBottom: 0 }} type="text" placeholder="Company name" value={companyName} onChange={e => setCompanyName(e.target.value)} required={isBusiness} />
+                </div>
+                <div className="auth-input-container">
+                  <label className="auth-label">VAT / Tax number</label>
+                  <input className="auth-input" style={{ marginBottom: 0 }} type="text" placeholder="VAT / Tax number" value={vatNumber} onChange={e => setVatNumber(e.target.value)} required={isBusiness} />
+                </div>
+                <div className="auth-input-container">
+                  <label className="auth-label">Registered address</label>
+                  <input className="auth-input" style={{ marginBottom: 0 }} type="text" placeholder="Registered address" value={registeredAddress} onChange={e => setRegisteredAddress(e.target.value)} required={isBusiness} />
+                </div>
+                <div className="auth-input-container">
+                  <label className="auth-label">Billing email (optional)</label>
+                  <input className="auth-input" style={{ marginBottom: 0 }} type="email" placeholder="Billing email (optional)" value={billingEmail} onChange={e => setBillingEmail(e.target.value)} />
+                </div>
+              </div>
+            )}
+
+            <button type="submit" className="auth-btn" disabled={loading} style={{ marginTop: "1rem" }}>{loading ? "Creating account…" : "Create Account"}</button>
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0", color: "rgba(255,255,255,0.3)", fontSize: "0.8rem", fontWeight: 500 }}>
               <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} /> or <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
             </div>

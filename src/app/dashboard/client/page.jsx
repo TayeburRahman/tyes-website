@@ -6,6 +6,7 @@ import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
 import { Search, Bell, ChevronDown, ChevronRight, ChevronLeft, Download, MoreVertical, Plus, Eye, Check, X, Clock, RefreshCw, Upload, Image, Settings, LogOut, Home, Package, CreditCard, FileText, MessageSquare, User, Camera, Paperclip, Send, Star, ArrowUpRight, Menu, AlertCircle, Zap, ExternalLink, Trash2, Edit, Save, CheckCircle } from "lucide-react";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { EU_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 // stripePromise is lazy-loaded per component instance to avoid the global Stripe badge
 
 // ══════════════════════════════════════
@@ -125,6 +126,81 @@ const Modal = ({ open, onClose, title, children, width }) => {
 // ══════════════════════════════════════
 // HELPERS & COMPONENTS
 // ══════════════════════════════════════
+
+const MissingCountryModal = ({ open, onClose, onSubmit, loading }) => {
+  const [selectedCountry, setSelectedCountry] = useState("RO");
+  const [countrySearch, setCountrySearch] = useState("");
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+
+  if (!open) return null;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
+      <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 32, width: 440, maxWidth: "90vw" }}>
+        <h3 style={{ fontSize: 20, fontWeight: 800, color: "#fff", margin: "0 0 12px" }}>Where are you located?</h3>
+        <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 24, lineHeight: 1.5 }}>
+          We need to know your country for tax and invoicing purposes before you can place an order.
+        </p>
+
+        {/* Searchable Dropdown */}
+        <div style={{ position: "relative", marginBottom: 24 }}>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country</label>
+          <div 
+            style={{ padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 14, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+            onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+          >
+            <span>{EU_COUNTRIES_LIST.find(c => c.code === selectedCountry)?.name || "Select country"}</span>
+            <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
+          </div>
+          
+          {isCountryDropdownOpen && (
+            <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 10, background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", marginTop: "4px", padding: "8px", boxShadow: "0 10px 25px rgba(0,0,0,0.8)" }}>
+              <input 
+                type="text" 
+                placeholder="Search country..." 
+                value={countrySearch}
+                onChange={e => setCountrySearch(e.target.value)}
+                onClick={e => e.stopPropagation()}
+                style={{ width: "100%", padding: "10px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", color: "#fff", outline: "none", marginBottom: "8px", fontSize: "14px", fontFamily: "Montserrat, sans-serif" }}
+                autoFocus
+              />
+              <style>{`
+                .country-dropdown-scroll::-webkit-scrollbar { width: 6px; }
+                .country-dropdown-scroll::-webkit-scrollbar-track { background: transparent; }
+                .country-dropdown-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+              `}</style>
+              <div className="country-dropdown-scroll" style={{ maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
+                {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
+                  <div 
+                    key={c.code}
+                    onClick={() => {
+                      setSelectedCountry(c.code);
+                      setIsCountryDropdownOpen(false);
+                      setCountrySearch("");
+                    }}
+                    style={{ padding: "10px", cursor: "pointer", borderRadius: "6px", background: selectedCountry === c.code ? "rgba(78,205,196,0.15)" : "transparent", color: selectedCountry === c.code ? "#4ecdc4" : "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "14px", transition: "all 0.2s" }}
+                    onMouseEnter={e => e.currentTarget.style.background = selectedCountry === c.code ? "rgba(78,205,196,0.25)" : "rgba(255,255,255,0.05)"}
+                    onMouseLeave={e => e.currentTarget.style.background = selectedCountry === c.code ? "rgba(78,205,196,0.15)" : "transparent"}
+                  >
+                    {c.name}
+                    {selectedCountry === c.code && <span style={{ fontSize: "14px", fontWeight: "bold" }}>✓</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{ display: "flex", gap: 12 }}>
+          <button onClick={onClose} style={{ flex: 1, padding: "12px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "#d1d5db", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
+          <button onClick={() => onSubmit(selectedCountry)} disabled={loading} style={{ flex: 1, padding: "12px", borderRadius: 10, border: "none", background: loading ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: loading ? "#9ca3af" : "#fff", fontSize: 14, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer" }}>
+            {loading ? "Saving..." : "Save & Continue"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 const statusConfig = {
   pending: { label: "Pending", bg: "rgba(107,114,128,0.15)", color: "#9ca3af", icon: Clock },
   in_progress: { label: "In Progress", bg: "rgba(59,130,246,0.15)", color: "#60a5fa", icon: Clock },
@@ -661,6 +737,8 @@ export default function TyesClient() {
 
       if (profile) {
         const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.email;
+        // Fall back to user_metadata.country if the DB column is not yet populated
+        const resolvedCountry = profile.country || authUser.user_metadata?.country || null;
         setClientInfo({
           name: fullName,
           email: profile.email,
@@ -670,9 +748,14 @@ export default function TyesClient() {
           totalSpent: profile.total_spent || 0,
           imagesDelivered: 0,
           freeTestUsed: true,
+          country: resolvedCountry,
         });
         setCompanyName(fullName);
         setCompanyEmail(profile.email);
+        // If profile.country is missing but user_metadata has it, silently back-fill the DB
+        if (!profile.country && authUser.user_metadata?.country) {
+          supabase.from('profiles').update({ country: authUser.user_metadata.country }).eq('id', authUser.id).then(() => {});
+        }
       } else {
         const fullName = authUser.user_metadata?.first_name
           ? `${authUser.user_metadata.first_name} ${authUser.user_metadata.last_name || ''}`.trim()
@@ -687,6 +770,8 @@ export default function TyesClient() {
           totalSpent: 0,
           imagesDelivered: 0,
           freeTestUsed: false,
+          // Read country directly from auth metadata for users without a profiles row
+          country: authUser.user_metadata?.country || null,
         });
         setCompanyName(fullName);
         setCompanyEmail(authUser.email);
@@ -813,8 +898,43 @@ export default function TyesClient() {
 
   // Client info and orders are now initialized empty and filled by fetchData
   const [clientInfo, setClientInfo] = useState({
-    name: "Loading...", email: "", tier: "...", joined: "...", totalOrders: 0, totalSpent: 0, imagesDelivered: 0, freeTestUsed: false,
+    name: "Loading...", email: "", tier: "...", joined: "...", totalOrders: 0, totalSpent: 0, imagesDelivered: 0, freeTestUsed: false, country: null,
   });
+
+  const [showMissingCountryModal, setShowMissingCountryModal] = useState(false);
+  const [updatingCountry, setUpdatingCountry] = useState(false);
+
+  const handlePageChange = (newPage) => {
+    if (newPage === "new-order" && !clientInfo?.country) {
+      setShowMissingCountryModal(true);
+    } else {
+      setPage(newPage);
+    }
+  };
+
+  const handleUpdateCountry = async (selectedCountryCode) => {
+    setUpdatingCountry(true);
+    try {
+      // Always save to user_metadata — works even if SQL migration hasn't been run yet
+      await supabase.auth.updateUser({ data: { country: selectedCountryCode } });
+
+      // Also try to update the profiles table (works if migration has been run)
+      supabase.from('profiles').update({ country: selectedCountryCode }).eq('id', user.id).then(() => {});
+
+      // Update local state and proceed — never block the user
+      setClientInfo(prev => ({ ...prev, country: selectedCountryCode }));
+      addToast("Country saved!", "success");
+      setShowMissingCountryModal(false);
+      setPage("new-order");
+    } catch (err) {
+      // Even if something fails, still let the user proceed with the local state update
+      setClientInfo(prev => ({ ...prev, country: selectedCountryCode }));
+      setShowMissingCountryModal(false);
+      setPage("new-order");
+    } finally {
+      setUpdatingCountry(false);
+    }
+  };
 
   // ── Messages State ──
   const [messagesList, setMessagesList] = useState([
@@ -978,7 +1098,7 @@ export default function TyesClient() {
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Quick Actions</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { icon: Plus, label: "New Order", desc: "Start a new project", action: () => setPage("new-order") },
+                { icon: Plus, label: "New Order", desc: "Start a new project", action: () => handlePageChange("new-order") },
                 // { icon: MessageSquare, label: "Messages", desc: `${unreadMsgs} unread message${unreadMsgs !== 1 ? "s" : ""}`, action: () => setPage("messages") },
                 {
                   icon: Download, label: "Download All", desc: "All delivered images", action: () => {
@@ -1054,7 +1174,7 @@ export default function TyesClient() {
       <div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>My Orders</h1>
-          <button onClick={() => setPage("new-order")} style={{ padding: "8px 18px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Plus size={13} /> New Order</button>
+          <button onClick={() => handlePageChange("new-order")} style={{ padding: "8px 18px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Plus size={13} /> New Order</button>
         </div>
         <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
           {[{ key: "all", label: "All" }, { key: "in_progress", label: "In Progress" }, { key: "revision", label: "Revision" }, { key: "delivered", label: "Delivered" }].map(f => (
@@ -1295,6 +1415,160 @@ export default function TyesClient() {
   // ══════════════════════════════════════
   // ACCOUNT PAGE
   // ══════════════════════════════════════
+  // ──────────────────────────────────────
+  // ACCOUNT: COUNTRY SECTION
+  // ──────────────────────────────────────
+  const AccountCountrySection = ({ supabase, user, clientInfo, setClientInfo, addToast }) => {
+    const [editing, setEditing] = useState(false);
+    const [selectedCode, setSelectedCode] = useState(clientInfo.country || "RO");
+    const [search, setSearch] = useState("");
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    const currentName = EU_COUNTRIES_LIST.find(c => c.code === (clientInfo.country || selectedCode))?.name || "Not set";
+
+    const handleSave = async () => {
+      setSaving(true);
+      try {
+        await supabase.auth.updateUser({ data: { country: selectedCode } });
+        supabase.from('profiles').update({ country: selectedCode }).eq('id', user.id).then(() => {});
+        setClientInfo(prev => ({ ...prev, country: selectedCode }));
+        addToast("Country updated!", "success");
+        setEditing(false);
+      } catch (err) {
+        addToast("Failed to update country", "error");
+      } finally {
+        setSaving(false);
+      }
+    };
+
+    return (
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Country & Tax</h3>
+          <button onClick={() => { if (editing) { handleSave(); } else { setEditing(true); setSelectedCode(clientInfo.country || "RO"); } }} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+            {editing ? (saving ? "Saving..." : <><Save size={12} /> Save</>) : <><Edit size={12} /> Edit</>}
+          </button>
+        </div>
+        {editing ? (
+          <div style={{ position: "relative" }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country</label>
+            <div
+              style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              <span>{EU_COUNTRIES_LIST.find(c => c.code === selectedCode)?.name || "Select country"}</span>
+              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", transform: dropdownOpen ? "rotate(180deg)" : "none", display: "inline-block", transition: "transform 0.2s" }}>▼</span>
+            </div>
+            {dropdownOpen && (
+              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 20, background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, marginTop: 4, padding: 8, boxShadow: "0 10px 30px rgba(0,0,0,0.8)" }}>
+                <input type="text" placeholder="Search country..." value={search} onChange={e => setSearch(e.target.value)} onClick={e => e.stopPropagation()} style={{ width: "100%", padding: "8px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#fff", outline: "none", marginBottom: 6, fontSize: 13 }} autoFocus />
+                <div style={{ maxHeight: 180, overflowY: "auto" }}>
+                  {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(search.toLowerCase())).map(c => (
+                    <div key={c.code} onClick={() => { setSelectedCode(c.code); setDropdownOpen(false); setSearch(""); }} style={{ padding: "8px 10px", cursor: "pointer", borderRadius: 6, background: selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent", color: selectedCode === c.code ? "#4ecdc4" : "#fff", fontSize: 13, display: "flex", justifyContent: "space-between" }} onMouseEnter={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.2)" : "rgba(255,255,255,0.05)"} onMouseLeave={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent"}>
+                      {c.name} {selectedCode === c.code && <span>✓</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <p style={{ fontSize: 11, color: "#6b7280", marginTop: 8 }}>Used for VAT calculation and invoicing.</p>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "#6b7280" }}>Country</span>
+              <span style={{ fontSize: 13, color: clientInfo.country ? "#e5e7eb" : "#ef4444", fontWeight: 500 }}>{currentName}</span>
+            </div>
+            {clientInfo.country && (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: 13, color: "#6b7280" }}>VAT Rate</span>
+                <span style={{ fontSize: 13, color: "#4ecdc4", fontWeight: 600 }}>{EU_COUNTRIES_LIST.find(c => c.code === clientInfo.country)?.vatRate || "—"}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // ──────────────────────────────────────
+  // ACCOUNT: BUSINESS DETAILS SECTION
+  // ──────────────────────────────────────
+  const AccountBusinessSection = ({ supabase, user, addToast }) => {
+    const meta = user?.user_metadata || {};
+    const [editing, setEditing] = useState(false);
+    const [isBiz, setIsBiz] = useState(meta.is_business || false);
+    const [bizName, setBizName] = useState(meta.company_name || "");
+    const [vatNum, setVatNum] = useState(meta.vat_number || "");
+    const [regAddr, setRegAddr] = useState(meta.registered_address || "");
+    const [billEmail, setBillEmail] = useState(meta.billing_email || "");
+    const [saving, setSaving] = useState(false);
+
+    const handleSave = async () => {
+      setSaving(true);
+      try {
+        await supabase.auth.updateUser({
+          data: { is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }
+        });
+        supabase.from('profiles').update({ is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }).eq('id', user.id).then(() => {});
+        addToast("Business details updated!", "success");
+        setEditing(false);
+      } catch (err) {
+        addToast("Failed to update business details", "error");
+      } finally {
+        setSaving(false);
+      }
+    };
+
+    return (
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Business Details</h3>
+          <button onClick={() => { if (editing) { handleSave(); } else { setEditing(true); } }} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+            {editing ? (saving ? "Saving..." : <><Save size={12} /> Save</>) : <><Edit size={12} /> Edit</>}
+          </button>
+        </div>
+        {editing ? (
+          <div>
+            <div onClick={() => setIsBiz(!isBiz)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", cursor: "pointer", marginBottom: 12 }}>
+              <div style={{ width: 36, height: 20, borderRadius: 10, background: isBiz ? "#4ecdc4" : "rgba(255,255,255,0.1)", padding: 2, transition: "background 0.2s", flexShrink: 0 }}>
+                <div style={{ width: 16, height: 16, borderRadius: "50%", background: "#fff", transform: isBiz ? "translateX(16px)" : "translateX(0)", transition: "transform 0.2s" }} />
+              </div>
+              <span style={{ fontSize: 13, color: "#d1d5db" }}>I'm buying for a business</span>
+            </div>
+            {isBiz && (
+              <>
+                <InputField label="Company Name" value={bizName} onChange={setBizName} placeholder="Company name" />
+                <InputField label="VAT / Tax Number" value={vatNum} onChange={setVatNum} placeholder="VAT number" />
+                <InputField label="Registered Address" value={regAddr} onChange={setRegAddr} placeholder="Registered address" />
+                <InputField label="Billing Email (optional)" value={billEmail} onChange={setBillEmail} placeholder="billing@company.com" type="email" />
+              </>
+            )}
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "#6b7280" }}>Business Account</span>
+              <span style={{ fontSize: 13, color: meta.is_business ? "#34d399" : "#6b7280", fontWeight: 500 }}>{meta.is_business ? "Yes" : "No"}</span>
+            </div>
+            {meta.is_business && [
+              { label: "Company Name", value: meta.company_name },
+              { label: "VAT / Tax Number", value: meta.vat_number },
+              { label: "Registered Address", value: meta.registered_address },
+              { label: "Billing Email", value: meta.billing_email || "—" },
+            ].map((f, i) => (
+              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: 13, color: "#6b7280" }}>{f.label}</span>
+                <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, textAlign: "right", maxWidth: "60%", wordBreak: "break-word" }}>{f.value || "—"}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const AccountPage = () => {
     const saveAccount = async () => {
       const parts = companyName.split(" ");
@@ -1367,6 +1641,12 @@ export default function TyesClient() {
                 </div>
               )}
             </div>
+
+            {/* Country & Tax */}
+            <AccountCountrySection supabase={supabase} user={user} clientInfo={clientInfo} setClientInfo={setClientInfo} addToast={addToast} />
+
+            {/* Business Details */}
+            <AccountBusinessSection supabase={supabase} user={user} addToast={addToast} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, height: "100%" }}>
@@ -1455,6 +1735,7 @@ export default function TyesClient() {
   return (
     <div style={{ display: "flex", height: "100vh", background: "#0a0a0a", fontFamily: "'Inter',-apple-system,sans-serif", color: "#fff", overflow: "hidden" }}>
       <ToastContainer toasts={toasts} />
+      <MissingCountryModal open={showMissingCountryModal} onClose={() => setShowMissingCountryModal(false)} onSubmit={handleUpdateCountry} loading={updatingCountry} />
 
       {/* Logout Modal */}
       <Modal open={showLogoutModal} onClose={() => setShowLogoutModal(false)} title="Log Out">
@@ -1655,7 +1936,7 @@ export default function TyesClient() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
           {navPages.map(p => (
-            <SidebarItem key={p.id} icon={p.icon} label={p.label} active={page === p.id} onClick={() => setPage(p.id)} collapsed={collapsed} badge={p.id === "messages" && unreadMsgs > 0 ? String(unreadMsgs) : p.badge && p.id !== "messages" ? p.badge : null} />
+            <SidebarItem key={p.id} icon={p.icon} label={p.label} active={page === p.id} onClick={() => handlePageChange(p.id)} collapsed={collapsed} badge={p.id === "messages" && unreadMsgs > 0 ? String(unreadMsgs) : p.badge && p.id !== "messages" ? p.badge : null} />
           ))}
         </div>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 12, marginTop: 8 }}>
