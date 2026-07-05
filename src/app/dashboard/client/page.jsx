@@ -311,6 +311,12 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       const selectedPlan = plans.find(p => p.id === plan);
       if (!selectedPlan || selectedPlan.price <= 0) return;
 
+      if (!billingCountryCode) {
+        setVatResult(null);
+        setClientSecret(null);
+        return;
+      }
+
       let isMounted = true;
       const setupCheckout = async () => {
         setIsValidatingVat(true);
@@ -323,7 +329,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              countryCode: billingCountryCode || 'RO',
+              countryCode: billingCountryCode,
               isCompany: isBusinessPurchase || !!debouncedVatNumber,
               vatNumber: debouncedVatNumber
             })
@@ -802,6 +808,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     </Elements>
                   ) : stripeError ? (
                     <div style={{ color: "#ef4444", fontSize: 13, padding: 16 }}>{stripeError}</div>
+                  ) : !billingCountryCode ? (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", color: "#9ca3af", fontSize: 13, padding: 32, textAlign: "center", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 12 }}>
+                      Please select your billing country to securely load payment options.
+                    </div>
                   ) : (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#6b7280", fontSize: 13, padding: 16 }}>
                       <RefreshCw size={14} className="animate-spin" /> Setting up secure payment...
