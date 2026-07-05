@@ -34,22 +34,36 @@
   <link href="images/tyes-logo-new.svg" rel="apple-touch-icon">
   <style>
     @media (max-width: 768px) {
+
       /* Hero overlap fix */
-      .header-content-block { padding-top: 5rem !important; }
-      .heading-wrap { margin-bottom: 8rem !important; position: relative; z-index: 10; }
-      ._3d-block { 
-        transform: scale(0.45) !important; 
+      .header-content-block {
+        padding-top: 5rem !important;
+      }
+
+      .heading-wrap {
+        margin-bottom: 8rem !important;
+        position: relative;
+        z-index: 10;
+      }
+
+      ._3d-block {
+        transform: scale(0.45) !important;
         margin-top: -2rem !important;
         position: relative !important;
         z-index: 0;
       }
-      .subtitle-wrapper { margin-bottom: 2rem !important; position: relative; z-index: 10; }
-      
+
+      .subtitle-wrapper {
+        margin-bottom: 2rem !important;
+        position: relative;
+        z-index: 10;
+      }
+
       /* How it Works / Send Your Brief fix (Horizontal Scroll) */
-      .service-component-grid { 
-        display: flex !important; 
-        flex-direction: row !important; 
-        gap: 1.5rem !important; 
+      .service-component-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 1.5rem !important;
         overflow-x: auto !important;
         scroll-snap-type: x mandatory !important;
         padding-bottom: 2rem !important;
@@ -58,26 +72,68 @@
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
       }
-      .service-component-grid::-webkit-scrollbar { display: none; }
-      .card-container { 
-        min-width: 85vw !important; 
-        width: 85vw !important; 
+
+      .service-component-grid::-webkit-scrollbar {
+        display: none;
+      }
+
+      .card-container {
+        min-width: 85vw !important;
+        width: 85vw !important;
         flex-shrink: 0 !important;
         scroll-snap-align: center !important;
         margin: 0 !important;
       }
-      .card-side { max-width: 100% !important; box-sizing: border-box; }
-      
+
+      .card-side {
+        max-width: 100% !important;
+        box-sizing: border-box;
+      }
+
       /* Pricing Section Cards cut off */
-      .ap-scroll { padding-left: 1rem !important; padding-right: 1rem !important; gap: 1rem !important; }
-      .ap-card { min-width: 85vw !important; width: 85vw !important; }
-      
+      .ap-scroll {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        gap: 1rem !important;
+      }
+
+      .ap-card {
+        min-width: 85vw !important;
+        width: 85vw !important;
+      }
+
       /* Footer CTA overlap fix */
-      .cta-container { flex-direction: column !important; padding: 3rem 1rem !important; text-align: center; }
-      .cta-image-wrap { opacity: 0.1 !important; position: absolute; inset: 0; z-index: 0; }
-      .cta-content-block { position: relative; z-index: 10; margin-top: 0 !important; }
-      .cta-text { font-size: 2rem !important; padding: 0 1rem; }
-      .cta-button-wrap { position: relative; z-index: 10; margin-top: 1rem; display: flex; justify-content: center; }
+      .cta-container {
+        flex-direction: column !important;
+        padding: 3rem 1rem !important;
+        text-align: center;
+      }
+
+      .cta-image-wrap {
+        opacity: 0.1 !important;
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      .cta-content-block {
+        position: relative;
+        z-index: 10;
+        margin-top: 0 !important;
+      }
+
+      .cta-text {
+        font-size: 2rem !important;
+        padding: 0 1rem;
+      }
+
+      .cta-button-wrap {
+        position: relative;
+        z-index: 10;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -1251,7 +1307,11 @@
                     style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:#58b2ad;margin-top:0.25rem;">
                     + 30-min strategy call</div>
                 </div>
-                <button class="ap-btn ghost" onclick="window.location.href='/auth?tab=signup'">Contact Us</button>
+                <<<<<<< HEAD <button class="ap-btn ghost" onclick="window.location.href='/auth?tab=signup'">Contact
+                  Us</button>
+                  =======
+                  <button class="ap-btn ghost" onclick="window.location.href='contact.html'">Contact Us</button>
+                  >>>>>>> 1060ed22f0667f53fdc1393faeb93d35cf069097
               </div>
             </div>
 
