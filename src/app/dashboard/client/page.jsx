@@ -267,6 +267,12 @@ const navPages = [
 const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
   const [step, setStep] = useState(1);
   const [vatNumber, setVatNumber] = useState(clientInfo?.vat_number || "");
+  const [debouncedVatNumber, setDebouncedVatNumber] = useState(vatNumber);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedVatNumber(vatNumber), 1500);
+    return () => clearTimeout(timer);
+  }, [vatNumber]);
   const [vatResult, setVatResult] = useState(null);
   const [isValidatingVat, setIsValidatingVat] = useState(false);
   const [plan, setPlan] = useState("");
@@ -328,8 +334,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               countryCode: billingCountryCode || 'RO',
-              isCompany: isBusinessPurchase || !!vatNumber,
-              vatNumber: vatNumber
+              isCompany: isBusinessPurchase || !!debouncedVatNumber,
+              vatNumber: debouncedVatNumber
             })
           });
           const vatData = await vatRes.json();
@@ -376,7 +382,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
       return () => { isMounted = false; };
     }
-  }, [step, plan, plans, billingCountryCode, isBusinessPurchase]); // trigger when country or business toggle changes
+  }, [step, plan, plans, billingCountryCode, isBusinessPurchase, debouncedVatNumber]); // trigger when country, business toggle, or VAT changes
 
 
   const toggleStyle = (style) => {
@@ -491,9 +497,9 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         items: structuredItems,
         brief_description: briefDesc,
         selected_styles: selectedStyles,
-        vat_rate: vatResult ? vatResult.vatRate : 21,
-        vat_mode: vatResult ? vatResult.vatMode : (clientInfo?.country === 'RO' ? 'DOMESTIC' : 'NON_EU'),
-        vat_country: clientInfo?.country || 'RO',
+        vat_rate: vatResult ? vatResult.vatRate : (billingCountryCode === 'RO' ? 21 : 0),
+        vat_mode: vatResult ? vatResult.vatMode : (billingCountryCode === 'RO' ? 'DOMESTIC' : 'NON_EU'),
+        vat_country: billingCountryCode || 'RO',
         vat_number: vatNumber || null,
         vies_status: vatResult ? vatResult.viesStatus : 'unavailable',
         vies_consultation_id: vatResult?.viesConsultationId || null,
@@ -716,17 +722,6 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                             placeholder="e.g. RO123456" 
                             style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
                           />
-                          <button 
-                            onClick={() => {
-                              setClientSecret(null);
-                              setStep(2); 
-                              setTimeout(() => setStep(3), 0); // Hack to trigger useEffect re-run
-                            }} 
-                            disabled={isValidatingVat}
-                            style={{ padding: "0 16px", borderRadius: 8, border: "none", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: isValidatingVat ? "not-allowed" : "pointer" }}
-                          >
-                            {isValidatingVat ? "Validating..." : "Apply VAT"}
-                          </button>
                         </div>
                         {vatResult && vatResult.viesDown && (
                           <div style={{ color: "#fbbf24", fontSize: 11, marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>

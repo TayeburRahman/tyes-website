@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { generateSmartBillInvoice } from '@/utils/smartbill';
 import { sendOrderConfirmationEmail } from '@/utils/email';
+import { getVatInfo } from '@/utils/eu-vat-rates';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
@@ -49,9 +50,9 @@ export async function POST(req: Request) {
     const vatMode = order.vat_mode || 'DOMESTIC';
     const viesConsultationId = order.vies_consultation_id || '';
     
-    // In SmartBill, the country name needs to be provided. We can just use the code or map it if needed,
-    // but the spec dictates language and taxName based on the vat_mode and rate.
-    let clientCountry = clientCountryCode; // Simplification, could map to full name if SmartBill requires it, but code usually works
+    // In SmartBill, the country name needs to be provided.
+    // Map the 2-letter ISO code to the full country name.
+    let clientCountry = getVatInfo(clientCountryCode).name || 'Romania';
 
     // Fallback to profile for email if not present
     const { data: profile } = await supabase
