@@ -30,11 +30,19 @@ export async function POST(req: Request) {
     // 2. Fetch user profile to resolve billing details
     let companyName = order.customer_name || 'Client';
     let clientEmail = order.customer_email || '';
-    let clientAddress = 'Adresa nespecificata';
-    let clientCity = 'Bucuresti';
     
+    // Read billing details from the order payload first (single source of truth for this invoice)
+    const bd = order.attachments?.billing_details;
+    let clientAddress = bd?.address || 'Adresa nespecificata';
+    let clientCity = bd?.city || 'Bucuresti';
+    let clientCounty = bd?.county || 'Bucuresti';
+    
+    if (bd && bd.is_business && bd.company) {
+      companyName = bd.company;
+    }
+
     // We strictly use the VAT details stored on the order (single source of truth)
-    const clientCountryCode = order.vat_country || 'RO';
+    const clientCountryCode = bd?.country || order.vat_country || 'RO';
     const clientVatCode = order.vat_number || '';
     const isTaxPayer = !!clientVatCode;
     const vatRate = parseFloat(order.vat_rate) || 21;
@@ -45,6 +53,7 @@ export async function POST(req: Request) {
     // but the spec dictates language and taxName based on the vat_mode and rate.
     let clientCountry = clientCountryCode; // Simplification, could map to full name if SmartBill requires it, but code usually works
 
+    // Fallback to profile for email if not present
     const { data: profile } = await supabase
       .from('profiles')
       .select('*')
@@ -52,12 +61,11 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (profile) {
-      companyName = profile.company_name || profile.first_name
-        ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
-        : companyName;
-      clientEmail = profile.email || clientEmail;
-      if (profile.registered_address) clientAddress = profile.registered_address;
-      if (profile.billing_email) clientEmail = profile.billing_email;
+      clientEmail = profile.billing_email || profile.email || clientEmail;
+      
+      // If billing details were somehow missing from order, try to fall back to profile
+      if (!bd?.address && profile.registered_address) clientAddress = profile.registered_address;
+      if (!bd?.company && profile.company_name) companyName = profile.company_name;
     }
 
     // 3. Resolve exact SmartBill fields from the order's VAT state
@@ -93,7 +101,7 @@ export async function POST(req: Request) {
           isTaxPayer,
           vatCode: clientVatCode || undefined,
           city: clientCity,
-          county: clientCity,
+          county: clientCounty,
           country: clientCountry,
           email: clientEmail,
         },

@@ -12,13 +12,14 @@ import { EU_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 // ══════════════════════════════════════
 // CHECKOUT FORM (top-level for stable identity)
 // ══════════════════════════════════════
-const CheckoutForm = ({ onPaymentSuccess, stripeError }) => {
+const CheckoutForm = ({ onPaymentSuccess, stripeError, onBeforePayment }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState(null);
 
   const handlePay = async () => {
+    if (onBeforePayment && !onBeforePayment()) return;
     if (!stripe || !elements || paying) return;
     setPaying(true);
     setPayError(null);
@@ -280,6 +281,25 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [clientSecret, setClientSecret] = useState(null);
   const [stripeError, setStripeError] = useState(null);
 
+  const [isBusinessPurchase, setIsBusinessPurchase] = useState(clientInfo?.is_business || false);
+  const [companyName, setCompanyName] = useState(clientInfo?.company_name || "");
+  const [billingAddress, setBillingAddress] = useState(clientInfo?.registered_address || "");
+  const [billingCity, setBillingCity] = useState("");
+  const [billingCounty, setBillingCounty] = useState("");
+  const [billingCountryCode, setBillingCountryCode] = useState(clientInfo?.country || "RO");
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+
+  useEffect(() => {
+    if (clientInfo) {
+      if (clientInfo.is_business) setIsBusinessPurchase(true);
+      if (clientInfo.company_name) setCompanyName(clientInfo.company_name);
+      if (clientInfo.registered_address) setBillingAddress(clientInfo.registered_address);
+      if (clientInfo.vat_number) setVatNumber(clientInfo.vat_number);
+      if (clientInfo.country) setBillingCountryCode(clientInfo.country);
+    }
+  }, [clientInfo]);
+
   // Lazy-load Stripe only when this page mounts (prevents global badge on other tabs)
   const stripePromiseRef = useRef(null);
   if (!stripePromiseRef.current) {
@@ -307,8 +327,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              countryCode: clientInfo?.country || 'RO',
-              isCompany: clientInfo?.is_business || !!vatNumber,
+              countryCode: billingCountryCode || 'RO',
+              isCompany: isBusinessPurchase || !!vatNumber,
               vatNumber: vatNumber
             })
           });
@@ -356,7 +376,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
       return () => { isMounted = false; };
     }
-  }, [step, plan, plans]); // note: deliberately omits vatNumber to only trigger when explicitly asked
+  }, [step, plan, plans, billingCountryCode, isBusinessPurchase]); // trigger when country or business toggle changes
 
 
   const toggleStyle = (style) => {
@@ -394,7 +414,20 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
     return urls;
   };
 
+  const validateBilling = () => {
+    if (!billingAddress.trim() || !billingCity.trim() || !billingCounty.trim() || !billingCountryCode) {
+      addToast("Please fill in all required billing details before submitting.", "error");
+      return false;
+    }
+    if (isBusinessPurchase && !companyName.trim()) {
+      addToast("Please provide your Company Name.", "error");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmitOrder = async (stripeObj, elementsObj) => {
+    if (!validateBilling()) return;
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
@@ -431,10 +464,19 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         status: "pending"
       }));
 
+      const billing_details = {
+        is_business: isBusinessPurchase,
+        company: companyName,
+        address: billingAddress,
+        city: billingCity,
+        county: billingCounty,
+        country: billingCountryCode,
+      };
+
       const { data: newOrder, error: insertError } = await supabase.from("orders").insert([{
         user_id: currentUser.id,
         customer_email: currentUser.email,
-        customer_name: clientInfo.name || currentUser.user_metadata?.first_name || "Client",
+        customer_name: isBusinessPurchase ? companyName : (clientInfo.name || currentUser.user_metadata?.first_name || "Client"),
         title: projectTitle || `New ${selectedPlan.name} Order`,
         plan: selectedPlan.name,
         images_count: selectedPlan.images || 0,
@@ -443,7 +485,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         revisions: 0,
         max_revisions: selectedPlan.max_revisions || 3,
         progress: 0,
-        attachments: { photos: photoUrls },
+        attachments: { photos: photoUrls, billing_details },
         reference_images: refUrls,
         font_label_files: fontUrls,
         items: structuredItems,
@@ -657,32 +699,102 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                 
                 {isPaid && (
                   <div style={{ marginTop: 24, padding: 16, background: "rgba(0,0,0,0.2)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.04)" }}>
-                    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Company VAT Number (Optional)</label>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <input 
-                        type="text" 
-                        value={vatNumber} 
-                        onChange={e => setVatNumber(e.target.value)} 
-                        placeholder="e.g. RO123456" 
-                        style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
-                      />
-                      <button 
-                        onClick={() => {
-                          setClientSecret(null);
-                          setStep(2); 
-                          setTimeout(() => setStep(3), 0); // Hack to trigger useEffect re-run
-                        }} 
-                        disabled={isValidatingVat}
-                        style={{ padding: "0 16px", borderRadius: 8, border: "none", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: isValidatingVat ? "not-allowed" : "pointer" }}
-                      >
-                        {isValidatingVat ? "Validating..." : "Update"}
-                      </button>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, cursor: "pointer" }} onClick={() => setIsBusinessPurchase(!isBusinessPurchase)}>
+                      <input type="checkbox" checked={isBusinessPurchase} onChange={() => {}} style={{ accentColor: "#4ecdc4", width: 16, height: 16, cursor: "pointer" }} />
+                      <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>I am purchasing as a business</span>
                     </div>
-                    {vatResult && vatResult.viesDown && (
-                      <div style={{ color: "#fbbf24", fontSize: 11, marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>
-                        <AlertCircle size={12} /> VIES validation service is down. 21% VAT applied.
+
+                    {isBusinessPurchase && (
+                      <div style={{ marginBottom: 16 }}>
+                        <InputField label="Company Name" value={companyName} onChange={setCompanyName} placeholder="Your Company Ltd." required={true} />
+                        <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Company VAT Number (Optional)</label>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <input 
+                            type="text" 
+                            value={vatNumber} 
+                            onChange={e => setVatNumber(e.target.value)} 
+                            placeholder="e.g. RO123456" 
+                            style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
+                          />
+                          <button 
+                            onClick={() => {
+                              setClientSecret(null);
+                              setStep(2); 
+                              setTimeout(() => setStep(3), 0); // Hack to trigger useEffect re-run
+                            }} 
+                            disabled={isValidatingVat}
+                            style={{ padding: "0 16px", borderRadius: 8, border: "none", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: isValidatingVat ? "not-allowed" : "pointer" }}
+                          >
+                            {isValidatingVat ? "Validating..." : "Apply VAT"}
+                          </button>
+                        </div>
+                        {vatResult && vatResult.viesDown && (
+                          <div style={{ color: "#fbbf24", fontSize: 11, marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                            <AlertCircle size={12} /> VIES validation service is down. 21% VAT applied.
+                          </div>
+                        )}
                       </div>
                     )}
+
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16 }}>
+                      <h4 style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>Billing Address <span style={{ color: "#ef4444" }}>*</span></h4>
+                      <p style={{ fontSize: 11, color: "#9ca3af", marginBottom: 12 }}>Required for invoicing purposes under Romanian law.</p>
+                      
+                      <InputField label="Street Address" value={billingAddress} onChange={setBillingAddress} placeholder="e.g. Strada Florilor 12" required={true} />
+                      
+                      <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+                        <div style={{ flex: 1 }}><InputField label="City" value={billingCity} onChange={setBillingCity} placeholder="Bucharest" required={true} /></div>
+                        <div style={{ flex: 1 }}><InputField label="County / State" value={billingCounty} onChange={setBillingCounty} placeholder="Bucuresti" required={true} /></div>
+                      </div>
+
+                      <div style={{ position: "relative" }}>
+                        <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country <span style={{ color: "#ef4444" }}>*</span></label>
+                        <div 
+                          style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                          onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                        >
+                          <span>{EU_COUNTRIES_LIST.find(c => c.code === billingCountryCode)?.name || "Select country"}</span>
+                          <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
+                        </div>
+                        
+                        {isCountryDropdownOpen && (
+                          <div style={{ position: "absolute", bottom: "100%", left: 0, right: 0, zIndex: 10, background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", marginBottom: "4px", padding: "8px", boxShadow: "0 -10px 25px rgba(0,0,0,0.8)" }}>
+                            <input 
+                              type="text" 
+                              placeholder="Search country..." 
+                              value={countrySearch}
+                              onChange={e => setCountrySearch(e.target.value)}
+                              onClick={e => e.stopPropagation()}
+                              style={{ width: "100%", padding: "10px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", color: "#fff", outline: "none", marginBottom: "8px", fontSize: "14px", fontFamily: "inherit", boxSizing: "border-box" }}
+                              autoFocus
+                            />
+                            <style>{`
+                              .country-dropdown-scroll::-webkit-scrollbar { width: 6px; }
+                              .country-dropdown-scroll::-webkit-scrollbar-track { background: transparent; }
+                              .country-dropdown-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+                            `}</style>
+                            <div className="country-dropdown-scroll" style={{ maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
+                              {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
+                                <div 
+                                  key={c.code}
+                                  onClick={() => {
+                                    setBillingCountryCode(c.code);
+                                    setIsCountryDropdownOpen(false);
+                                    setCountrySearch("");
+                                  }}
+                                  style={{ padding: "10px", cursor: "pointer", borderRadius: "6px", background: billingCountryCode === c.code ? "rgba(78,205,196,0.15)" : "transparent", color: billingCountryCode === c.code ? "#4ecdc4" : "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px", transition: "all 0.2s" }}
+                                  onMouseEnter={e => e.currentTarget.style.background = billingCountryCode === c.code ? "rgba(78,205,196,0.25)" : "rgba(255,255,255,0.05)"}
+                                  onMouseLeave={e => e.currentTarget.style.background = billingCountryCode === c.code ? "rgba(78,205,196,0.15)" : "transparent"}
+                                >
+                                  {c.name}
+                                  {billingCountryCode === c.code && <span style={{ fontSize: "13px", fontWeight: "bold" }}>✓</span>}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
                 {/* Free plan submit button */}
@@ -701,7 +813,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Payment</h3>
                   {clientSecret ? (
                     <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#4ecdc4", colorBackground: "#111827", colorText: "#f9fafb", colorDanger: "#ef4444", fontFamily: '"Inter", -apple-system, sans-serif', borderRadius: "8px" } } }}>
-                      <CheckoutForm onPaymentSuccess={handleSubmitOrder} stripeError={stripeError} />
+                      <CheckoutForm onPaymentSuccess={handleSubmitOrder} stripeError={stripeError} onBeforePayment={validateBilling} />
                     </Elements>
                   ) : stripeError ? (
                     <div style={{ color: "#ef4444", fontSize: 13, padding: 16 }}>{stripeError}</div>
@@ -848,10 +960,12 @@ export default function TyesClient() {
           imagesDelivered: 0,
           freeTestUsed: true,
           country: resolvedCountry,
-          is_business: profile.is_business || false,
-          vat_number: profile.vat_number || "",
+          is_business: profile.is_business || authUser.user_metadata?.is_business || false,
+          vat_number: profile.vat_number || authUser.user_metadata?.vat_number || "",
+          company_name: profile.company_name || authUser.user_metadata?.company_name || "",
+          registered_address: profile.registered_address || authUser.user_metadata?.registered_address || "",
         });
-        setCompanyName(fullName);
+        setCompanyName(profile.company_name || authUser.user_metadata?.company_name || fullName);
         setCompanyEmail(profile.email);
         // If profile.country is missing but user_metadata has it, silently back-fill the DB
         if (!profile.country && authUser.user_metadata?.country) {
@@ -875,8 +989,10 @@ export default function TyesClient() {
           country: authUser.user_metadata?.country || null,
           is_business: authUser.user_metadata?.is_business || false,
           vat_number: authUser.user_metadata?.vat_number || "",
+          company_name: authUser.user_metadata?.company_name || "",
+          registered_address: authUser.user_metadata?.registered_address || "",
         });
-        setCompanyName(fullName);
+        setCompanyName(authUser.user_metadata?.company_name || fullName);
         setCompanyEmail(authUser.email);
       }
 
