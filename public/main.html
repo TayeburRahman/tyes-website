@@ -1251,7 +1251,7 @@
                     style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:#58b2ad;margin-top:0.25rem;">
                     + 30-min strategy call</div>
                 </div>
-                <button class="ap-btn ghost" onclick="window.location.href='contact.html'">Contact Us</button>
+                <button class="ap-btn ghost" onclick="window.location.href='/auth?tab=signup'">Contact Us</button>
               </div>
             </div>
 
@@ -1876,10 +1876,7 @@
         routeUser(intent);
         return;
       }
-      currentAuthIntent = intent;
-      const modal = document.getElementById('auth-modal');
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      window.location.href = '/auth?tab=signup';
     }
     function closeAuthModal() {
       const modal = document.getElementById('auth-modal');

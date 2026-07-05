@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
@@ -42,11 +42,13 @@ const ToastContainer = ({ toasts }: { toasts: any[] }) => (
 
 export default function AuthPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const { toasts, addToast } = useToast();
   const [mounted, setMounted] = useState(false);
 
-  const [tab, setTab] = useState<Tab>("signin");
+  const initialTab = (searchParams.get("tab") as Tab) || "signin";
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -105,7 +107,7 @@ export default function AuthPage() {
         addToast("Signed in successfully!", "success");
         const isAdmin = ["admin", "superAdmin"].includes(role);
         console.log("Is Admin:", isAdmin);
-        router.push(isAdmin ? "/dashboard/admin" : "/dashboard/client");
+        window.location.href = isAdmin ? "/dashboard/admin" : "/dashboard/client";
       }
     } catch (err: any) {
       addToast(err.message || "An error occurred", "error");
@@ -165,7 +167,7 @@ export default function AuthPage() {
           addToast("Account created successfully!", "success");
           const role = data.user.user_metadata?.role || "client";
           const isAdmin = ["admin", "superAdmin"].includes(role);
-          router.push(isAdmin ? "/dashboard/admin" : "/dashboard/client");
+          window.location.href = isAdmin ? "/dashboard/admin" : "/dashboard/client";
         }
       }
     } catch (err: any) {
@@ -240,7 +242,7 @@ export default function AuthPage() {
         const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
         const role = profile?.role || data.user?.user_metadata?.role || "client";
         const isAdmin = ["admin", "superAdmin"].includes(role);
-        router.push(isAdmin ? "/dashboard/admin" : "/dashboard/client");
+        window.location.href = isAdmin ? "/dashboard/admin" : "/dashboard/client";
       }
     } catch (err: any) {
       addToast(err.message || "Invalid or expired code", "error");
