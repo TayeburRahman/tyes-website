@@ -87,7 +87,8 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
     <body>
       <div class="container">
         <div class="header">
-          <h1>Tyes Studio</h1>
+          <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="Tyes Logo" style="height: 40px; margin-bottom: 16px;" />
+          <h1>Tyes</h1>
           <p>Order Confirmation & Receipt</p>
         </div>
         
@@ -178,7 +179,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
         </div>
 
         <div class="footer">
-          <p>Tyes Studio SRL<br>This electronic receipt is generated automatically.<br>Your official PDF invoice is stored securely in our systems for 10 years in compliance with EU regulations.</p>
+          <p>Tyes SRL<br>This electronic receipt is generated automatically.<br>Your official PDF invoice is stored securely in our systems for 10 years in compliance with EU regulations.</p>
         </div>
       </div>
     </body>
@@ -193,7 +194,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
   try {
     const resend = new Resend(resendApiKey);
     const { data, error } = await resend.emails.send({
-      from: 'Tyes Studio <hello@tyes.app>',
+      from: 'Tyes <hello@tyes.app>',
       to: props.to,
       subject: `Order Confirmation & Receipt - ${props.orderTitle}`,
       html: htmlContent,
