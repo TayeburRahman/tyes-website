@@ -288,9 +288,9 @@ function AuthContent() {
         .auth-tab.active { background:#58b2ad; color:#fff; }
         .auth-link { color:#58b2ad; text-decoration:none; font-size:0.85rem; font-weight:500; }
         .auth-link:hover { text-decoration:underline; }
-        .auth-checkbox-container { display:flex; align-items:flex-start; gap:0.75rem; background:#6223e8; padding:1.25rem 1rem; border-radius:6px; margin-bottom:1rem; cursor:pointer; }
+        .auth-checkbox-container { display:flex; align-items:flex-start; gap:0.75rem; background:#2563eb; padding:1.25rem 1rem; border-radius:6px; margin-bottom:1rem; cursor:pointer; }
         .auth-checkbox { width:1.2rem; height:1.2rem; cursor:pointer; margin-top:2px; accent-color:#fff; }
-        .auth-section-title { font-family:Montserrat,sans-serif; font-size:0.75rem; font-weight:700; color:#fff; background:#6223e8; padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em; }
+        .auth-section-title { font-family:Montserrat,sans-serif; font-size:0.75rem; font-weight:700; color:#fff; background:#2563eb; padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em; }
         .auth-label { font-family:Montserrat,sans-serif; font-size:0.8rem; font-weight:600; color:#fff; margin-bottom:0.4rem; display:block; }
         .auth-input-container { margin-bottom:0.5rem; }
         .auth-dropdown-scroll::-webkit-scrollbar { width: 6px; }
