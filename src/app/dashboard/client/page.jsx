@@ -287,24 +287,14 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [clientSecret, setClientSecret] = useState(null);
   const [stripeError, setStripeError] = useState(null);
 
-  const [isBusinessPurchase, setIsBusinessPurchase] = useState(clientInfo?.is_business || false);
-  const [companyName, setCompanyName] = useState(clientInfo?.company_name || "");
-  const [billingAddress, setBillingAddress] = useState(clientInfo?.registered_address || "");
+  const [isBusinessPurchase, setIsBusinessPurchase] = useState(false);
+  const [billingName, setBillingName] = useState("");
+  const [billingAddress, setBillingAddress] = useState("");
   const [billingCity, setBillingCity] = useState("");
   const [billingCounty, setBillingCounty] = useState("");
-  const [billingCountryCode, setBillingCountryCode] = useState(clientInfo?.country || "RO");
+  const [billingCountryCode, setBillingCountryCode] = useState("");
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
-
-  useEffect(() => {
-    if (clientInfo) {
-      if (clientInfo.is_business) setIsBusinessPurchase(true);
-      if (clientInfo.company_name) setCompanyName(clientInfo.company_name);
-      if (clientInfo.registered_address) setBillingAddress(clientInfo.registered_address);
-      if (clientInfo.vat_number) setVatNumber(clientInfo.vat_number);
-      if (clientInfo.country) setBillingCountryCode(clientInfo.country);
-    }
-  }, [clientInfo]);
 
   // Lazy-load Stripe only when this page mounts (prevents global badge on other tabs)
   const stripePromiseRef = useRef(null);
@@ -425,8 +415,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       addToast("Please fill in all required billing details before submitting.", "error");
       return false;
     }
-    if (isBusinessPurchase && !companyName.trim()) {
-      addToast("Please provide your Company Name.", "error");
+    if (!billingName.trim()) {
+      addToast(`Please provide your ${isBusinessPurchase ? "Company Name" : "Full Name"}.`, "error");
       return false;
     }
     return true;
@@ -472,7 +462,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
       const billing_details = {
         is_business: isBusinessPurchase,
-        company: companyName,
+        company: billingName,
         address: billingAddress,
         city: billingCity,
         county: billingCounty,
@@ -482,7 +472,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       const { data: newOrder, error: insertError } = await supabase.from("orders").insert([{
         user_id: currentUser.id,
         customer_email: currentUser.email,
-        customer_name: isBusinessPurchase ? companyName : (clientInfo.name || currentUser.user_metadata?.first_name || "Client"),
+        customer_name: billingName,
         title: projectTitle || `New ${selectedPlan.name} Order`,
         plan: selectedPlan.name,
         images_count: selectedPlan.images || 0,
@@ -712,7 +702,6 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
                     {isBusinessPurchase && (
                       <div style={{ marginBottom: 16 }}>
-                        <InputField label="Company Name" value={companyName} onChange={setCompanyName} placeholder="Your Company Ltd." required={true} />
                         <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Company VAT Number (Optional)</label>
                         <div style={{ display: "flex", gap: 8 }}>
                           <input 
@@ -732,9 +721,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     )}
 
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16 }}>
-                      <h4 style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>Billing Address <span style={{ color: "#ef4444" }}>*</span></h4>
+                      <h4 style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>Billing Details <span style={{ color: "#ef4444" }}>*</span></h4>
                       <p style={{ fontSize: 11, color: "#9ca3af", marginBottom: 12 }}>Required for invoicing purposes under Romanian law.</p>
                       
+                      <InputField label={isBusinessPurchase ? "Company Name" : "Full Name"} value={billingName} onChange={setBillingName} placeholder={isBusinessPurchase ? "Your Company Ltd." : "John Doe"} required={true} />
                       <InputField label="Street Address" value={billingAddress} onChange={setBillingAddress} placeholder="e.g. Strada Florilor 12" required={true} />
                       
                       <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
