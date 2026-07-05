@@ -86,6 +86,25 @@
       }, 1500);
     })();
   </script>
+  
+  <script>
+    // Intercept clicks on the React-rendered buttons
+    document.addEventListener('click', function(e) {
+      const target = e.target.closest('a') || e.target.closest('button');
+      if (!target) return;
+      
+      const text = target.textContent || "";
+      if (text.includes('Get Your Free Image')) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = 'services.html';
+      } else if (text.includes('Get Your Free Strategy')) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = 'main.html';
+      }
+    }, true); // Use capture phase to intercept before React handles it
+  </script>
 </body>
 
 </html>
