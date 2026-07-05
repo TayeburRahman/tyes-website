@@ -274,6 +274,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
     return () => clearTimeout(timer);
   }, [vatNumber]);
   const [vatResult, setVatResult] = useState(null);
+  const [vatError, setVatError] = useState(null);
   const [isValidatingVat, setIsValidatingVat] = useState(false);
   const [plan, setPlan] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
@@ -338,6 +339,15 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           if (!vatRes.ok) throw new Error(vatData.error);
           
           if (isMounted) {
+            if (debouncedVatNumber && vatData.vatMode === 'EU_B2C' && vatData.viesStatus === 'invalid') {
+              setVatError("Invalid VAT Number. Please provide a valid VAT number or clear the field to proceed as a consumer (21% VAT).");
+              setVatResult(null);
+              setClientSecret(null);
+              return; // Block checkout setup
+            } else {
+              setVatError(null);
+            }
+
             setVatResult(vatData);
             currentVatResult = vatData;
             if (vatData.viesDown) {
@@ -718,6 +728,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                             style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
                           />
                         </div>
+                        {vatError && (
+                          <div style={{ color: "#ef4444", fontSize: 11, marginTop: 8, display: "flex", alignItems: "flex-start", gap: 4 }}>
+                            <AlertCircle size={12} style={{ marginTop: 1 }} /> {vatError}
+                          </div>
+                        )}
                         {vatResult && vatResult.viesDown && (
                           <div style={{ color: "#fbbf24", fontSize: 11, marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>
                             <AlertCircle size={12} /> VIES validation service is down. 21% VAT applied.
@@ -808,6 +823,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     </Elements>
                   ) : stripeError ? (
                     <div style={{ color: "#ef4444", fontSize: 13, padding: 16 }}>{stripeError}</div>
+                  ) : vatError ? (
+                    <div style={{ color: "#ef4444", fontSize: 13, padding: 32, textAlign: "center", border: "1px dashed rgba(239,68,68,0.2)", borderRadius: 12, background: "rgba(239,68,68,0.05)" }}>
+                      {vatError}
+                    </div>
                   ) : !billingCountryCode ? (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", color: "#9ca3af", fontSize: 13, padding: 32, textAlign: "center", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 12 }}>
                       Please select your billing country to securely load payment options.
