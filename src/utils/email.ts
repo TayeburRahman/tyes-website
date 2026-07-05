@@ -85,11 +85,13 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
       </style>
     </head>
     <body>
+
       <div class="container">
         <div class="header">
-          <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="Tyes Logo" style="height: 40px; margin-bottom: 16px;" />
-          <h1>Tyes</h1>
-          <p>Order Confirmation & Receipt</p>
+           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+                  <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="Tyes Logo" style="height: 40px; margin-bottom: 16px;" />
+
+           <p>Order Confirmation & Receipt</p>
         </div>
         
         <div class="content">
