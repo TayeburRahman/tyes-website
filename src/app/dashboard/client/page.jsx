@@ -146,19 +146,19 @@ const MissingCountryModal = ({ open, onClose, onSubmit, loading }) => {
         {/* Searchable Dropdown */}
         <div style={{ position: "relative", marginBottom: 24 }}>
           <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country</label>
-          <div 
+          <div
             style={{ padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 14, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
             onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
           >
             <span>{EU_COUNTRIES_LIST.find(c => c.code === selectedCountry)?.name || "Select country"}</span>
             <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
           </div>
-          
+
           {isCountryDropdownOpen && (
             <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 10, background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", marginTop: "4px", padding: "8px", boxShadow: "0 10px 25px rgba(0,0,0,0.8)" }}>
-              <input 
-                type="text" 
-                placeholder="Search country..." 
+              <input
+                type="text"
+                placeholder="Search country..."
                 value={countrySearch}
                 onChange={e => setCountrySearch(e.target.value)}
                 onClick={e => e.stopPropagation()}
@@ -172,7 +172,7 @@ const MissingCountryModal = ({ open, onClose, onSubmit, loading }) => {
               `}</style>
               <div className="country-dropdown-scroll" style={{ maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
                 {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
-                  <div 
+                  <div
                     key={c.code}
                     onClick={() => {
                       setSelectedCountry(c.code);
@@ -261,9 +261,9 @@ const navPages = [
   { id: "account", label: "Account", icon: User },
 ];
 
-// ══════════════════════════════════════
+// ════════════════════════════ 
 // NEW ORDER PAGE
-// ══════════════════════════════════════
+// ════════════════════════════ 
 const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
   const [step, setStep] = useState(1);
   const [vatNumber, setVatNumber] = useState(clientInfo?.vat_number || "");
@@ -323,7 +323,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         setIsValidatingVat(true);
         setStripeError(null);
         let currentVatResult = vatResult;
-        
+
         try {
           // 1. Validate VAT
           const vatRes = await fetch('/api/vat/validate', {
@@ -337,7 +337,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           });
           const vatData = await vatRes.json();
           if (!vatRes.ok) throw new Error(vatData.error);
-          
+
           if (isMounted) {
             if (debouncedVatNumber && vatData.vatMode === 'EU_B2C' && vatData.viesStatus === 'invalid') {
               setVatError("Invalid VAT Number. Please provide a valid VAT number or clear the field to proceed as a consumer (21% VAT).");
@@ -359,20 +359,20 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
           // 2. Setup Stripe Payment Intent with exact total
           const totalAmount = selectedPlan.price + (selectedPlan.price * (currentVatResult.vatRate / 100));
-          
+
           const piRes = await fetch('/api/stripe/payment-intent', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              price: totalAmount, 
+            body: JSON.stringify({
+              price: totalAmount,
               planName: selectedPlan.name,
               vatRate: currentVatResult.vatRate,
-              viesConsultationId: currentVatResult.viesConsultationId 
+              viesConsultationId: currentVatResult.viesConsultationId
             })
           });
           const piData = await piRes.json();
           if (!piRes.ok) throw new Error(piData.error);
-          
+
           if (isMounted && piData.clientSecret) {
             setClientSecret(piData.clientSecret);
           }
@@ -688,7 +688,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             { label: "Ref. Images", val: `${referencePhotos.length} files` },
             { label: "Fonts / Labels", val: `${fontFiles.length} files` },
             { label: "Revisions", val: "3 included" },
-          
+
           ];
           if (vatResult) {
             orderSummary.push({ label: "Subtotal", val: `$${selectedPlan.price}` });
@@ -708,11 +708,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   <span style={{ color: "#9ca3af", fontWeight: 600 }}>Total</span>
                   <span style={{ color: isPaid ? "#4ecdc4" : "#34d399", fontWeight: 800 }}>{isPaid ? `${selectedPlan.price}` : "Free"}</span>
                 </div>
-                
+
                 {isPaid && (
                   <div style={{ marginTop: 24, padding: 16, background: "rgba(0,0,0,0.2)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.04)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, cursor: "pointer" }} onClick={() => setIsBusinessPurchase(!isBusinessPurchase)}>
-                      <input type="checkbox" checked={isBusinessPurchase} onChange={() => {}} style={{ accentColor: "#4ecdc4", width: 16, height: 16, cursor: "pointer" }} />
+                      <input type="checkbox" checked={isBusinessPurchase} onChange={() => { }} style={{ accentColor: "#4ecdc4", width: 16, height: 16, cursor: "pointer" }} />
                       <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>I am purchasing as a business</span>
                     </div>
 
@@ -720,11 +720,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                       <div style={{ marginBottom: 16 }}>
                         <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Company VAT Number (Optional)</label>
                         <div style={{ display: "flex", gap: 8 }}>
-                          <input 
-                            type="text" 
-                            value={vatNumber} 
-                            onChange={e => setVatNumber(e.target.value)} 
-                            placeholder="e.g. RO123456" 
+                          <input
+                            type="text"
+                            value={vatNumber}
+                            onChange={e => setVatNumber(e.target.value)}
+                            placeholder="e.g. RO123456"
                             style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
                           />
                         </div>
@@ -744,10 +744,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16 }}>
                       <h4 style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>Billing Details <span style={{ color: "#ef4444" }}>*</span></h4>
                       <p style={{ fontSize: 11, color: "#9ca3af", marginBottom: 12 }}>Required for invoicing purposes under Romanian law.</p>
-                      
+
                       <InputField label={isBusinessPurchase ? "Company Name" : "Full Name"} value={billingName} onChange={setBillingName} placeholder={isBusinessPurchase ? "Your Company Ltd." : "John Doe"} required={true} />
                       <InputField label="Street Address" value={billingAddress} onChange={setBillingAddress} placeholder="e.g. Strada Florilor 12" required={true} />
-                      
+
                       <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
                         <div style={{ flex: 1 }}><InputField label="City" value={billingCity} onChange={setBillingCity} placeholder="Bucharest" required={true} /></div>
                         <div style={{ flex: 1 }}><InputField label="County / State" value={billingCounty} onChange={setBillingCounty} placeholder="Bucuresti" required={true} /></div>
@@ -755,19 +755,19 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
                       <div style={{ position: "relative" }}>
                         <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country <span style={{ color: "#ef4444" }}>*</span></label>
-                        <div 
+                        <div
                           style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
                           onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
                         >
                           <span>{EU_COUNTRIES_LIST.find(c => c.code === billingCountryCode)?.name || "Select country"}</span>
                           <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
                         </div>
-                        
+
                         {isCountryDropdownOpen && (
                           <div style={{ position: "absolute", bottom: "100%", left: 0, right: 0, zIndex: 10, background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", marginBottom: "4px", padding: "8px", boxShadow: "0 -10px 25px rgba(0,0,0,0.8)" }}>
-                            <input 
-                              type="text" 
-                              placeholder="Search country..." 
+                            <input
+                              type="text"
+                              placeholder="Search country..."
                               value={countrySearch}
                               onChange={e => setCountrySearch(e.target.value)}
                               onClick={e => e.stopPropagation()}
@@ -781,7 +781,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                             `}</style>
                             <div className="country-dropdown-scroll" style={{ maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
                               {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
-                                <div 
+                                <div
                                   key={c.code}
                                   onClick={() => {
                                     setBillingCountryCode(c.code);
@@ -983,7 +983,7 @@ export default function TyesClient() {
         setCompanyEmail(profile.email);
         // If profile.country is missing but user_metadata has it, silently back-fill the DB
         if (!profile.country && authUser.user_metadata?.country) {
-          supabase.from('profiles').update({ country: authUser.user_metadata.country }).eq('id', authUser.id).then(() => {});
+          supabase.from('profiles').update({ country: authUser.user_metadata.country }).eq('id', authUser.id).then(() => { });
         }
       } else {
         const fullName = authUser.user_metadata?.first_name
@@ -1152,7 +1152,7 @@ export default function TyesClient() {
       await supabase.auth.updateUser({ data: { country: selectedCountryCode } });
 
       // Also try to update the profiles table (works if migration has been run)
-      supabase.from('profiles').update({ country: selectedCountryCode }).eq('id', user.id).then(() => {});
+      supabase.from('profiles').update({ country: selectedCountryCode }).eq('id', user.id).then(() => { });
 
       // Update local state and proceed — never block the user
       setClientInfo(prev => ({ ...prev, country: selectedCountryCode }));
@@ -1664,7 +1664,7 @@ export default function TyesClient() {
       setSaving(true);
       try {
         await supabase.auth.updateUser({ data: { country: selectedCode } });
-        supabase.from('profiles').update({ country: selectedCode }).eq('id', user.id).then(() => {});
+        supabase.from('profiles').update({ country: selectedCode }).eq('id', user.id).then(() => { });
         setClientInfo(prev => ({ ...prev, country: selectedCode }));
         addToast("Country updated!", "success");
         setEditing(false);
@@ -1744,7 +1744,7 @@ export default function TyesClient() {
         await supabase.auth.updateUser({
           data: { is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }
         });
-        supabase.from('profiles').update({ is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }).eq('id', user.id).then(() => {});
+        supabase.from('profiles').update({ is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }).eq('id', user.id).then(() => { });
         addToast("Business details updated!", "success");
         setEditing(false);
       } catch (err) {
