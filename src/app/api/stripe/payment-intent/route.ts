@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(price * 100), // Convert to cents
+      amount: Math.round(price * 100),
       currency: 'usd',
       description: `Tyes Studio – ${planName} Plan`,
       automatic_payment_methods: { enabled: true },
