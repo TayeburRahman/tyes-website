@@ -9,79 +9,7 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import { EU_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 // stripePromise is lazy-loaded per component instance to avoid the global Stripe badge
 
-// ══════════════════════════════════════
-// CHECKOUT FORM (top-level for stable identity)
-// ══════════════════════════════════════
-const CheckoutForm = ({ onPaymentSuccess, stripeError, onBeforePayment }) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [paying, setPaying] = useState(false);
-  const [payError, setPayError] = useState(null);
 
-  const handlePay = async () => {
-    if (onBeforePayment && !onBeforePayment()) return;
-    if (!stripe || !elements || paying) return;
-    setPaying(true);
-    setPayError(null);
-    try {
-      const { error: submitErr } = await elements.submit();
-      if (submitErr) {
-        setPayError(submitErr.message);
-        setPaying(false);
-        return;
-      }
-
-      const { error: confirmErr } = await stripe.confirmPayment({
-        elements,
-        confirmParams: { return_url: window.location.href },
-        redirect: "if_required",
-      });
-
-      if (confirmErr) {
-        setPayError(confirmErr.message);
-        setPaying(false);
-        return;
-      }
-
-      // Payment confirmed — hand off to parent for uploads + DB insert
-      await onPaymentSuccess();
-    } catch (e) {
-      setPayError(e.message || "Payment failed");
-      setPaying(false);
-    }
-  };
-
-  return (
-    <div>
-      {paying && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 99999, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", padding: "16px 32px", background: "rgba(17,24,39,0.95)", borderRadius: "100px", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 20px 40px rgba(0,0,0,0.5)", maxWidth: "90vw" }}>
-            <RefreshCw size={24} className="animate-spin" style={{ color: "#4ecdc4" }} />
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Processing Payment...</div>
-              <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>Please do not close this window</div>
-            </div>
-          </div>
-        </div>
-      )}
-      <div style={{ marginTop: 4, marginBottom: 8 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#d1d5db", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-          <CreditCard size={14} color="#4ecdc4" /> Payment Details
-        </div>
-        <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: 16 }}>
-          <PaymentElement options={{ layout: "tabs" }} />
-        </div>
-      </div>
-      {(stripeError || payError) && <div style={{ color: "#ef4444", fontSize: 12, marginTop: 8 }}>{payError || stripeError}</div>}
-      <button
-        onClick={handlePay}
-        disabled={paying || !stripe || !elements}
-        style={{ marginTop: 20, width: "100%", padding: "14px", borderRadius: 10, border: "none", background: paying ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: paying ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: paying ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.3s" }}>
-        {paying ? <><RefreshCw size={14} className="animate-spin" /> Processing...</> : <><Send size={14} /> Pay &amp; Submit Order</>}
-      </button>
-    </div>
-  );
-};
 
 // ══════════════════════════════════════
 // TOAST NOTIFICATION SYSTEM
@@ -267,15 +195,6 @@ const navPages = [
 const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
   const [step, setStep] = useState(1);
   const [vatNumber, setVatNumber] = useState(clientInfo?.vat_number || "");
-  const [debouncedVatNumber, setDebouncedVatNumber] = useState(vatNumber);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedVatNumber(vatNumber), 1500);
-    return () => clearTimeout(timer);
-  }, [vatNumber]);
-  const [vatResult, setVatResult] = useState(null);
-  const [vatError, setVatError] = useState(null);
-  const [isValidatingVat, setIsValidatingVat] = useState(false);
   const [plan, setPlan] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
   const [briefDesc, setBriefDesc] = useState("");
@@ -285,8 +204,6 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [fontFiles, setFontFiles] = useState([]);
   const [documentFiles, setDocumentFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [clientSecret, setClientSecret] = useState(null);
-  const [stripeError, setStripeError] = useState(null);
 
   const [isBusinessPurchase, setIsBusinessPurchase] = useState(false);
   const [billingName, setBillingName] = useState("");
@@ -297,98 +214,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
 
-  // Lazy-load Stripe only when this page mounts (prevents global badge on other tabs)
-  const stripePromiseRef = useRef(null);
-  if (!stripePromiseRef.current) {
-    stripePromiseRef.current = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-  }
-  const stripePromise = stripePromiseRef.current;
-
   const plans = pricingPlans;
-
-  // Real-time VAT validation and Stripe Intent generation
-  useEffect(() => {
-    if (step === 3) {
-      const selectedPlan = plans.find(p => p.id === plan);
-      if (!selectedPlan || selectedPlan.price <= 0) return;
-
-      if (!billingCountryCode) {
-        setVatResult(null);
-        setClientSecret(null);
-        return;
-      }
-
-      let isMounted = true;
-      const setupCheckout = async () => {
-        setIsValidatingVat(true);
-        setStripeError(null);
-        let currentVatResult = vatResult;
-
-        try {
-          // 1. Validate VAT
-          const vatRes = await fetch('/api/vat/validate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              countryCode: billingCountryCode,
-              isCompany: isBusinessPurchase || !!debouncedVatNumber,
-              vatNumber: debouncedVatNumber
-            })
-          });
-          const vatData = await vatRes.json();
-          if (!vatRes.ok) throw new Error(vatData.error);
-
-          if (isMounted) {
-            if (debouncedVatNumber && vatData.vatMode === 'EU_B2C' && vatData.viesStatus === 'invalid') {
-              setVatError("Invalid VAT Number. Please provide a valid VAT number or clear the field to proceed as a consumer (21% VAT).");
-              setVatResult(null);
-              setClientSecret(null);
-              return; // Block checkout setup
-            } else {
-              setVatError(null);
-            }
-
-            setVatResult(vatData);
-            currentVatResult = vatData;
-            if (vatData.viesDown) {
-              addToast("We couldn't verify your VAT number right now — VAT has been charged. Contact us for a corrected invoice once verification succeeds.", "warning");
-            } else if (vatData.viesValid) {
-              addToast("VAT number verified! 0% Reverse charge applied.", "success");
-            }
-          }
-
-          // 2. Setup Stripe Payment Intent with exact total
-          const totalAmount = selectedPlan.price + (selectedPlan.price * (currentVatResult.vatRate / 100));
-
-          const piRes = await fetch('/api/stripe/payment-intent', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              price: totalAmount,
-              planName: selectedPlan.name,
-              vatRate: currentVatResult.vatRate,
-              viesConsultationId: currentVatResult.viesConsultationId
-            })
-          });
-          const piData = await piRes.json();
-          if (!piRes.ok) throw new Error(piData.error);
-
-          if (isMounted && piData.clientSecret) {
-            setClientSecret(piData.clientSecret);
-          }
-        } catch (err) {
-          console.error(err);
-          if (isMounted) setStripeError(err.message || 'Checkout setup failed.');
-        } finally {
-          if (isMounted) setIsValidatingVat(false);
-        }
-      };
-
-      setupCheckout();
-
-      return () => { isMounted = false; };
-    }
-  }, [step, plan, plans, billingCountryCode, isBusinessPurchase, debouncedVatNumber]); // trigger when country, business toggle, or VAT changes
 
 
   const toggleStyle = (style) => {
@@ -438,7 +264,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
     return true;
   };
 
-  const handleSubmitOrder = async (stripeObj, elementsObj) => {
+  const handleSubmitOrder = async () => {
     if (!validateBilling()) return;
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -448,8 +274,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
       const selectedPlan = plans.find(p => p.id === plan);
       if (!selectedPlan) throw new Error("Please select a plan first.");
+      
+      const isPaid = selectedPlan.price > 0;
 
-      // --- Upload files after payment confirmed (or for free orders) ---
+      // --- Upload files ---
       let photoUrls = [];
       let refUrls = [];
       let fontUrls = [];
@@ -503,36 +331,53 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         items: structuredItems,
         brief_description: briefDesc,
         selected_styles: selectedStyles,
-        vat_rate: vatResult ? vatResult.vatRate : (billingCountryCode === 'RO' ? 21 : 0),
-        vat_mode: vatResult ? vatResult.vatMode : (billingCountryCode === 'RO' ? 'DOMESTIC' : 'NON_EU'),
-        vat_country: billingCountryCode || 'RO',
-        vat_number: vatNumber || null,
-        vies_status: vatResult ? vatResult.viesStatus : 'unavailable',
-        vies_consultation_id: vatResult?.viesConsultationId || null,
         created_at: new Date().toISOString()
       }]).select().single();
 
       if (insertError) throw insertError;
 
-      // Trigger invoice generation and order confirmation email
-      try {
-        await fetch('/api/orders/post-payment', {
+      if (isPaid) {
+        // Redirect to Stripe Checkout Session
+        addToast("Preparing secure checkout...", "info");
+        const checkoutRes = await fetch('/api/stripe/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderId: newOrder.id })
+          body: JSON.stringify({
+            orderId: newOrder.id,
+            planName: selectedPlan.name,
+            price: selectedPlan.price,
+            customerEmail: currentUser.email,
+            customerName: billingName,
+          })
         });
-      } catch (postPaymentErr) {
-        console.error("Post payment processing error:", postPaymentErr);
-      }
+        
+        const checkoutData = await checkoutRes.json();
+        
+        if (!checkoutRes.ok) throw new Error(checkoutData.error || 'Failed to initialize checkout');
+        if (checkoutData.url) {
+          window.location.href = checkoutData.url;
+          return; // Do not clear submitting state so it doesn't flash
+        }
+      } else {
+        // Free order: Trigger post payment directly
+        try {
+          await fetch('/api/orders/post-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: newOrder.id })
+          });
+        } catch (postPaymentErr) {
+          console.error("Post payment processing error:", postPaymentErr);
+        }
 
-      fetchData();
-      setStep(1);
-      setPage("success");
+        fetchData();
+        setStep(1);
+        setPage("success");
+      }
     } catch (err) {
       console.error("Submission error:", err);
       addToast(err.message || "Failed to submit order", "error");
-    } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Only unset submitting on error so redirect persists
     }
   };
 
@@ -690,9 +535,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             { label: "Revisions", val: "3 included" },
 
           ];
-          if (vatResult) {
-            orderSummary.push({ label: "Subtotal", val: `$${selectedPlan.price}` });
-            orderSummary.push({ label: `VAT (${vatResult.vatRate}%)`, val: `$${(selectedPlan.price * (vatResult.vatRate / 100)).toFixed(2)}` });
+          if (isPaid) {
+            orderSummary.push({ label: "Taxes", val: "Calculated at checkout" });
           }
           return (
             <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
@@ -728,16 +572,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                             style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
                           />
                         </div>
-                        {vatError && (
-                          <div style={{ color: "#ef4444", fontSize: 11, marginTop: 8, display: "flex", alignItems: "flex-start", gap: 4 }}>
-                            <AlertCircle size={12} style={{ marginTop: 1 }} /> {vatError}
-                          </div>
-                        )}
-                        {vatResult && vatResult.viesDown && (
-                          <div style={{ color: "#fbbf24", fontSize: 11, marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>
-                            <AlertCircle size={12} /> VIES validation service is down. 21% VAT applied.
-                          </div>
-                        )}
+
                       </div>
                     )}
 
@@ -813,29 +648,17 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   </button>
                 )}
               </div>
-              {/* RIGHT: Payment form for paid plans */}
+              {/* RIGHT: Payment action for paid plans */}
               {isPaid && (
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Payment</h3>
-                  {clientSecret ? (
-                    <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#4ecdc4", colorBackground: "#111827", colorText: "#f9fafb", colorDanger: "#ef4444", fontFamily: '"Inter", -apple-system, sans-serif', borderRadius: "8px" } } }}>
-                      <CheckoutForm onPaymentSuccess={handleSubmitOrder} stripeError={stripeError} onBeforePayment={validateBilling} />
-                    </Elements>
-                  ) : stripeError ? (
-                    <div style={{ color: "#ef4444", fontSize: 13, padding: 16 }}>{stripeError}</div>
-                  ) : vatError ? (
-                    <div style={{ color: "#ef4444", fontSize: 13, padding: 32, textAlign: "center", border: "1px dashed rgba(239,68,68,0.2)", borderRadius: 12, background: "rgba(239,68,68,0.05)" }}>
-                      {vatError}
-                    </div>
-                  ) : !billingCountryCode ? (
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", color: "#9ca3af", fontSize: 13, padding: 32, textAlign: "center", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 12 }}>
-                      Please select your billing country to securely load payment options.
-                    </div>
-                  ) : (
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#6b7280", fontSize: 13, padding: 16 }}>
-                      <RefreshCw size={14} className="animate-spin" /> Setting up secure payment...
-                    </div>
-                  )}
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Checkout</h3>
+                  <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 24 }}>You will be securely redirected to Stripe to complete your payment and calculate any applicable taxes.</p>
+                  <button
+                    onClick={() => handleSubmitOrder()}
+                    disabled={isSubmitting}
+                    style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                    {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Preparing Checkout...</> : <><CreditCard size={14} /> Proceed to Payment</>}
+                  </button>
                 </div>
               )}
             </div>

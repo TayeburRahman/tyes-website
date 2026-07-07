@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { sendOrderConfirmationEmail } from '@/utils/email';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
-// Note: If Row Level Security (RLS) blocks anonymous/unauthenticated updates,
-// you might need to supply process.env.SUPABASE_SERVICE_ROLE_KEY instead.
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(req: Request) {
@@ -34,17 +33,66 @@ export async function POST(req: Request) {
     
     if (orderId) {
       console.log(`Processing successful payment for Order: ${orderId}`);
+
+      let invoiceUrl = '';
+      let invoiceId = '';
+
+      // If Stripe generated an invoice, fetch it to get the hosted URL
+      if (session.invoice) {
+        try {
+          const invoice = await stripe.invoices.retrieve(session.invoice as string);
+          invoiceUrl = invoice.hosted_invoice_url || '';
+          invoiceId = invoice.id;
+        } catch (invErr) {
+          console.error('Error fetching Stripe invoice:', invErr);
+        }
+      }
       
-      // We assume the title of the order matches orderId if ID was not fetched during insert.
-      // Update the status of the order to 'paid' (or however you'd like to reflect success)
-      const { error } = await supabase
+      // Update the status of the order to 'paid'
+      const { data: order, error } = await supabase
         .from('orders')
         .update({ status: 'paid' }) 
-        .eq('title', orderId); 
+        .eq('id', orderId)
+        .select()
+        .single();
         
-      if (error) {
+      if (error || !order) {
          console.error('Error updating supabase order:', error);
          return NextResponse.json({ error: 'Database update failed' }, { status: 500 });
+      }
+
+      // Save the invoice to the invoices table
+      if (invoiceUrl && invoiceId) {
+        const { error: invError } = await supabase.from('invoices').insert([{
+          order_id: order.id,
+          user_id: order.user_id,
+          amount: order.revenue,
+          status: 'paid',
+          due_date: new Date().toISOString().split('T')[0],
+          smartbill_series: 'STRIPE',
+          smartbill_number: invoiceId,
+          invoice_url: invoiceUrl,
+        }]);
+        if (invError) console.error('Error saving invoice to DB:', invError);
+      }
+
+      // Send Order Confirmation Email
+      let clientEmail = order.customer_email || session.customer_details?.email || '';
+      if (!clientEmail) {
+        const { data: profile } = await supabase.from('profiles').select('email, billing_email').eq('id', order.user_id).single();
+        if (profile) clientEmail = profile.billing_email || profile.email;
+      }
+
+      if (clientEmail) {
+        await sendOrderConfirmationEmail({
+          to: clientEmail,
+          customerName: order.customer_name || session.customer_details?.name || 'Client',
+          orderTitle: order.title,
+          planName: order.plan,
+          price: order.revenue,
+          orderId: order.id,
+          invoiceUrl: invoiceUrl, // This points to the Stripe Hosted Invoice
+        });
       }
     }
   }
