@@ -194,7 +194,6 @@ const navPages = [
 // ════════════════════════════ 
 const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
   const [step, setStep] = useState(1);
-  const [vatNumber, setVatNumber] = useState(clientInfo?.vat_number || "");
   const [plan, setPlan] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
   const [briefDesc, setBriefDesc] = useState("");
@@ -204,15 +203,6 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [fontFiles, setFontFiles] = useState([]);
   const [documentFiles, setDocumentFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const [isBusinessPurchase, setIsBusinessPurchase] = useState(false);
-  const [billingName, setBillingName] = useState("");
-  const [billingAddress, setBillingAddress] = useState("");
-  const [billingCity, setBillingCity] = useState("");
-  const [billingCounty, setBillingCounty] = useState("");
-  const [billingCountryCode, setBillingCountryCode] = useState("");
-  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
-  const [countrySearch, setCountrySearch] = useState("");
 
   const plans = pricingPlans;
 
@@ -252,20 +242,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
     return urls;
   };
 
-  const validateBilling = () => {
-    if (!billingAddress.trim() || !billingCity.trim() || !billingCounty.trim() || !billingCountryCode) {
-      addToast("Please fill in all required billing details before submitting.", "error");
-      return false;
-    }
-    if (!billingName.trim()) {
-      addToast(`Please provide your ${isBusinessPurchase ? "Company Name" : "Full Name"}.`, "error");
-      return false;
-    }
-    return true;
-  };
-
   const handleSubmitOrder = async () => {
-    if (!validateBilling()) return;
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
@@ -304,19 +281,12 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         status: "pending"
       }));
 
-      const billing_details = {
-        is_business: isBusinessPurchase,
-        company: billingName,
-        address: billingAddress,
-        city: billingCity,
-        county: billingCounty,
-        country: billingCountryCode,
-      };
+      const customerName = clientInfo?.name || currentUser.email;
 
       const { data: newOrder, error: insertError } = await supabase.from("orders").insert([{
         user_id: currentUser.id,
         customer_email: currentUser.email,
-        customer_name: billingName,
+        customer_name: customerName,
         title: projectTitle || `New ${selectedPlan.name} Order`,
         plan: selectedPlan.name,
         images_count: selectedPlan.images || 0,
@@ -325,7 +295,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         revisions: 0,
         max_revisions: selectedPlan.max_revisions || 3,
         progress: 0,
-        attachments: { photos: photoUrls, billing_details },
+        attachments: { photos: photoUrls },
         reference_images: refUrls,
         font_label_files: fontUrls,
         items: structuredItems,
@@ -347,7 +317,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             planName: selectedPlan.name,
             price: selectedPlan.price,
             customerEmail: currentUser.email,
-            customerName: billingName,
+            customerName: customerName,
           })
         });
         
@@ -553,95 +523,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   <span style={{ color: isPaid ? "#4ecdc4" : "#34d399", fontWeight: 800 }}>{isPaid ? `${selectedPlan.price}` : "Free"}</span>
                 </div>
 
-                {isPaid && (
-                  <div style={{ marginTop: 24, padding: 16, background: "rgba(0,0,0,0.2)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.04)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, cursor: "pointer" }} onClick={() => setIsBusinessPurchase(!isBusinessPurchase)}>
-                      <input type="checkbox" checked={isBusinessPurchase} onChange={() => { }} style={{ accentColor: "#4ecdc4", width: 16, height: 16, cursor: "pointer" }} />
-                      <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>I am purchasing as a business</span>
-                    </div>
 
-                    {isBusinessPurchase && (
-                      <div style={{ marginBottom: 16 }}>
-                        <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Company VAT Number (Optional)</label>
-                        <div style={{ display: "flex", gap: 8 }}>
-                          <input
-                            type="text"
-                            value={vatNumber}
-                            onChange={e => setVatNumber(e.target.value)}
-                            placeholder="e.g. RO123456"
-                            style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none" }}
-                          />
-                        </div>
-
-                      </div>
-                    )}
-
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16 }}>
-                      <h4 style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>Billing Details <span style={{ color: "#ef4444" }}>*</span></h4>
-                      <p style={{ fontSize: 11, color: "#9ca3af", marginBottom: 12 }}>Required for invoicing purposes under Romanian law.</p>
-
-                      <InputField label={isBusinessPurchase ? "Company Name" : "Full Name"} value={billingName} onChange={setBillingName} placeholder={isBusinessPurchase ? "Your Company Ltd." : "John Doe"} required={true} />
-                      <InputField label="Street Address" value={billingAddress} onChange={setBillingAddress} placeholder="e.g. Strada Florilor 12" required={true} />
-
-                      <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
-                        <div style={{ flex: 1 }}><InputField label="City" value={billingCity} onChange={setBillingCity} placeholder="Bucharest" required={true} /></div>
-                        <div style={{ flex: 1 }}><InputField label="County / State" value={billingCounty} onChange={setBillingCounty} placeholder="Bucuresti" required={true} /></div>
-                      </div>
-
-                      <div style={{ position: "relative" }}>
-                        <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country <span style={{ color: "#ef4444" }}>*</span></label>
-                        <div
-                          style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
-                          onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                        >
-                          <span>{EU_COUNTRIES_LIST.find(c => c.code === billingCountryCode)?.name || "Select country"}</span>
-                          <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
-                        </div>
-
-                        {isCountryDropdownOpen && (
-                          <div style={{ position: "absolute", bottom: "100%", left: 0, right: 0, zIndex: 10, background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", marginBottom: "4px", padding: "8px", boxShadow: "0 -10px 25px rgba(0,0,0,0.8)" }}>
-                            <input
-                              type="text"
-                              placeholder="Search country..."
-                              value={countrySearch}
-                              onChange={e => setCountrySearch(e.target.value)}
-                              onClick={e => e.stopPropagation()}
-                              style={{ width: "100%", padding: "10px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", color: "#fff", outline: "none", marginBottom: "8px", fontSize: "14px", fontFamily: "inherit", boxSizing: "border-box" }}
-                              autoFocus
-                            />
-                            <style>{`
-                              .country-dropdown-scroll::-webkit-scrollbar { width: 6px; }
-                              .country-dropdown-scroll::-webkit-scrollbar-track { background: transparent; }
-                              .country-dropdown-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-                            `}</style>
-                            <div className="country-dropdown-scroll" style={{ maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
-                              {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
-                                <div
-                                  key={c.code}
-                                  onClick={() => {
-                                    setBillingCountryCode(c.code);
-                                    setIsCountryDropdownOpen(false);
-                                    setCountrySearch("");
-                                  }}
-                                  style={{ padding: "10px", cursor: "pointer", borderRadius: "6px", background: billingCountryCode === c.code ? "rgba(78,205,196,0.15)" : "transparent", color: billingCountryCode === c.code ? "#4ecdc4" : "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px", transition: "all 0.2s" }}
-                                  onMouseEnter={e => e.currentTarget.style.background = billingCountryCode === c.code ? "rgba(78,205,196,0.25)" : "rgba(255,255,255,0.05)"}
-                                  onMouseLeave={e => e.currentTarget.style.background = billingCountryCode === c.code ? "rgba(78,205,196,0.15)" : "transparent"}
-                                >
-                                  {c.name}
-                                  {billingCountryCode === c.code && <span style={{ fontSize: "13px", fontWeight: "bold" }}>✓</span>}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
                 {/* Free plan submit button */}
                 {!isPaid && (
                   <button
-                    onClick={() => handleSubmitOrder(null, null)}
+                    onClick={() => handleSubmitOrder()}
                     disabled={isSubmitting}
                     style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
                     {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
@@ -666,7 +552,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         })()}
 
         <div style={{ display: "flex", gap: 10, marginTop: 32 }}>
-          {step > 1 && <button onClick={() => { setStep(step - 1); if (step === 3) { setClientSecret(null); setStripeError(null); } }} style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 13, cursor: "pointer", minWidth: 100 }}>Back</button>}
+          {step > 1 && <button onClick={() => setStep(step - 1)} style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 13, cursor: "pointer", minWidth: 100 }}>Back</button>}
           {step < 3 && (
             <button
               onClick={async () => {
@@ -912,7 +798,7 @@ export default function TyesClient() {
         console.log("Invoices table might not exist yet:", invoicesError.message);
       } else if (invoicesData) {
         setInvoices(invoicesData.map(i => ({
-          id: i.smartbill_number ? `${i.smartbill_series}-${i.smartbill_number}` : `INV-${i.id.slice(0, 8)}`,
+          id: i.stripe_invoice_id ? i.stripe_invoice_id : `INV-${i.id.slice(0, 8)}`,
           order: i.orders?.title || `ORD-${i.order_id.slice(0, 8)}`,
           amount: i.amount,
           status: i.status,
@@ -932,12 +818,30 @@ export default function TyesClient() {
   useEffect(() => {
     fetchData();
 
-    // Check for Stripe checkout session success or PaymentElement redirect success
+    // Check for Stripe checkout session success
     const query = new URLSearchParams(window.location.search);
-    if (query.get("session_id") || query.get("redirect_status") === "succeeded") {
+    const sessionId = query.get("session_id");
+    if (sessionId || query.get("redirect_status") === "succeeded") {
       setPage("success");
-      // Clear the query string
       router.replace("/dashboard/client");
+
+      // Call verify-session to mark order paid + send confirmation email with invoice
+      if (sessionId) {
+        fetch('/api/stripe/verify-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId }),
+        })
+          .then(r => r.json())
+          .then(d => {
+            if (d.success) {
+              console.log('[Checkout] Order verified. Invoice URL:', d.invoiceUrl || '(none)');
+            } else {
+              console.warn('[Checkout] Verify session issue:', d.error);
+            }
+          })
+          .catch(err => console.error('[Checkout] verify-session error:', err));
+      }
     }
   }, [supabase, router, addToast]);
 
@@ -1453,10 +1357,33 @@ export default function TyesClient() {
                   </td>
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#6b7280" }}>{inv.date}</td>
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#6b7280" }}>{inv.due}</td>
-                  <td style={{ padding: "12px 16px", display: "flex", gap: 6 }}>
-                    <button onClick={() => handleDownloadInvoice(inv)} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", padding: 4 }}><Download size={13} /></button>
-                    {inv.status === "pending" && (
-                      <button onClick={() => handlePayInvoice(inv)} style={{ background: "rgba(78,205,196,0.1)", border: "1px solid rgba(78,205,196,0.3)", borderRadius: 6, color: "#4ecdc4", cursor: "pointer", padding: "2px 8px", fontSize: 11, fontWeight: 600 }}>Pay</button>
+                  <td style={{ padding: "12px 16px" }}>
+                    {inv.url ? (
+                      <a
+                        href={inv.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 5,
+                          padding: "5px 12px",
+                          borderRadius: 7,
+                          border: "1px solid rgba(78,205,196,0.35)",
+                          background: "rgba(78,205,196,0.08)",
+                          color: "#4ecdc4",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          textDecoration: "none",
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <Download size={11} /> View Invoice
+                      </a>
+                    ) : (
+                      <span style={{ fontSize: 12, color: "#374151" }}>—</span>
                     )}
                   </td>
                 </tr>

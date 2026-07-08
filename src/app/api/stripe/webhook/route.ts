@@ -69,9 +69,8 @@ export async function POST(req: Request) {
           amount: order.revenue,
           status: 'paid',
           due_date: new Date().toISOString().split('T')[0],
-          smartbill_series: 'STRIPE',
-          smartbill_number: invoiceId,
           invoice_url: invoiceUrl,
+          stripe_invoice_id: invoiceId,
         }]);
         if (invError) console.error('Error saving invoice to DB:', invError);
       }

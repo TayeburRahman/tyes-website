@@ -75,8 +75,12 @@ export async function POST(req: Request) {
             currency: 'usd',
             product_data: {
               name: planName,
+              // Marketing & Design services tax code — Stripe Tax uses this to determine
+              // the correct VAT/sales tax treatment per jurisdiction.
+              // Update only this code if the product classification changes.
+              tax_code: 'txcd_20030000',
             },
-            unit_amount: Math.round(price * 100), // Convert to cents
+            unit_amount: Math.round(price * 100),
           },
           quantity: 1,
         },

@@ -1,5 +1,4 @@
-// This is a placeholder for the Resend email system
-// You can later implement this using the 'resend' npm package
+// Email utility – sends order confirmation emails via Resend
 
 export interface OrderConfirmationEmailProps {
   to: string;
@@ -52,6 +51,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
 
       <div class="container">
         <div class="header">
+           <img src="https://tyes-website-nu.vercel.app/images/logo.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
            <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
            <p>Order Confirmation</p>
         </div>
@@ -93,7 +93,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
         </div>
 
         <div class="footer">
-          <p>Tyes SRL<br>EU OSS VAT Registration: ${process.env.EU_OSS_VAT_NUMBER || 'RO49688321'}<br>Str. Principala, Bucuresti, RO</p>
+          <p>Tyes · hello@tyes.app<br>tyes.app</p>
         </div>
       </div>
     </body>
