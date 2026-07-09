@@ -159,6 +159,13 @@ function AuthContent() {
       }
 
       if (data.user) {
+        // Supabase returns an empty identities array for already registered emails to prevent enumeration.
+        if (data.user.identities && data.user.identities.length === 0) {
+          addToast("This email is already registered. Please sign in instead.", "warning");
+          setTab("signin");
+          return;
+        }
+
         // If there is no session, it means email confirmation is required
         if (!data.session) {
           addToast("Verification code sent to your email!", "success");
