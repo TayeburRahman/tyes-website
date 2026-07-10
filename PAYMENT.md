@@ -1,42 +1,36 @@
-Final Status — সব ✅
-System এভাবে কাজ করবে:
+Hi!
 
-🇺🇸 US customer → Stripe Tax applies US sales tax (only if US registration active in Stripe Dashboard)
-🇪🇺 EU B2C (no VAT ID) → Local VAT applied (after EU OSS registration activated in Stripe Dashboard)
-🇪🇺 EU B2B (valid VAT ID) → 0% reverse charge automatically
-🌏 Outside US/EU → No tax
-তুমি শুধু Stripe Dashboard এ করো:
+The automatic tax calculation system has been fully integrated and is ready on the website. The only remaining step is to activate your tax registrations in your Stripe Dashboard.
 
-Tax → Registrations → EU OSS registration activate করো
-তোমার EU VAT number সেখানে configure করো — Stripe automatically invoice এ print করবে, কোনো hardcode দরকার নেই
+How the system works:
 
-<!-- ========================================================================== -->
+- US customers → Stripe Tax automatically applies US sales tax (only if a US tax registration is active).
+- EU B2C customers (without a VAT ID)→ The customer's local VAT is applied automatically.
+- EU B2B customers (with a valid VAT ID)→ A 0% reverse charge is applied automatically. 
 
-এই এররটি এখনও আসার মূল কারণ হলো আপনি সম্ভবত Stripe-এর Account Verification / Banking পেজে ডেটা সেভ করেছেন, কিন্তু Stripe Tax এর সেটিংসে "Head Office Address" অ্যাড করেননি।
+Please complete the following steps:
 
-দয়া করে খুব মনোযোগ দিয়ে নিচের ধাপগুলো ঠিক সেভাবেই অনুসরণ করুন:
+Step 1: Add Head Office Address :
+Add your Head Office Address in the Stripe Tax Settings by following these steps:
 
-১. আপনার ব্রাউজারে ঠিক এই লিংকটি ওপেন করুন: https://dashboard.stripe.com/test/settings/tax (আগের ভেরিফিকেশন পেজটি নয়, ঠিক এই লিংকেই যেতে হবে)
+- Open: https://dashboard.stripe.com/settings/tax
+- On the Stripe Tax Settings page, find the Head Office Address section.
+- Enter your business address. 
+Click Save (or Enable Tax, if that option appears).
 
-২. এই পেজটি হলো "Stripe Tax Settings"। এখানে আপনি "Head Office Address" নামে একটি অপশন দেখতে পাবেন।
+Step 2: Set up Tax Registrations:
 
-৩. সেখানে একটি ঠিকানা দিন, যেমন:
+1. Go to:   https://dashboard.stripe.com/tax/locations
+2. Open the Collect and file" tab.
+3. Click "Start collecting tax" (or + Add registration) and add the countries where you are registered to collect tax.
 
-Country: United States
-Address Line 1: 1301 4th Ave
-City: Seattle
-State: Washington
-ZIP: 98101
-৪. ঠিকানাটি দেওয়ার পর পেজের নিচে বা ওপরে "Save" বা "Enable Tax" বাটনে ক্লিক করুন।
+For example, you may add the United States, the United Kingdom, and any applicable EU Member States.
 
-Stripe-এ আপনার ট্যাক্স সেটিংস সেভ হয়ে গেলে, সাইটে ফিরে গিয়ে আরেকবার ট্রাই করে দেখুন। এররটি নিশ্চিতভাবে চলে যাবে।
+Important for EU registrations:
+When adding EU countries, please select your EU OSS registration or Standard VAT registration, as appropriate. Since your business sells digital services/software, do not select "Inbound Goods."
 
-<!-- ------------------------ -->
-১. আপনার Stripe Dashboard (dashboard.stripe.com)-এ লগইন করুন। ২. ডানপাশের উপরে গিয়ার আইকন (Settings ⚙️) এ ক্লিক করে Tax > Registrations সেকশনে যান। ৩. সেখানে "Add registration" এ ক্লিক করে Romania, Spain এবং Bangladesh যোগ করে দিন।
+Once your EU VAT number is added in Stripe, Stripe will automatically include it on customer invoices, so no additional changes to the website are required.
 
-একবার Stripe ড্যাশবোর্ডে এই দেশগুলো অ্যাড করে দিলে, আপনি চেকআউট পেজটি রিলোড করে আবার ট্রাই করলেই দেখবেন Stripe অটোমেটিকভাবে ট্যাক্স ক্যালকুলেট করছে। কোড একদম ঠিক আছে, শুধু আপনার Stripe-এর সেটিংসে ওই দেশগুলোর ট্যাক্স অন করা বাকি আছে।
+After these tax registrations have been added, the checkout page will begin calculating taxes automatically.
 
-
-ইউরোপিয়ান ইউনিয়ন (EU Member States): Austria - 20% Belgium - 21% Bulgaria - 20% Croatia - 25% Cyprus - 19% Czech Republic - 21% Denmark - 25% Estonia - 22% Finland - 25.5% France - 20% Germany - 19% Greece - 24% Hungary - 27% Ireland - 23% Italy - 22% Latvia - 21% Lithuania - 21% Luxembourg - 17% Malta - 18% Netherlands - 21% Poland - 23% Portugal - 23% Romania - 21% Slovakia - 20% Slovenia - 22% Spain - 21% Sweden - 25%
-
-নন-ইইউ এবং অন্যান্য দেশ (Non-EU Countries): United Kingdom - 20% Norway - 25% Switzerland - 8.1% Iceland - 24% Bangladesh - 9%
+Please let me know once you've completed this step, and I'll verify that everything is working correctly.

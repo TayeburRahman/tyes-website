@@ -73,12 +73,13 @@ export async function POST(req: Request) {
         {
           price_data: {
             currency: 'usd',
+            tax_behavior: 'exclusive',
             product_data: {
               name: planName,
               // Marketing & Design services tax code — Stripe Tax uses this to determine
               // the correct VAT/sales tax treatment per jurisdiction.
               // Update only this code if the product classification changes.
-              tax_code: 'txcd_20030000',
+              tax_code: 'txcd_10103000', // Changed to SaaS to test EU VAT applicability
             },
             unit_amount: Math.round(price * 100),
           },

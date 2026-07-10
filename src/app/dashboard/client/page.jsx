@@ -836,6 +836,7 @@ export default function TyesClient() {
           .then(d => {
             if (d.success) {
               console.log('[Checkout] Order verified. Invoice URL:', d.invoiceUrl || '(none)');
+              fetchData(); // Refresh the dashboard data so the new invoice appears
             } else {
               console.warn('[Checkout] Verify session issue:', d.error);
             }

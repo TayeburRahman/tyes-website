@@ -88,9 +88,11 @@ export async function POST(req: Request) {
           customerName: order.customer_name || session.customer_details?.name || 'Client',
           orderTitle: order.title,
           planName: order.plan,
-          price: order.revenue,
+          price: order.revenue, // Base price
           orderId: order.id,
           invoiceUrl: invoiceUrl, // This points to the Stripe Hosted Invoice
+          taxAmount: session.total_details?.amount_tax ? session.total_details.amount_tax / 100 : 0,
+          totalAmount: session.amount_total ? session.amount_total / 100 : order.revenue,
         });
       }
     }

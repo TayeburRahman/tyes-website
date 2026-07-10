@@ -8,6 +8,8 @@ export interface OrderConfirmationEmailProps {
   price: number;
   orderId: string;
   invoiceUrl?: string;
+  taxAmount?: number;
+  totalAmount?: number;
 }
 
 import { Resend } from 'resend';
@@ -78,6 +80,22 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
                   </td>
                   <td style="text-align: right; font-weight: 500;">${formatMoney(props.price)}</td>
                 </tr>
+                ${props.taxAmount !== undefined && props.taxAmount > 0 ? `
+                <tr>
+                  <td style="color: #6b7280; font-size: 14px; border-bottom: none;">
+                    <strong>Tax/VAT</strong>
+                  </td>
+                  <td style="text-align: right; font-weight: 500; color: #6b7280; border-bottom: none;">${formatMoney(props.taxAmount)}</td>
+                </tr>
+                ` : ''}
+                ${props.totalAmount !== undefined && props.totalAmount > props.price ? `
+                <tr>
+                  <td style="padding-top: 16px; border-top: 1px solid #e5e7eb; border-bottom: none;">
+                    <strong style="font-size: 15px; color: #111827;">Total</strong>
+                  </td>
+                  <td style="text-align: right; font-weight: 700; font-size: 15px; color: #111827; padding-top: 16px; border-top: 1px solid #e5e7eb; border-bottom: none;">${formatMoney(props.totalAmount)}</td>
+                </tr>
+                ` : ''}
               </tbody>
             </table>
           </div>
