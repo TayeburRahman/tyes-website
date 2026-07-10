@@ -63,6 +63,7 @@ export const NON_EU_VAT_RATES: Record<string, VATCountry> = {
   NO: { code: "NO", name: "Norway",          rate: 25,  vatRate: "25%",  isEU: false, taxName: "MVA" },
   CH: { code: "CH", name: "Switzerland",     rate: 8.1, vatRate: "8.1%", isEU: false, taxName: "MWST" },
   IS: { code: "IS", name: "Iceland",         rate: 24,  vatRate: "24%",  isEU: false, taxName: "VSK" },
+  BD: { code: "BD", name: "Bangladesh",      rate: 9,   vatRate: "9%",   isEU: false, taxName: "VAT" },
 };
 
 // ─── Combined lookup (EU + Non-EU) ───────────────────────────────────────────
@@ -148,13 +149,14 @@ export async function calculateVAT(countryCode: string, isCompany: boolean, vatN
     };
   }
 
-  // 2. Non-EU -> 0%, EN invoice
+  // 2. Non-EU -> Specific rate or 0%, EN invoice
   if (!isEU) {
+    const nonEuCountry = NON_EU_VAT_RATES[code];
     return {
-      vatRate: 0,
-      taxName: 'Taxare inversa', // SmartBill accepts this for 0%
+      vatRate: nonEuCountry ? nonEuCountry.rate : 0,
+      taxName: nonEuCountry ? nonEuCountry.taxName : 'Taxare inversa', 
       invoiceLanguage: 'EN',
-      isReverseCharge: false, // Export (not strict reverse charge, but we use EN invoice + 0%)
+      isReverseCharge: false, 
       viesValid: false,
       vatMode: 'NON_EU',
       viesStatus: 'invalid'

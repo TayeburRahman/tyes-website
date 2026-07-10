@@ -12,18 +12,6 @@ Tax → Registrations → EU OSS registration activate করো
 
 <!-- ========================================================================== -->
 
-@AGENTS.md
-এই এররটি আপনার কোডের কোনো সমস্যার জন্য নয়, বরং এটি আপনার Stripe Account Configuration-এর একটি সমস্যা।
-
-Stripe Tax বা স্বয়ংক্রিয় ট্যাক্স ক্যালকুলেশন (automatic tax calculation) ব্যবহার করার জন্য, Stripe-এর টেস্ট মোডে (Test Mode) আপনার কোম্পানির একটি Head Office Address সেট করা থাকা বাধ্যতামূলক।
-
-এটি সমাধান করার জন্য: ১. আপনার Stripe অ্যাকাউন্টে লগ ইন করুন। ২. সরাসরি এই লিংকে যান: https://dashboard.stripe.com/test/settings/tax ৩. সেখানে Head Office Address সেকশনে গিয়ে আপনার বা কোম্পানির একটি ঠিকানা (যেমন: Wyoming, US এর ঠিকানা) দিয়ে সেভ করুন।
-
-ঠিকানা সেভ করার পর আবার ট্রাই করুন, তাহলে আর এই এররটি আসবে না এবং চেকআউট সেশনটি সফলভাবে তৈরি হবে।
-
-
-
-
 এই এররটি এখনও আসার মূল কারণ হলো আপনি সম্ভবত Stripe-এর Account Verification / Banking পেজে ডেটা সেভ করেছেন, কিন্তু Stripe Tax এর সেটিংসে "Head Office Address" অ্যাড করেননি।
 
 দয়া করে খুব মনোযোগ দিয়ে নিচের ধাপগুলো ঠিক সেভাবেই অনুসরণ করুন:
@@ -43,4 +31,12 @@ ZIP: 98101
 
 Stripe-এ আপনার ট্যাক্স সেটিংস সেভ হয়ে গেলে, সাইটে ফিরে গিয়ে আরেকবার ট্রাই করে দেখুন। এররটি নিশ্চিতভাবে চলে যাবে।
 
-1:13 AM
+<!-- ------------------------ -->
+১. আপনার Stripe Dashboard (dashboard.stripe.com)-এ লগইন করুন। ২. ডানপাশের উপরে গিয়ার আইকন (Settings ⚙️) এ ক্লিক করে Tax > Registrations সেকশনে যান। ৩. সেখানে "Add registration" এ ক্লিক করে Romania, Spain এবং Bangladesh যোগ করে দিন।
+
+একবার Stripe ড্যাশবোর্ডে এই দেশগুলো অ্যাড করে দিলে, আপনি চেকআউট পেজটি রিলোড করে আবার ট্রাই করলেই দেখবেন Stripe অটোমেটিকভাবে ট্যাক্স ক্যালকুলেট করছে। কোড একদম ঠিক আছে, শুধু আপনার Stripe-এর সেটিংসে ওই দেশগুলোর ট্যাক্স অন করা বাকি আছে।
+
+
+ইউরোপিয়ান ইউনিয়ন (EU Member States): Austria - 20% Belgium - 21% Bulgaria - 20% Croatia - 25% Cyprus - 19% Czech Republic - 21% Denmark - 25% Estonia - 22% Finland - 25.5% France - 20% Germany - 19% Greece - 24% Hungary - 27% Ireland - 23% Italy - 22% Latvia - 21% Lithuania - 21% Luxembourg - 17% Malta - 18% Netherlands - 21% Poland - 23% Portugal - 23% Romania - 21% Slovakia - 20% Slovenia - 22% Spain - 21% Sweden - 25%
+
+নন-ইইউ এবং অন্যান্য দেশ (Non-EU Countries): United Kingdom - 20% Norway - 25% Switzerland - 8.1% Iceland - 24% Bangladesh - 9%
