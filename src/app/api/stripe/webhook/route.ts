@@ -66,7 +66,7 @@ export async function POST(req: Request) {
         const { error: invError } = await supabase.from('invoices').insert([{
           order_id: order.id,
           user_id: order.user_id,
-          amount: order.revenue,
+          amount: session.amount_total ? session.amount_total / 100 : order.revenue,
           status: 'paid',
           due_date: new Date().toISOString().split('T')[0],
           invoice_url: invoiceUrl,

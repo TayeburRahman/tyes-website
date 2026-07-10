@@ -75,7 +75,7 @@ export async function POST(req: Request) {
       await supabase.from('invoices').insert([{
         order_id: orderId,
         user_id: existingOrder.user_id,
-        amount: existingOrder.revenue,
+        amount: session.amount_total ? session.amount_total / 100 : existingOrder.revenue,
         status: 'paid',
         due_date: new Date().toISOString().split('T')[0],
         invoice_url: invoiceUrl,
@@ -101,6 +101,8 @@ export async function POST(req: Request) {
         price: existingOrder.revenue,
         orderId: existingOrder.id,
         invoiceUrl,
+        taxAmount: session.total_details?.amount_tax ? session.total_details.amount_tax / 100 : 0,
+        totalAmount: session.amount_total ? session.amount_total / 100 : existingOrder.revenue,
       });
     }
 
