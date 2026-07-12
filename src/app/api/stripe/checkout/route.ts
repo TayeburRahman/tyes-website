@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { calculateVAT } from '@/utils/eu-vat-rates';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
@@ -65,11 +66,32 @@ export async function POST(req: Request) {
       });
     }
 
-    // 5. Fetch our synced tax rates for dynamic application
-    const existingRates = await stripe.taxRates.list({ active: true, limit: 100 });
-    const dynamicTaxRates = existingRates.data
-      .filter(r => r.metadata?.source === 'tyes_vat_engine' && r.inclusive === false)
-      .map(r => r.id);
+    // 5. Calculate VAT based on the user's registration country using custom engine
+    const vatResult = await calculateVAT(registrationCountry, profile.is_business || false, profile.vat_number || undefined);
+    let taxRatesToApply: string[] = [];
+
+    if (vatResult.vatRate > 0) {
+      // Find the tax rate we synced for this country
+      const existingRates = await stripe.taxRates.list({ active: true, limit: 100 });
+      let taxRate = existingRates.data.find(r => 
+        r.percentage === vatResult.vatRate && 
+        r.inclusive === false && 
+        r.country === registrationCountry
+      );
+      
+      if (!taxRate) {
+        // Fallback in case sync script missed it or it's a new rate
+        taxRate = await stripe.taxRates.create({
+          display_name: vatResult.taxName || 'VAT',
+          description: `Custom ${vatResult.vatRate}% VAT`,
+          percentage: vatResult.vatRate,
+          country: registrationCountry,
+          inclusive: false,
+          metadata: { source: 'tyes_vat_engine' }
+        });
+      }
+      taxRatesToApply.push(taxRate.id);
+    }
 
     // 6. Create Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -98,7 +120,7 @@ export async function POST(req: Request) {
             unit_amount: Math.round(price * 100),
           },
           quantity: 1,
-          dynamic_tax_rates: dynamicTaxRates.length > 0 ? dynamicTaxRates : undefined,
+          tax_rates: taxRatesToApply.length > 0 ? taxRatesToApply : undefined,
         },
       ],
       mode: 'payment',
