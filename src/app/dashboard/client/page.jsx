@@ -203,6 +203,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [fontFiles, setFontFiles] = useState([]);
   const [documentFiles, setDocumentFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [billingCountry, setBillingCountry] = useState(clientInfo?.country || "RO");
+
+  useEffect(() => {
+    if (clientInfo?.country) setBillingCountry(clientInfo.country);
+  }, [clientInfo?.country]);
 
   const plans = pricingPlans;
 
@@ -318,6 +323,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             price: selectedPlan.price,
             customerEmail: currentUser.email,
             customerName: customerName,
+            billingCountry: billingCountry
           })
         });
         
@@ -538,7 +544,21 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
               {isPaid && (
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                   <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Checkout</h3>
-                  <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 24 }}>You will be securely redirected to Stripe to complete your payment and calculate any applicable taxes.</p>
+                  
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Billing Country (For Tax Purposes)</label>
+                    <select
+                      value={billingCountry}
+                      onChange={(e) => setBillingCountry(e.target.value)}
+                      style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", cursor: "pointer" }}
+                    >
+                      {ALL_COUNTRIES_LIST.map(c => (
+                        <option key={c.code} value={c.code} style={{ background: "#111", color: "#fff" }}>{c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 24 }}>You will be securely redirected to Stripe to complete your payment.</p>
                   <button
                     onClick={() => handleSubmitOrder()}
                     disabled={isSubmitting}

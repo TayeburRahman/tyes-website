@@ -10,10 +10,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(req: Request) {
   try {
-    const { orderId, planName, price, customerEmail, customerName } = await req.json();
+    const { orderId, planName, price, customerEmail, customerName, billingCountry } = await req.json();
 
     if (!orderId || !planName || !price) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
     }
 
     // 1. Fetch the order to get the user ID
@@ -38,9 +38,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
-    // 3. Fetch registration country from auth metadata
+    // 3. Determine the country to use (frontend selection or fallback)
     const { data: userAuth } = await supabase.auth.admin.getUserById(order.user_id);
-    const registrationCountry = userAuth?.user?.user_metadata?.country || 'RO';
+    const fallbackCountry = userAuth?.user?.user_metadata?.country || 'RO';
+    const selectedCountry = billingCountry || fallbackCountry;
 
     // 4. Get or create Stripe Customer
     let stripeCustomerId = profile.stripe_customer_id;
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
       const customer = await stripe.customers.create({
         email: customerEmail || profile.email,
         name: customerName || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
-        address: { country: registrationCountry },
+        address: { country: selectedCountry },
       });
       
       stripeCustomerId = customer.id;
@@ -62,12 +63,12 @@ export async function POST(req: Request) {
     } else {
       // Ensure customer has the default country set
       await stripe.customers.update(stripeCustomerId, {
-        address: { country: registrationCountry },
+        address: { country: selectedCountry },
       });
     }
 
-    // 5. Calculate VAT based on the user's registration country using custom engine
-    const vatResult = await calculateVAT(registrationCountry, profile.is_business || false, profile.vat_number || undefined);
+    // 5. Calculate VAT based on the selected country using custom engine
+    const vatResult = await calculateVAT(selectedCountry, profile.is_business || false, profile.vat_number || undefined);
     let taxRatesToApply: string[] = [];
 
     if (vatResult.vatRate > 0) {
@@ -76,7 +77,7 @@ export async function POST(req: Request) {
       let taxRate = existingRates.data.find(r => 
         r.percentage === vatResult.vatRate && 
         r.inclusive === false && 
-        r.country === registrationCountry
+        r.country === selectedCountry
       );
       
       if (!taxRate) {
@@ -85,7 +86,7 @@ export async function POST(req: Request) {
           display_name: vatResult.taxName || 'VAT',
           description: `Custom ${vatResult.vatRate}% VAT`,
           percentage: vatResult.vatRate,
-          country: registrationCountry,
+          country: selectedCountry,
           inclusive: false,
           metadata: { source: 'tyes_vat_engine' }
         });
