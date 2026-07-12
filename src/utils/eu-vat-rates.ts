@@ -218,9 +218,9 @@ export async function calculateVAT(countryCode: string, isCompany: boolean, vatN
       }
     } catch (err) {
       console.error('VIES Validation Error:', err);
-      // Fall through to 21% if VIES is down, but set the viesDown flag so we can notify the user
+      // Fall through to country's rate if VIES is down, but set the viesDown flag so we can notify the user
       return {
-        vatRate: 21,
+        vatRate: EU_VAT_RATES[code].rate,
         taxName: 'Normala',
         invoiceLanguage: 'EN',
         isReverseCharge: false,
@@ -232,9 +232,9 @@ export async function calculateVAT(countryCode: string, isCompany: boolean, vatN
     }
   }
 
-  // EU individual or invalid VAT or empty VAT -> 21%
+  // EU individual or invalid VAT or empty VAT -> Apply customer's country VAT rate
   return {
-    vatRate: 21,
+    vatRate: EU_VAT_RATES[code].rate,
     taxName: 'Normala',
     invoiceLanguage: 'EN',
     isReverseCharge: false,
