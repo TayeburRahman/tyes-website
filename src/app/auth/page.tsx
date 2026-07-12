@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
-import { EU_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
+import { ALL_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 
 type Tab = "signin" | "signup" | "forgot" | "otp" | "forgot_otp";
 
@@ -369,7 +369,7 @@ function AuthContent() {
                 style={{ marginBottom: 0, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
                 onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
               >
-                <span>{EU_COUNTRIES_LIST.find(c => c.code === country)?.name || "Select country"}</span>
+                <span>{ALL_COUNTRIES_LIST.find(c => c.code === country)?.name || "Select country"}</span>
                 <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
               </div>
               
@@ -385,7 +385,7 @@ function AuthContent() {
                     autoFocus
                   />
                   <div className="auth-dropdown-scroll" style={{ maxHeight: "180px", overflowY: "auto", paddingRight: "4px" }}>
-                    {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
+                    {ALL_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
                       <div 
                         key={c.code}
                         onClick={() => {
@@ -401,7 +401,7 @@ function AuthContent() {
                         {country === c.code && <span style={{ fontSize: "0.9rem" }}>✓</span>}
                       </div>
                     ))}
-                    {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).length === 0 && (
+                    {ALL_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).length === 0 && (
                       <div style={{ padding: "0.6rem", color: "rgba(255,255,255,0.4)", textAlign: "center", fontSize: "0.85rem" }}>No countries found</div>
                     )}
                   </div>

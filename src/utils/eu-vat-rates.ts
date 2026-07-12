@@ -26,48 +26,50 @@ export interface VATCountry {
 // ─── EU Member States ────────────────────────────────────────────────────────
 
 export const EU_VAT_RATES: Record<string, VATCountry> = {
-  AT: { code: "AT", name: "Austria",        rate: 20,   vatRate: "20%",   isEU: true,  taxName: "Normala" },
-  BE: { code: "BE", name: "Belgium",         rate: 21,   vatRate: "21%",   isEU: true,  taxName: "Normala" },
-  BG: { code: "BG", name: "Bulgaria",        rate: 20,   vatRate: "20%",   isEU: true,  taxName: "Normala" },
-  HR: { code: "HR", name: "Croatia",         rate: 25,   vatRate: "25%",   isEU: true,  taxName: "Normala" },
-  CY: { code: "CY", name: "Cyprus",          rate: 19,   vatRate: "19%",   isEU: true,  taxName: "Normala" },
-  CZ: { code: "CZ", name: "Czech Rep.",      rate: 21,   vatRate: "21%",   isEU: true,  taxName: "Normala" },
-  DK: { code: "DK", name: "Denmark",         rate: 25,   vatRate: "25%",   isEU: true,  taxName: "Normala" },
-  EE: { code: "EE", name: "Estonia",         rate: 22,   vatRate: "22%",   isEU: true,  taxName: "Normala" },
-  FI: { code: "FI", name: "Finland",         rate: 25.5, vatRate: "25.5%", isEU: true,  taxName: "Normala" },
-  FR: { code: "FR", name: "France",          rate: 20,   vatRate: "20%",   isEU: true,  taxName: "Normala" },
-  DE: { code: "DE", name: "Germany",         rate: 19,   vatRate: "19%",   isEU: true,  taxName: "Normala" },
-  GR: { code: "GR", name: "Greece",          rate: 24,   vatRate: "24%",   isEU: true,  taxName: "Normala" },
-  HU: { code: "HU", name: "Hungary",         rate: 27,   vatRate: "27%",   isEU: true,  taxName: "Normala" },
-  IE: { code: "IE", name: "Ireland",         rate: 23,   vatRate: "23%",   isEU: true,  taxName: "Normala" },
-  IT: { code: "IT", name: "Italy",           rate: 22,   vatRate: "22%",   isEU: true,  taxName: "Normala" },
-  LV: { code: "LV", name: "Latvia",          rate: 21,   vatRate: "21%",   isEU: true,  taxName: "Normala" },
-  LT: { code: "LT", name: "Lithuania",       rate: 21,   vatRate: "21%",   isEU: true,  taxName: "Normala" },
-  LU: { code: "LU", name: "Luxembourg",      rate: 17,   vatRate: "17%",   isEU: true,  taxName: "Normala" },
-  MT: { code: "MT", name: "Malta",           rate: 18,   vatRate: "18%",   isEU: true,  taxName: "Normala" },
-  NL: { code: "NL", name: "Netherlands",     rate: 21,   vatRate: "21%",   isEU: true,  taxName: "Normala" },
-  PL: { code: "PL", name: "Poland",          rate: 23,   vatRate: "23%",   isEU: true,  taxName: "Normala" },
-  PT: { code: "PT", name: "Portugal",        rate: 23,   vatRate: "23%",   isEU: true,  taxName: "Normala" },
-  RO: { code: "RO", name: "Romania",         rate: 21,   vatRate: "21%",   isEU: true,  taxName: "Normala" },
-  SK: { code: "SK", name: "Slovakia",        rate: 20,   vatRate: "20%",   isEU: true,  taxName: "Normala" },
-  SI: { code: "SI", name: "Slovenia",        rate: 22,   vatRate: "22%",   isEU: true,  taxName: "Normala" },
-  ES: { code: "ES", name: "Spain",           rate: 21,   vatRate: "21%",   isEU: true,  taxName: "Normala" },
-  SE: { code: "SE", name: "Sweden",          rate: 25,   vatRate: "25%",   isEU: true,  taxName: "Normala" },
+  AT: { code: "AT", name: "Austria", rate: 20, vatRate: "20%", isEU: true, taxName: "Normala" },
+  BE: { code: "BE", name: "Belgium", rate: 21, vatRate: "21%", isEU: true, taxName: "Normala" },
+  BG: { code: "BG", name: "Bulgaria", rate: 20, vatRate: "20%", isEU: true, taxName: "Normala" },
+  HR: { code: "HR", name: "Croatia", rate: 25, vatRate: "25%", isEU: true, taxName: "Normala" },
+  CY: { code: "CY", name: "Cyprus", rate: 19, vatRate: "19%", isEU: true, taxName: "Normala" },
+  CZ: { code: "CZ", name: "Czech Rep.", rate: 21, vatRate: "21%", isEU: true, taxName: "Normala" },
+  DK: { code: "DK", name: "Denmark", rate: 25, vatRate: "25%", isEU: true, taxName: "Normala" },
+  EE: { code: "EE", name: "Estonia", rate: 22, vatRate: "22%", isEU: true, taxName: "Normala" },
+  FI: { code: "FI", name: "Finland", rate: 25.5, vatRate: "25.5%", isEU: true, taxName: "Normala" },
+  FR: { code: "FR", name: "France", rate: 20, vatRate: "20%", isEU: true, taxName: "Normala" },
+  DE: { code: "DE", name: "Germany", rate: 19, vatRate: "19%", isEU: true, taxName: "Normala" },
+  GR: { code: "GR", name: "Greece", rate: 24, vatRate: "24%", isEU: true, taxName: "Normala" },
+  HU: { code: "HU", name: "Hungary", rate: 27, vatRate: "27%", isEU: true, taxName: "Normala" },
+  IE: { code: "IE", name: "Ireland", rate: 23, vatRate: "23%", isEU: true, taxName: "Normala" },
+  IT: { code: "IT", name: "Italy", rate: 22, vatRate: "22%", isEU: true, taxName: "Normala" },
+  LV: { code: "LV", name: "Latvia", rate: 21, vatRate: "21%", isEU: true, taxName: "Normala" },
+  LT: { code: "LT", name: "Lithuania", rate: 21, vatRate: "21%", isEU: true, taxName: "Normala" },
+  LU: { code: "LU", name: "Luxembourg", rate: 17, vatRate: "17%", isEU: true, taxName: "Normala" },
+  MT: { code: "MT", name: "Malta", rate: 18, vatRate: "18%", isEU: true, taxName: "Normala" },
+  NL: { code: "NL", name: "Netherlands", rate: 21, vatRate: "21%", isEU: true, taxName: "Normala" },
+  PL: { code: "PL", name: "Poland", rate: 23, vatRate: "23%", isEU: true, taxName: "Normala" },
+  PT: { code: "PT", name: "Portugal", rate: 23, vatRate: "23%", isEU: true, taxName: "Normala" },
+  RO: { code: "RO", name: "Romania", rate: 21, vatRate: "21%", isEU: true, taxName: "Normala" },
+  SK: { code: "SK", name: "Slovakia", rate: 20, vatRate: "20%", isEU: true, taxName: "Normala" },
+  SI: { code: "SI", name: "Slovenia", rate: 22, vatRate: "22%", isEU: true, taxName: "Normala" },
+  ES: { code: "ES", name: "Spain", rate: 21, vatRate: "21%", isEU: true, taxName: "Normala" },
+  SE: { code: "SE", name: "Sweden", rate: 25, vatRate: "25%", isEU: true, taxName: "Normala" },
 };
 
 // ─── Non-EU Countries (apply only if threshold is crossed) ───────────────────
 // UK: £85,000 threshold | Norway: NOK 50,000 | Switzerland: CHF 100,000 | Iceland: ISK 2,000,000
 
 export const NON_EU_VAT_RATES: Record<string, VATCountry> = {
-  GB: { code: "GB", name: "United Kingdom", rate: 20,  vatRate: "20%",  isEU: false, taxName: "UK VAT" },
-  NO: { code: "NO", name: "Norway",          rate: 25,  vatRate: "25%",  isEU: false, taxName: "MVA" },
-  CH: { code: "CH", name: "Switzerland",     rate: 8.1, vatRate: "8.1%", isEU: false, taxName: "MWST" },
-  IS: { code: "IS", name: "Iceland",         rate: 24,  vatRate: "24%",  isEU: false, taxName: "VSK" },
-  BD: { code: "BD", name: "Bangladesh",      rate: 9,   vatRate: "9%",   isEU: false, taxName: "VAT" },
+  GB: { code: "GB", name: "United Kingdom", rate: 20, vatRate: "20%", isEU: false, taxName: "UK VAT" },
+  NO: { code: "NO", name: "Norway", rate: 25, vatRate: "25%", isEU: false, taxName: "MVA" },
+  CH: { code: "CH", name: "Switzerland", rate: 8.1, vatRate: "8.1%", isEU: false, taxName: "MWST" },
+  IS: { code: "IS", name: "Iceland", rate: 24, vatRate: "24%", isEU: false, taxName: "VSK" },
+  BD: { code: "BD", name: "Bangladesh", rate: 9, vatRate: "9%", isEU: false, taxName: "VAT" },
+  US: { code: "US", name: "United States", rate: 0, vatRate: "0%", isEU: false, taxName: "Sales Tax" },
+  CA: { code: "CA", name: "Canada", rate: 5, vatRate: "5%", isEU: false, taxName: "GST" },
+  AU: { code: "AU", name: "Australia", rate: 10, vatRate: "10%", isEU: false, taxName: "GST" },
 };
 
 // ─── Combined lookup (EU + Non-EU) ───────────────────────────────────────────
-
 export const ALL_VAT_RATES: Record<string, VATCountry> = {
   ...EU_VAT_RATES,
   ...NON_EU_VAT_RATES,
@@ -122,7 +124,7 @@ export async function calculateVAT(countryCode: string, isCompany: boolean, vatN
 
   // Clean VAT number
   let cleanVat = vatNumber ? vatNumber.replace(/[^a-zA-Z0-9]/g, '') : '';
-  
+
   // Edge Case: foreign company holding a Romanian VAT code -> Treat as DOMESTIC
   if (cleanVat.toUpperCase().startsWith('RO')) {
     return {
@@ -154,9 +156,9 @@ export async function calculateVAT(countryCode: string, isCompany: boolean, vatN
     const nonEuCountry = NON_EU_VAT_RATES[code];
     return {
       vatRate: nonEuCountry ? nonEuCountry.rate : 0,
-      taxName: nonEuCountry ? nonEuCountry.taxName : 'Taxare inversa', 
+      taxName: nonEuCountry ? nonEuCountry.taxName : 'Taxare inversa',
       invoiceLanguage: 'EN',
-      isReverseCharge: false, 
+      isReverseCharge: false,
       viesValid: false,
       vatMode: 'NON_EU',
       viesStatus: 'invalid'
@@ -197,7 +199,7 @@ export async function calculateVAT(countryCode: string, isCompany: boolean, vatN
 
       const xml = await res.text();
       const isValid = xml.includes('<valid>true</valid>') || xml.includes('<ns2:valid>true</ns2:valid>');
-      
+
       const matchId = xml.match(/<(?:ns2:)?requestIdentifier>(.*?)<\/(?:ns2:)?requestIdentifier>/);
       const requestIdentifier = matchId && matchId[1] ? matchId[1] : undefined;
 

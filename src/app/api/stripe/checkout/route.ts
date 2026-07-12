@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { calculateVAT } from '@/utils/eu-vat-rates';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
@@ -55,11 +56,30 @@ export async function POST(req: Request) {
         .eq('id', profile.id);
     }
 
+    // 3.5 Calculate VAT based on profile using custom engine
+    const vatResult = await calculateVAT(profile.country || 'RO', profile.is_business || false, profile.vat_number || undefined);
+    let taxRatesToApply: string[] = [];
+
+    if (vatResult.vatRate > 0) {
+      const existingRates = await stripe.taxRates.list({ active: true, limit: 100 });
+      let taxRate = existingRates.data.find(r => r.percentage === vatResult.vatRate && r.inclusive === false);
+      
+      if (!taxRate) {
+        taxRate = await stripe.taxRates.create({
+          display_name: vatResult.taxName || 'VAT',
+          description: `Custom ${vatResult.vatRate}% VAT`,
+          percentage: vatResult.vatRate,
+          inclusive: false,
+        });
+      }
+      taxRatesToApply.push(taxRate.id);
+    }
+
     // 4. Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       customer: stripeCustomerId,
-      automatic_tax: { enabled: true },
+      // Removed automatic_tax so we can apply our custom tax rate
       tax_id_collection: { enabled: true },
       billing_address_collection: 'required',
       customer_update: {
@@ -76,14 +96,11 @@ export async function POST(req: Request) {
             tax_behavior: 'exclusive',
             product_data: {
               name: planName,
-              // Marketing & Design services tax code — Stripe Tax uses this to determine
-              // the correct VAT/sales tax treatment per jurisdiction.
-              // Update only this code if the product classification changes.
-              tax_code: 'txcd_10103000', // Changed to SaaS to test EU VAT applicability
             },
             unit_amount: Math.round(price * 100),
           },
           quantity: 1,
+          tax_rates: taxRatesToApply.length > 0 ? taxRatesToApply : undefined,
         },
       ],
       mode: 'payment',
