@@ -37,13 +37,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
-    // 3. Get or create Stripe Customer
+    // 3. Fetch registration country from auth metadata
+    const { data: userAuth } = await supabase.auth.admin.getUserById(order.user_id);
+    const registrationCountry = userAuth?.user?.user_metadata?.country || 'RO';
+
+    // 4. Get or create Stripe Customer
     let stripeCustomerId = profile.stripe_customer_id;
 
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
         email: customerEmail || profile.email,
         name: customerName || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
+        address: { country: registrationCountry },
       });
       
       stripeCustomerId = customer.id;
@@ -53,13 +58,23 @@ export async function POST(req: Request) {
         .from('profiles')
         .update({ stripe_customer_id: stripeCustomerId })
         .eq('id', profile.id);
+    } else {
+      // Ensure customer has the default country set
+      await stripe.customers.update(stripeCustomerId, {
+        address: { country: registrationCountry },
+      });
     }
 
-    // 4. Create Checkout Session
+    // 5. Fetch our synced tax rates for dynamic application
+    const existingRates = await stripe.taxRates.list({ active: true, limit: 100 });
+    const dynamicTaxRates = existingRates.data
+      .filter(r => r.metadata?.source === 'tyes_vat_engine' && r.inclusive === false)
+      .map(r => r.id);
+
+    // 6. Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       customer: stripeCustomerId,
-      automatic_tax: { enabled: true },
       tax_id_collection: { enabled: true },
       billing_address_collection: 'required',
       customer_update: {
@@ -83,6 +98,7 @@ export async function POST(req: Request) {
             unit_amount: Math.round(price * 100),
           },
           quantity: 1,
+          dynamic_tax_rates: dynamicTaxRates.length > 0 ? dynamicTaxRates : undefined,
         },
       ],
       mode: 'payment',
