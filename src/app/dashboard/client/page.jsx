@@ -6,7 +6,7 @@ import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
 import { Search, Bell, ChevronDown, ChevronRight, ChevronLeft, Download, MoreVertical, Plus, Eye, Check, X, Clock, RefreshCw, Upload, Image, Settings, LogOut, Home, Package, CreditCard, FileText, MessageSquare, User, Camera, Paperclip, Send, Star, ArrowUpRight, Menu, AlertCircle, Zap, ExternalLink, Trash2, Edit, Save, CheckCircle } from "lucide-react";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { EU_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
+import { ALL_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 // stripePromise is lazy-loaded per component instance to avoid the global Stripe badge
 
 
@@ -78,7 +78,7 @@ const MissingCountryModal = ({ open, onClose, onSubmit, loading }) => {
             style={{ padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 14, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
             onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
           >
-            <span>{EU_COUNTRIES_LIST.find(c => c.code === selectedCountry)?.name || "Select country"}</span>
+            <span>{ALL_COUNTRIES_LIST.find(c => c.code === selectedCountry)?.name || "Select country"}</span>
             <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
           </div>
 
@@ -99,7 +99,7 @@ const MissingCountryModal = ({ open, onClose, onSubmit, loading }) => {
                 .country-dropdown-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
               `}</style>
               <div className="country-dropdown-scroll" style={{ maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
-                {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
+                {ALL_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
                   <div
                     key={c.code}
                     onClick={() => {
@@ -1409,7 +1409,7 @@ export default function TyesClient() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [saving, setSaving] = useState(false);
 
-    const currentName = EU_COUNTRIES_LIST.find(c => c.code === (clientInfo.country || selectedCode))?.name || "Not set";
+    const currentName = ALL_COUNTRIES_LIST.find(c => c.code === (clientInfo.country || selectedCode))?.name || "Not set";
 
     const handleSave = async () => {
       setSaving(true);
@@ -1441,14 +1441,14 @@ export default function TyesClient() {
               style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
-              <span>{EU_COUNTRIES_LIST.find(c => c.code === selectedCode)?.name || "Select country"}</span>
+              <span>{ALL_COUNTRIES_LIST.find(c => c.code === selectedCode)?.name || "Select country"}</span>
               <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", transform: dropdownOpen ? "rotate(180deg)" : "none", display: "inline-block", transition: "transform 0.2s" }}>▼</span>
             </div>
             {dropdownOpen && (
               <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 20, background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, marginTop: 4, padding: 8, boxShadow: "0 10px 30px rgba(0,0,0,0.8)" }}>
                 <input type="text" placeholder="Search country..." value={search} onChange={e => setSearch(e.target.value)} onClick={e => e.stopPropagation()} style={{ width: "100%", padding: "8px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#fff", outline: "none", marginBottom: 6, fontSize: 13 }} autoFocus />
                 <div style={{ maxHeight: 180, overflowY: "auto" }}>
-                  {EU_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(search.toLowerCase())).map(c => (
+                  {ALL_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(search.toLowerCase())).map(c => (
                     <div key={c.code} onClick={() => { setSelectedCode(c.code); setDropdownOpen(false); setSearch(""); }} style={{ padding: "8px 10px", cursor: "pointer", borderRadius: 6, background: selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent", color: selectedCode === c.code ? "#4ecdc4" : "#fff", fontSize: 13, display: "flex", justifyContent: "space-between" }} onMouseEnter={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.2)" : "rgba(255,255,255,0.05)"} onMouseLeave={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent"}>
                       {c.name} {selectedCode === c.code && <span>✓</span>}
                     </div>
@@ -1467,7 +1467,7 @@ export default function TyesClient() {
             {clientInfo.country && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ fontSize: 13, color: "#6b7280" }}>VAT Rate</span>
-                <span style={{ fontSize: 13, color: "#4ecdc4", fontWeight: 600 }}>{EU_COUNTRIES_LIST.find(c => c.code === clientInfo.country)?.vatRate || "—"}</span>
+                <span style={{ fontSize: 13, color: "#4ecdc4", fontWeight: 600 }}>{ALL_COUNTRIES_LIST.find(c => c.code === clientInfo.country)?.vatRate || "—"}</span>
               </div>
             )}
           </div>
