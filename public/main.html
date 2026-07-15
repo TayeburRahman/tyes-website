@@ -139,7 +139,7 @@
 </head>
 
 <body>
-  <script>if (sessionStorage.getItem("tyes_auth") !== "1") window.location.href = "index.html";</script>
+  <script>if (sessionStorage.getItem("tyes_auth") !== "1" && document.cookie.indexOf("tyes_auth=1") === -1) window.location.href = "index.html";</script>
 
   <div class="page-wrapper">
     <div data-animation="default" data-collapse="all" data-duration="0" data-easing="ease" data-easing2="ease"

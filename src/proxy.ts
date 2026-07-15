@@ -1,10 +1,19 @@
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  if (process.env.HOME_PASSWORD === 'false') {
+    if (pathname === '/' || pathname === '/index.html') {
+      const response = NextResponse.redirect(new URL('/landing.html', request.url))
+      response.cookies.set('tyes_auth', '1', { path: '/' })
+      return response
+    }
+  }
+
   return await updateSession(request)
 }
-
 export const config = {
   matcher: [
     /*
