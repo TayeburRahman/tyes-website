@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>tyes | How It Works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<!-- Paste your licensed Gliker kit <link> or @font-face here if you have one. -->
+<style>
+ @page { size: A4; margin: 15mm 18mm; }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body {
+ font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+ font-weight: 500;
+ color: #EDEDED; line-height: 1.65;
+ background: #0A0A0A;
+ padding: 60px 40px;
+ }
+ h1, h2, h3, h4, h5, h6 {
+ font-family: "League Spartan", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+ font-weight: 700;
+ }
+ .cta-btn, .cta, button, .mock-cta {
+ font-family: "Montserrat", -apple-system, sans-serif;
+ font-weight: 500;
+ }
+ .container { max-width: 820px; margin: 0 auto; }
+ .brand {
+ font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif;
+ font-weight: 700; letter-spacing: -0.5pt;
+ }
+ .accent {
+ font-family: "Montserrat", -apple-system, sans-serif;
+ font-style: italic; font-weight: 700; color: #2DD4BF;
+ }
+ .tagline {
+ font-size: 10pt; letter-spacing: 5pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 600; margin-bottom: 6mm;
+ }
+ h1 {
+ font-size: 36pt; font-weight: 800; line-height: 1.1;
+ letter-spacing: -1pt; color: #FFFFFF; margin-bottom: 8mm;
+ }
+ h1 .accent { color: #2DD4BF; }
+ .lead {
+ font-size: 13pt; color: #B8B8B8; line-height: 1.6;
+ max-width: 660px; margin-bottom: 15mm;
+ }
+ .lead strong { color: #FFFFFF; font-weight: 700; }
+ h2 {
+ font-size: 20pt; font-weight: 800; line-height: 1.2;
+ color: #FFFFFF; letter-spacing: -0.4pt;
+ margin-top: 15mm; margin-bottom: 5mm;
+ }
+ h2 .accent { color: #2DD4BF; }
+ h3 { font-size: 13pt; font-weight: 700; color: #FFFFFF; margin-top: 6mm; margin-bottom: 3mm; }
+ p, li { font-size: 11pt; margin-bottom: 4mm; color: #C8C8C8; line-height: 1.7; }
+ p strong { color: #FFFFFF; font-weight: 700; }
+ ul, ol { margin: 3mm 0 5mm 5mm; }
+ li { margin-bottom: 2mm; }
+ a { color: #2DD4BF; text-decoration: none; }
+ a:hover { text-decoration: underline; }
+
+ .grid-3 {
+ display: grid; grid-template-columns: 1fr 1fr 1fr;
+ gap: 5mm; margin: 6mm 0 8mm;
+ }
+ .card {
+ background: #141414; padding: 8mm 8mm;
+ border-radius: 8px; border-top: 3px solid #2DD4BF;
+ }
+ .card h3 { margin-top: 0; font-size: 14pt; color: #FFFFFF; }
+ .card p { font-size: 10pt; color: #B4B4B4; line-height: 1.55; margin-bottom: 0; }
+ .card .tag {
+ font-size: 8pt; letter-spacing: 3pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 700; margin-bottom: 3mm;
+ }
+
+ .buyer-grid {
+ display: grid; grid-template-columns: 1fr 1fr;
+ gap: 5mm; margin: 6mm 0 5mm;
+ }
+ .buyer-card {
+ background: #141414; padding: 7mm 8mm;
+ border-radius: 8px; border-left: 3px solid #2DD4BF;
+ }
+ .buyer-card .cat {
+ font-size: 9pt; letter-spacing: 3pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 700; margin-bottom: 2mm;
+ }
+ .buyer-card h3 { margin-top: 0; font-size: 13pt; color: #FFFFFF; margin-bottom: 3mm; }
+ .buyer-card p { font-size: 10pt; color: #B4B4B4; line-height: 1.55; margin-bottom: 3mm; }
+ .buyer-card .examples { font-size: 9.5pt; color: #888; font-style: italic; margin-bottom: 0; }
+
+ .geo-row {
+ display: grid; grid-template-columns: 1fr 1fr;
+ gap: 5mm; margin: 6mm 0 8mm;
+ }
+ .geo-block {
+ background: #141414; padding: 6mm 7mm;
+ border-radius: 6px;
+ }
+ .geo-block .flag {
+ font-size: 9pt; letter-spacing: 3pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 700; margin-bottom: 3mm;
+ }
+ .geo-block p { font-size: 10pt; margin-bottom: 0; color: #C8C8C8; }
+
+ .process-list {
+ counter-reset: step;
+ list-style: none; padding: 0; margin: 6mm 0;
+ }
+ .process-list > li {
+ counter-increment: step;
+ background: #141414; padding: 5mm 7mm 5mm 15mm;
+ border-radius: 6px; margin-bottom: 3mm;
+ position: relative;
+ font-size: 11pt; color: #C8C8C8;
+ }
+ .process-list > li::before {
+ content: counter(step, decimal-leading-zero);
+ position: absolute; left: 6mm; top: 4mm;
+ font-size: 12pt; color: #2DD4BF; font-weight: 800;
+ letter-spacing: 1pt;
+ }
+ .process-list > li strong { color: #FFFFFF; }
+
+ .info-box {
+ background: #141414; border-left: 3px solid #2DD4BF;
+ padding: 6mm 8mm; border-radius: 0 4px 4px 0;
+ margin: 6mm 0;
+ }
+ .info-box p { margin-bottom: 3mm; font-size: 10.5pt; }
+ .info-box p:last-child { margin-bottom: 0; }
+
+ .boundaries {
+ background: rgba(45,212,191,0.06);
+ border: 1px solid rgba(45,212,191,0.35);
+ padding: 7mm 10mm; border-radius: 8px;
+ margin: 8mm 0;
+ }
+ .boundaries .eyebrow {
+ font-size: 9pt; letter-spacing: 3pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 700; margin-bottom: 4mm;
+ }
+ .boundaries p {
+ font-size: 10.5pt; color: #C8C8C8; line-height: 1.65; margin-bottom: 3mm;
+ }
+ .boundaries p strong { color: #FFFFFF; }
+ .boundaries p:last-child { margin-bottom: 0; }
+
+ .footer-note {
+ font-size: 9.5pt; color: #777; margin-top: 15mm;
+ padding-top: 6mm; border-top: 1px solid #2A2A2A;
+ }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="tagline">Product</div>
+<h1>How It <span class="accent">Works.</span></h1>
+
+<p class="lead">
+Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter.
+Here's exactly what happens, step by step.
+</p>
+
+<h2>Engine 01, Campaign Imagery.</h2>
+<div class="grid-3">
+<div class="card">
+<div class="tag">Step 01</div>
+<h3>Brief</h3>
+<p>Upload your product, brand guidelines, and reference direction. Describe the scene, mood, and use case.
+Takes 5 minutes.</p>
+</div>
+<div class="card">
+<div class="tag">Step 02</div>
+<h3>Generate</h3>
+<p>AI produces visual options aligned with your brand. You review, pick favorites, request revisions
+directly in the platform.</p>
+</div>
+<div class="card">
+<div class="tag">Step 03</div>
+<h3>Polish &amp; Deliver</h3>
+<p>Our graphic designers fix color, logo, text, and detail issues. Final assets delivered in production-ready
+formats within hours.</p>
+</div>
+</div>
+
+<h2>Engine 02, Strategy + <span class="accent">Retail Access.</span></h2>
+<div class="grid-3">
+<div class="card">
+<div class="tag">Step 01 · Included</div>
+<h3>Snapshot</h3>
+<p>3-day scan of your brand: LLM visibility gaps, viral product angles, and a shortlist of retail buyers who fit your brand.</p>
+<p style="margin-top: 4mm; font-size: 9pt; color: #2DD4BF; font-weight: 700; font-family: 'Montserrat', sans-serif;">$25 standalone · $25 add-on on Free Image · Free with any Campaign</p>
+</div>
+<div class="card">
+<div class="tag">Step 02 · Custom scope</div>
+<h3>Deep Dive</h3>
+<p>Full strategic package: positioning refinement, competitive map, product roadmap, and named retail buyers with
+contact context we already work with.</p>
+<p style="margin-top: 4mm; font-size: 9pt; color: #FFFFFF; font-weight: 700; font-family: 'Montserrat', sans-serif;">Separate engagement · Priced per scope</p>
+</div>
+<div class="card">
+<div class="tag">Step 03 · With Deep Dive</div>
+<h3>Introduction &amp; Journey</h3>
+<p>When positioning is tight and product is ready, we introduce you to the right retail buyers and
+assist you through your journey to retail: pitch prep, buyer follow-through, and guidance at each step.</p>
+<p style="margin-top: 4mm; font-size: 9pt; color: #FFFFFF; font-weight: 700; font-family: 'Montserrat', sans-serif;">Delivered as part of Deep Dive</p>
+</div>
+</div>
+
+<div style="background: rgba(45,212,191,0.06); border: 1px solid rgba(45,212,191,0.35); border-radius: 8px; padding: 6mm 8mm; margin: 6mm 0 10mm; font-size: 10pt; color: #C8C8C8;">
+<strong style="color: #FFFFFF;">How the pricing works.</strong> The Snapshot is the entry point, in three ways: <strong style="color: #FFFFFF;">$25 standalone tier</strong>, <strong style="color: #FFFFFF;">$25 add-on on Free Image</strong>, or <strong style="color: #FFFFFF;">bundled free</strong> with any Campaign order. The Deep Dive is a separate strategic engagement, quoted per scope depending on your brand size, target markets, and retail ambition. The Warm Introduction (Step 03) is delivered as part of every Deep Dive engagement, not sold separately.
+</div>
+
+<h2>The Retail <span class="accent">Network.</span></h2>
+<p style="max-width:640px;">
+Not a directory. Not cold outreach. A working network of buyer relationships across
+<strong>5 retail categories</strong>, the same buyers we already send briefs to on behalf of other brands.
+</p>
+
+<div class="buyer-grid">
+
+<div class="buyer-card">
+<div class="cat">01 · Mass Market</div>
+<h3>Mass Market Retail</h3>
+<p>National chain drugstores, big-box discount, national supermarkets. Where volume and shelf visibility
+matter most.</p>
+</div>
+
+<div class="buyer-card">
+<div class="cat">02 · Prestige</div>
+<h3>Premium Retail</h3>
+<p>High-end and prestige beauty chains, curated boutique retailers, department store beauty halls.</p>
+</div>
+
+<div class="buyer-card">
+<div class="cat">03 · Volume</div>
+<h3>Hyperstores</h3>
+<p>Warehouse clubs, cash &amp; carry, hypermarkets. Volume plays with strong price positioning.</p>
+</div>
+
+<div class="buyer-card">
+<div class="cat">04 · Beauty Pharmacy</div>
+<h3>Hyperpharmacies</h3>
+<p>Drugstore beauty chains, the fast-growing channel for accessible skincare, personal care, and fragrance.</p>
+</div>
+
+</div>
+
+<div class="buyer-card">
+<div class="cat">05 · Digital-First</div>
+<h3>Marketplaces</h3>
+<p>Curated online marketplaces, D2C wholesale platforms, and beauty-forward e-commerce destinations
+where discovery happens.</p>
+</div>
+
+<h2>Geographic <span class="accent">Coverage.</span></h2>
+<div class="geo-row">
+<div class="geo-block">
+<div class="flag">🇺🇸 United States</div>
+<p>National retail chains, regional grocery, beauty prestige channels, and marketplace category managers.</p>
+</div>
+<div class="geo-block">
+<div class="flag">🇪🇺 Europe</div>
+<p>Coverage across Europe. Retail HQ contacts plus regional buyers.</p>
+</div>
+</div>
+
+<h2>What Makes It <span class="accent">Fast.</span></h2>
+<ul>
+<li><strong>AI does the heavy lifting</strong>, hours of studio work compressed into minutes.</li>
+<li><strong>Humans do the fine work</strong>, our graphic designers catch what AI misses.</li>
+<li><strong>Strategy is baked in</strong>, no separate consulting engagement required.</li>
+<li><strong>Retail access is real</strong>, an existing network of buyer relationships, not cold outreach.</li>
+</ul>
+
+<h2>Who's In the <span class="accent">Loop.</span></h2>
+<div class="info-box">
+<p><strong>You:</strong> brand owner, marketing lead, or founder driving the launch.</p>
+<p><strong>tyes AI:</strong> generates initial imagery and surfaces strategic insights.</p>
+<p><strong>tyes team:</strong> our graphic designers, strategists, and buyer-network operators.</p>
+<p><strong>Retail buyers (Engine 02 only):</strong> introduced by us, at your direction, only when you're ready.</p>
+</div>
+
+<h2>Ready to <span class="accent">Try It.</span></h2>
+<p>
+Start with a Brand Strategy Snapshot ($25 standalone, $25 add-on to Free Image, or included free with any Campaign). Or upload a product and see how the imagery
+engine handles it in your first campaign.
+</p>
+
+<div class="footer-note">
+<strong>tyes LLC</strong> · <a href="mailto:office@tyes.app">office@tyes.app</a>
+</div>
+
+</div>
+</body>
+</html>

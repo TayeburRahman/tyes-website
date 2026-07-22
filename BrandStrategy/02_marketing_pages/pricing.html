@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>tyes | Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<!-- Paste your licensed Gliker kit <link> or @font-face here if you have one. -->
+<style>
+ @page { size: A4; margin: 15mm 18mm; }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body {
+ font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+ font-weight: 500;
+ color: #EDEDED; line-height: 1.65;
+ background: #0A0A0A;
+ padding: 60px 40px;
+ }
+ h1, h2, h3, h4, h5, h6 {
+ font-family: "League Spartan", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+ font-weight: 700;
+ }
+ .cta-btn, .cta, button, .mock-cta {
+ font-family: "Montserrat", -apple-system, sans-serif;
+ font-weight: 500;
+ }
+ .container { max-width: 960px; margin: 0 auto; }
+ .brand {
+ font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif;
+ font-weight: 700; letter-spacing: -0.5pt;
+ }
+ .accent {
+ font-family: "Montserrat", -apple-system, sans-serif;
+ font-style: italic; font-weight: 700; color: #2DD4BF;
+ }
+ .tagline {
+ font-size: 10pt; letter-spacing: 5pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 600; margin-bottom: 6mm;
+ text-align: center;
+ }
+ h1 {
+ font-size: 36pt; font-weight: 800; line-height: 1.1;
+ letter-spacing: -1pt; color: #FFFFFF; margin-bottom: 4mm;
+ text-align: center;
+ }
+ h1 .accent { color: #2DD4BF; }
+ .sub-headline {
+ font-size: 13pt; color: #B8B8B8; line-height: 1.55;
+ text-align: center; margin-bottom: 12mm;
+ }
+ h2 {
+ font-size: 18pt; font-weight: 800; line-height: 1.25;
+ color: #FFFFFF; letter-spacing: -0.3pt;
+ margin-top: 15mm; margin-bottom: 5mm;
+ }
+ h3 {
+ font-size: 13pt; font-weight: 700; color: #FFFFFF;
+ margin-top: 8mm; margin-bottom: 3mm;
+ }
+ p, li { font-size: 11pt; margin-bottom: 4mm; color: #C8C8C8; line-height: 1.7; }
+ p strong { color: #FFFFFF; font-weight: 700; }
+ a { color: #2DD4BF; text-decoration: none; }
+ a:hover { text-decoration: underline; }
+
+ /* Pricing grid, 4 cards top row */
+ .price-grid-main {
+ display: grid; grid-template-columns: repeat(5, 1fr);
+ gap: 4mm; margin: 6mm 0;
+ }
+ .price-card {
+ background: #141414; padding: 8mm 8mm;
+ border-radius: 10px; border: 1px solid #2A2A2A;
+ position: relative;
+ display: flex; flex-direction: column;
+ }
+ .price-card.popular {
+ background: #1a1a1a; border: 2px solid #2DD4BF;
+ }
+ .badge {
+ position: absolute; top: -3mm; right: 6mm;
+ background: #2DD4BF; color: #0A0A0A;
+ font-size: 7.5pt; letter-spacing: 2pt; text-transform: uppercase;
+ font-weight: 800; padding: 1.5mm 3mm; border-radius: 3px;
+ }
+ .badge.free {
+ background: #22C55E; color: #0A0A0A;
+ }
+ .price-card .tag {
+ font-size: 8pt; letter-spacing: 3pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 700; margin-bottom: 3mm;
+ }
+ .price-card h3 {
+ margin-top: 0; font-size: 16pt; color: #FFFFFF;
+ margin-bottom: 1mm;
+ }
+ .price-value {
+ font-size: 34pt; color: #FFFFFF; font-weight: 800;
+ letter-spacing: -1pt; line-height: 1; margin: 3mm 0 5mm;
+ }
+ .price-value.text {
+ font-size: 20pt;
+ }
+ .price-card ul {
+ list-style: none; padding: 0; margin: 4mm 0 0 0;
+ flex-grow: 1;
+ }
+ .price-card ul li {
+ font-size: 10pt; color: #C8C8C8; margin-bottom: 3mm;
+ padding-left: 5mm; position: relative; line-height: 1.5;
+ }
+ .price-card ul li::before {
+ content: "✓"; color: #2DD4BF; font-weight: 700;
+ position: absolute; left: 0;
+ }
+ .price-card .add-strategy {
+ border-top: 1px dashed #2DD4BF;
+ padding-top: 4mm; margin-top: 4mm;
+ display: flex; align-items: center; justify-content: space-between;
+ gap: 3mm;
+ }
+ .price-card .add-strategy .label {
+ font-size: 9.5pt; color: #FFFFFF; font-weight: 600;
+ line-height: 1.35;
+ }
+ .price-card .add-strategy .label small {
+ color: #888; font-size: 8pt; font-weight: 400;
+ display: block; margin-top: 0.5mm;
+ }
+ .price-card .add-strategy .toggle {
+ background: rgba(45,212,191,0.15);
+ color: #2DD4BF; font-weight: 700;
+ font-size: 8pt; letter-spacing: 1.5pt; text-transform: uppercase;
+ padding: 2mm 3mm; border-radius: 3px;
+ border: 1px solid #2DD4BF;
+ white-space: nowrap;
+ flex-shrink: 0;
+ }
+ .price-card .cta-btn {
+ background: #2DD4BF; color: #0A0A0A;
+ font-weight: 800; font-size: 9.5pt;
+ letter-spacing: 1pt; text-transform: uppercase;
+ padding: 3.5mm 5mm; border-radius: 4px;
+ text-align: center; margin-top: 5mm;
+ display: block;
+ }
+ .price-card.popular .cta-btn {
+ background: #2DD4BF;
+ }
+
+ /* Custom / Enterprise tier, full width row */
+ .custom-tier {
+ background: #1a1a1a; border: 2px solid #2DD4BF;
+ padding: 10mm 12mm; border-radius: 10px;
+ margin: 8mm 0;
+ position: relative;
+ display: grid; grid-template-columns: 1fr 1fr;
+ gap: 10mm; align-items: center;
+ }
+ .custom-tier .tag {
+ font-size: 8pt; letter-spacing: 3pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 700; margin-bottom: 3mm;
+ }
+ .custom-tier h3 {
+ margin-top: 0; font-size: 22pt; color: #FFFFFF;
+ margin-bottom: 2mm; letter-spacing: -0.4pt;
+ }
+ .custom-tier .price {
+ font-size: 22pt; color: #2DD4BF; font-weight: 800;
+ font-style: italic; font-family: "Montserrat", sans-serif;
+ margin-bottom: 4mm;
+ }
+ .custom-tier ul {
+ list-style: none; padding: 0; margin: 0;
+ }
+ .custom-tier ul li {
+ font-size: 10.5pt; color: #C8C8C8; margin-bottom: 2mm;
+ padding-left: 5mm; position: relative; line-height: 1.55;
+ }
+ .custom-tier ul li::before {
+ content: "✓"; color: #2DD4BF; font-weight: 700;
+ position: absolute; left: 0;
+ }
+ .custom-tier .bonus-block {
+ background: rgba(45,212,191,0.1);
+ border-left: 3px solid #2DD4BF;
+ padding: 4mm 5mm; margin-top: 5mm;
+ font-size: 10pt; color: #FFFFFF;
+ }
+
+ /* Deep Dive Brand Strategy section */
+ .deep-dive-section {
+ background: linear-gradient(135deg, #141414, #1a1a1a);
+ border: 1px solid #2A2A2A;
+ border-radius: 12px; padding: 12mm 14mm;
+ margin: 12mm 0;
+ position: relative;
+ overflow: hidden;
+ }
+ .deep-dive-section::before {
+ content: "";
+ position: absolute; top: 0; left: 0; right: 0; height: 4px;
+ background: linear-gradient(90deg, #2DD4BF, transparent 60%);
+ }
+ .deep-dive-section .eyebrow {
+ font-size: 8.5pt; letter-spacing: 4pt; text-transform: uppercase;
+ color: #2DD4BF; font-weight: 700; margin-bottom: 5mm;
+ }
+ .deep-dive-section h3 {
+ margin-top: 0; font-size: 28pt; color: #FFFFFF;
+ letter-spacing: -0.8pt; line-height: 1.1;
+ margin-bottom: 5mm;
+ }
+ .deep-dive-section .desc {
+ font-size: 12pt; color: #B8B8B8; line-height: 1.65;
+ max-width: 600px; margin-bottom: 6mm;
+ }
+ .deep-dive-section .features-grid {
+ display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 8mm;
+ margin: 6mm 0 8mm;
+ }
+ .deep-dive-section .features-grid li {
+ font-size: 10.5pt; color: #C8C8C8;
+ padding-left: 6mm; position: relative; line-height: 1.55;
+ margin-bottom: 2mm; list-style: none;
+ }
+ .deep-dive-section .features-grid li::before {
+ content: "→"; color: #2DD4BF; font-weight: 700;
+ position: absolute; left: 0;
+ }
+ .deep-dive-section .cta-row {
+ display: flex; gap: 4mm; flex-wrap: wrap;
+ margin-top: 6mm;
+ }
+ .deep-dive-section .cta {
+ padding: 4mm 8mm; border-radius: 999px;
+ font-weight: 700; font-size: 11pt;
+ letter-spacing: 0.5pt;
+ display: inline-block;
+ }
+ .deep-dive-section .cta-primary {
+ background: #2DD4BF; color: #0A0A0A;
+ }
+ .deep-dive-section .cta-secondary {
+ background: transparent; color: #2DD4BF;
+ border: 2px solid #2DD4BF;
+ }
+
+ .footer-note {
+ font-size: 9.5pt; color: #777; margin-top: 15mm;
+ padding-top: 6mm; border-top: 1px solid #2A2A2A;
+ }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="tagline">Pricing</div>
+<h1>Find the <span class="accent">Perfect Package.</span></h1>
+<p class="sub-headline">
+Pay per campaign. Scale when ready.
+</p>
+
+<!-- ======= 3 MAIN TIERS ======= -->
+<div class="price-grid-main">
+
+<!-- FREE IMAGE -->
+<div class="price-card">
+<span class="badge free">Free</span>
+<div class="tag">Free</div>
+<h3>Free Image</h3>
+<div class="price-value">$0</div>
+<ul>
+<li>1 AI image</li>
+<li>From 3H delivery</li>
+<li>AI-generated + designer-polished</li>
+</ul>
+<div class="add-strategy">
+<div class="label">
+Add Brand Strategy
+<small>Optional add-on for this tier</small>
+</div>
+<span class="toggle">+ $25</span>
+</div>
+<a href="/signup?intent=image" class="cta-btn">Claim Free Image →</a>
+</div>
+
+<!-- BRAND STRATEGY (STANDALONE) -->
+<div class="price-card">
+<div class="tag">Strategy-First</div>
+<h3>Brand Strategy</h3>
+<div class="price-value">$25</div>
+<ul>
+<li>LLM visibility audit</li>
+<li>Viral product angles for your niche</li>
+<li>Retail buyer shortlist (US + EU)</li>
+<li>3-day delivery</li>
+<li>Delivered to your dashboard</li>
+</ul>
+<a href="/signup?intent=strategy" class="cta-btn">Get Brand Strategy →</a>
+</div>
+
+<!-- DEEP DIVE BRAND STRATEGY (SEPARATE CARD) -->
+<div class="price-card" style="border: 1.5px solid #2DD4BF;">
+<div class="tag" style="color: #2DD4BF;">Retail-Ready</div>
+<h3>Deep Dive Brand Strategy</h3>
+<div class="price-value" style="font-size: 22pt;">Priced per scope</div>
+<ul>
+<li>Full LLM audit + 90-day roadmap</li>
+<li>Viral product concepts for your niche</li>
+<li>Warm intros to retail buyers we know</li>
+<li>Packaging &amp; positioning direction</li>
+<li>1-hour strategy call</li>
+</ul>
+<div style="display: flex; gap: 2mm; flex-wrap: wrap; margin-top: 3mm;">
+<a href="/contact?intent=deep-dive" class="cta-btn" style="flex: 1; text-align: center;">Contact Us →</a>
+<a href="#deep-dive-book" style="flex: 1; text-align: center; display: inline-block; background: transparent; border: 1.5px solid #2DD4BF; color: #2DD4BF; padding: 2.5mm 4mm; border-radius: 999px; font-weight: 600; font-size: 10pt; text-decoration: none;">Book a Call →</a>
+</div>
+<div style="margin-top: 3mm; font-size: 8pt; color: #B8B8B8; font-style: italic; text-align: center;">Subject to availability</div>
+</div>
+
+<!-- CAMPAIGN 5 -->
+<div class="price-card popular">
+<span class="badge">Popular</span>
+<div class="tag">Popular</div>
+<h3>Campaign 5</h3>
+<div class="price-value">$25</div>
+<ul>
+<li>5 AI campaign images</li>
+<li>1 revision / image</li>
+<li>From 24H delivery</li>
+<li>AI-generated + designer-polished</li>
+</ul>
+<div class="add-strategy">
+<div class="label">
+Free Brand Strategy
+<small>Snapshot bundled with order</small>
+</div>
+<span class="toggle">Included ✓</span>
+</div>
+<a href="/signup?intent=order&plan=campaign-5" class="cta-btn">Get Campaign 5 →</a>
+</div>
+
+<!-- CAMPAIGN 10 -->
+<div class="price-card">
+<div class="tag">Go Big</div>
+<h3>Campaign 10</h3>
+<div class="price-value">$45</div>
+<ul>
+<li>10 AI campaign images</li>
+<li>1 revision / image</li>
+<li>From 24H delivery</li>
+<li>AI-generated + designer-polished</li>
+</ul>
+<div class="add-strategy">
+<div class="label">
+Free Brand Strategy
+<small>Snapshot bundled with order</small>
+</div>
+<span class="toggle">Included ✓</span>
+</div>
+<a href="/signup?intent=order&plan=campaign-10" class="cta-btn">Get Campaign 10 →</a>
+</div>
+
+</div>
+
+<!-- ======= CUSTOM / ENTERPRISE ======= -->
+<div class="custom-tier">
+<div>
+<div class="tag">Enterprise</div>
+<h3>Custom.</h3>
+<div class="price">Get in Touch</div>
+<p style="color:#B8B8B8; font-size:10.5pt; margin-bottom: 0;">
+Handled per scope. Built for teams, multi-brand groups, and high-volume launches.
+</p>
+</div>
+<div>
+<ul>
+<li>Custom number of images</li>
+<li>Custom revisions</li>
+<li>AI-generated + designer-polished</li>
+<li>Dedicated manager</li>
+</ul>
+<div class="bonus-block">
+<strong>+ Brand Strategy Snapshot</strong><br>
+<strong>+ 30-min strategy call</strong>
+</div>
+<div style="display:flex; gap:3mm; margin-top:5mm; flex-wrap:wrap;">
+<a href="/contact?intent=custom" style="display:inline-block; background:#2DD4BF; color:#0A0A0A; padding:3.5mm 7mm; border-radius:999px; font-weight:700; font-size:10pt; letter-spacing:0.5pt;">Contact Us →</a>
+<a href="https://calendly.com/tyes/discovery-call" style="display:inline-block; background:transparent; border:2px solid #2DD4BF; color:#2DD4BF; padding:3mm 7mm; border-radius:999px; font-weight:700; font-size:10pt; letter-spacing:0.5pt;">Book a Call →</a>
+</div>
+</div>
+</div>
+
+<!-- ======= DEEP DIVE BRAND STRATEGY ======= -->
+<h2>Ready for more? <span class="accent">Deep Dive Brand Strategy.</span></h2>
+
+<div class="deep-dive-section">
+<div class="eyebrow">Beyond the snapshot</div>
+<h3>The <span class="accent">full playbook</span> that puts you in front of the buyer who says yes.</h3>
+<p class="desc">
+Where the Snapshot identifies your gaps, the Deep Dive Brand Strategy solves them. Full LLM audit with a 90-day
+implementation roadmap. Viral product concepts developed for your niche. And when you're ready,
+<strong>we put your product in front of the retail buyers we already work with</strong> across the US and Europe.
+</p>
+
+<div style="display: inline-block; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.25); color: #FFFFFF; padding: 2mm 5mm; border-radius: 999px; font-size: 9pt; font-weight: 700; letter-spacing: 1.5pt; text-transform: uppercase; margin-bottom: 6mm;">Priced per scope · Subject to availability</div>
+
+<ul class="features-grid">
+<li>Full LLM visibility audit (ChatGPT, Claude, Gemini, Perplexity)</li>
+<li>90-day implementation roadmap</li>
+<li>Viral product concepts developed for your niche</li>
+<li>Warm intros to retail buyers we know personally</li>
+<li>Packaging &amp; positioning direction</li>
+<li>1-hour strategy call with our team</li>
+</ul>
+
+<p style="font-size: 9.5pt; color: #888; margin: 4mm 0 5mm; line-height: 1.6;">
+The Deep Dive is a bespoke strategic engagement quoted per your brand size, target markets, and retail ambition. We take on a limited number of brands at any time to protect quality and buyer relationships. Reach out for a quote and current availability.
+</p>
+
+<div class="cta-row">
+<a href="/contact?intent=deep-dive" class="cta cta-primary">Contact Us →</a>
+<a href="https://calendly.com/tyes/deep-dive-call" class="cta cta-secondary">Book a Call →</a>
+</div>
+</div>
+
+<!-- ======= FAQ ======= -->
+<h2>Frequently asked.</h2>
+
+<h3>Are packages one-time or subscription?</h3>
+<p>All packages are one-time. Pay per campaign. Scale when ready.</p>
+
+<h3>What's the Brand Strategy Snapshot?</h3>
+<p>A custom snapshot tailored to your brand: LLM visibility gaps (where you show up in ChatGPT, Claude,
+Gemini, Perplexity), viral product angles for your niche, and a shortlist of retail buyers who fit your brand.
+Delivered to your dashboard within 3 business days.</p>
+
+<h3>How do I get the Brand Strategy Snapshot?</h3>
+<p>Three ways: <strong>included FREE</strong> with any Campaign 5, Campaign 10, or Custom order.
+<strong>Add it to Free Image for $25</strong>. Or <strong>order the Brand Strategy tier standalone for $25</strong>.
+Same snapshot in all three paths.</p>
+
+<h3>What's the difference between the Deep Dive Brand Strategy and the Brand Strategy Snapshot?</h3>
+<p>Two very different products. The <strong>Brand Strategy Snapshot ($25)</strong> is a 3-day audit that identifies your gaps: LLM visibility, viral product angles, retail buyer shortlist. Same snapshot whether you get it free with a Campaign, as a $25 add-on, or as the $25 standalone tier.<br><br>
+The <strong>Deep Dive Brand Strategy</strong> is a bespoke engagement that solves those gaps: full LLM audit with a 90-day implementation roadmap, viral product concepts developed for your niche, warm intros to retail buyers we already work with personally, packaging and positioning direction, and a 1-hour strategy call. Priced per scope, subject to availability. Contact Us or Book a Call to get started.<br><br>
+Short version: <strong>Snapshot = diagnosis. Deep Dive = cure + access.</strong></p>
+
+<h3>Is there a free trial available?</h3>
+<p>Yes. Free Image is $0. <strong>1 Free Image per user.</strong> After that, order a Campaign or grab the standalone Brand Strategy tier.</p>
+
+<h3>How long does delivery take?</h3>
+<p>Free Image: from 3 hours. Campaign 5 &amp; Campaign 10: from 24 hours. Custom: handled per scope.
+Strategy snapshot: 3 business days.</p>
+
+<h3>Can I request revisions on my images?</h3>
+<p>Campaign 5 and Campaign 10 include 1 revision per image. Custom revisions are agreed per scope.</p>
+
+<h3>What categories do you support?</h3>
+<p>Beauty. Personal Care. Fragrance. Fashion.</p>
+
+<h3>What if I need images faster?</h3>
+<p>Add your deadline directly in your brief when you place the order. We'll do our best to accommodate and confirm turnaround before starting.</p>
+
+<div class="footer-note">
+<strong>tyes LLC</strong> · <a href="mailto:office@tyes.app">office@tyes.app</a>
+</div>
+
+</div>
+</body>
+</html>

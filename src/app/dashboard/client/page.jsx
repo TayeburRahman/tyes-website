@@ -3,10 +3,12 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Search, Bell, ChevronDown, ChevronRight, ChevronLeft, Download, MoreVertical, Plus, Eye, Check, X, Clock, RefreshCw, Upload, Image, Settings, LogOut, Home, Package, CreditCard, FileText, MessageSquare, User, Camera, Paperclip, Send, Star, ArrowUpRight, Menu, AlertCircle, Zap, ExternalLink, Trash2, Edit, Save, CheckCircle } from "lucide-react";
+import { Search, Bell, ChevronDown, ChevronRight, ChevronLeft, Download, MoreVertical, Plus, Eye, Check, X, Clock, RefreshCw, Upload, Image, Settings, LogOut, Home, Package, CreditCard, FileText, MessageSquare, User, Camera, Paperclip, Send, Star, ArrowUpRight, Menu, AlertCircle, Zap, ExternalLink, Trash2, Edit, Save, CheckCircle, BarChart2 } from "lucide-react";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { ALL_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
+import BrandStrategyHub from "@/components/dashboard/BrandStrategyHub";
+import BrandInfoForm from "@/components/dashboard/BrandInfoForm";
 // stripePromise is lazy-loaded per component instance to avoid the global Stripe badge
 
 
@@ -184,7 +186,7 @@ const navPages = [
   { id: "overview", label: "Overview", icon: Home },
   { id: "orders", label: "My Orders", icon: Package },
   { id: "new-order", label: "New Order", icon: Plus },
-  // { id: "messages", label: "Messages", icon: MessageSquare, badge: "1" },
+  { id: "brand-strategy", label: "Brand Strategy", icon: BarChart2 },
   { id: "invoices", label: "Invoices", icon: FileText },
   { id: "account", label: "Account", icon: User },
 ];
@@ -195,6 +197,8 @@ const navPages = [
 const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
   const [step, setStep] = useState(1);
   const [plan, setPlan] = useState("");
+  const [addStrategy, setAddStrategy] = useState(false);
+  const [brandStrategyChecked, setBrandStrategyChecked] = useState(false);
   const [projectTitle, setProjectTitle] = useState("");
   const [briefDesc, setBriefDesc] = useState("");
   const [selectedStyles, setSelectedStyles] = useState([]);
@@ -210,7 +214,57 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   }, [clientInfo?.country]);
 
   const plans = pricingPlans;
+  const displayedPlans = plans.filter(p => brandStrategyChecked ? p.strategy_included === true : p.strategy_included === false);
 
+  useEffect(() => {
+    const preselect = localStorage.getItem('tyes_preselect_plan_name');
+    const preselectAddon = localStorage.getItem('tyes_preselect_strategy_addon');
+    let isStrat = preselectAddon === 'true';
+
+    if (preselect === 'Brand Strategy' || (preselect && preselect.includes('Strategy'))) {
+      isStrat = true;
+    }
+    if (isStrat) {
+      setBrandStrategyChecked(true);
+    }
+
+    if (preselect && plans.length > 0) {
+      const p = plans.find(x => x.name === preselect || (isStrat && x.strategy_included && x.name.startsWith(preselect)));
+      if (p) {
+        setPlan(p.id);
+        setStep(2);
+      }
+      localStorage.removeItem('tyes_preselect_plan_name');
+    }
+    if (preselectAddon === 'true') {
+      setAddStrategy(true);
+      localStorage.removeItem('tyes_preselect_strategy_addon');
+    }
+  }, [plans]);
+
+  const openCalendly = (customUrl) => {
+    const calendlyUrl = customUrl || process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/tayebrayhan101/client";
+    if (typeof window !== "undefined") {
+      if (window.Calendly) {
+        window.Calendly.initPopupWidget({ url: calendlyUrl });
+      } else {
+        if (!document.querySelector('link[href*="calendly.com"]')) {
+          const link = document.createElement('link');
+          link.href = 'https://assets.calendly.com/assets/external/widget.css';
+          link.rel = 'stylesheet';
+          document.head.appendChild(link);
+        }
+        const script = document.createElement('script');
+        script.src = 'https://assets.calendly.com/assets/external/widget.js';
+        script.onload = () => {
+          if (window.Calendly) {
+            window.Calendly.initPopupWidget({ url: calendlyUrl });
+          }
+        };
+        document.body.appendChild(script);
+      }
+    }
+  };
 
   const toggleStyle = (style) => {
     setSelectedStyles(prev => prev.includes(style) ? prev.filter(s => s !== style) : [...prev, style]);
@@ -256,7 +310,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
       const selectedPlan = plans.find(p => p.id === plan);
       if (!selectedPlan) throw new Error("Please select a plan first.");
-      
+
       const isPaid = selectedPlan.price > 0;
 
       // --- Upload files ---
@@ -296,11 +350,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         plan: selectedPlan.name,
         images_count: selectedPlan.images || 0,
         status: "pending",
-        revenue: selectedPlan.price || 0,
+        revenue: (selectedPlan.price || 0) + (addStrategy ? 25 : 0),
         revisions: 0,
         max_revisions: selectedPlan.max_revisions || 3,
         progress: 0,
-        attachments: { photos: photoUrls },
+        attachments: { photos: photoUrls, has_strategy_addon: addStrategy },
         reference_images: refUrls,
         font_label_files: fontUrls,
         items: structuredItems,
@@ -311,6 +365,27 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
       if (insertError) throw insertError;
 
+      // Handle Brand Strategy Request creation if applicable
+      const shouldCreateStrategy = selectedPlan.strategy_included || addStrategy;
+      if (shouldCreateStrategy) {
+        try {
+          const savedBrandInfo = localStorage.getItem('tyes_brand_info');
+          let brandData = savedBrandInfo ? JSON.parse(savedBrandInfo) : null;
+          if (brandData) {
+            await supabase.from("brand_strategy_requests").insert([{
+              user_id: currentUser.id,
+              order_id: newOrder.id,
+              status: "pending",
+              brand_info: brandData,
+              created_at: new Date().toISOString()
+            }]);
+            localStorage.removeItem('tyes_brand_info');
+          }
+        } catch (stratErr) {
+          console.error("Failed to create strategy request:", stratErr);
+        }
+      }
+
       if (isPaid) {
         // Redirect to Stripe Checkout Session
         addToast("Preparing secure checkout...", "info");
@@ -320,15 +395,16 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           body: JSON.stringify({
             orderId: newOrder.id,
             planName: selectedPlan.name,
-            price: selectedPlan.price,
+            price: (selectedPlan.price || 0) + (addStrategy ? 25 : 0),
+            hasStrategy: addStrategy,
             customerEmail: currentUser.email,
             customerName: customerName,
             billingCountry: billingCountry
           })
         });
-        
+
         const checkoutData = await checkoutRes.json();
-        
+
         if (!checkoutRes.ok) throw new Error(checkoutData.error || 'Failed to initialize checkout');
         if (checkoutData.url) {
           window.location.href = checkoutData.url;
@@ -376,231 +452,419 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 32px" }}>Fill in your brief and we'll get started right away.</p>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>
-          {["Choose Plan", "Upload Brief", "Review & Submit"].map((s, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
-              <div style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, background: step > i + 1 ? "#34d399" : step === i + 1 ? "linear-gradient(135deg,#4ecdc4,#2ab7a9)" : "rgba(255,255,255,0.06)", color: step >= i + 1 ? "#fff" : "#4b5563" }}>
-                {step > i + 1 ? <Check size={13} /> : i + 1}
+          {(() => {
+            const selectedPlan = plans.find(p => p.id === plan);
+            const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
+            const showBrandInfo = brandStrategyChecked || addStrategy || (selectedPlan ? selectedPlan.strategy_included : false);
+
+            const steps = ["Choose Plan"];
+            if (showUploadBrief) steps.push("Upload Brief");
+            if (showBrandInfo) steps.push("Brand Info");
+            steps.push("Review & Submit");
+            const currentStepName = steps[step - 1] || steps[0];
+
+            return steps.map((s, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, background: step > i + 1 ? "#34d399" : step === i + 1 ? "linear-gradient(135deg,#4ecdc4,#2ab7a9)" : "rgba(255,255,255,0.06)", color: step >= i + 1 ? "#fff" : "#4b5563" }}>
+                  {step > i + 1 ? <Check size={13} /> : i + 1}
+                </div>
+                <span style={{ fontSize: 12, color: step === i + 1 ? "#fff" : "#4b5563", fontWeight: step === i + 1 ? 600 : 400 }}>{s}</span>
+                {i < steps.length - 1 && <div style={{ flex: 1, height: 1, background: step > i + 1 ? "#34d399" : "rgba(255,255,255,0.06)", margin: "0 8px" }} />}
               </div>
-              <span style={{ fontSize: 12, color: step === i + 1 ? "#fff" : "#4b5563", fontWeight: step === i + 1 ? 600 : 400 }}>{s}</span>
-              {i < 2 && <div style={{ flex: 1, height: 1, background: step > i + 1 ? "#34d399" : "rgba(255,255,255,0.06)", margin: "0 8px" }} />}
-            </div>
-          ))}
+            ));
+          })()}
         </div>
 
-        {step === 1 && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
-            {plans.length === 0 ? (
-              <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#6b7280" }}>
-                <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 12px", opacity: 0.5 }} />
-                <p>Loading plans...</p>
-              </div>
-            ) : (
-              plans.map(p => (
-                <div key={p.id} onClick={() => setPlan(p.id)} style={{ background: plan === p.id ? "rgba(78,205,196,0.06)" : "rgba(255,255,255,0.03)", border: `2px solid ${plan === p.id ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)"}`, borderRadius: 16, padding: 24, cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
-                  {p.badge && <span style={{ position: "absolute", top: 12, right: 12, background: "rgba(78,205,196,0.15)", color: "#4ecdc4", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10 }}>{p.badge}</span>}
-                  <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", marginBottom: 4 }}>${p.price}</div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: "#e5e7eb", marginBottom: 4 }}>{p.name}</div>
-                  <div style={{ fontSize: 12, color: "#6b7280" }}>{p.images} image{p.images > 1 ? "s" : ""} · 3 revisions</div>
-                  {plan === p.id && <div style={{ position: "absolute", top: 12, left: 12 }}><Check size={16} color="#4ecdc4" /></div>}
-                </div>
-              ))
-            )}
-          </div>
-        )}
+        {(() => {
+          const selectedPlan = plans.find(p => p.id === plan);
+          const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
+          const showBrandInfo = brandStrategyChecked || addStrategy || (selectedPlan ? selectedPlan.strategy_included : false);
+          const steps = ["Choose Plan"];
+          if (showUploadBrief) steps.push("Upload Brief");
+          if (showBrandInfo) steps.push("Brand Info");
+          steps.push("Review & Submit");
+          const currentStepName = steps[step - 1] || steps[0];
 
-        {step === 2 && (
-          <div style={{ width: "100%" }}>
-            <InputField label="Project Title" value={projectTitle} onChange={setProjectTitle} placeholder="e.g. Summer Skincare Launch" required={true} />
-            <div style={{ marginBottom: 20 }}>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Brief / Mood Description <span style={{ color: "#ef4444" }}>*</span></label>
-              <textarea value={briefDesc} onChange={e => setBriefDesc(e.target.value)} placeholder="Describe the mood, style, angles you want..." rows={4} style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }} />
-            </div>
-            <div style={{ marginBottom: 20 }}>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Style (click to select)</label>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {["Product Shot", "Editorial", "Lifestyle", "Flat Lay", "Minimal", "Mood Lighting", "Artistic"].map(s => (
-                  <button key={s} onClick={() => toggleStyle(s)} style={{ padding: "6px 14px", borderRadius: 20, border: `1px solid ${selectedStyles.includes(s) ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.08)"}`, background: selectedStyles.includes(s) ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.03)", color: selectedStyles.includes(s) ? "#4ecdc4" : "#9ca3af", fontSize: 12, cursor: "pointer", transition: "all 0.2s" }}>{s}</button>
-                ))}
-              </div>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 20 }}>
-              {/* Product Photos */}
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Product Photos <span style={{ color: "#ef4444" }}>*</span></label>
-                <div onClick={() => document.getElementById('photoInput').click()}
-                  style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
-                  <input type="file" id="photoInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => {
-                    const selectedPlan = plans.find(p => p.id === plan);
-                    const limit = selectedPlan ? selectedPlan.images : 0;
-                    const newFiles = Array.from(e.target.files);
-                    if (productPhotos.length + newFiles.length > limit) {
-                      addToast(`Plan limit: ${limit} photos`, "warning");
+          return (
+            <>
+              {currentStepName === "Choose Plan" && (
+                <div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+                    {displayedPlans.length === 0 ? (
+                      <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#6b7280" }}>
+                        <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 12px", opacity: 0.5 }} />
+                        <p>Loading plans...</p>
+                      </div>
+                    ) : (
+                      displayedPlans.map(p => {
+                        const isSelected = plan === p.id;
+                        const isFreeImage = p.name === 'Free Image';
+                        const cleanName = p.name.replace(' (Strategy)', '');
+                        return (
+                          <div 
+                            key={p.id} 
+                            onClick={() => setPlan(p.id)} 
+                            style={{ 
+                              background: isSelected ? "rgba(45,212,191,0.06)" : "#0A0A0A", 
+                              border: `1.5px solid ${isSelected ? "#2DD4BF" : "rgba(255,255,255,0.08)"}`, 
+                              borderRadius: 12, 
+                              padding: "20px 16px", 
+                              cursor: "pointer", 
+                              transition: "all 0.25s ease", 
+                              position: "relative", 
+                              textAlign: "center",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                              minHeight: 180,
+                              boxShadow: isSelected ? "0 8px 24px rgba(45, 212, 191, 0.15)" : "none"
+                            }}
+                          >
+                            <div>
+                              <div style={{ fontSize: 10, letterSpacing: "1.5px", color: p.badge === 'Popular' ? "#4ecdc4" : "#2DD4BF", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>
+                                {p.badge ? p.badge : (isFreeImage ? 'Free' : (cleanName === 'Brand Strategy' ? 'Strategy-First' : ''))}
+                              </div>
+                              <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", fontFamily: '"League Spartan", sans-serif' }}>{cleanName}</div>
+                              <div style={{ fontSize: 24, color: "#fff", fontWeight: 800, margin: "8px 0", fontFamily: '"League Spartan", sans-serif' }}>
+                                {cleanName === 'Custom' ? <span style={{ fontSize: 16, color: "#2DD4BF" }}>Get in Touch</span> : `$${p.price}`}
+                              </div>
+                              <div style={{ fontSize: 11, color: "#9ca3af", lineHeight: 1.5, marginTop: 4 }}>
+                                {cleanName === 'Brand Strategy' ? "LLM audit · Viral angles · Retail shortlist · 3-day delivery" :
+                                  cleanName === 'Custom' ? "Custom volume · Per-scope" :
+                                    `${p.images} image${p.images !== 1 ? 's' : ''} · ${p.max_revisions} rev/img · From 24H`}
+                              </div>
+                            </div>
+
+                            <div style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              {p.strategy_included ? (
+                                <div style={{ fontSize: 10, color: "#34d399", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                                  <Check size={12} /> Strategy {p.strategy_call_included ? '+ 30-min call' : 'included'}
+                                </div>
+                              ) : (p.strategy_addon_allowed && !brandStrategyChecked) ? (
+                                <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 600, background: "rgba(45, 212, 191, 0.1)", padding: "4px 10px", borderRadius: 12, display: "inline-block" }}>
+                                  + Add Strategy for ${p.strategy_addon_price}
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Brand Strategy Checkbox Option */}
+                  <div
+                    onClick={() => {
+                      const nextState = !brandStrategyChecked;
+                      setBrandStrategyChecked(nextState);
+                      setPlan("");
+                    }}
+                    style={{
+                      marginTop: 24,
+                      padding: "20px 24px",
+                      borderRadius: 14,
+                      background: brandStrategyChecked ? "linear-gradient(135deg, rgba(45, 212, 191, 0.12), rgba(16, 185, 129, 0.05))" : "rgba(255, 255, 255, 0.02)",
+                      border: `1.5px solid ${brandStrategyChecked ? "#2DD4BF" : "rgba(255, 255, 255, 0.1)"}`,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 16,
+                      cursor: "pointer",
+                      transition: "all 0.25s ease",
+                      boxShadow: brandStrategyChecked ? "0 8px 24px rgba(45, 212, 191, 0.12)" : "none"
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <input
+                        type="checkbox"
+                        id="brandStrategyToggle"
+                        checked={brandStrategyChecked}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          setBrandStrategyChecked(e.target.checked);
+                          setPlan("");
+                        }}
+                        style={{ width: 20, height: 20, cursor: "pointer", accentColor: "#2DD4BF" }}
+                      />
+                    </div>
+                    <label htmlFor="brandStrategyToggle" style={{ cursor: "pointer", flex: 1, userSelect: "none" }}>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                        <span>Include Brand Strategy</span>
+                        {brandStrategyChecked ? (
+                          <span style={{ fontSize: 10, padding: "2px 10px", borderRadius: 12, background: "linear-gradient(135deg,#2DD4BF,#10b981)", color: "#000", fontWeight: 800 }}>ACTIVE</span>
+                        ) : (
+                          <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "#9ca3af", fontWeight: 600 }}>OPTIONAL</span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 4, lineHeight: 1.5 }}>
+                        Include LLM audit, viral angles, retail shortlist, and comprehensive brand positioning strategy with your order.
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {currentStepName === "Upload Brief" && (
+                <div style={{ width: "100%" }}>
+                  <InputField label="Project Title" value={projectTitle} onChange={setProjectTitle} placeholder="e.g. Summer Skincare Launch" required={true} />
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Brief / Mood Description <span style={{ color: "#ef4444" }}>*</span></label>
+                    <textarea value={briefDesc} onChange={e => setBriefDesc(e.target.value)} placeholder="Describe the mood, style, angles you want..." rows={4} style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }} />
+                  </div>
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Style (click to select)</label>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {["Product Shot", "Editorial", "Lifestyle", "Flat Lay", "Minimal", "Mood Lighting", "Artistic"].map(s => (
+                        <button key={s} onClick={() => toggleStyle(s)} style={{ padding: "6px 14px", borderRadius: 20, border: `1px solid ${selectedStyles.includes(s) ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.08)"}`, background: selectedStyles.includes(s) ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.03)", color: selectedStyles.includes(s) ? "#4ecdc4" : "#9ca3af", fontSize: 12, cursor: "pointer", transition: "all 0.2s" }}>{s}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 20 }}>
+                    {/* Product Photos */}
+                    <div>
+                      <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Product Photos <span style={{ color: "#ef4444" }}>*</span></label>
+                      <div onClick={() => document.getElementById('photoInput').click()}
+                        style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
+                        <input type="file" id="photoInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => {
+                          const selectedPlan = plans.find(p => p.id === plan);
+                          const cleanName = selectedPlan?.name?.replace(' (Strategy)', '');
+                          const limit = (selectedPlan && selectedPlan.images > 0) ? selectedPlan.images : (cleanName === 'Custom' ? 999 : 0);
+                          const newFiles = Array.from(e.target.files);
+                          if (limit > 0 && (productPhotos.length + newFiles.length > limit)) {
+                            addToast(`Plan limit: ${limit} photos`, "warning");
+                            return;
+                          }
+                          setProductPhotos(prev => [...prev, ...newFiles]);
+                        }} />
+                        <Camera size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
+                        <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Main Products</div>
+                        <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Required</div>
+                      </div>
+                      <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+                        {productPhotos.map((f, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
+                            <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
+                            <button onClick={() => setProductPhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Reference Images */}
+                    <div>
+                      <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Reference Images</label>
+                      <div onClick={() => document.getElementById('refInput').click()}
+                        style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
+                        <input type="file" id="refInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => setReferencePhotos(prev => [...prev, ...Array.from(e.target.files)])} />
+                        <Image size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
+                        <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Style References</div>
+                        <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Mood, angles, etc.</div>
+                      </div>
+                      <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+                        {referencePhotos.map((f, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
+                            <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
+                            <button onClick={() => setReferencePhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Fonts / Label */}
+                    <div>
+                      <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Fonts / Label</label>
+                      <div onClick={() => document.getElementById('fontInput').click()}
+                        style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
+                        <input type="file" id="fontInput" multiple style={{ display: "none" }} onChange={e => setFontFiles(prev => [...prev, ...Array.from(e.target.files)])} />
+                        <FileText size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
+                        <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Label Files</div>
+                        <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>PDF, PNG, OTF, etc.</div>
+                      </div>
+                      <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+                        {fontFiles.map((f, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
+                            <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
+                            <button onClick={() => setFontFiles(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {currentStepName === "Brand Info" && (
+                <div style={{ width: "100%" }}>
+                  <BrandInfoForm onComplete={(data) => {
+                    // Store locally but proceed to next step
+                    localStorage.setItem('tyes_brand_info', JSON.stringify(data));
+                    setStep(step + 1);
+                  }} />
+                </div>
+              )}
+
+              {currentStepName === "Review & Submit" && (() => {
+                const selectedPlan = plans.find(p => p.id === plan);
+                const cleanName = selectedPlan?.name?.replace(' (Strategy)', '');
+                const isPaid = selectedPlan && selectedPlan.price > 0;
+                const orderSummary = [
+
+                  { label: "Plan", val: selectedPlan?.name || "—" },
+                  { label: "Project", val: projectTitle || "Untitled" },
+                  { label: "Images", val: selectedPlan?.images || 0 },
+                  { label: "Style", val: selectedStyles.join(", ") || "Not specified" },
+                  { label: "Product Photos", val: `${productPhotos.length} files` },
+                  { label: "Ref. Images", val: `${referencePhotos.length} files` },
+                  { label: "Fonts / Labels", val: `${fontFiles.length} files` },
+                  { label: "Revisions", val: "3 included" },
+                ];
+                if (selectedPlan.strategy_addon_allowed) {
+                  orderSummary.push({ label: "Brand Strategy", val: addStrategy ? "Yes (+$25)" : "No" });
+                }
+                if (isPaid) {
+                  orderSummary.push({ label: "Taxes", val: "Calculated at checkout" });
+                }
+                const finalPrice = (selectedPlan.price || 0) + (addStrategy && selectedPlan.strategy_addon_allowed ? 25 : 0);
+                return (
+                  <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
+                    {/* LEFT: Order Summary */}
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+                      <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Order Summary</h3>
+                      {orderSummary.map((r, i) => (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 14 }}>
+                          <span style={{ color: "#9ca3af" }}>{r.label}</span><span style={{ color: "#fff", fontWeight: 500 }}>{r.val}</span>
+                        </div>
+                      ))}
+
+                      {selectedPlan.strategy_addon_allowed && (
+                        <div style={{ marginTop: 16, padding: 12, borderRadius: 8, background: 'rgba(45, 212, 191, 0.1)', border: '1px solid #2DD4BF', display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <input type="checkbox" id="addStrategy" checked={addStrategy} onChange={(e) => {
+                            const checked = e.target.checked;
+                            setAddStrategy(checked);
+                            if (checked) {
+                              setStep(3); // Navigate to Brand Info step to fill out brief
+                            } else {
+                              // When unchecking, steps array shrinks. Keep user on Review & Submit step (step 3).
+                              setStep(3);
+                            }
+                          }} style={{ width: 16, height: 16, cursor: 'pointer' }} />
+                          <label htmlFor="addStrategy" style={{ fontSize: 13, color: '#fff', cursor: 'pointer', flex: 1 }}>
+                            <strong>Add Brand Strategy Snapshot (+$25)</strong><br />
+                            <span style={{ color: '#9ca3af', fontSize: 11 }}>Market positioning, retail targets, and competitor analysis.</span>
+                          </label>
+                        </div>
+                      )}
+
+                      <div style={{ display: "flex", justifyContent: "space-between", padding: "16px 0", fontSize: 20 }}>
+                        <span style={{ color: "#9ca3af", fontWeight: 600 }}>Total</span>
+                        <span style={{ color: isPaid || addStrategy ? "#4ecdc4" : "#34d399", fontWeight: 800 }}>{(isPaid || addStrategy) ? `$${finalPrice}` : "Free"}</span>
+                      </div>
+
+
+                      {/* Free plan submit button */}
+                      {!isPaid && (
+                        <>
+                          <button
+                            onClick={() => handleSubmitOrder()}
+                            disabled={isSubmitting}
+                            style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
+                            {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
+                          </button>
+                          {(cleanName === 'Custom' || selectedPlan.strategy_call_included) && (
+                            <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(45, 212, 191, 0.08)', borderRadius: 12, border: '1px solid rgba(45, 212, 191, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+                              <div>
+                                <h4 style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: '0 0 4px' }}>Schedule your 30-min Discovery Call</h4>
+                                <p style={{ color: '#9ca3af', fontSize: 12, margin: 0 }}>Pick a convenient time slot with our strategy team.</p>
+                              </div>
+                              <button 
+                                type="button"
+                                onClick={() => openCalendly()}
+                                style={{ padding: '10px 20px', borderRadius: 20, background: 'linear-gradient(135deg,#4ecdc4,#2ab7a9)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 12px rgba(45, 212, 191, 0.3)' }}
+                              >
+                                <Clock size={16} /> Book Call via Calendly
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    {/* RIGHT: Payment action for paid plans */}
+                    {isPaid && (
+                      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Checkout</h3>
+
+                        <div style={{ marginBottom: 20 }}>
+                          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Billing Country (For Tax Purposes)</label>
+                          <select
+                            value={billingCountry}
+                            onChange={(e) => setBillingCountry(e.target.value)}
+                            style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", cursor: "pointer" }}
+                          >
+                            {ALL_COUNTRIES_LIST.map(c => (
+                              <option key={c.code} value={c.code} style={{ background: "#111", color: "#fff" }}>{c.name}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 24 }}>You will be securely redirected to Stripe to complete your payment.</p>
+                        <button
+                          onClick={() => handleSubmitOrder()}
+                          disabled={isSubmitting}
+                          style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                          {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Preparing Checkout...</> : <><CreditCard size={14} /> Proceed to Payment</>}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </>
+          );
+        })()}
+        {/* Next / Back navigation buttons block */}
+        {(() => {
+          const selectedPlan = plans.find(p => p.id === plan);
+          const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
+          const showBrandInfo = brandStrategyChecked || addStrategy || (selectedPlan ? selectedPlan.strategy_included : false);
+          const steps = ["Choose Plan"];
+          if (showUploadBrief) steps.push("Upload Brief");
+          if (showBrandInfo) steps.push("Brand Info");
+          steps.push("Review & Submit");
+          const currentStepName = steps[step - 1] || steps[0];
+
+          return (
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 32 }}>
+              {step > 1 ? (
+                <button onClick={() => setStep(step - 1)} style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#d1d5db", fontSize: 13, cursor: "pointer", transition: "all 0.2s" }}>Back</button>
+              ) : <div />}
+
+              {currentStepName !== "Review & Submit" && (
+                <button
+                  onClick={() => {
+                    if (currentStepName === "Choose Plan" && !plan) {
+                      addToast("Please select a plan", "warning");
                       return;
                     }
-                    setProductPhotos(prev => [...prev, ...newFiles]);
-                  }} />
-                  <Camera size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
-                  <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Main Products</div>
-                  <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Required</div>
-                </div>
-                <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-                  {productPhotos.map((f, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
-                      <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
-                      <button onClick={() => setProductPhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Reference Images */}
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Reference Images</label>
-                <div onClick={() => document.getElementById('refInput').click()}
-                  style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
-                  <input type="file" id="refInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => setReferencePhotos(prev => [...prev, ...Array.from(e.target.files)])} />
-                  <Image size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
-                  <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Style References</div>
-                  <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>Mood, angles, etc.</div>
-                </div>
-                <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-                  {referencePhotos.map((f, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
-                      <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
-                      <button onClick={() => setReferencePhotos(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Fonts / Label */}
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Fonts / Label</label>
-                <div onClick={() => document.getElementById('fontInput').click()}
-                  style={{ display: "grid", justifyItems: "center", border: "2px dashed rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: "rgba(255,255,255,0.01)" }}>
-                  <input type="file" id="fontInput" multiple style={{ display: "none" }} onChange={e => setFontFiles(prev => [...prev, ...Array.from(e.target.files)])} />
-                  <FileText size={20} color="#4ecdc4" style={{ marginBottom: 8 }} />
-                  <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 600 }}>Label Files</div>
-                  <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>PDF, PNG, OTF, etc.</div>
-                </div>
-                <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-                  {fontFiles.map((f, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 6, fontSize: 11 }}>
-                      <span style={{ flex: 1, color: "#d1d5db", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</span>
-                      <button onClick={() => setFontFiles(prev => prev.filter((_, idx) => idx !== i))} style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}><X size={12} /></button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (() => {
-          const selectedPlan = plans.find(p => p.id === plan);
-          const isPaid = selectedPlan && selectedPlan.price > 0;
-          const orderSummary = [
-
-            { label: "Plan", val: selectedPlan?.name || "—" },
-            { label: "Project", val: projectTitle || "Untitled" },
-            { label: "Images", val: selectedPlan?.images || 0 },
-            { label: "Style", val: selectedStyles.join(", ") || "Not specified" },
-            { label: "Product Photos", val: `${productPhotos.length} files` },
-            { label: "Ref. Images", val: `${referencePhotos.length} files` },
-            { label: "Fonts / Labels", val: `${fontFiles.length} files` },
-            { label: "Revisions", val: "3 included" },
-
-          ];
-          if (isPaid) {
-            orderSummary.push({ label: "Taxes", val: "Calculated at checkout" });
-          }
-          return (
-            <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
-              {/* LEFT: Order Summary */}
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Order Summary</h3>
-                {orderSummary.map((r, i) => (
-                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 14 }}>
-                    <span style={{ color: "#9ca3af" }}>{r.label}</span><span style={{ color: "#fff", fontWeight: 500 }}>{r.val}</span>
-                  </div>
-                ))}
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "16px 0", fontSize: 20 }}>
-                  <span style={{ color: "#9ca3af", fontWeight: 600 }}>Total</span>
-                  <span style={{ color: isPaid ? "#4ecdc4" : "#34d399", fontWeight: 800 }}>{isPaid ? `${selectedPlan.price}` : "Free"}</span>
-                </div>
-
-
-                {/* Free plan submit button */}
-                {!isPaid && (
-                  <button
-                    onClick={() => handleSubmitOrder()}
-                    disabled={isSubmitting}
-                    style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
-                    {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
-                  </button>
-                )}
-              </div>
-              {/* RIGHT: Payment action for paid plans */}
-              {isPaid && (
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Checkout</h3>
-                  
-                  <div style={{ marginBottom: 20 }}>
-                    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Billing Country (For Tax Purposes)</label>
-                    <select
-                      value={billingCountry}
-                      onChange={(e) => setBillingCountry(e.target.value)}
-                      style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", cursor: "pointer" }}
-                    >
-                      {ALL_COUNTRIES_LIST.map(c => (
-                        <option key={c.code} value={c.code} style={{ background: "#111", color: "#fff" }}>{c.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 24 }}>You will be securely redirected to Stripe to complete your payment.</p>
-                  <button
-                    onClick={() => handleSubmitOrder()}
-                    disabled={isSubmitting}
-                    style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                    {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Preparing Checkout...</> : <><CreditCard size={14} /> Proceed to Payment</>}
-                  </button>
-                </div>
+                    if (currentStepName === "Upload Brief" && (!projectTitle || !briefDesc || productPhotos.length === 0)) {
+                      addToast("Please fill all required fields", "warning");
+                      return;
+                    }
+                    // For Brand Info, the form handles its own next via onComplete
+                    if (currentStepName !== "Brand Info") {
+                      setStep(step + 1);
+                    } else {
+                      // Trigger form submit inside BrandInfoForm
+                      const btn = document.querySelector('button[type="submit"]');
+                      if (btn) btn.click();
+                    }
+                  }}
+                  style={{ padding: "12px 24px", borderRadius: 10, background: "#fff", color: "#000", border: "none", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+                >
+                  {currentStepName === "Brand Info" ? "Save & Continue" : "Next Step"}
+                </button>
               )}
             </div>
           );
         })()}
-
-        <div style={{ display: "flex", gap: 10, marginTop: 32 }}>
-          {step > 1 && <button onClick={() => setStep(step - 1)} style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 13, cursor: "pointer", minWidth: 100 }}>Back</button>}
-          {step < 3 && (
-            <button
-              onClick={async () => {
-                if (step === 1 && !plan) return;
-                if (step === 2) {
-                  if (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0) return;
-                }
-                const nextStep = step + 1;
-                setStep(nextStep);
-                // Client secret and VAT will be handled in step 3 useEffect
-              }}
-              disabled={(step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))}
-              style={{
-                padding: "12px 24px",
-                borderRadius: 10,
-                border: "none",
-                background: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#4ecdc4,#2ab7a9)",
-                color: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "#4b5563" : "#fff",
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: ((step === 1 && !plan) || (step === 2 && (!projectTitle.trim() || !briefDesc.trim() || productPhotos.length === 0))) ? "not-allowed" : "pointer",
-                minWidth: 120,
-                transition: "all 0.3s ease"
-              }}>
-              Continue
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );
@@ -660,6 +924,7 @@ export default function TyesClient() {
   const supabase = createClient();
   const { toasts, addToast } = useToast();
   const [page, setPage] = useState("overview");
+  const [strategyRequests, setStrategyRequests] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifDrop, setShowNotifDrop] = useState(false);
   const [showProfileDrop, setShowProfileDrop] = useState(false);
@@ -1009,52 +1274,64 @@ export default function TyesClient() {
   // ══════════════════════════════════════
   const OverviewPage = () => {
     const activeOrder = orders.find(o => o.status !== "delivered");
+    const snapshotsDelivered = strategyRequests.filter(s => s.status === 'sent').length;
+    const latestStrategy = strategyRequests[0];
+    const hasStratAddon = activeOrder?.has_strategy_addon || activeOrder?.attachments?.has_strategy_addon || activeOrder?.plan?.includes('Strategy');
+    const isActiveOrderStrategyEligible = activeOrder && (hasStratAddon || ["Campaign 5", "Campaign 10", "Brand Strategy", "Custom"].includes(activeOrder.plan));
+
     return (
       <div>
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Welcome back, {companyName.split(" ")[0]}</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0, fontFamily: '"League Spartan", sans-serif' }}>Welcome back, {companyName.split(" ")[0]}.</h1>
           <p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>Here's an overview of your account.</p>
         </div>
-        <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
-          <StatCard icon={Package} label="Total Orders" value={orders.length} sub={`Since ${clientInfo.joined}`} onClick={() => setPage("orders")} />
-          <StatCard icon={Image} label="Images Delivered" value={orders.filter(o => o.status === "delivered").reduce((s, o) => s + o.images, 0)} sub="Across all orders" onClick={() => setPage("orders")} />
-          <StatCard icon={CreditCard} label="Total Spent" value={`$${orders.reduce((s, o) => s + o.revenue, 0)}`} accent="#34d399" sub="Lifetime" onClick={() => setPage("invoices")} />
-          <StatCard icon={Star} label="Your Tier" value="Pro" sub="5+ orders" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
+          <StatCard icon={Package} label="Total Orders" value={orders.length} onClick={() => setPage("orders")} />
+          <StatCard icon={Image} label="Images Delivered" value={orders.filter(o => o.status === "delivered").reduce((s, o) => s + o.images, 0)} onClick={() => setPage("orders")} />
+          <StatCard icon={CreditCard} label="Total Spent" value={`$${orders.reduce((s, o) => s + o.revenue, 0)}`} accent="#34d399" onClick={() => setPage("invoices")} />
+          <StatCard icon={Star} label="Strategy Snapshots" value={snapshotsDelivered} onClick={() => setPage("brand-strategy")} />
         </div>
 
         {activeOrder && (
-          <div style={{ background: "rgba(78,205,196,0.04)", border: "1px solid rgba(78,205,196,0.15)", borderRadius: 16, padding: 24, marginBottom: 24, cursor: "pointer" }} onClick={() => { setPage("orders"); }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <div style={{ background: "#0A0A0A", borderLeft: "2px solid #2DD4BF", borderRadius: 4, padding: "16px 20px", marginBottom: 16, cursor: "pointer" }} onClick={() => { setPage("orders"); }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                  <Zap size={14} color="#4ecdc4" />
-                  <span style={{ fontSize: 12, color: "#4ecdc4", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Active Order</span>
-                </div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>{activeOrder.title}</h3>
-                <span style={{ fontSize: 12, color: "#6b7280" }}>{activeOrder.id} · {activeOrder.plan} · {activeOrder.images} images</span>
+                <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", marginBottom: 8 }}>Active Order</div>
+                <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{activeOrder.title} · {activeOrder.plan} · {activeOrder.images} images</h3>
               </div>
               <StatusBadge status={activeOrder.status} />
             </div>
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: 12, color: "#9ca3af" }}>Progress</span>
-                <span style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{activeOrder.progress}%</span>
+            {isActiveOrderStrategyEligible && (
+              <div style={{ fontSize: 11, color: "#2DD4BF", fontStyle: "italic", fontFamily: '"Montserrat", sans-serif' }}>
+                {activeOrder.plan === 'Free Image' && hasStratAddon ? "Brand Strategy Snapshot ($25 add-on) will be delivered separately." :
+                  activeOrder.plan === 'Brand Strategy' ? "Your $25 Brand Strategy Snapshot will be delivered in 3 business days." :
+                    "Free Brand Strategy Snapshot will be delivered with this order."}
               </div>
-              <div style={{ height: 8, borderRadius: 4, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
-                <div style={{ width: `${activeOrder.progress}%`, height: "100%", borderRadius: 4, background: "linear-gradient(90deg,#4ecdc4,#2ab7a9)", transition: "width 0.5s" }} />
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              {activeOrder.items.slice(0, 6).map((item, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: statusConfig[item.status]?.color || "#6b7280" }} />
-                  <span style={{ fontSize: 11, color: "#d1d5db" }}>{item.name}</span>
-                </div>
-              ))}
-              {activeOrder.items.length > 6 && <span style={{ fontSize: 11, color: "#4b5563", alignSelf: "center" }}>+{activeOrder.items.length - 6} more</span>}
-            </div>
+            )}
           </div>
         )}
+
+        <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 5, padding: "20px 24px", marginBottom: 24 }}>
+          <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", marginBottom: 8 }}>✦ Brand Strategy</div>
+          {latestStrategy ? (
+            <>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>
+                {latestStrategy.status === 'sent' ? 'Your strategy snapshot is ready.' : 'Your free strategy snapshot is being prepared.'}
+              </div>
+              <div style={{ fontSize: 11, color: "#B8B8B8" }}>
+                {latestStrategy.status === 'sent' ? 'Ready for more? Book a Deep Dive call.' : 'Estimated delivery: 3 business days.'}
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>You don't have a strategy snapshot yet.</div>
+              <div style={{ fontSize: 11, color: "#B8B8B8" }}>Request one free with a Campaign order, or add it for $25.</div>
+            </>
+          )}
+          <button onClick={() => setPage("brand-strategy")} style={{ background: "#2DD4BF", color: "#0A0A0A", padding: "8px 16px", borderRadius: 999, fontSize: 11, fontWeight: 700, border: "none", cursor: "pointer", marginTop: 12 }}>
+            View Strategy →
+          </button>
+        </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
           <div style={{ flex: 2, minWidth: 380, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
@@ -1117,6 +1394,40 @@ export default function TyesClient() {
     );
   };
 
+  const handlePayOrderInvoice = async (order) => {
+    try {
+      addToast("Redirecting to secure Stripe Checkout...", "info");
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: order.id,
+          planName: `Custom Quote: ${order.title || order.plan}`,
+          price: order.revenue,
+          customerEmail: user?.email || clientInfo?.email || order.customer_email,
+          customerName: clientInfo?.name || user?.user_metadata?.first_name || order.customer_name,
+          billingCountry: clientInfo?.country || "RO"
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to initialize payment");
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+      addToast(err.message || "Failed to start payment process", "error");
+    }
+  };
+
+  const isOrderPaid = (o) => {
+    if (!o) return false;
+    if (o.payment_status === 'paid' || o.payment_status === 'completed' || o.payment_status === 'succeeded') return true;
+    if (o.payment_status === 'unpaid' || o.status === 'quote_sent') return false;
+    if (!o.plan?.includes('Custom') && o.revenue > 0) return true;
+    return false;
+  };
+
   // ══════════════════════════════════════
   // ORDERS PAGE
   // ══════════════════════════════════════
@@ -1165,21 +1476,41 @@ export default function TyesClient() {
           ))}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {paginatedOrders.map(o => (
-            <div key={o.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden", transition: "all 0.2s" }}>
-              <div style={{ display: "flex", alignItems: "center", padding: "16px 20px", cursor: "pointer", gap: 16 }} onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                    <span style={{ fontSize: 11, color: "#7dd8d0", fontWeight: 600 }}>{o.id}</span>
-                    <StatusBadge status={o.status} />
+          {paginatedOrders.map(o => {
+            const paid = isOrderPaid(o);
+            return (
+              <div key={o.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden", transition: "all 0.2s" }}>
+                <div style={{ display: "flex", alignItems: "center", padding: "16px 20px", cursor: "pointer", gap: 16 }} onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 11, color: "#7dd8d0", fontWeight: 600 }}>{o.id}</span>
+                      <StatusBadge status={o.status} />
+                    </div>
+                    <h3 style={{ fontSize: 15, fontWeight: 600, color: "#fff", margin: 0 }}>{o.title}</h3>
+                    <span style={{ fontSize: 12, color: "#6b7280" }}>{o.plan} · {o.images} images · {o.date}</span>
                   </div>
-                  <h3 style={{ fontSize: 15, fontWeight: 600, color: "#fff", margin: 0 }}>{o.title}</h3>
-                  <span style={{ fontSize: 12, color: "#6b7280" }}>{o.plan} · {o.images} images · {o.date}</span>
-                </div>
-                <div style={{ textAlign: "right", marginRight: 12 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: (o.revenue || 0) > 0 ? "#34d399" : "#6b7280" }}>{(o.revenue || 0) > 0 ? `Paid: $${o.revenue}` : "Free"}</div>
-                  <div style={{ fontSize: 11, color: "#4b5563" }}>Rev {o.revisions}/{o.maxRevisions}</div>
-                </div>
+                  <div style={{ textAlign: "right", marginRight: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                    {paid ? (
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#34d399" }}>Paid: ${o.revenue}</div>
+                    ) : o.revenue > 0 ? (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#fbbf24" }}>Quote: ${o.revenue}</div>
+                        {o.status !== 'cancelled' && (
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); handlePayOrderInvoice(o); }}
+                            style={{ padding: "4px 10px", borderRadius: 14, background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", border: "none", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}
+                          >
+                            <CreditCard size={12} /> Pay Invoice (${o.revenue})
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: 12, fontWeight: 600, color: "#9ca3af" }}>
+                        {o.plan?.includes('Custom') ? "Quote Pending" : "Free"}
+                      </div>
+                    )}
+                    <div style={{ fontSize: 10, color: "#4b5563" }}>Rev {o.revisions}/{o.maxRevisions}</div>
+                  </div>
                 <div style={{ width: 60 }}>
                   <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
                     <div style={{ width: `${o.progress}%`, height: "100%", borderRadius: 3, background: o.progress === 100 ? "#34d399" : "linear-gradient(90deg,#4ecdc4,#2ab7a9)" }} />
@@ -1227,6 +1558,9 @@ export default function TyesClient() {
                   )}
                   <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
                     <button onClick={() => setShowOrderDetailModal(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Eye size={12} /> View Details</button>
+                    {!paid && o.revenue > 0 && o.status !== 'cancelled' && (
+                      <button onClick={() => handlePayOrderInvoice(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><CreditCard size={13} /> Pay Invoice (${o.revenue})</button>
+                    )}
                     {o.status === "delivered" && (
                       <button onClick={() => handleDownloadAll(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Download All</button>
                     )}
@@ -1237,7 +1571,8 @@ export default function TyesClient() {
                 </div>
               )}
             </div>
-          ))}
+          );
+        })}
           {filtered.length === 0 && <div style={{ padding: 40, textAlign: "center", color: "#4b5563", fontSize: 13 }}>No orders found.</div>}
         </div>
 
@@ -1337,18 +1672,22 @@ export default function TyesClient() {
   // INVOICES PAGE
   // ══════════════════════════════════════
   const InvoicesPage = () => {
-    const handlePayInvoice = (inv) => {
-      setInvoices(prev => prev.map(i => i.id === inv.id ? { ...i, status: "paid" } : i));
-      addToast(`Invoice ${inv.id} paid successfully!`);
-    };
-
-    const handleDownloadInvoice = (inv) => {
-      if (inv.url) {
-        window.open(inv.url, '_blank');
-      } else {
-        addToast(`Downloading ${inv.id}...`, "info");
-      }
-    };
+    const combinedInvoices = [
+      ...invoices,
+      ...orders.filter(o => o.revenue > 0 && !invoices.some(i => i.order === o.title || i.rawOrder?.id === o.id)).map(o => {
+        const paid = isOrderPaid(o);
+        return {
+          id: `INV-${o.id.toString().slice(0, 8)}`,
+          order: o.title || `Order ${o.id}`,
+          amount: o.revenue,
+          status: paid ? 'paid' : (o.status === 'cancelled' ? 'cancelled' : 'pending'),
+          date: o.date,
+          due: 'Upon Receipt',
+          url: null,
+          rawOrder: o
+        };
+      })
+    ];
 
     return (
       <div>
@@ -1366,20 +1705,28 @@ export default function TyesClient() {
               </tr>
             </thead>
             <tbody>
-              {invoices.map(inv => (
+              {combinedInvoices.length > 0 ? combinedInvoices.map(inv => (
                 <tr key={inv.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#7dd8d0", fontWeight: 600 }}>{inv.id}</td>
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#9ca3af", cursor: "pointer" }} onClick={() => setPage("orders")}>{inv.order}</td>
                   <td style={{ padding: "12px 16px", fontSize: 13, color: "#fff", fontWeight: 600 }}>${inv.amount}</td>
                   <td style={{ padding: "12px 16px" }}>
-                    <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600, background: inv.status === "paid" ? "rgba(16,185,129,0.15)" : "rgba(251,191,36,0.15)", color: inv.status === "paid" ? "#34d399" : "#fbbf24" }}>
-                      {inv.status === "paid" ? "Paid" : "Pending"}
+                    <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600, background: inv.status === "paid" ? "rgba(16,185,129,0.15)" : inv.status === 'cancelled' ? "rgba(239,68,68,0.15)" : "rgba(251,191,36,0.15)", color: inv.status === "paid" ? "#34d399" : inv.status === 'cancelled' ? "#ef4444" : "#fbbf24" }}>
+                      {inv.status === "paid" ? "Paid" : inv.status === 'cancelled' ? "Cancelled" : "Unpaid"}
                     </span>
                   </td>
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#6b7280" }}>{inv.date}</td>
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#6b7280" }}>{inv.due}</td>
-                  <td style={{ padding: "12px 16px" }}>
-                    {inv.url ? (
+                  <td style={{ padding: "12px 16px", display: "flex", gap: 8, alignItems: "center" }}>
+                    {inv.status !== 'paid' && inv.status !== 'cancelled' && (
+                      <button 
+                        onClick={() => handlePayOrderInvoice(inv.rawOrder || { id: inv.orderId || inv.id, title: inv.order, revenue: inv.amount })} 
+                        style={{ padding: "5px 12px", borderRadius: 7, border: "none", background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}
+                      >
+                        <CreditCard size={11} /> Pay Now (${inv.amount})
+                      </button>
+                    )}
+                    {inv.url && (
                       <a
                         href={inv.url}
                         target="_blank"
@@ -1403,12 +1750,14 @@ export default function TyesClient() {
                       >
                         <Download size={11} /> View Invoice
                       </a>
-                    ) : (
-                      <span style={{ fontSize: 12, color: "#374151" }}>—</span>
                     )}
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={7} style={{ padding: 24, textAlign: "center", color: "#6b7280", fontSize: 13 }}>No invoices found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -1721,6 +2070,7 @@ export default function TyesClient() {
       case "invoices": return <InvoicesPage />;
       case "account": return <AccountPage />;
       case "success": return <SuccessPage setPage={setPage} />;
+      case "brand-strategy": return <BrandStrategyHub supabase={supabase} clientInfo={clientInfo} setPage={setPage} />;
       default: return <OverviewPage />;
     }
   };
@@ -1929,16 +2279,14 @@ export default function TyesClient() {
           <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 13, flexShrink: 0 }}>T</div>
           {!collapsed && (
             <div>
-              <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", lineHeight: 1.1 }}>Tyes</div>
-              <div style={{ fontSize: 9, color: "#4ecdc4", fontStyle: "italic" }}>AI tied with a pulse</div>
-              <div style={{ fontSize: 10, color: "#6b7280" }}>Client Portal</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: "#fff", lineHeight: 1.1, fontFamily: '"Gliker", sans-serif', letterSpacing: "-0.5pt" }}>tyes</div>
             </div>
           )}
           <button onClick={() => setCollapsed(!collapsed)} style={{ marginLeft: "auto", background: "none", border: "none", color: "#4b5563", cursor: "pointer", padding: 2, display: collapsed ? "none" : "block" }}>
             <ChevronLeft size={14} />
           </button>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
           {navPages.map(p => (
             <SidebarItem key={p.id} icon={p.icon} label={p.label} active={page === p.id} onClick={() => handlePageChange(p.id)} collapsed={collapsed} badge={p.id === "messages" && unreadMsgs > 0 ? String(unreadMsgs) : p.badge && p.id !== "messages" ? p.badge : null} />
           ))}

@@ -144,3 +144,76 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
   }
 };
 
+export const sendStrategySnapshotEmail = async (props: { to: string; brandName: string; pdfUrl: string }) => {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
+        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 40px; text-align: center; }
+        .btn { display: inline-block; background-color: #2DD4BF; color: #0A0A0A; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; margin-top: 24px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>Your Brand Strategy Snapshot is Ready</h2>
+        <p>Hi there,</p>
+        <p>We've completed the Brand Strategy Snapshot for <strong>${props.brandName}</strong>.</p>
+        <p>You can download your snapshot PDF using the link below:</p>
+        <a href="${props.pdfUrl}" class="btn">Download Snapshot</a>
+      </div>
+    </body>
+    </html>
+  `;
+  if (!resendApiKey) {
+    console.log(`[MOCK EMAIL] To: ${props.to} | Subject: Your Brand Strategy Snapshot`);
+    return { success: true, mocked: true, htmlContent };
+  }
+  const resend = new Resend(resendApiKey);
+  return await resend.emails.send({
+    from: 'Tyes <hello@tyes.app>',
+    to: props.to,
+    subject: `Your Brand Strategy Snapshot - ${props.brandName}`,
+    html: htmlContent,
+  });
+};
+
+export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: string }) => {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
+        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 40px; text-align: center; }
+        .btn { display: inline-block; background-color: #2DD4BF; color: #0A0A0A; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; margin-top: 24px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>Ready for the full playbook?</h2>
+        <p>Hi there,</p>
+        <p>We see massive potential for <strong>${props.brandName}</strong> based on your recent snapshot. A Brand Strategy Snapshot diagnoses the gaps, but our Deep Dive Brand Strategy actually gives you the execution roadmap.</p>
+        <p>Let's talk about retail intros, viral product concepts, and how to dominate your niche.</p>
+        <a href="https://calendly.com/tyes/deep-dive-call" class="btn">Book a Deep Dive call &rarr;</a>
+      </div>
+    </body>
+    </html>
+  `;
+  if (!resendApiKey) {
+    console.log(`[MOCK EMAIL] To: ${props.to} | Subject: Ready for the full playbook?`);
+    return { success: true, mocked: true, htmlContent };
+  }
+  const resend = new Resend(resendApiKey);
+  return await resend.emails.send({
+    from: 'Tyes <hello@tyes.app>',
+    to: props.to,
+    subject: `Ready for the full playbook?`,
+    html: htmlContent,
+  });
+};

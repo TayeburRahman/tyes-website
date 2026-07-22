@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>tyes.app · Admin Dashboard v2 · Aligned with Homepage v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<!-- Paste your licensed Gliker kit here if you have one. -->
+<style>
+  @page { size: A4; margin: 12mm 12mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 500;
+    color: #1a1a1a; line-height: 1.55;
+    background: #FAFAF7;
+    padding: 15mm 10mm;
+  }
+  h1, h2, h3, h4, .doc-title, .mock-headline {
+    font-family: "League Spartan", -apple-system, sans-serif;
+    font-weight: 700;
+  }
+  .mock-cta, button { font-family: "Montserrat", sans-serif; font-weight: 500; }
+  .container { max-width: 820px; margin: 0 auto; }
+  .brand { font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif; font-weight: 700; letter-spacing: -0.5pt; }
+  .accent-italic { font-family: "Montserrat", sans-serif; font-style: italic; font-weight: 700; color: #2DD4BF; }
+
+  .doc-title { font-size: 22pt; font-weight: 800; letter-spacing: -0.5pt; color: #1a1a1a; margin-bottom: 3mm; line-height: 1.15; }
+  .doc-title .brand { color: #2DD4BF; }
+  .doc-subtitle { font-size: 11pt; color: #666; margin-bottom: 8mm; }
+
+  .shift-box { background: #E8F8F5; border-left: 4px solid #2DD4BF; padding: 5mm 6mm; margin-bottom: 10mm; font-size: 10pt; color: #1a4a45; }
+  .shift-box strong { color: #0D5B54; }
+
+  .section-header { background: #1a1a1a; color: #FFFFFF; padding: 4mm 6mm; border-radius: 3px; margin: 12mm 0 6mm; font-size: 10pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; }
+  .section-header:first-of-type { margin-top: 8mm; }
+
+  .version-label { font-size: 10pt; font-weight: 700; letter-spacing: 1pt; color: #2DD4BF; text-transform: uppercase; margin-bottom: 3mm; }
+
+  .mockup { background: #0A0A0A; color: #FFFFFF; border-radius: 6px; padding: 10mm 8mm; margin-bottom: 4mm; position: relative; }
+  .mockup .label { position: absolute; top: 3mm; left: 4mm; font-size: 7.5pt; letter-spacing: 2pt; color: #666; text-transform: uppercase; font-weight: 700; }
+
+  /* Admin dashboard chrome */
+  .dash-layout { display: grid; grid-template-columns: 45mm 1fr; gap: 4mm; margin-top: 6mm; }
+  .dash-sidebar { background: #141414; border-radius: 4px; padding: 5mm 4mm; }
+  .dash-sidebar .brand-mark { font-family: "Gliker", sans-serif; color: #FFFFFF; font-size: 11pt; font-weight: 700; margin-bottom: 5mm; }
+  .dash-sidebar .role-tag { font-size: 6pt; color: #2DD4BF; letter-spacing: 2pt; text-transform: uppercase; margin-bottom: 5mm; font-weight: 700; }
+  .dash-sidebar ul { list-style: none; padding: 0; margin: 0; }
+  .dash-sidebar li { font-size: 8pt; color: #B8B8B8; padding: 2mm 3mm; border-radius: 3px; margin-bottom: 1mm; letter-spacing: 0.2pt; }
+  .dash-sidebar li.active { background: rgba(45,212,191,0.15); color: #2DD4BF; font-weight: 700; }
+  /* .dash-sidebar li.new-item removed — same-time launch, no NEW badge */
+  /* .dash-sidebar li.new-item::after removed */
+
+  .dash-content { background: #141414; border-radius: 4px; padding: 6mm 6mm; }
+  .dash-content h4 { font-size: 12pt; color: #FFFFFF; margin-bottom: 2mm; }
+  .dash-content .sub { font-size: 8pt; color: #888; margin-bottom: 4mm; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm; margin-bottom: 5mm; }
+  .kpi-grid.six { grid-template-columns: repeat(6, 1fr); }
+  .kpi-card { background: #0A0A0A; border-radius: 3px; padding: 3mm 3mm; }
+  /* .kpi-card.new-kpi removed — no NEW highlighting */
+  .kpi-card .icon { font-size: 9pt; color: #2DD4BF; }
+  .kpi-card .val { font-size: 13pt; color: #FFFFFF; font-weight: 800; margin: 1mm 0; font-family: "League Spartan", sans-serif; }
+  .kpi-card .lbl { font-size: 6.5pt; color: #B8B8B8; letter-spacing: 0.5pt; text-transform: uppercase; }
+  .kpi-card .sub-val { font-size: 6.5pt; color: #FBBF24; margin-top: 1mm; font-weight: 700; }
+
+  .copy-block { background: #FFFFFF; border-left: 3px solid #2DD4BF; padding: 4mm 5mm; margin: 3mm 0; border-radius: 0 3px 3px 0; }
+  .copy-block .cb-label { font-size: 8pt; letter-spacing: 1.5pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm; }
+  .copy-block .cb-text { font-size: 10pt; color: #333; line-height: 1.55; font-style: italic; }
+  .copy-block .cb-text strong { color: #1a1a1a; font-style: normal; }
+
+  .note-box { background: #1a1a1a; color: #EDEDED; padding: 5mm 6mm; border-radius: 4px; margin: 5mm 0 6mm; font-size: 9pt; line-height: 1.6; }
+  .note-box strong { color: #2DD4BF; }
+  .note-box code { background: #000; padding: 1px 4px; border-radius: 3px; color: #2DD4BF; font-family: 'Courier New', monospace; }
+
+  h3 { font-size: 11pt; color: #1a1a1a; margin: 6mm 0 3mm; font-family: "League Spartan", sans-serif; }
+  p { font-size: 10pt; color: #333; margin-bottom: 3mm; line-height: 1.6; }
+  p strong { color: #1a1a1a; }
+  ul, ol { margin: 3mm 0 5mm 5mm; font-size: 10pt; color: #333; }
+  li { margin-bottom: 1.5mm; line-height: 1.55; }
+
+  table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-size: 9pt; }
+  th, td { text-align: left; padding: 2.5mm 3mm; border-bottom: 1px solid #E5E5E5; }
+  th { background: #F5F5F0; font-weight: 700; color: #1a1a1a; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.5pt; }
+
+  /* Strategy requests list mockup */
+  .list-mock { background: #0A0A0A; border-radius: 4px; padding: 4mm 5mm; }
+  .list-mock .list-tabs { display: flex; gap: 2mm; margin-bottom: 4mm; font-size: 7.5pt; flex-wrap: wrap; }
+  .list-mock .tab { padding: 1.5mm 3mm; border-radius: 3px; background: #141414; color: #B8B8B8; }
+  .list-mock .tab.active { background: rgba(45,212,191,0.15); color: #2DD4BF; font-weight: 700; }
+  .list-mock table { font-size: 7.5pt; margin: 0; }
+  .list-mock th, .list-mock td { border-bottom: 1px solid #2A2A2A; padding: 2mm 2mm; color: #B8B8B8; }
+  .list-mock th { background: transparent; color: #888; text-transform: uppercase; letter-spacing: 1pt; font-size: 6.5pt; }
+  .list-mock td.brand-col { color: #FFFFFF; font-weight: 700; }
+  .list-mock td .status-badge { background: rgba(45,212,191,0.15); color: #2DD4BF; padding: 0.5mm 2mm; border-radius: 2px; font-size: 6pt; text-transform: uppercase; letter-spacing: 1pt; font-weight: 700; }
+  .list-mock td .status-badge.new { background: rgba(251,191,36,0.15); color: #FBBF24; }
+  .list-mock td .status-badge.in-progress { background: rgba(59,130,246,0.15); color: #60A5FA; }
+
+  /* Plan cards on admin pricing */
+  .admin-plan-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2mm; margin: 4mm 0; }
+  .admin-plan { background: #0A0A0A; border: 1px solid #333; border-radius: 3px; padding: 3mm 3mm; position: relative; }
+  .admin-plan.popular { border: 1.5px solid #2DD4BF; }
+  .admin-plan .p-cat { font-size: 6pt; letter-spacing: 1.5pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 1mm; }
+  .admin-plan .p-name { font-size: 9pt; color: #FFFFFF; font-weight: 700; font-family: "League Spartan", sans-serif; }
+  .admin-plan .p-price { font-size: 12pt; color: #FFFFFF; font-weight: 800; margin: 1mm 0; font-family: "League Spartan", sans-serif; }
+  .admin-plan .p-feat { font-size: 6.5pt; color: #B4B4B4; }
+  .admin-plan .p-edit { position: absolute; top: 2mm; right: 3mm; color: #2DD4BF; font-size: 8pt; cursor: pointer; }
+
+  /* Add-on config box */
+  .addon-config { background: #0A0A0A; border: 1px solid #333; border-radius: 4px; padding: 4mm 5mm; margin: 3mm 0; }
+  .addon-config .ac-label { font-size: 7pt; letter-spacing: 2pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm; }
+  .addon-config .ac-title { font-size: 10pt; color: #FFFFFF; font-weight: 700; }
+  .addon-config .ac-note { font-size: 7.5pt; color: #B4B4B4; margin-top: 1mm; }
+
+  .divider { border-top: 1px solid #E5E5E5; margin: 12mm 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-title">
+<span class="brand">tyes.app</span> · Admin Dashboard v2 · <span class="accent-italic">Aligned with Homepage v3.</span>
+</div>
+<div class="doc-subtitle">
+For the super-admin team. Adds Strategy Requests management. Pricing page rebuilt for the
+5-plan structure. All values aligned with homepage v3 pricing model. Buyer intros happen off-platform
+via email after the Deep Dive kickoff call, so there is no in-app Buyer Intros module.
+</div>
+
+<div class="shift-box">
+<strong>What's changed vs. v1:</strong> Brand Strategy Snapshot standalone tier at <strong>$25</strong> + $25 add-on on Free Image (was $10). 5 plan cards only:
+Free Image · Brand Strategy ($25) · Campaign 5 ($25) · Campaign 10 ($45) · Custom (Get in Touch). New <strong>Strategy Requests</strong>
+sidebar item &amp; management page. Analytics gains 2 new KPIs (Deep Dive conversion, Strategy add-on revenue).
+Categories tightened to <strong>Beauty · Personal Care · Fragrance · Fashion</strong>. Retail categories on Strategy
+Request detail view use the 5 buyer types from homepage. Fonts: League Spartan + Montserrat + Gliker.
+<strong style="color:#0D5B54;">Buyer intros are handled off-platform</strong> — after the Deep Dive kickoff call, all buyer introductions and
+follow-through happen by email between Sheika and the client. No in-app Buyer Intros module.
+</div>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1 · SIDEBAR                                                   -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Section 1 · Sidebar Update</div>
+
+<p>Add one new item to the admin sidebar: <strong>Strategy Requests</strong> (between Orders and Clients).
+Buyer intros are handled by email after the Deep Dive call, so there is no in-app Buyer Intros module.</p>
+
+<div class="mockup">
+<div class="label">Updated sidebar with 1 new admin item</div>
+
+<div class="dash-layout">
+<div class="dash-sidebar">
+<div class="brand-mark">tyes</div>
+<div class="role-tag">Super Admin</div>
+<ul>
+<li>Dashboard</li>
+<li>Orders</li>
+<li>Strategy Requests</li>
+<li>Clients</li>
+<li>Analytics</li>
+<li>Pricing</li>
+<li>Settings</li>
+</ul>
+</div>
+
+<div class="dash-content">
+<h4>Super Admin, sidebar updated</h4>
+<div class="sub">One new item added, grouped with the existing "incoming work" flow.</div>
+<div style="font-size: 8pt; color: #B8B8B8; line-height: 1.65;">
+<strong style="color:#2DD4BF;">Strategy Requests</strong>: track all Brand Strategy Snapshot requests (from paid Campaigns, $25 add-on on Free Image, and $25 standalone tier).<br><br>
+<em style="color:#888;">Deep Dive buyer introductions are handled off-platform via email after the kickoff call.</em>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2 · DASHBOARD KPIS                                            -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Section 2 · Dashboard · Add 1 New KPI</div>
+
+<div class="mockup">
+<div class="label">5 KPI cards · Strategy Requests added</div>
+
+<div class="dash-content">
+<h4>Dashboard</h4>
+<div class="sub">Welcome back. Here's what's happening today.</div>
+
+<div class="kpi-grid">
+<div class="kpi-card"><div class="icon">$</div><div class="val">$985</div><div class="lbl">Revenue</div></div>
+<div class="kpi-card"><div class="icon">📦</div><div class="val">56</div><div class="lbl">Orders</div></div>
+<div class="kpi-card"><div class="icon">👥</div><div class="val">6</div><div class="lbl">Clients</div></div>
+<div class="kpi-card"><div class="icon">🖼</div><div class="val">127</div><div class="lbl">Images</div></div>
+<div class="kpi-card"><div class="icon">✦</div><div class="val">14</div><div class="lbl">Strategy Requests</div><div class="sub-val">3 pending</div></div>
+</div>
+
+</div>
+</div>
+
+<div class="copy-block">
+<div class="cb-label">KPI 5 · Strategy Requests</div>
+<div class="cb-text">Big number: total strategy requests lifetime. Sub-label: how many are currently pending (need admin action). Clickable, goes to Strategy Requests filtered to pending.</div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3 · STRATEGY REQUESTS PAGE                                    -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Section 3 · Strategy Requests · List + Detail</div>
+
+<div class="mockup">
+<div class="label">Strategy Requests list view</div>
+
+<div class="list-mock">
+<div style="color: #FFFFFF; font-size: 11pt; font-weight: 700; margin-bottom: 2mm; font-family: 'League Spartan', sans-serif;">Strategy Requests</div>
+<div style="font-size: 8pt; color: #888; margin-bottom: 4mm;">Manage incoming Brand Strategy Snapshots and Deep Dive bookings.</div>
+
+<div class="list-tabs">
+<div class="tab active">All (14)</div>
+<div class="tab">New (3)</div>
+<div class="tab">In Progress (4)</div>
+<div class="tab">Ready to Send (1)</div>
+<div class="tab">Sent (5)</div>
+<div class="tab">Converted to Deep Dive (1)</div>
+<div class="tab">Lost (0)</div>
+</div>
+
+<table>
+<tr><th>Brand</th><th>Client</th><th>Source</th><th>Category</th><th>Tier</th><th>Status</th><th>Assigned</th><th>Date</th></tr>
+<tr><td class="brand-col">myGeisha</td><td>Denisa T.</td><td>ORD-5CF8</td><td>Fragrance</td><td>Campaign 5</td><td><span class="status-badge new">New</span></td><td>Raluca (auto)</td><td>2h ago</td></tr>
+<tr><td class="brand-col">Synergy Therm</td><td>Raluca C.</td><td>Standalone</td><td>Personal Care</td><td>Campaign 10</td><td><span class="status-badge in-progress">In Progress</span></td><td>Raluca (auto)</td><td>Yesterday</td></tr>
+<tr><td class="brand-col">VitaOra</td><td>Tayebur R.</td><td>ORD-7275</td><td>Personal Care</td><td>Custom</td><td><span class="status-badge">Ready to Send</span></td><td>Sheika</td><td>2d ago</td></tr>
+<tr><td class="brand-col">TerraLine</td><td>Sofia M.</td><td>Free +$25 standalone</td><td>Beauty</td><td>Standalone $25</td><td><span class="status-badge">Sent</span></td><td>Sheika</td><td>5d ago</td></tr>
+</table>
+</div>
+
+</div>
+
+<h3>Column definitions</h3>
+
+<table>
+<tr><th>Column</th><th>Content</th></tr>
+<tr><td><strong>Brand</strong></td><td>Brand name from Brand Info form. Clickable, opens detail.</td></tr>
+<tr><td><strong>Client</strong></td><td>tyes user account. Clickable, opens client profile.</td></tr>
+<tr><td><strong>Source</strong></td><td>Where the request came from: Order ID (bundled_with_order) · <strong>Free Image + $25 add-on</strong> (freeimage_addon_25) · <strong>Standalone Brand Strategy tier</strong> (standalone_25).</td></tr>
+<tr><td><strong>Category</strong></td><td>Beauty · Personal Care · Fragrance · Fashion (4 only, singular Fragrance)</td></tr>
+<tr><td><strong>Status</strong></td><td>New · In Progress · Ready to Send · Sent · <strong>Converted to Deep Dive</strong> · Lost</td></tr>
+<tr><td><strong>Tier</strong></td><td>Standalone $25 · Campaign 5 · Campaign 10 · Custom</td></tr>
+<tr><td><strong>Assigned</strong></td><td><strong>Always Raluca, auto-assigned on request creation.</strong> Raluca is our Brand Growth &amp; AI Strategy Lead and the only strategist. No manual assignment step — the column shows "Raluca (auto)" on every row for at-a-glance confirmation.</td></tr>
+<tr><td><strong>Date</strong></td><td>Relative time (X hrs/days ago)</td></tr>
+</table>
+
+<h3>Detail view</h3>
+
+<div class="mockup">
+<div class="label">Strategy Request detail</div>
+
+<div style="background: #0A0A0A; padding: 5mm 6mm; border-radius: 4px;">
+<div style="font-size: 6.5pt; color: #FBBF24; letter-spacing: 2pt; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm;">Status · New</div>
+<div style="font-size: 14pt; color: #FFFFFF; font-weight: 700; font-family: 'League Spartan', sans-serif; margin-bottom: 2mm;">myGeisha · Strategy Request</div>
+<div style="font-size: 7.5pt; color: #888; margin-bottom: 5mm;">Submitted 2h ago · From Order ORD-5CF8 (Campaign 5) · Denisa T. (denisa@mygeisha.com)</div>
+
+<div style="border-top: 1px solid #2A2A2A; padding-top: 4mm; margin-bottom: 4mm;">
+<div style="font-size: 7pt; letter-spacing: 2pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm;">Essential Brand Info</div>
+<div style="font-size: 8pt; color: #C8C8C8; line-height: 1.75;">
+<strong style="color:#FFFFFF;">Brand:</strong> myGeisha<br>
+<strong style="color:#FFFFFF;">Website:</strong> mygeisha.com<br>
+<strong style="color:#FFFFFF;">Category:</strong> Fragrance<br>
+<strong style="color:#FFFFFF;">SKUs:</strong> 50-200<br>
+<strong style="color:#FFFFFF;">Annual revenue:</strong> $1-5M<br>
+<strong style="color:#FFFFFF;">Marketing budget:</strong> $5-25k / mo<br>
+<strong style="color:#FFFFFF;">Countries selling:</strong> RO, FR, UK + 2 boutiques BG<br>
+<strong style="color:#FFFFFF;">Retail presence:</strong> Premium Retail · Marketplaces · Own boutique<br>
+<strong style="color:#FFFFFF;">Distributors:</strong> Sephora (RO only) · None other
+</div>
+</div>
+
+<div style="border-top: 1px solid #2A2A2A; padding-top: 4mm; margin-bottom: 4mm;">
+<div style="font-size: 7pt; letter-spacing: 2pt; color: #FBBF24; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm;">Bonus Info (if provided)</div>
+<div style="font-size: 8pt; color: #C8C8C8; line-height: 1.75;">
+<strong style="color:#FFFFFF;">Brand age:</strong> 5 years<br>
+<strong style="color:#FFFFFF;">Expand to:</strong> US, Spain, UAE, Japan<br>
+<strong style="color:#FFFFFF;">Target customer:</strong> Women 28-45, urban professionals, fragrance enthusiasts...<br>
+<strong style="color:#FFFFFF;">Competitors:</strong> Le Labo, Byredo, Margiela Replica...<br>
+<strong style="color:#FFFFFF;">Social:</strong> IG @mygeisha 24k · TikTok 8k<br>
+<strong style="color:#FFFFFF;">USP:</strong> First Romanian cannabis-forward niche perfumery...<br>
+<strong style="color:#FFFFFF;">Goals:</strong> Grow D2C · Expand retail · New countries
+</div>
+</div>
+
+<div style="border-top: 1px solid #2A2A2A; padding-top: 4mm;">
+<div style="font-size: 7pt; letter-spacing: 2pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm;">Admin Actions</div>
+<div style="font-size: 7.5pt; color: #B8B8B8; margin-bottom: 3mm; font-family: 'Montserrat', sans-serif;">Auto-assigned to <strong style="color:#FFFFFF;">Raluca — Brand Growth &amp; AI Strategy Lead</strong>. No "assign strategist" step — she is the only strategist.</div>
+<div style="display: flex; gap: 3mm; flex-wrap: wrap;">
+<div style="background: transparent; border: 1.5px solid #2DD4BF; color: #2DD4BF; padding: 2mm 5mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">Change status</div>
+<div style="background: transparent; border: 1.5px solid #2DD4BF; color: #2DD4BF; padding: 2mm 5mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">Upload PDF</div>
+<div style="background: #2DD4BF; color: #0A0A0A; padding: 2mm 5mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">Send to client</div>
+<div style="background: transparent; border: 1.5px solid #FBBF24; color: #FBBF24; padding: 2mm 5mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">Flag for Deep Dive nudge</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="copy-block">
+<div class="cb-label">Admin action button definitions</div>
+<div class="cb-text">
+<strong>Change status</strong> — manually move the request through New → In Progress → Ready to Send → Sent → Lost.<br>
+<strong>Upload PDF</strong> — attach Raluca's completed Snapshot PDF (3-5 pages) to the request record. Once uploaded, it's visible in the client dashboard.<br>
+<strong>Send to client</strong> — publish the Snapshot to the client's dashboard AND fire an in-app + email notification ("Your Brand Strategy Snapshot is ready"). Auto-updates status to "Sent".<br>
+<strong>Flag for Deep Dive nudge</strong> — for brands Raluca thinks are strong Deep Dive candidates (retail-ready, opportunity is bigger than a Snapshot can address). Clicking it: (1) marks the request as "Converted to Deep Dive" in the pipeline for tracking; (2) fires an automated nudge email to the client with a soft "Ready for the full playbook? Book a Deep Dive call →" CTA (opens Calendly deep-dive-call event). It does NOT create a Deep Dive engagement — the client still has to book the call. Think of it as: "this brand is ripe, send the nudge."
+</div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4 · DEEP DIVE BUYER INTROS · OFF-PLATFORM                       -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Section 4 · Deep Dive Buyer Introductions · Off-Platform</div>
+
+<p><strong>No in-app module.</strong> Buyer introductions and follow-through for Deep Dive customers are handled
+<strong>off-platform via email</strong> after the Deep Dive kickoff call. Sheika manages the buyer relationships
+personally and communicates outcomes to the client directly by email. Nothing about buyer intros is uploaded,
+tracked, or exposed in the admin dashboard.</p>
+
+<div class="note-box">
+<strong>Rationale:</strong> Buyer relationships are high-touch and sensitive. Managing them off-platform keeps
+the process flexible, protects buyer contact details, and avoids the maintenance overhead of an internal CRM.
+The platform's promise ("warm intros to retail buyers we know personally") is delivered through Sheika's
+network, not through in-app messaging.
+</div>
+
+<div class="copy-block">
+<div class="cb-label">What NOT to build</div>
+<div class="cb-text">No <strong>Buyer Intros</strong> sidebar item. No Buyer Intros list view. No intro-email templates in-app. No buyer contact database. No status pipeline (Sent · Replied · Meeting Booked, etc.). No commission tracking UI. No API endpoints under <code>/api/admin/buyer-intros</code>.</div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5 · ANALYTICS · STRATEGY KPI ROW                              -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Section 5 · Analytics · New Strategy KPIs</div>
+
+<div class="mockup">
+<div class="label">New KPI row · Strategy metrics</div>
+
+<div class="dash-content">
+<h4>Analytics</h4>
+<div class="sub">Existing KPIs (Delivery Time, Revision Rate, etc.) keep as-is. Add these below.</div>
+
+<div class="kpi-grid">
+<div class="kpi-card"><div class="icon">✦</div><div class="val">14</div><div class="lbl">Strategy Requests</div></div>
+<div class="kpi-card"><div class="icon">⏱</div><div class="val">2.4d</div><div class="lbl">Avg Delivery</div></div>
+<div class="kpi-card"><div class="icon">%</div><div class="val">21%</div><div class="lbl">Free → Paid</div></div>
+<div class="kpi-card"><div class="icon">$</div><div class="val">$1.2k</div><div class="lbl">Strategy Revenue</div><div class="sub-val">$25 add-ons + standalones</div></div>
+</div>
+
+</div>
+</div>
+
+<h3>KPI definitions</h3>
+
+<table>
+<tr><th>KPI</th><th>Definition</th></tr>
+<tr><td><strong>Strategy Requests (total)</strong></td><td>All Brand Strategy Snapshots requested, delivered or in progress</td></tr>
+<tr><td><strong>Avg Delivery time</strong></td><td>Average business days from request to delivered snapshot</td></tr>
+<tr><td><strong>Free → Paid conversion</strong></td><td>% of Free Image users who paid the $25 strategy add-on OR upgraded to Campaign after seeing a snapshot</td></tr>
+<tr><td><strong>Strategy Revenue</strong></td><td>Total revenue from $25 Brand Strategy purchases: add-ons on Free Image + standalone tier orders</td></tr>
+</table>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6 · PRICING PAGE                                              -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Section 6 · Pricing Page · 5 Plans + $25 Strategy Add-on</div>
+
+<div class="mockup">
+<div class="label">Pricing plans management · 5 plans only</div>
+
+<div class="dash-content">
+<h4>Pricing Plans</h4>
+<div class="sub">Manage plans shown on the public homepage. Toggle Active to hide/show a plan.</div>
+
+<div class="admin-plan-grid">
+<div class="admin-plan">
+<div class="p-edit">✎</div>
+<div class="p-cat">Free</div>
+<div class="p-name">Free Image</div>
+<div class="p-price">$0</div>
+<div class="p-feat">1 image · No revisions · From 3H · Active</div>
+</div>
+
+<div class="admin-plan">
+<div class="p-edit">✎</div>
+<div class="p-cat">Strategy-First</div>
+<div class="p-name">Brand Strategy</div>
+<div class="p-price">$25</div>
+<div class="p-feat">LLM audit · Viral angles · Retail shortlist · 3-day delivery · Active</div>
+</div>
+
+<div class="admin-plan popular">
+<div class="p-edit">✎</div>
+<div class="p-cat">Popular</div>
+<div class="p-name">Campaign 5</div>
+<div class="p-price">$25</div>
+<div class="p-feat">5 images · 1 rev/img · From 24H · Strategy incl · Active</div>
+</div>
+
+<div class="admin-plan">
+<div class="p-edit">✎</div>
+<div class="p-cat">Go Big</div>
+<div class="p-name">Campaign 10</div>
+<div class="p-price">$45</div>
+<div class="p-feat">10 images · 1 rev/img · From 24H · Strategy incl · Active</div>
+</div>
+
+<div class="admin-plan">
+<div class="p-edit">✎</div>
+<div class="p-cat">Enterprise</div>
+<div class="p-name">Custom</div>
+<div class="p-price" style="font-size:10pt;">Get in Touch</div>
+<div class="p-feat">Custom · Strategy + 30-min call · Active</div>
+</div>
+</div>
+
+<div class="addon-config">
+<div class="ac-label">⚙ Strategy Pricing Config</div>
+<div class="ac-title">Price: <span style="color:#2DD4BF;">$25</span> — used for both the <strong>add-on on Free Image</strong> and the <strong>standalone Brand Strategy tier</strong> · Toggle: ✓ ON</div>
+<div class="ac-note">When ON, the "+ Add strategy $25" checkbox appears on the Free Image tier during New Order, and the Brand Strategy standalone tier ($25) is orderable directly. When OFF, both are hidden.</div>
+</div>
+
+</div>
+</div>
+
+<h3>Edit Plan modal (fields)</h3>
+
+<div class="mockup">
+<div class="label">Edit modal for Campaign 5</div>
+
+<div style="background: #0A0A0A; padding: 6mm 7mm; border-radius: 4px;">
+<div style="font-size: 11pt; color: #FFFFFF; font-weight: 700; margin-bottom: 4mm; font-family: 'League Spartan', sans-serif;">Edit Plan: Campaign 5</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3mm;">
+<div>
+<div style="font-size: 7pt; color:#2DD4BF; letter-spacing: 1pt; text-transform: uppercase; font-weight: 700;">Plan name</div>
+<div style="background:#141414; padding: 2mm 3mm; border-radius:2px; font-size: 8pt; color:#FFFFFF; margin-bottom: 3mm;">Campaign 5</div>
+
+<div style="font-size: 7pt; color:#2DD4BF; letter-spacing: 1pt; text-transform: uppercase; font-weight: 700;">Image count</div>
+<div style="background:#141414; padding: 2mm 3mm; border-radius:2px; font-size: 8pt; color:#FFFFFF; margin-bottom: 3mm;">5</div>
+
+<div style="font-size: 7pt; color:#2DD4BF; letter-spacing: 1pt; text-transform: uppercase; font-weight: 700;">Delivery time</div>
+<div style="background:#141414; padding: 2mm 3mm; border-radius:2px; font-size: 8pt; color:#FFFFFF; margin-bottom: 3mm;">From 24H</div>
+</div>
+<div>
+<div style="font-size: 7pt; color:#2DD4BF; letter-spacing: 1pt; text-transform: uppercase; font-weight: 700;">Price</div>
+<div style="background:#141414; padding: 2mm 3mm; border-radius:2px; font-size: 8pt; color:#FFFFFF; margin-bottom: 3mm;">$25</div>
+
+<div style="font-size: 7pt; color:#2DD4BF; letter-spacing: 1pt; text-transform: uppercase; font-weight: 700;">Revisions per image</div>
+<div style="background:#141414; padding: 2mm 3mm; border-radius:2px; font-size: 8pt; color:#FFFFFF; margin-bottom: 3mm;">1</div>
+
+<div style="font-size: 7pt; color:#2DD4BF; letter-spacing: 1pt; text-transform: uppercase; font-weight: 700;">Active</div>
+<div style="font-size: 8pt; color:#2DD4BF; margin-bottom: 3mm;">⚡ ON</div>
+</div>
+</div>
+
+<div style="border-top: 1px solid #2A2A2A; padding-top: 3mm; margin-top: 3mm;">
+<div style="font-size: 7pt; color:#2DD4BF; letter-spacing: 1pt; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm;">Strategy Options</div>
+<div style="font-size: 8pt; color:#FFFFFF;">Strategy snapshot included: <span style="color:#2DD4BF;">✓ ON</span></div>
+<div style="font-size: 8pt; color:#FFFFFF;">30-min discovery call included: <span style="color:#888;">✕ OFF</span></div>
+<div style="font-size: 8pt; color:#FFFFFF;">Enable Brand Strategy pricing: <span style="color:#888;">✕ OFF (Free Image only)</span></div>
+</div>
+
+<div style="margin-top: 4mm; display: flex; gap: 3mm;">
+<div style="background:#2DD4BF; color:#0A0A0A; padding: 2mm 5mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">Save changes</div>
+<div style="background: transparent; color:#B8B8B8; padding: 2mm 5mm; font-size: 8pt;">Cancel</div>
+</div>
+</div>
+
+</div>
+
+<h3>Plan field structure</h3>
+
+<table>
+<tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+<tr><td>Plan name</td><td>Text input</td><td>e.g. "Campaign 5"</td></tr>
+<tr><td>Price</td><td>Currency input</td><td>USD. Custom plan: shows "Get in Touch" instead of a number</td></tr>
+<tr><td>Image count</td><td>Number input</td><td>e.g. 5 · 10 · Custom (for Custom plan)</td></tr>
+<tr><td>Revisions per image</td><td>Number input</td><td>0 for Free Image · 1 for Campaign 5/10 · Custom for Custom</td></tr>
+<tr><td>Delivery time</td><td>Text input</td><td>"From 3H" · "From 24H" · "Per-scope"</td></tr>
+<tr><td>Active</td><td>Toggle</td><td>If OFF, plan doesn't show on homepage</td></tr>
+<tr><td>Strategy snapshot included</td><td>Toggle</td><td>If ON, brand info form auto-shows in New Order Step 3</td></tr>
+<tr><td>30-min discovery call included</td><td>Toggle</td><td>If ON, Calendly widget shows in Step 3 (Custom plan only). Uses the <code>discovery-call</code> Calendly event, not the Deep Dive 1-hour event.</td></tr>
+<tr><td>Enable Brand Strategy pricing</td><td>Toggle</td><td>If ON, user can opt in to +$25 strategy add-on (Free Image only)</td></tr>
+</table>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7 · REACT IMPLEMENTATION                                      -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Section 7 · React Implementation</div>
+
+<h3>New components</h3>
+
+<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+&lt;AdminSidebar /&gt;  →  add 1 item: Strategy Requests<br>
+&lt;StrategyRequestsList /&gt;  →  table with status tab filters<br>
+&lt;StrategyRequestDetail /&gt;  →  detail view with admin actions (status, assign, upload PDF, send, convert to Deep Dive)<br>
+&lt;StrategyKpis /&gt;  →  4 KPIs (Strategy Requests, Avg Delivery, Free→Paid, Strategy Revenue)<br>
+&lt;PricingPlanCard /&gt;  →  5 cards (Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom)<br>
+&lt;EditPlanModal /&gt;  →  fields including 3 strategy toggles<br>
+&lt;StrategyAddonConfig /&gt;  →  price ($25) + active toggle for Free Image tier
+</div>
+
+<h3>New endpoints</h3>
+
+<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+GET  /api/admin/strategy-requests  →  list with status filter<br>
+GET  /api/admin/strategy-requests/:id  →  detail<br>
+PATCH /api/admin/strategy-requests/:id  →  update status, notes (assignee auto-set to Raluca on INSERT)<br>
+POST /api/admin/strategy-requests/:id/upload  →  upload snapshot PDF<br>
+POST /api/admin/strategy-requests/:id/send  →  send to client<br>
+POST /api/admin/strategy-requests/:id/flag-deep-dive  →  flag for Deep Dive nudge (marks status "Converted to Deep Dive" + fires client nudge email)<br><br>
+GET  /api/admin/analytics/strategy  →  strategy KPIs<br><br>
+GET  /api/admin/plans  →  5 plans<br>
+PATCH /api/admin/plans/:id  →  update plan fields (incl. strategy toggles)<br><br>
+<span style="color:#888;">// Buyer intros: no endpoints. Handled off-platform by email after the Deep Dive kickoff call.</span>
+</div>
+
+<h3>Design tokens (aligned with homepage v3)</h3>
+
+<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+:root {<br>
+&nbsp;&nbsp;--bg-primary: #0A0A0A;<br>
+&nbsp;&nbsp;--bg-card: #141414;<br>
+&nbsp;&nbsp;--accent-teal: #2DD4BF;<br>
+&nbsp;&nbsp;--accent-yellow: #FBBF24;   /* dev warnings + pending states + rate-limit notices ONLY — NOT the customer-facing "+ Add strategy $25" toggle (that's teal) */<br>
+&nbsp;&nbsp;--status-new: #FBBF24;<br>
+&nbsp;&nbsp;--status-in-progress: #60A5FA;<br>
+&nbsp;&nbsp;--status-ready: #2DD4BF;<br>
+&nbsp;&nbsp;--status-lost: #EF4444;<br>
+&nbsp;&nbsp;--font-body: "Montserrat", sans-serif;<br>
+&nbsp;&nbsp;--font-title: "League Spartan", sans-serif;<br>
+&nbsp;&nbsp;--font-accent: "Montserrat", sans-serif;<br>
+&nbsp;&nbsp;--font-brand: "Gliker", sans-serif;<br>
+}
+</div>
+
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+<!-- CHECKLIST                                                             -->
+<!-- ═════════════════════════════════════════════════════════════════════ -->
+
+<div class="section-header">Implementation Checklist</div>
+
+<p>
+<strong>Sidebar &amp; branding:</strong><br>
+☐ Add "Strategy Requests" between Orders and Clients<br>
+☐ Standard sidebar item — no NEW badge (same-time launch)<br>
+☐ <strong>Do NOT add "Buyer Intros"</strong> — buyer introductions are handled off-platform by email after the Deep Dive kickoff call<br><br>
+
+<strong>Dashboard:</strong><br>
+☐ Add 5th KPI card: Strategy Requests (14 · 3 pending)<br>
+☐ Clickable to filtered list view<br><br>
+
+<strong>Strategy Requests page:</strong><br>
+☐ List view with 7 status tabs (All / New / In Progress / Ready to Send / Sent / Converted to Deep Dive / Lost)<br>
+☐ Columns: Brand · Client · Source · Category · Tier · Status · Assigned · Date<br>
+☐ Detail view: essential + bonus info sections + admin action bar<br>
+☐ Sources: Order ID · Free Image + $25 add-on · Standalone Brand Strategy tier<br>
+☐ Categories: Beauty · Personal Care · Fragrance · Fashion (4 only)<br>
+☐ <strong>Auto-assign every new Strategy Request to Raluca (Brand Growth &amp; AI Strategy Lead)</strong> — she is the only strategist. No manual assign step, no assignee dropdown. The "Assigned" column displays "Raluca (auto)" on every row.<br>
+☐ Admin actions: Change status · Upload PDF · Send to client · <strong>Flag for Deep Dive nudge</strong> (button renamed from "Convert to Deep Dive" — see explainer above)<br><br>
+
+<strong>Buyer Intros:</strong><br>
+☐ No in-app module. Deep Dive buyer introductions and follow-through happen off-platform via email between Sheika and the client.<br><br>
+
+<strong>Analytics:</strong><br>
+☐ Add 4 new KPIs in dedicated row: Strategy Requests · Avg Delivery · Free→Paid · Strategy Revenue<br>
+☐ Existing KPIs stay untouched<br><br>
+
+<strong>Pricing page:</strong><br>
+☐ Set plan cards to 5: Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom<br>
+☐ Remove Free Test, Single, Starter, Growth cards<br>
+☐ Strategy Pricing Config box: price $25 (applies to both the Free Image add-on and the standalone Brand Strategy tier), toggle ON<br>
+☐ Edit Plan modal: 3 strategy toggles (included · call · allow add-on)<br><br>
+
+<strong>Fonts &amp; design tokens:</strong><br>
+☐ League Spartan for titles (h1-h4, brand name, prices)<br>
+☐ Montserrat Medium for body text and admin action buttons<br>
+☐ Montserrat Italic for teal accents<br>
+☐ Gliker for tyes brand mark in sidebar<br><br>
+
+<strong>QA:</strong><br>
+☐ All strategy add-on references updated to $25 (both Free Image add-on and standalone Brand Strategy tier are $25)<br>
+☐ All references to old plans (Free Test, Single, Starter, Growth) removed<br>
+☐ Categories say "Fragrance" (singular), not "Fragrances"<br>
+☐ Retail Categories in Strategy Request detail use the 5 buyer types<br>
+☐ No em-dashes anywhere in copy<br>
+☐ Contrast passes WCAG AA on teal text over dark bg
+</p>
+
+<div class="divider"></div>
+
+<p style="text-align:center; font-size: 9pt; color: #999; margin-top: 8mm;">
+<span class="brand">tyes.app</span> · Admin Dashboard v2 · Aligned with Homepage v3 · Dev-ready
+</p>
+
+</div>
+</body>
+</html>
