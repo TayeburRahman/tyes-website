@@ -982,7 +982,7 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
 
 const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTargetOrder }) => {
   const [editPlan, setEditPlan] = useState(null);
-  const [form, setForm] = useState({ name: "", images: 10, price: 99 });
+  const [form, setForm] = useState({ name: "", images: 10, price: 99, features: [], description: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -1002,7 +1002,9 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
       max_revisions: String(p.max_revisions ?? 0),
       strategy_included: !!p.strategy_included,
       strategy_addon_allowed: !!p.strategy_addon_allowed,
-      strategy_addon_price: String(p.strategy_addon_price ?? 0)
+      strategy_addon_price: String(p.strategy_addon_price ?? 0),
+      features: p.features || [],
+      description: p.description || ""
     }); 
     setEditPlan(p.id); 
   };
@@ -1016,7 +1018,9 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
       max_revisions: Number(form.max_revisions || 0),
       strategy_included: !!form.strategy_included,
       strategy_addon_allowed: !!form.strategy_addon_allowed,
-      strategy_addon_price: Number(form.strategy_addon_price || 0)
+      strategy_addon_price: Number(form.strategy_addon_price || 0),
+      features: form.features || [],
+      description: form.description || ""
     };
 
     try {
@@ -1078,7 +1082,9 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
       max_revisions: "3",
       strategy_included: false,
       strategy_addon_allowed: true,
-      strategy_addon_price: "25"
+      strategy_addon_price: "25",
+      features: [],
+      description: ""
     });
     setEditPlan("new");
   };
@@ -1106,6 +1112,7 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
     <div>
       <Modal open={editPlan !== null} onClose={() => setEditPlan(null)} title={editPlan === "new" ? "Add New Plan" : "Edit Plan"}>
         <InputField label="Plan Name" value={form.name} onChange={v => setForm({ ...form, name: v })} placeholder="e.g. Starter" />
+        <InputField label="Description" value={form.description || ""} onChange={v => setForm({ ...form, description: v })} placeholder="e.g. One stunning image" />
         <InputField label="Badge Tag (e.g. Popular, Go Big)" value={form.badge || ""} onChange={v => setForm({ ...form, badge: v })} placeholder="e.g. Popular" />
         <InputField label="Number of Images" value={form.images} onChange={v => setForm({ ...form, images: v })} type="number" />
         <InputField label="Price ($)" value={form.price} onChange={v => setForm({ ...form, price: v })} type="number" />
@@ -1126,6 +1133,51 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
         {form.strategy_addon_allowed && (
           <InputField label="Strategy Add-on Price ($)" value={form.strategy_addon_price || "25"} onChange={v => setForm({ ...form, strategy_addon_price: v })} type="number" />
         )}
+
+        <div style={{ marginTop: 16 }}>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Plan Features (Bullet Points)</label>
+          {form.features?.map((feat, i) => (
+            <div key={i} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "center" }}>
+              <select 
+                value={feat.icon || "check"} 
+                onChange={e => {
+                  const nf = [...(form.features || [])];
+                  nf[i].icon = e.target.value;
+                  setForm({ ...form, features: nf });
+                }}
+                style={{ padding: "8px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }}
+              >
+                <option value="check">Checkmark</option>
+                <option value="clock">Clock</option>
+              </select>
+              <input 
+                type="text" 
+                value={feat.text || ""} 
+                onChange={e => {
+                  const nf = [...(form.features || [])];
+                  nf[i].text = e.target.value;
+                  setForm({ ...form, features: nf });
+                }}
+                placeholder="e.g. 3 revisions / image"
+                style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }}
+              />
+              <button 
+                onClick={() => {
+                  const nf = [...(form.features || [])];
+                  nf.splice(i, 1);
+                  setForm({ ...form, features: nf });
+                }}
+                style={{ padding: 6, borderRadius: 6, border: "none", background: "rgba(239,68,68,0.15)", color: "#ef4444", cursor: "pointer" }}
+              ><Trash2 size={14}/></button>
+            </div>
+          ))}
+          <button 
+            onClick={() => setForm({ ...form, features: [...(form.features || []), { text: "", icon: "check" }] })}
+            style={{ padding: "6px 12px", borderRadius: 8, border: "1px dashed rgba(255,255,255,0.15)", background: "transparent", color: "#9ca3af", fontSize: 11, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}
+          >
+            <Plus size={12}/> Add Feature
+          </button>
+        </div>
 
         <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
           <button onClick={() => setEditPlan(null)} style={{ padding: "8px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, cursor: "pointer" }}>Cancel</button>
