@@ -366,7 +366,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         plan: selectedPlan.name,
         images_count: selectedPlan.images || 0,
         status: "pending",
-        revenue: (selectedPlan.price || 0) + (addStrategy ? 25 : 0),
+        revenue: (selectedPlan.price || 0) + (addStrategy && selectedPlan.name === 'Free Image' ? 25 : 0),
         revisions: 0,
         max_revisions: selectedPlan.max_revisions || 3,
         progress: 0,
@@ -411,7 +411,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           body: JSON.stringify({
             orderId: newOrder.id,
             planName: selectedPlan.name,
-            price: (selectedPlan.price || 0) + (addStrategy ? 25 : 0),
+            price: (selectedPlan.price || 0) + (addStrategy && selectedPlan.name === 'Free Image' ? 25 : 0),
             hasStrategy: addStrategy,
             customerEmail: currentUser.email,
             customerName: customerName,
@@ -1498,8 +1498,9 @@ export default function TyesClient() {
 
   const isOrderPaid = (o) => {
     if (!o) return false;
-    if (o.payment_status === 'paid' || o.payment_status === 'completed' || o.payment_status === 'succeeded') return true;
-    if (o.payment_status === 'unpaid' || o.status === 'quote_sent') return false;
+    const rawPs = o.payment_status || o.attachments?.payment_status;
+    if (rawPs === 'paid' || rawPs === 'completed' || rawPs === 'succeeded') return true;
+    if (rawPs === 'unpaid' || o.status === 'quote_sent') return false;
     if (!(o.plan?.includes('Custom') || o.plan?.includes('Deep Dive')) && o.revenue > 0) return true;
     return false;
   };

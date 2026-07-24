@@ -87,14 +87,13 @@ const getPaymentStatus = (o) => {
   if (rawPs === 'unpaid') return 'unpaid';
   if (rawPs === 'free') return 'free';
 
+  const isCustom = o.plan?.includes('Custom') || o.is_custom || o.plan?.includes('Deep Dive');
+  if (isCustom) {
+    return 'unpaid';
+  }
+
   const rev = Number(o.revenue || 0);
   if (rev <= 0) return 'free';
-
-  const isCustom = o.plan?.includes('Custom') || o.is_custom;
-  if (isCustom) {
-    if (o.status === 'pending' || o.status === 'quote_sent') return 'unpaid';
-    return 'paid';
-  }
 
   // Regular paid plans (Single, Starter, Pro, Campaign 5, Campaign 10, etc.) are paid at checkout
   return 'paid';
@@ -487,7 +486,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               ["Category", viewOrder.category],
               ["Images", viewOrder.images],
               ["Revisions", viewOrder.revisions],
-              ["Revenue", viewOrder.revenue > 0 ? `$${viewOrder.revenue}` : "Free"],
+              ["Revenue", viewOrder.revenue > 0 ? `$${viewOrder.revenue}` : (viewOrder.plan?.includes('Custom') || viewOrder.is_custom || viewOrder.plan?.includes('Deep Dive')) ? "Quote Pending" : "Free"],
               ["Payment Status", getPaymentStatus(viewOrder).toUpperCase()],
               ["Date", viewOrder.date]
             ].map(([k, v], i) => (
@@ -561,7 +560,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
             )}
 
             {/* ADMIN PRICING & PAYMENT CONTROLS (ONLY FOR CUSTOM ORDERS) */}
-            {(viewOrder.plan?.includes('Custom') || viewOrder.is_custom) && (
+            {(viewOrder.plan?.includes('Custom') || viewOrder.is_custom || viewOrder.plan?.includes('Deep Dive')) && (
               <div style={{ marginTop: 16, padding: 16, background: "rgba(255,255,255,0.03)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 10 }}>Order Pricing & Controls</div>
 
@@ -721,7 +720,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               <td style={{ padding: "12px 16px", fontSize: 12, color: "#9ca3af" }}>{o.images}</td>
               <td style={{ padding: "12px 16px" }}><StatusBadge status={o.status} /></td>
               <td style={{ padding: "12px 16px" }}><div style={{ display: "flex", alignItems: "center", gap: 8 }}><div style={{ flex: 1, height: 4, borderRadius: 2, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}><div style={{ width: `${o.progress}%`, height: "100%", borderRadius: 2, background: o.progress === 100 ? "#34d399" : "linear-gradient(90deg,#4ecdc4,#2ab7a9)" }} /></div><span style={{ fontSize: 11, color: "#6b7280", minWidth: 28 }}>{o.progress}%</span></div></td>
-              <td style={{ padding: "12px 16px", fontSize: 12, color: o.revenue > 0 ? "#34d399" : "#4b5563", fontWeight: 600 }}>{o.revenue > 0 ? `$${o.revenue}` : "Free"}</td>
+              <td style={{ padding: "12px 16px", fontSize: 12, color: o.revenue > 0 ? "#34d399" : (o.plan?.includes('Custom') || o.is_custom || o.plan?.includes('Deep Dive')) ? "#fbbf24" : "#4b5563", fontWeight: 600 }}>{o.revenue > 0 ? `$${o.revenue}` : (o.plan?.includes('Custom') || o.is_custom || o.plan?.includes('Deep Dive')) ? "Quote Pending" : "Free"}</td>
               <td style={{ padding: "12px 16px" }}>
                 {(() => {
                   const pStatus = getPaymentStatus(o);

@@ -18,7 +18,7 @@ export async function GET(req: Request) {
 
     let query = supabase
       .from('brand_strategy_requests')
-      .select('*, profiles:user_id (email, full_name)')
+      .select('*, profiles:user_id (email, full_name), orders:order_id (status)')
       .order('created_at', { ascending: false });
 
     if (statusFilter && statusFilter !== 'all') {

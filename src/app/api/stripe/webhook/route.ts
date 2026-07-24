@@ -61,6 +61,13 @@ export async function POST(req: Request) {
          return NextResponse.json({ error: 'Database update failed' }, { status: 500 });
       }
 
+      // Update brand_strategy_requests status if pending
+      await supabase
+        .from('brand_strategy_requests')
+        .update({ status: 'new' })
+        .eq('order_id', orderId)
+        .eq('status', 'pending');
+
       // Save the invoice to the invoices table
       if (invoiceUrl && invoiceId) {
         const { error: invError } = await supabase.from('invoices').insert([{

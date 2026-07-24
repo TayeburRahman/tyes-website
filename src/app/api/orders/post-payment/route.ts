@@ -30,11 +30,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Order already processed' }, { status: 400 });
     }
 
-    // 2. Mark order as paid (this route is mostly for free orders now, paid handled by webhook)
+    // 2. Mark order as paid for non-custom free orders
+    const isCustom = order.plan?.includes('Custom') || order.is_custom || order.plan?.includes('Deep Dive');
+    const updatedAttachments = { ...(order.attachments || {}) };
+    
+    if (!isCustom) {
+      updatedAttachments.payment_status = 'paid';
+    }
+
     await supabase
       .from('orders')
-      .update({ status: 'paid' })
+      .update({ attachments: updatedAttachments })
       .eq('id', order.id);
+
+    // Update brand_strategy_requests status if pending
+    await supabase
+      .from('brand_strategy_requests')
+      .update({ status: 'new' })
+      .eq('order_id', order.id)
+      .eq('status', 'pending');
 
     // 3. Fetch user profile for email
     let clientEmail = order.customer_email || '';

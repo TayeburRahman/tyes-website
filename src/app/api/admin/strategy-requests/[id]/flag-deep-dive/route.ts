@@ -40,7 +40,7 @@ export async function POST(
 
     const { data: updatedRequest, error: updateError } = await supabase
       .from('brand_strategy_requests')
-      .update({ status: 'converted' })
+      .update({ status: 'converted_to_deep_dive' })
       .eq('id', id)
       .select()
       .single();
