@@ -50,7 +50,7 @@
         }
 
         .container {
-            max-width: 960px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
@@ -139,11 +139,10 @@
             text-decoration: underline;
         }
 
-        /* Pricing grid, 4 cards top row */
         .price-grid-main {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 4mm;
+            gap: 3mm;
             margin: 6mm 0;
         }
 
@@ -481,88 +480,68 @@
             Pay per campaign. Scale when ready.
         </p>
 
-        <!-- ======= 3 MAIN TIERS ======= -->
+        <!-- ======= 5 MAIN TIERS ======= -->
         <div class="price-grid-main">
 
             <!-- FREE IMAGE -->
             <div class="price-card">
-                <span class="badge free">Free</span>
                 <div class="tag">Free</div>
                 <h3>Free Image</h3>
                 <div class="price-value">$0</div>
                 <ul>
                     <li>1 AI image</li>
                     <li>From 3H delivery</li>
-                    <li>AI-generated + designer-polished</li>
                 </ul>
                 <div class="add-strategy">
-                    <div class="label">
-                        Add Brand Strategy
-                        <small>Optional add-on for this tier</small>
-                    </div>
-                    <span class="toggle">+ $25</span>
+                    <div class="label" style="color:#2DD4BF;">+ Add strategy $25</div>
                 </div>
-                <a href="/signup?intent=image" class="cta-btn">Claim Free Image →</a>
             </div>
 
-            <!-- BRAND STRATEGY (STANDALONE) -->
+            <!-- BRAND STRATEGY -->
             <div class="price-card">
                 <div class="tag">Strategy-First</div>
                 <h3>Brand Strategy</h3>
                 <div class="price-value">$25</div>
                 <ul>
                     <li>LLM visibility audit</li>
-                    <li>Viral product angles for your niche</li>
-                    <li>Retail buyer shortlist (US + EU)</li>
+                    <li>Viral product angles</li>
+                    <li>Retail buyer shortlist</li>
                     <li>3-day delivery</li>
-                    <li>Delivered to your dashboard</li>
                 </ul>
-                <a href="/signup?intent=strategy" class="cta-btn">Get Brand Strategy →</a>
             </div>
 
-            <!-- DEEP DIVE BRAND STRATEGY (SEPARATE CARD) -->
-            <div class="price-card" style="border: 1.5px solid #2DD4BF;">
-                <div class="tag" style="color: #2DD4BF;">Retail-Ready</div>
-                <h3>Deep Dive Brand Strategy</h3>
-                <div class="price-value" style="font-size: 22pt;">Priced per scope</div>
-                <ul>
+            <!-- DEEP DIVE BRAND STRATEGY -->
+            <div class="price-card popular">
+                <div class="tag" style="color:#2DD4BF;">Retail-Ready</div>
+                <h3 style="font-size: 16pt;">Deep Dive Brand Strategy</h3>
+                <div class="price-value" style="font-size: 24pt; line-height: 1.1; margin: 3mm 0 6mm;">Priced per scope</div>
+                <ul style="margin-top:0;">
                     <li>Full LLM audit + 90-day roadmap</li>
                     <li>Viral product concepts for your niche</li>
-                    <li>Warm intros to retail buyers we know</li>
-                    <li>Packaging &amp; positioning direction</li>
+                    <li>Warm intros to retail buyers</li>
+                    <li>Packaging & positioning direction</li>
                     <li>1-hour strategy call</li>
                 </ul>
-                <div style="display: flex; gap: 2mm; flex-wrap: wrap; margin-top: 3mm;">
-                    <a href="/contact?intent=deep-dive" class="cta-btn" style="flex: 1; text-align: center;">Contact Us
-                        →</a>
-                    <a href="#deep-dive-book"
-                        style="flex: 1; text-align: center; display: inline-block; background: transparent; border: 1.5px solid #2DD4BF; color: #2DD4BF; padding: 2.5mm 4mm; border-radius: 999px; font-weight: 600; font-size: 10pt; text-decoration: none;">Book
-                        a Call →</a>
+                <div style="margin-top:6mm; display:flex; flex-direction:column; gap:2mm;">
+                    <a href="/contact?intent=custom" class="cta-btn" style="background:#2DD4BF; color:#0A0A0A; border-radius:999px; text-align:center; padding: 2.5mm 0; font-size: 9pt;">Contact Us</a>
+                    <a href="https://calendly.com/tyes/discovery-call" class="cta-btn" style="background:transparent; border:1px solid #2DD4BF; color:#2DD4BF; border-radius:999px; text-align:center; padding: 2.5mm 0; font-size: 9pt;">Book a Call</a>
+                    <div style="font-size:7pt; color:#777; font-style:italic; text-align:center;">Subject to availability</div>
                 </div>
-                <div style="margin-top: 3mm; font-size: 8pt; color: #B8B8B8; font-style: italic; text-align: center;">
-                    Subject to availability</div>
             </div>
 
             <!-- CAMPAIGN 5 -->
             <div class="price-card popular">
-                <span class="badge">Popular</span>
                 <div class="tag">Popular</div>
                 <h3>Campaign 5</h3>
                 <div class="price-value">$25</div>
                 <ul>
-                    <li>5 AI campaign images</li>
+                    <li>5 AI images</li>
                     <li>1 revision / image</li>
                     <li>From 24H delivery</li>
-                    <li>AI-generated + designer-polished</li>
                 </ul>
-                <div class="add-strategy">
-                    <div class="label">
-                        Free Brand Strategy
-                        <small>Snapshot bundled with order</small>
-                    </div>
-                    <span class="toggle">Included ✓</span>
+                <div class="add-strategy" style="border-top:1px dashed #2DD4BF; padding-top:4mm; color:#2DD4BF; font-weight:700; font-size:8.5pt; text-align:center;">
+                    + FREE Brand Strategy Snapshot
                 </div>
-                <a href="/signup?intent=order&plan=campaign-5" class="cta-btn">Get Campaign 5 →</a>
             </div>
 
             <!-- CAMPAIGN 10 -->
@@ -571,56 +550,18 @@
                 <h3>Campaign 10</h3>
                 <div class="price-value">$45</div>
                 <ul>
-                    <li>10 AI campaign images</li>
+                    <li>10 AI images</li>
                     <li>1 revision / image</li>
                     <li>From 24H delivery</li>
-                    <li>AI-generated + designer-polished</li>
                 </ul>
-                <div class="add-strategy">
-                    <div class="label">
-                        Free Brand Strategy
-                        <small>Snapshot bundled with order</small>
-                    </div>
-                    <span class="toggle">Included ✓</span>
+                <div class="add-strategy" style="border-top:1px dashed #2DD4BF; padding-top:4mm; color:#2DD4BF; font-weight:700; font-size:8.5pt; text-align:center;">
+                    + FREE Brand Strategy Snapshot
                 </div>
-                <a href="/signup?intent=order&plan=campaign-10" class="cta-btn">Get Campaign 10 →</a>
             </div>
 
         </div>
 
-        <!-- ======= CUSTOM / ENTERPRISE ======= -->
-        <div class="custom-tier">
-            <div>
-                <div class="tag">Enterprise</div>
-                <h3>Custom.</h3>
-                <div class="price">Get in Touch</div>
-                <p style="color:#B8B8B8; font-size:10.5pt; margin-bottom: 0;">
-                    Handled per scope. Built for teams, multi-brand groups, and high-volume launches.
-                </p>
-            </div>
-            <div>
-                <ul>
-                    <li>Custom number of images</li>
-                    <li>Custom revisions</li>
-                    <li>AI-generated + designer-polished</li>
-                    <li>Dedicated manager</li>
-                </ul>
-                <div class="bonus-block">
-                    <strong>+ Brand Strategy Snapshot</strong><br>
-                    <strong>+ 30-min strategy call</strong>
-                </div>
-                <div style="display:flex; gap:3mm; margin-top:5mm; flex-wrap:wrap;">
-                    <a href="/contact?intent=custom"
-                        style="display:inline-block; background:#2DD4BF; color:#0A0A0A; padding:3.5mm 7mm; border-radius:999px; font-weight:700; font-size:10pt; letter-spacing:0.5pt;">Contact
-                        Us →</a>
-                    <a href="https://calendly.com/tyes/discovery-call"
-                        style="display:inline-block; background:transparent; border:2px solid #2DD4BF; color:#2DD4BF; padding:3mm 7mm; border-radius:999px; font-weight:700; font-size:10pt; letter-spacing:0.5pt;">Book
-                        a Call →</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- ======= DEEP DIVE BRAND STRATEGY ======= -->
+        <!-- ======= SECTION END ======= -->
         <h2>Ready for more? <span class="accent">Deep Dive Brand Strategy.</span></h2>
 
         <div class="deep-dive-section">

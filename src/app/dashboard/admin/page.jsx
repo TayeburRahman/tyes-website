@@ -6,7 +6,7 @@ import { LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell, X
 import { Search, Bell, ChevronDown, ChevronRight, Download, MoreVertical, Plus, Edit, Trash2, Eye, Check, X, Clock, RefreshCw, TrendingUp, TrendingDown, Users, ShoppingCart, DollarSign, Image, Settings, LogOut, Home, Package, CreditCard, BarChart2, UserCheck, Star, AlertCircle, ArrowUpRight, ArrowDownRight, Menu, ChevronLeft, Save, Mail, Globe, Zap, Shield, Key, Webhook, User, Upload, Target } from "lucide-react";
 import AdminStrategyHub from "@/components/dashboard/AdminStrategyHub";
 
-// TOAST NOTIFICATION SYSTEM
+// TOAST NOTIFICATION 
 const useToast = () => {
   const [toasts, setToasts] = useState([]);
   const addToast = useCallback((message, type = "success") => {
@@ -296,8 +296,8 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
 
       const { error } = await supabase
         .from('orders')
-        .update({ 
-          revenue: numericPrice, 
+        .update({
+          revenue: numericPrice,
           status: newStatus,
           attachments: updatedAttachments
         })
@@ -501,7 +501,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               <StatusBadge status={viewOrder.status} />
             </div>
             <div style={{ marginTop: 8 }}><div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}><span style={{ fontSize: 12, color: "#6b7280" }}>Progress</span><span style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{viewOrder.progress}%</span></div><div style={{ height: 8, borderRadius: 4, background: "rgba(255,255,255,0.06)" }}><div style={{ width: `${viewOrder.progress}%`, height: "100%", borderRadius: 4, background: viewOrder.progress === 100 ? "#34d399" : "linear-gradient(90deg,#4ecdc4,#2ab7a9)" }} /></div></div>
-            
+
             {(viewOrder.brief_description || viewOrder.mood_description) && (
               <div style={{ marginTop: 16 }}>
                 <span style={{ fontSize: 11, color: "#6b7280", display: "block", marginBottom: 8, textTransform: "uppercase" }}>Brief / Description</span>
@@ -541,7 +541,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {(viewOrder.font_label_files || viewOrder.attachments?.fonts_labels || []).map((url, i) => (
                     <div key={i} onClick={() => window.open(url, '_blank')} style={{ width: 80, height: 80, borderRadius: 10, background: `url(${url}) center/cover`, border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                      {!url.match(/\.(jpg|jpeg|png|gif|webp)$/i) && <span style={{ fontSize: 10, color: "#6b7280" }}>File {i+1}</span>}
+                      {!url.match(/\.(jpg|jpeg|png|gif|webp)$/i) && <span style={{ fontSize: 10, color: "#6b7280" }}>File {i + 1}</span>}
                     </div>
                   ))}
                 </div>
@@ -564,20 +564,20 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
             {(viewOrder.plan?.includes('Custom') || viewOrder.is_custom) && (
               <div style={{ marginTop: 16, padding: 16, background: "rgba(255,255,255,0.03)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 10 }}>Order Pricing & Controls</div>
-                
+
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                   <div style={{ flex: 1 }}>
                     <label style={{ fontSize: 11, color: "#9ca3af", display: "block", marginBottom: 4 }}>Set Custom Quote / Price ($)</label>
-                    <input 
-                      type="number" 
-                      value={priceInput} 
-                      onChange={(e) => setPriceInput(e.target.value)} 
+                    <input
+                      type="number"
+                      value={priceInput}
+                      onChange={(e) => setPriceInput(e.target.value)}
                       style={{ width: "100%", padding: "8px 12px", borderRadius: 8, background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 13, outline: "none" }}
                       placeholder="e.g. 350"
                     />
                   </div>
-                  <button 
-                    onClick={() => updateOrderPrice(viewOrder.id, priceInput)} 
+                  <button
+                    onClick={() => updateOrderPrice(viewOrder.id, priceInput)}
                     style={{ marginTop: 16, padding: "8px 16px", borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
                   >
                     Save Price
@@ -593,16 +593,16 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                   </div>
 
                   <div style={{ display: "flex", gap: 8 }}>
-                    <button 
-                      onClick={() => togglePaymentStatus(viewOrder.id, viewOrder.payment_status === 'paid' ? 'unpaid' : 'paid')} 
+                    <button
+                      onClick={() => togglePaymentStatus(viewOrder.id, viewOrder.payment_status === 'paid' ? 'unpaid' : 'paid')}
                       style={{ padding: "5px 12px", borderRadius: 8, background: "rgba(255,255,255,0.06)", color: "#e5e7eb", border: "1px solid rgba(255,255,255,0.1)", fontSize: 11, fontWeight: 600, cursor: "pointer" }}
                     >
                       {viewOrder.payment_status === 'paid' ? 'Mark Unpaid' : 'Mark Paid'}
                     </button>
 
                     {viewOrder.status !== 'cancelled' ? (
-                      <button 
-                        onClick={() => cancelOrder(viewOrder.id)} 
+                      <button
+                        onClick={() => cancelOrder(viewOrder.id)}
                         style={{ padding: "5px 12px", borderRadius: 8, background: "rgba(239,68,68,0.15)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.3)", fontSize: 11, fontWeight: 600, cursor: "pointer" }}
                       >
                         Cancel Order
@@ -728,13 +728,13 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                   const isPaid = pStatus === 'paid';
                   const isUnpaid = pStatus === 'unpaid';
                   return (
-                    <span style={{ 
-                      fontSize: 10, 
-                      fontWeight: 700, 
-                      padding: "3px 8px", 
-                      borderRadius: 20, 
+                    <span style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      padding: "3px 8px",
+                      borderRadius: 20,
                       background: isPaid ? "rgba(16,185,129,0.15)" : isUnpaid ? "rgba(251,191,36,0.15)" : "rgba(107,114,128,0.15)",
-                      color: isPaid ? "#34d399" : isUnpaid ? "#fbbf24" : "#9ca3af" 
+                      color: isPaid ? "#34d399" : isUnpaid ? "#fbbf24" : "#9ca3af"
                     }}>
                       {pStatus.toUpperCase()}
                     </span>
@@ -993,10 +993,10 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
   const totalPages = Math.ceil(transactions.length / itemsPerPage);
   const paginatedTransactions = transactions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const openEdit = (p) => { 
-    setForm({ 
-      name: p.name || "", 
-      images: String(p.images ?? 0), 
+  const openEdit = (p) => {
+    setForm({
+      name: p.name || "",
+      images: String(p.images ?? 0),
       price: String(p.price ?? 0),
       badge: p.badge || "",
       max_revisions: String(p.max_revisions ?? 0),
@@ -1005,14 +1005,14 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
       strategy_addon_price: String(p.strategy_addon_price ?? 0),
       features: p.features || [],
       description: p.description || ""
-    }); 
-    setEditPlan(p.id); 
+    });
+    setEditPlan(p.id);
   };
 
   const savePlan = async () => {
-    const planData = { 
-      name: form.name, 
-      images: Number(form.images || 0), 
+    const planData = {
+      name: form.name,
+      images: Number(form.images || 0),
       price: Number(form.price || 0),
       badge: form.badge || "",
       max_revisions: Number(form.max_revisions || 0),
@@ -1074,9 +1074,9 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
   };
 
   const addPlan = () => {
-    setForm({ 
-      name: "", 
-      images: "1", 
+    setForm({
+      name: "",
+      images: "1",
       price: "0",
       badge: "",
       max_revisions: "3",
@@ -1117,13 +1117,13 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
         <InputField label="Number of Images" value={form.images} onChange={v => setForm({ ...form, images: v })} type="number" />
         <InputField label="Price ($)" value={form.price} onChange={v => setForm({ ...form, price: v })} type="number" />
         <InputField label="Max Revisions per Image" value={form.max_revisions || "0"} onChange={v => setForm({ ...form, max_revisions: v })} type="number" />
-        
+
         <div style={{ margin: "12px 0", display: "flex", flexDirection: "column", gap: 10 }}>
           <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#fff", cursor: "pointer" }}>
             <input type="checkbox" checked={!!form.strategy_included} onChange={e => setForm({ ...form, strategy_included: e.target.checked })} style={{ width: 16, height: 16, accentColor: "#2DD4BF" }} />
             Includes Brand Strategy Positioning by Default
           </label>
-          
+
           <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#fff", cursor: "pointer" }}>
             <input type="checkbox" checked={!!form.strategy_addon_allowed} onChange={e => setForm({ ...form, strategy_addon_allowed: e.target.checked })} style={{ width: 16, height: 16, accentColor: "#2DD4BF" }} />
             Allow Adding Brand Strategy Add-on (+ $25)
@@ -1138,8 +1138,8 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
           <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Plan Features (Bullet Points)</label>
           {form.features?.map((feat, i) => (
             <div key={i} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "center" }}>
-              <select 
-                value={feat.icon || "check"} 
+              <select
+                value={feat.icon || "check"}
                 onChange={e => {
                   const nf = [...(form.features || [])];
                   nf[i].icon = e.target.value;
@@ -1150,9 +1150,9 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
                 <option value="check">Checkmark</option>
                 <option value="clock">Clock</option>
               </select>
-              <input 
-                type="text" 
-                value={feat.text || ""} 
+              <input
+                type="text"
+                value={feat.text || ""}
                 onChange={e => {
                   const nf = [...(form.features || [])];
                   nf[i].text = e.target.value;
@@ -1161,21 +1161,21 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
                 placeholder="e.g. 3 revisions / image"
                 style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }}
               />
-              <button 
+              <button
                 onClick={() => {
                   const nf = [...(form.features || [])];
                   nf.splice(i, 1);
                   setForm({ ...form, features: nf });
                 }}
                 style={{ padding: 6, borderRadius: 6, border: "none", background: "rgba(239,68,68,0.15)", color: "#ef4444", cursor: "pointer" }}
-              ><Trash2 size={14}/></button>
+              ><Trash2 size={14} /></button>
             </div>
           ))}
-          <button 
+          <button
             onClick={() => setForm({ ...form, features: [...(form.features || []), { text: "", icon: "check" }] })}
             style={{ padding: "6px 12px", borderRadius: 8, border: "1px dashed rgba(255,255,255,0.15)", background: "transparent", color: "#9ca3af", fontSize: 11, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}
           >
-            <Plus size={12}/> Add Feature
+            <Plus size={12} /> Add Feature
           </button>
         </div>
 
@@ -1746,10 +1746,10 @@ export default function TyesAdmin() {
         setOrders(currentOrders => {
           if (eventType === 'INSERT') {
             const isCustom = newRow.plan === 'Custom' || newRow.plan === 'Custom (Strategy)' || newRow.plan?.includes('Custom');
-            const alertMsg = isCustom 
-              ? `🔔 NEW CUSTOM ORDER received from ${newRow.customer_name || newRow.customer_email}!` 
+            const alertMsg = isCustom
+              ? `🔔 NEW CUSTOM ORDER received from ${newRow.customer_name || newRow.customer_email}!`
               : `🔔 New Order (${newRow.plan}) received from ${newRow.customer_name || newRow.customer_email}!`;
-              
+
             addToast(alertMsg, isCustom ? "warning" : "success", 8000);
 
             const newOrder = {

@@ -210,11 +210,26 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [billingCountry, setBillingCountry] = useState(clientInfo?.country || "RO");
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('intent') === 'deep-dive') {
+        const deepDivePlan = pricingPlans.find(p => p.name === 'Deep Dive Brand Strategy');
+        if (deepDivePlan) {
+          setPlan(deepDivePlan.id);
+          setAddStrategy(true);
+        }
+      }
+    }
+  }, [pricingPlans]);
+
+  useEffect(() => {
     if (clientInfo?.country) setBillingCountry(clientInfo.country);
   }, [clientInfo?.country]);
 
   const plans = pricingPlans;
-  const displayedPlans = plans.filter(p => brandStrategyChecked ? p.strategy_included === true : p.strategy_included === false);
+  // Brand Strategy on hold — show all active plans directly
+  const displayedPlans = plans;
+
 
   useEffect(() => {
     const preselect = localStorage.getItem('tyes_preselect_plan_name');
@@ -311,7 +326,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       const selectedPlan = plans.find(p => p.id === plan);
       if (!selectedPlan) throw new Error("Please select a plan first.");
 
-      const isPaid = selectedPlan.price > 0;
+      const isPaid = selectedPlan.price > 0 || (addStrategy && selectedPlan.name === 'Free Image');
+
 
       // --- Upload files ---
       let photoUrls = [];
@@ -455,7 +471,9 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           {(() => {
             const selectedPlan = plans.find(p => p.id === plan);
             const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
-            const showBrandInfo = brandStrategyChecked || addStrategy || (selectedPlan ? selectedPlan.strategy_included : false);
+            const isBrandStrategyPlan = selectedPlan?.name === 'Brand Strategy';
+            const showBrandInfo = isBrandStrategyPlan || addStrategy;
+
 
             const steps = ["Choose Plan"];
             if (showUploadBrief) steps.push("Upload Brief");
@@ -478,7 +496,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         {(() => {
           const selectedPlan = plans.find(p => p.id === plan);
           const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
-          const showBrandInfo = brandStrategyChecked || addStrategy || (selectedPlan ? selectedPlan.strategy_included : false);
+          const isBrandStrategyPlan = selectedPlan?.name === 'Brand Strategy';
+          const showBrandInfo = isBrandStrategyPlan || addStrategy;
+
+
+
           const steps = ["Choose Plan"];
           if (showUploadBrief) steps.push("Upload Brief");
           if (showBrandInfo) steps.push("Brand Info");
@@ -501,17 +523,29 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                         const isFreeImage = p.name === 'Free Image';
                         const cleanName = p.name.replace(' (Strategy)', '');
                         return (
-                          <div 
-                            key={p.id} 
-                            onClick={() => setPlan(p.id)} 
-                            style={{ 
-                              background: isSelected ? "rgba(45,212,191,0.06)" : "#0A0A0A", 
-                              border: `1.5px solid ${isSelected ? "#2DD4BF" : "rgba(255,255,255,0.08)"}`, 
-                              borderRadius: 12, 
-                              padding: "20px 16px", 
-                              cursor: "pointer", 
-                              transition: "all 0.25s ease", 
-                              position: "relative", 
+                          <div
+                            key={p.id}
+                            onClick={() => {
+                              setPlan(p.id);
+                              // Brand Strategy → always includes brand info, no toggle needed
+                              // Campaign 5/10/Custom → default ON (opt-out available)
+                              // Free Image → default OFF (opt-in add-on at $25)
+                              if (p.name === 'Brand Strategy') {
+                                setAddStrategy(false); // controlled via isBrandStrategyPlan
+                              } else if (p.name === 'Free Image') {
+                                setAddStrategy(false);
+                              } else {
+                                setAddStrategy(true);
+                              }
+                            }}
+                            style={{
+                              background: isSelected ? "rgba(45,212,191,0.06)" : "#0A0A0A",
+                              border: `1.5px solid ${isSelected ? "#2DD4BF" : "rgba(255,255,255,0.08)"}`,
+                              borderRadius: 12,
+                              padding: "20px 16px",
+                              cursor: "pointer",
+                              transition: "all 0.25s ease",
+                              position: "relative",
                               textAlign: "center",
                               display: "flex",
                               flexDirection: "column",
@@ -526,80 +560,113 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               </div>
                               <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", fontFamily: '"League Spartan", sans-serif' }}>{cleanName}</div>
                               <div style={{ fontSize: 24, color: "#fff", fontWeight: 800, margin: "8px 0", fontFamily: '"League Spartan", sans-serif' }}>
-                                {cleanName === 'Custom' ? <span style={{ fontSize: 16, color: "#2DD4BF" }}>Get in Touch</span> : `$${p.price}`}
+                                {cleanName === 'Deep Dive Brand Strategy' ? <span style={{ fontSize: 16, color: "#2DD4BF" }}>Get in Touch</span> : `$${p.price}`}
                               </div>
                               <div style={{ fontSize: 11, color: "#9ca3af", lineHeight: 1.5, marginTop: 4 }}>
                                 {cleanName === 'Brand Strategy' ? "LLM audit · Viral angles · Retail shortlist · 3-day delivery" :
-                                  cleanName === 'Custom' ? "Custom volume · Per-scope" :
+                                  cleanName === 'Deep Dive Brand Strategy' ? "Priced per scope" :
                                     `${p.images} image${p.images !== 1 ? 's' : ''} · ${p.max_revisions} rev/img · From 24H`}
                               </div>
                             </div>
 
-                            <div style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                              {p.strategy_included ? (
-                                <div style={{ fontSize: 10, color: "#34d399", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                                  <Check size={12} /> Strategy {p.strategy_call_included ? '+ 30-min call' : 'included'}
-                                </div>
-                              ) : (p.strategy_addon_allowed && !brandStrategyChecked) ? (
-                                <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 600, background: "rgba(45, 212, 191, 0.1)", padding: "4px 10px", borderRadius: 12, display: "inline-block" }}>
-                                  + Add Strategy for ${p.strategy_addon_price}
-                                </div>
-                              ) : null}
-                            </div>
+                            {/* Strategy bonus badge */}
+                            {(cleanName === 'Campaign 5' || cleanName === 'Campaign 10' || cleanName === 'Deep Dive Brand Strategy' || cleanName === 'Free Image') && (
+                              <div style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                                {cleanName === 'Free Image' ? (
+                                  <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 600, background: "rgba(45, 212, 191, 0.1)", padding: "4px 10px", borderRadius: 12, display: "inline-block" }}>
+                                    + Add Strategy for $25
+                                  </div>
+                                ) : (
+                                  <div style={{ fontSize: 10, color: (isSelected && !addStrategy) ? "#6b7280" : "#34d399", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 4, transition: "color 0.2s" }}>
+                                    <Check size={12} color={(isSelected && !addStrategy) ? "#6b7280" : "#34d399"} /> 
+                                    <span style={{ textDecoration: (isSelected && !addStrategy) ? "line-through" : "none" }}>
+                                      Strategy {cleanName === 'Deep Dive Brand Strategy' ? '+ 30-min call' : 'included'}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
                           </div>
                         );
                       })
                     )}
                   </div>
 
-                  {/* Brand Strategy Checkbox Option */}
-                  <div
-                    onClick={() => {
-                      const nextState = !brandStrategyChecked;
-                      setBrandStrategyChecked(nextState);
-                      setPlan("");
-                    }}
-                    style={{
-                      marginTop: 24,
-                      padding: "20px 24px",
-                      borderRadius: 14,
-                      background: brandStrategyChecked ? "linear-gradient(135deg, rgba(45, 212, 191, 0.12), rgba(16, 185, 129, 0.05))" : "rgba(255, 255, 255, 0.02)",
-                      border: `1.5px solid ${brandStrategyChecked ? "#2DD4BF" : "rgba(255, 255, 255, 0.1)"}`,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 16,
-                      cursor: "pointer",
-                      transition: "all 0.25s ease",
-                      boxShadow: brandStrategyChecked ? "0 8px 24px rgba(45, 212, 191, 0.12)" : "none"
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <input
-                        type="checkbox"
-                        id="brandStrategyToggle"
-                        checked={brandStrategyChecked}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          setBrandStrategyChecked(e.target.checked);
-                          setPlan("");
+                  {/* Brand Info toggle — behaviour differs per plan */}
+                  {(() => {
+                    const sp = plans.find(p => p.id === plan);
+                    if (!sp) return null;
+
+                    // Brand Strategy plan: always included, no toggle
+                    if (sp.name === 'Brand Strategy') {
+                      return (
+                        <div style={{ marginTop: 20, padding: "12px 18px", borderRadius: 12, background: "rgba(45,212,191,0.06)", border: "1.5px solid #2DD4BF", display: "flex", alignItems: "center", gap: 12 }}>
+                          <Check size={16} color="#2DD4BF" />
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Brand Info included</div>
+                            <div style={{ fontSize: 11, color: "#6b7280" }}>Required to complete your Brand Strategy order.</div>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    // Free Image: optional $25 add-on
+                    if (sp.name === 'Free Image') {
+                      return (
+                        <div
+                          onClick={() => setAddStrategy(v => !v)}
+                          style={{
+                            marginTop: 20, padding: "14px 20px", borderRadius: 12, cursor: "pointer", transition: "all 0.25s ease",
+                            background: addStrategy ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.02)",
+                            border: `1.5px solid ${addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.1)"}`,
+                            display: "flex", alignItems: "center", gap: 14
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            id="freeImageStrategyAddon"
+                            checked={addStrategy}
+                            onChange={e => { e.stopPropagation(); setAddStrategy(e.target.checked); }}
+                            style={{ width: 18, height: 18, cursor: "pointer", accentColor: "#2DD4BF", flexShrink: 0 }}
+                          />
+                          <label htmlFor="freeImageStrategyAddon" style={{ cursor: "pointer", userSelect: "none", flex: 1 }}>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
+                              + Add Brand Strategy
+                              <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 8, background: addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.08)", color: addStrategy ? "#000" : "#9ca3af", fontWeight: 700 }}>$25</span>
+                            </div>
+                            <div style={{ fontSize: 11, color: "#6b7280", marginTop: 3, lineHeight: 1.5 }}>LLM visibility audit · Viral product angles · Retail shortlist. Delivered in 3 business days.</div>
+                          </label>
+                        </div>
+                      );
+                    }
+
+                    // Campaign 5/10/Custom: default ON, can opt out
+                    return (
+                      <div
+                        onClick={() => setAddStrategy(v => !v)}
+                        style={{
+                          marginTop: 20, padding: "14px 20px", borderRadius: 12, cursor: "pointer", transition: "all 0.25s ease",
+                          background: addStrategy ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.02)",
+                          border: `1.5px solid ${addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.1)"}`,
+                          display: "flex", alignItems: "center", gap: 14
                         }}
-                        style={{ width: 20, height: 20, cursor: "pointer", accentColor: "#2DD4BF" }}
-                      />
-                    </div>
-                    <label htmlFor="brandStrategyToggle" style={{ cursor: "pointer", flex: 1, userSelect: "none" }}>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                        <span>Include Brand Strategy</span>
-                        {brandStrategyChecked ? (
-                          <span style={{ fontSize: 10, padding: "2px 10px", borderRadius: 12, background: "linear-gradient(135deg,#2DD4BF,#10b981)", color: "#000", fontWeight: 800 }}>ACTIVE</span>
-                        ) : (
-                          <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "#9ca3af", fontWeight: 600 }}>OPTIONAL</span>
-                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          id="includeBrandInfo"
+                          checked={addStrategy}
+                          onChange={e => { e.stopPropagation(); setAddStrategy(e.target.checked); }}
+                          style={{ width: 18, height: 18, cursor: "pointer", accentColor: "#2DD4BF", flexShrink: 0 }}
+                        />
+                        <label htmlFor="includeBrandInfo" style={{ cursor: "pointer", userSelect: "none", flex: 1 }}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2 }}>Include Brand Info</div>
+                          <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>Tell us about your brand so we can deliver better results. Uncheck to skip this step.</div>
+                        </label>
                       </div>
-                      <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 4, lineHeight: 1.5 }}>
-                        Include LLM audit, viral angles, retail shortlist, and comprehensive brand positioning strategy with your order.
-                      </div>
-                    </label>
-                  </div>
+                    );
+                  })()}
+
                 </div>
               )}
 
@@ -627,7 +694,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                         <input type="file" id="photoInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => {
                           const selectedPlan = plans.find(p => p.id === plan);
                           const cleanName = selectedPlan?.name?.replace(' (Strategy)', '');
-                          const limit = (selectedPlan && selectedPlan.images > 0) ? selectedPlan.images : (cleanName === 'Custom' ? 999 : 0);
+                          const limit = (selectedPlan && selectedPlan.images > 0) ? selectedPlan.images : (cleanName === 'Deep Dive Brand Strategy' ? 999 : 0);
                           const newFiles = Array.from(e.target.files);
                           if (limit > 0 && (productPhotos.length + newFiles.length > limit)) {
                             addToast(`Plan limit: ${limit} photos`, "warning");
@@ -705,7 +772,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
               {currentStepName === "Review & Submit" && (() => {
                 const selectedPlan = plans.find(p => p.id === plan);
                 const cleanName = selectedPlan?.name?.replace(' (Strategy)', '');
-                const isPaid = selectedPlan && selectedPlan.price > 0;
+                const isPaid = selectedPlan && (selectedPlan.price > 0 || (addStrategy && selectedPlan.name === 'Free Image'));
                 const orderSummary = [
 
                   { label: "Plan", val: selectedPlan?.name || "—" },
@@ -717,13 +784,13 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   { label: "Fonts / Labels", val: `${fontFiles.length} files` },
                   { label: "Revisions", val: "3 included" },
                 ];
-                if (selectedPlan.strategy_addon_allowed) {
+                if (selectedPlan.name === 'Free Image') {
                   orderSummary.push({ label: "Brand Strategy", val: addStrategy ? "Yes (+$25)" : "No" });
                 }
                 if (isPaid) {
                   orderSummary.push({ label: "Taxes", val: "Calculated at checkout" });
                 }
-                const finalPrice = (selectedPlan.price || 0) + (addStrategy && selectedPlan.strategy_addon_allowed ? 25 : 0);
+                const finalPrice = (selectedPlan.price || 0) + (addStrategy && selectedPlan.name === 'Free Image' ? 25 : 0);
                 return (
                   <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
                     {/* LEFT: Order Summary */}
@@ -769,13 +836,13 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                             style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
                             {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
                           </button>
-                          {(cleanName === 'Custom' || selectedPlan.strategy_call_included) && (
+                          {(cleanName === 'Deep Dive Brand Strategy' || selectedPlan.strategy_call_included) && (
                             <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(45, 212, 191, 0.08)', borderRadius: 12, border: '1px solid rgba(45, 212, 191, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
                               <div>
                                 <h4 style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: '0 0 4px' }}>Schedule your 30-min Discovery Call</h4>
                                 <p style={{ color: '#9ca3af', fontSize: 12, margin: 0 }}>Pick a convenient time slot with our strategy team.</p>
                               </div>
-                              <button 
+                              <button
                                 type="button"
                                 onClick={() => openCalendly()}
                                 style={{ padding: '10px 20px', borderRadius: 20, background: 'linear-gradient(135deg,#4ecdc4,#2ab7a9)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 12px rgba(45, 212, 191, 0.3)' }}
@@ -824,7 +891,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         {(() => {
           const selectedPlan = plans.find(p => p.id === plan);
           const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
-          const showBrandInfo = brandStrategyChecked || addStrategy || (selectedPlan ? selectedPlan.strategy_included : false);
+          const isBrandStrategyPlan = selectedPlan?.name === 'Brand Strategy';
+          const showBrandInfo = isBrandStrategyPlan || addStrategy;
+
+
           const steps = ["Choose Plan"];
           if (showUploadBrief) steps.push("Upload Brief");
           if (showBrandInfo) steps.push("Brand Info");
@@ -1106,6 +1176,12 @@ export default function TyesClient() {
     // Check for Stripe checkout session success
     const query = new URLSearchParams(window.location.search);
     const sessionId = query.get("session_id");
+    const intent = query.get("intent");
+
+    if (intent === "deep-dive") {
+      setPage("new-order");
+    }
+
     if (sessionId || query.get("redirect_status") === "succeeded") {
       setPage("success");
       router.replace("/dashboard/client");
@@ -1277,7 +1353,7 @@ export default function TyesClient() {
     const snapshotsDelivered = strategyRequests.filter(s => s.status === 'sent').length;
     const latestStrategy = strategyRequests[0];
     const hasStratAddon = activeOrder?.has_strategy_addon || activeOrder?.attachments?.has_strategy_addon || activeOrder?.plan?.includes('Strategy');
-    const isActiveOrderStrategyEligible = activeOrder && (hasStratAddon || ["Campaign 5", "Campaign 10", "Brand Strategy", "Custom"].includes(activeOrder.plan));
+    const isActiveOrderStrategyEligible = activeOrder && (hasStratAddon || ["Campaign 5", "Campaign 10", "Brand Strategy", "Custom", "Deep Dive Brand Strategy"].includes(activeOrder.plan));
 
     return (
       <div>
@@ -1424,7 +1500,7 @@ export default function TyesClient() {
     if (!o) return false;
     if (o.payment_status === 'paid' || o.payment_status === 'completed' || o.payment_status === 'succeeded') return true;
     if (o.payment_status === 'unpaid' || o.status === 'quote_sent') return false;
-    if (!o.plan?.includes('Custom') && o.revenue > 0) return true;
+    if (!(o.plan?.includes('Custom') || o.plan?.includes('Deep Dive')) && o.revenue > 0) return true;
     return false;
   };
 
@@ -1496,7 +1572,7 @@ export default function TyesClient() {
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
                         <div style={{ fontSize: 12, fontWeight: 700, color: "#fbbf24" }}>Quote: ${o.revenue}</div>
                         {o.status !== 'cancelled' && (
-                          <button 
+                          <button
                             onClick={(e) => { e.stopPropagation(); handlePayOrderInvoice(o); }}
                             style={{ padding: "4px 10px", borderRadius: 14, background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", border: "none", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}
                           >
@@ -1506,73 +1582,73 @@ export default function TyesClient() {
                       </div>
                     ) : (
                       <div style={{ fontSize: 12, fontWeight: 600, color: "#9ca3af" }}>
-                        {o.plan?.includes('Custom') ? "Quote Pending" : "Free"}
+                        {(o.plan?.includes('Custom') || o.plan?.includes('Deep Dive')) ? "Quote Pending" : "Free"}
                       </div>
                     )}
                     <div style={{ fontSize: 10, color: "#4b5563" }}>Rev {o.revisions}/{o.maxRevisions}</div>
                   </div>
-                <div style={{ width: 60 }}>
-                  <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
-                    <div style={{ width: `${o.progress}%`, height: "100%", borderRadius: 3, background: o.progress === 100 ? "#34d399" : "linear-gradient(90deg,#4ecdc4,#2ab7a9)" }} />
-                  </div>
-                  <div style={{ fontSize: 10, color: "#6b7280", textAlign: "center", marginTop: 2 }}>{o.progress}%</div>
-                </div>
-                <ChevronDown size={16} color="#4b5563" style={{ transform: expanded === o.id ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
-              </div>
-              {expanded === o.id && (
-                <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", padding: "16px 20px" }}>
-                  {o.items && o.items.length > 0 ? (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
-                      {o.items.map((item, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)", transition: "all 0.2s" }}>
-                          <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                            <Image size={16} color="#6b7280" />
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</div>
-                            <div style={{ marginTop: 4 }}><StatusBadge status={item.status} /></div>
-                          </div>
-                          {item.status === "delivered" && item.finishImage && (
-                            <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-                              <div
-                                onClick={() => window.open(item.finishImage, '_blank')}
-                                style={{ width: 36, height: 36, borderRadius: 8, background: `url(${item.finishImage}) center/cover`, border: "2px solid rgba(16,185,129,0.3)", cursor: "pointer", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
-                                title="Preview"
-                              />
-                              <div style={{ display: "flex", gap: 4 }}>
-                                <button onClick={(e) => { e.stopPropagation(); handleDownloadItem(item.name, item.finishImage); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(78,205,196,0.1)", border: "none", color: "#4ecdc4", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Download"><Download size={14} /></button>
-                                <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(251,191,36,0.1)", border: "none", color: "#fbbf24", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Request Revision"><RefreshCw size={14} /></button>
-                              </div>
-                            </div>
-                          )}
-                          {item.status === "revision" && (
-                            <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ padding: "6px 12px", borderRadius: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", color: "#fbbf24", cursor: "pointer", fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-                              <RefreshCw size={13} /> Reason
-                            </button>
-                          )}
-                        </div>
-                      ))}
+                  <div style={{ width: 60 }}>
+                    <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                      <div style={{ width: `${o.progress}%`, height: "100%", borderRadius: 3, background: o.progress === 100 ? "#34d399" : "linear-gradient(90deg,#4ecdc4,#2ab7a9)" }} />
                     </div>
-                  ) : (
-                    <div style={{ fontSize: 13, color: "#4b5563", textAlign: "center", padding: 16 }}>No item details available for this order.</div>
-                  )}
-                  <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
-                    <button onClick={() => setShowOrderDetailModal(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Eye size={12} /> View Details</button>
-                    {!paid && o.revenue > 0 && o.status !== 'cancelled' && (
-                      <button onClick={() => handlePayOrderInvoice(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><CreditCard size={13} /> Pay Invoice (${o.revenue})</button>
-                    )}
-                    {o.status === "delivered" && (
-                      <button onClick={() => handleDownloadAll(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Download All</button>
-                    )}
-                    {o.status === "revision" && (
-                      <button onClick={() => handleRequestRevision(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(251,191,36,0.3)", background: "rgba(251,191,36,0.1)", color: "#fbbf24", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><RefreshCw size={12} /> Request Revision</button>
-                    )}
+                    <div style={{ fontSize: 10, color: "#6b7280", textAlign: "center", marginTop: 2 }}>{o.progress}%</div>
                   </div>
+                  <ChevronDown size={16} color="#4b5563" style={{ transform: expanded === o.id ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
                 </div>
-              )}
-            </div>
-          );
-        })}
+                {expanded === o.id && (
+                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", padding: "16px 20px" }}>
+                    {o.items && o.items.length > 0 ? (
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
+                        {o.items.map((item, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)", transition: "all 0.2s" }}>
+                            <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                              <Image size={16} color="#6b7280" />
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</div>
+                              <div style={{ marginTop: 4 }}><StatusBadge status={item.status} /></div>
+                            </div>
+                            {item.status === "delivered" && item.finishImage && (
+                              <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+                                <div
+                                  onClick={() => window.open(item.finishImage, '_blank')}
+                                  style={{ width: 36, height: 36, borderRadius: 8, background: `url(${item.finishImage}) center/cover`, border: "2px solid rgba(16,185,129,0.3)", cursor: "pointer", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
+                                  title="Preview"
+                                />
+                                <div style={{ display: "flex", gap: 4 }}>
+                                  <button onClick={(e) => { e.stopPropagation(); handleDownloadItem(item.name, item.finishImage); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(78,205,196,0.1)", border: "none", color: "#4ecdc4", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Download"><Download size={14} /></button>
+                                  <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(251,191,36,0.1)", border: "none", color: "#fbbf24", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Request Revision"><RefreshCw size={14} /></button>
+                                </div>
+                              </div>
+                            )}
+                            {item.status === "revision" && (
+                              <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ padding: "6px 12px", borderRadius: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", color: "#fbbf24", cursor: "pointer", fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                                <RefreshCw size={13} /> Reason
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: 13, color: "#4b5563", textAlign: "center", padding: 16 }}>No item details available for this order.</div>
+                    )}
+                    <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
+                      <button onClick={() => setShowOrderDetailModal(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Eye size={12} /> View Details</button>
+                      {!paid && o.revenue > 0 && o.status !== 'cancelled' && (
+                        <button onClick={() => handlePayOrderInvoice(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><CreditCard size={13} /> Pay Invoice (${o.revenue})</button>
+                      )}
+                      {o.status === "delivered" && (
+                        <button onClick={() => handleDownloadAll(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Download All</button>
+                      )}
+                      {o.status === "revision" && (
+                        <button onClick={() => handleRequestRevision(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(251,191,36,0.3)", background: "rgba(251,191,36,0.1)", color: "#fbbf24", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><RefreshCw size={12} /> Request Revision</button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
           {filtered.length === 0 && <div style={{ padding: 40, textAlign: "center", color: "#4b5563", fontSize: 13 }}>No orders found.</div>}
         </div>
 
@@ -1719,8 +1795,8 @@ export default function TyesClient() {
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#6b7280" }}>{inv.due}</td>
                   <td style={{ padding: "12px 16px", display: "flex", gap: 8, alignItems: "center" }}>
                     {inv.status !== 'paid' && inv.status !== 'cancelled' && (
-                      <button 
-                        onClick={() => handlePayOrderInvoice(inv.rawOrder || { id: inv.orderId || inv.id, title: inv.order, revenue: inv.amount })} 
+                      <button
+                        onClick={() => handlePayOrderInvoice(inv.rawOrder || { id: inv.orderId || inv.id, title: inv.order, revenue: inv.amount })}
                         style={{ padding: "5px 12px", borderRadius: 7, border: "none", background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}
                       >
                         <CreditCard size={11} /> Pay Now (${inv.amount})

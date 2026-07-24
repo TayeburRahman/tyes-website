@@ -64,7 +64,7 @@ The existing 3-step flow (Choose Plan → Upload Brief → Review & Submit) is k
 
 | Plan | Brand Info Behavior |
 |---|---|
-| Free Image | Hidden by default. A toggle offers "Add a brand strategy snapshot (+$10)"; toggling it ON reveals the section |
+| Free Image | Hidden by default. A toggle offers "Add a brand strategy snapshot (+$25)"; toggling it ON reveals the section |
 | Campaign 5 / 10 | Always visible and required — the snapshot is bundled with the plan |
 | Custom | Same as Campaign 5/10, plus an inline Calendly widget to book the strategy call |
 
@@ -98,9 +98,9 @@ How the team receives, manages, and delivers strategy requests. Existing Orders 
 
 - Sidebar: new **"Strategy Requests"** item between Orders and Clients.
 - Dashboard: a 5th KPI card — total strategy requests with a clickable "pending" sub-label that opens the list filtered to pending.
-- **Strategy Requests page (new):** a list view matching the Orders page pattern, with status tabs and columns for brand, client, source (order / +$10 add-on / standalone), category, status, tier, assigned strategist, and date. Clicking a row opens a detail view showing all submitted brand data plus admin actions: change status, assign a strategist, add internal notes, upload the snapshot PDF, send to brand, or mark as lost.
+- **Strategy Requests page (new):** a list view matching the Orders page pattern, with status tabs and columns for brand, client, source (order / +$25 add-on / standalone), category, status, tier, assigned strategist, and date. Clicking a row opens a detail view showing all submitted brand data plus admin actions: change status, assign a strategist, add internal notes, upload the snapshot PDF, send to brand, or mark as lost.
 - Analytics: a new row of 4 strategy KPIs — total requests, average time to deliver, free-to-paid conversion rate, and revenue from strategy upsells.
-- Pricing page: plans renamed to match the new structure, a $10 strategy add-on config, and an edit modal with 3 new toggles per plan (strategy snapshot included, 1H call included, allow strategy add-on). These toggles drive what the client sees in Upload Brief.
+- Pricing page: plans renamed to match the new structure, a $25 strategy add-on config (single "Strategy Pricing Config" — applies to both the Free Image add-on and the standalone Brand Strategy tier), and an edit modal with 3 new toggles per plan (strategy snapshot included, 1H call included, allow strategy add-on). These toggles drive what the client sees in Upload Brief.
 
 ### Status Lifecycle of a Strategy Request
 
@@ -123,7 +123,7 @@ How the team receives, manages, and delivers strategy requests. Existing Orders 
 4. An admin assigns a strategist, the snapshot PDF is uploaded and sent; the client sees it in her snapshots archive and can download it.
 5. The upsell banner invites her to book the 1-hour Deep Dive call; if she books, the request is marked Converted and shows up in strategy analytics.
 
-> **Note:** A strategy request can enter from three sources: bundled with a paid order (Campaign 5/10/Custom), as the +$10 add-on on a Free Image order, or standalone via the Brand Strategy tab. All three land in the same admin queue.
+> **Note:** A strategy request can enter from three sources: bundled with a paid order (Campaign 5/10/Custom), as the +$25 add-on on a Free Image order, or standalone via the Brand Strategy tab. All three land in the same admin queue.
 
 ---
 
@@ -141,9 +141,10 @@ How the team receives, manages, and delivers strategy requests. Existing Orders 
 
 | Decision | Answer |
 |---|---|
-| Campaign 5 / 10 prices | **TBD** — not decided yet. Build with placeholder values; prices are editable by admin on the Pricing page, so they can be set at launch without a code change. |
-| Custom plan strategy call | **1 hour (confirmed).** The homepage pricing section says "30-min strategy call" in two places — update that copy to 1 hour so everything matches. |
-| Strategy add-on price | **$10**, available only on the Free Image plan, controlled by the admin add-on config toggle. |
+| Campaign 5 price | **$25 (confirmed).** |
+| Campaign 10 price | **$45 (confirmed).** |
+| Custom plan strategy call | **30-min discovery call (confirmed).** Snapshot also bundled FREE. |
+| Strategy add-on price | **$25** — applies to both the Free Image add-on and the standalone Brand Strategy tier. Single "Strategy Pricing Config" in admin (ON/OFF + price field). |
 | Commercial license | Keep all mentions off the homepage for now (per the homepage PDF). Can be re-added as a footnote once rights are confirmed. |
 
 ---
@@ -163,7 +164,7 @@ How the team receives, manages, and delivers strategy requests. Existing Orders 
   - `POST /api/brand-strategy-requests` (create, linked to order or standalone)
   - `GET /api/brand-strategy-requests` (list user's)
   - `GET /api/brand-strategy-requests/:id` (detail + PDF URL)
-  - `POST /api/orders/:id/add-strategy-addon` ($10 toggle on Free Image orders)
+  - `POST /api/orders/:id/add-strategy-addon` ($25 toggle on Free Image orders)
 - **DB:** new table `brand_strategy_requests` — `id`, `user_id`, `order_id` (nullable), `brand_data` (JSON of all form fields), `status`, `assigned_to`, `delivered_pdf_url`, timestamps.
 
 ### Admin Dashboard
@@ -202,7 +203,7 @@ Manual admin status change when a brand books the Deep Dive call. No Calendly we
 **What does "Send to brand" actually do?**
 Sends a delivery email with the snapshot PDF and flips status to Sent. An email template/service is needed — not specified in the PDFs, dev's choice.
 
-**Where is the $10 add-on charged?**
+**Where is the $25 add-on charged?**
 At checkout on a Free Image order, via the toggle above the Upload Brief form (`POST /api/orders/:id/add-strategy-addon`).
 
 **Does Free Image still include revisions?**

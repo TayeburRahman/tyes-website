@@ -6,14 +6,13 @@ export async function GET() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
     // Use service role key to bypass RLS since this is a server-side route
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-    
+
     if (!supabaseUrl || !supabaseServiceKey) {
       return NextResponse.json({ error: 'Missing Supabase credentials' }, { status: 500 });
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Fetch active plans ordered by id (to maintain order like Free Image, Single, etc)
     const { data: plans, error } = await supabase
       .from('pricing_plans')
       .select('*')

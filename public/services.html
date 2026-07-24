@@ -250,6 +250,7 @@
 
           .ap-card.featured {
             background: rgba(10, 10, 20, 0.8);
+            border: 1px solid #2DD4BF;
           }
 
           .ap-card.featured .card-glow {
@@ -271,24 +272,19 @@
           }
 
           .ap-badge {
-            position: absolute;
-            top: 12px;
-            right: 14px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 10px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 4px 10px;
-            border-radius: 4px;
+            letter-spacing: 0.2em;
+            color: #2DD4BF !important;
+            margin-bottom: 6px;
           }
 
           .ap-name {
             font-family: 'League Spartan', sans-serif;
             font-size: 22px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
             color: #fff;
             margin: 0;
             transition: color 0.3s;
@@ -399,7 +395,7 @@
 
           .ap-scroll {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             padding: 2rem 0 1rem;
           }
@@ -447,13 +443,10 @@
         </div>
 
         <div class="padding-global" style="position:relative;z-index:1;">
-          <div class="container-large" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
-
-
-          </div>
+          <div class="container-large" style="display:flex;flex-direction:column;align-items:center;text-align:center; width:100%;">
 
           <!-- Scrollable Cards -->
-          <div class="ap-scroll" id="ap-scroll">
+          <div class="ap-scroll" id="ap-scroll" style="width:100%; text-align:left;">
 
 <style>
 .skeleton-shimmer {
@@ -612,6 +605,7 @@
                   <polyline points="9 18 15 12 9 6" />
                 </svg></button>
             </div>
+          </div>
           </div>
         </div>
       </section>
@@ -783,60 +777,70 @@
         scrollEl.innerHTML = '';
         
         plans.forEach(plan => {
-          const isFeatured = plan.badge === 'Best Value' || plan.badge === 'Enterprise' || plan.price > 20; // heuristic or check DB
-          const cardClass = plan.badge && plan.badge.toLowerCase().includes('value') ? 'ap-card featured' : 'ap-card default';
+          const isFeatured = plan.name === 'Deep Dive Brand Strategy' || plan.name === 'Campaign 5';
+          const cardClass = isFeatured ? 'ap-card featured' : 'ap-card default';
           
           let badgeHtml = '';
           if (plan.badge) {
-            let bg = '#58b2ad'; let color = '#000';
-            if (plan.badge.toLowerCase() === 'free') { bg = '#22c55e'; color = '#fff'; }
-            else if (plan.badge.toLowerCase() === 'popular') { bg = '#ef4444'; color = '#fff'; }
-            else if (plan.badge.toLowerCase() === 'new') { bg = '#ec4899'; color = '#fff'; }
-            else if (plan.badge.toLowerCase() === 'enterprise') { bg = '#a855f7'; color = '#fff'; }
-            badgeHtml = `<div class="ap-badge" style="background:${bg};color:${color};">${plan.badge}</div>`;
+            badgeHtml = `<div class="ap-badge">${plan.badge}</div>`;
           }
           
-          const priceDisplay = plan.price === 0 && plan.name === 'Custom' ? 'Let\'s talk' : `${plan.price}`;
+          const priceDisplay = plan.price === 0 && plan.name === 'Deep Dive Brand Strategy' ? 'Priced per scope' : `${plan.price}`;
           
           let featuresHtml = '';
           if (plan.features && Array.isArray(plan.features)) {
             featuresHtml = plan.features.map(f => {
+              if (f.text.startsWith('+')) {
+                return `<div style="border-top: 1px dashed #2DD4BF; margin-top: 12px; padding-top: 12px;"><div class="ap-feat" style="color: #2DD4BF; font-weight: 600;">${f.text}</div></div>`;
+              }
               const svg = f.icon === 'clock' 
-                ? `<svg class="it" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>`
-                : `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12" /></svg>`;
-              return `<div class="ap-feat">${svg}${f.text}</div>`;
+                ? `<svg class="it" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#2DD4BF"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>`
+                : `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#2DD4BF"><polyline points="20 6 9 17 4 12" /></svg>`;
+              return `<div class="ap-feat">${svg}<span style="color:#C8C8C8">${f.text}</span></div>`;
             }).join('');
           }
 
           let btnClass = 'ap-btn ghost';
-          if (plan.price === 0 && plan.name !== 'Custom') btnClass = 'ap-btn fill';
+          if (plan.price === 0 && plan.name !== 'Deep Dive Brand Strategy') btnClass = 'ap-btn fill';
           else if (plan.badge && plan.badge.toLowerCase().includes('value')) btnClass = 'ap-btn fill';
           else if (plan.badge && plan.badge.toLowerCase().includes('new')) btnClass = 'ap-btn accent';
 
           let btnText = 'Get Started';
-          if (plan.price === 0 && plan.name !== 'Custom') btnText = 'Claim Free Image';
-          else if (plan.name === 'Custom') btnText = 'Contact Us';
-          else if (plan.name === 'Social Media Pack') btnText = 'Get a Quote';
+          if (plan.name === 'Deep Dive Brand Strategy') {
+            btnText = 'Contact Us';
+          } else if (plan.price === 0 && plan.name !== 'Custom') {
+            btnText = 'Claim Free Image';
+          } else if (plan.name === 'Social Media Pack') {
+            btnText = 'Get a Quote';
+          }
           
           let qtyDesc = `${plan.images} AI image${plan.images !== 1 ? 's' : ''}`;
           if (plan.name === 'Free Image' || plan.name === 'Free Test') qtyDesc = '1 AI image · Quality assurance';
           if (plan.name === 'Social Media Pack') qtyDesc = '7 images · 7-day visual story';
-          if (plan.name === 'Custom') qtyDesc = 'Custom quantity';
+          if (plan.name === 'Deep Dive Brand Strategy') qtyDesc = '';
 
           const cardHtml = `
             <div class="${cardClass}">
               <div class="card-glow"></div>
-              ${badgeHtml}
               <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
+                ${badgeHtml}
                 <h3 class="ap-name">${plan.name}</h3>
-                <p class="ap-desc">${plan.description || ''}</p>
-                <div style="margin:0;"><span class="ap-price" ${priceDisplay === "Let's talk" ? 'style="font-size:2.25rem;"' : ''}>${priceDisplay}</span></div>
-                <p class="ap-qty">${qtyDesc}</p>
+                ${plan.description ? `<p class="ap-desc" style="font-size:11px; margin-bottom:5px;">${plan.description}</p>` : ''}
+                <div style="margin:0;"><span class="ap-price" ${priceDisplay === "Priced per scope" ? 'style="font-size:32px; line-height:1.1; display:inline-block; margin-top:8px;"' : ''}>${priceDisplay}</span></div>
+                ${qtyDesc ? `<p class="ap-qty">${qtyDesc}</p>` : ''}
                 <div style="margin:0;">
                   ${featuresHtml}
                 </div>
-                <div style="flex-grow:1;min-height:6px;"></div>
-                <button onclick="window.location.href='signin.html'" class="${btnClass}">${btnText}</button>
+                <div style="flex-grow:1;min-height:16px;"></div>
+                ${plan.name === 'Deep Dive Brand Strategy' ? `
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                    <button onclick="window.location.href='contact.html'" style="width:100%; padding:10px 0; background:#2DD4BF; color:#0A0A0A; border:none; border-radius:999px; font-weight:700; font-size:12px; cursor:pointer;">Contact Us</button>
+                    <button onclick="window.location.href='signin.html'" style="width:100%; padding:10px 0; background:transparent; color:#2DD4BF; border:1px solid #2DD4BF; border-radius:999px; font-weight:700; font-size:12px; cursor:pointer;">Book a Call</button>
+                    <div style="font-size:10px; color:#777; font-style:italic; text-align:center; margin-top:2px;">Subject to availability</div>
+                  </div>
+                ` : `
+                  <button onclick="window.location.href='signin.html'" class="${btnClass}">${btnText}</button>
+                `}
               </div>
             </div>
           `;
