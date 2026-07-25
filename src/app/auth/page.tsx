@@ -122,7 +122,7 @@ function AuthContent() {
     setError("");
     if (!fullName || !email || !password) { addToast("Please fill in all required fields", "error"); return; }
     if (password !== confirmPassword) { addToast("Passwords do not match", "error"); return; }
-    
+
     // Split full name
     const nameParts = fullName.trim().split(" ");
     const firstName = nameParts[0] || "";
@@ -213,12 +213,12 @@ function AuthContent() {
         type: "recovery"
       });
       if (verifyError) throw verifyError;
-      
+
       if (data.session) {
         // Update password
         const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
         if (updateError) throw updateError;
-        
+
         addToast("Password reset successfully! You can now sign in.", "success");
         setTab("signin");
         setResetEmail("");
@@ -285,19 +285,19 @@ function AuthContent() {
       <style>{`
         .auth-input { width:100%; padding:0.85rem 1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-family:Montserrat,sans-serif; font-size:0.9rem; font-weight:500; margin-bottom:1rem; outline:none; transition:border-color 0.3s; }
         .auth-input::placeholder { color:rgba(255,255,255,0.3); }
-        .auth-input:focus { border-color:#58b2ad; }
-        .auth-btn { width:100%; padding:0.9rem; background:#58b2ad; color:#fff; border:none; border-radius:6px; font-family:Montserrat,sans-serif; font-size:0.9rem; font-weight:500; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; transition:opacity 0.3s; margin-top:0.5rem; }
+        .auth-input:focus { border-color:#4ecdc4; }
+        .auth-btn { width:100%; padding:0.9rem; background:#4ecdc4; color:#fff; border:none; border-radius:6px; font-family:Montserrat,sans-serif; font-size:0.9rem; font-weight:500; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; transition:opacity 0.3s; margin-top:0.5rem; }
         .auth-btn:hover { opacity:0.85; }
         .auth-btn:disabled { opacity:0.6; cursor:not-allowed; }
         .auth-btn-outline { width:100%; padding:0.9rem; background:transparent; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:6px; font-family:Montserrat,sans-serif; font-size:0.9rem; font-weight:500; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; transition:all 0.3s; margin-top:0.5rem; }
         .auth-btn-outline:hover { background:rgba(255,255,255,0.05); }
         .auth-tab { flex:1; padding:0.75rem; text-align:center; font-family:Montserrat,sans-serif; font-size:0.85rem; font-weight:500; text-transform:uppercase; letter-spacing:0.08em; cursor:pointer; background:transparent; border:none; color:rgba(255,255,255,0.4); transition:all 0.3s; }
-        .auth-tab.active { background:#58b2ad; color:#fff; }
-        .auth-link { color:#58b2ad; text-decoration:none; font-size:0.85rem; font-weight:500; }
+        .auth-tab.active { background:#4ecdc4; color:#fff; }
+        .auth-link { color:#4ecdc4; text-decoration:none; font-size:0.85rem; font-weight:500; }
         .auth-link:hover { text-decoration:underline; }
-        .auth-checkbox-container { display:flex; align-items:flex-start; gap:0.75rem; background:#58b2ad; padding:1.25rem 1rem; border-radius:6px; margin-bottom:1rem; cursor:pointer; }
+        .auth-checkbox-container { display:flex; align-items:flex-start; gap:0.75rem; background:#4ecdc4; padding:1.25rem 1rem; border-radius:6px; margin-bottom:1rem; cursor:pointer; }
         .auth-checkbox { width:1.2rem; height:1.2rem; cursor:pointer; margin-top:2px; accent-color:#fff; }
-        .auth-section-title { font-family:Montserrat,sans-serif; font-size:0.75rem; font-weight:700; color:#fff; background:#58b2ad; padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em; }
+        .auth-section-title { font-family:Montserrat,sans-serif; font-size:0.75rem; font-weight:700; color:#fff; background:#4ecdc4; padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em; }
         .auth-label { font-family:Montserrat,sans-serif; font-size:0.8rem; font-weight:600; color:#fff; margin-bottom:0.4rem; display:block; }
         .auth-input-container { margin-bottom:0.5rem; }
         .auth-dropdown-scroll::-webkit-scrollbar { width: 6px; }
@@ -308,8 +308,8 @@ function AuthContent() {
       <div style={{ width: "100%", maxWidth: 420, padding: "2rem" }}>
         {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "3rem" }}>
-          <img src="/images/tyes-logo-new.svg" alt="tyes" style={{ height: 36 }} onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-          <span style={{ fontFamily: "'League Spartan',sans-serif", fontSize: "1.5rem", color: "#4ecdc4" }}>tyes</span>
+          <img src="/images/tyes-logo-new.svg" alt="tyes icon" style={{ height: 36 }} onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          <img src="/images/tyes-wordmark.svg" alt="tyes" style={{ height: 36 }} onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
         </div>
 
         {/* Title */}
@@ -364,20 +364,20 @@ function AuthContent() {
             </div>
             <div className="auth-input-container" style={{ marginBottom: "1.5rem", position: "relative" }}>
               <label className="auth-label">Country</label>
-              <div 
-                className="auth-input" 
+              <div
+                className="auth-input"
                 style={{ marginBottom: 0, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
                 onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
               >
                 <span>{ALL_COUNTRIES_LIST.find(c => c.code === country)?.name || "Select country"}</span>
                 <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", transition: "transform 0.3s", transform: isCountryDropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
               </div>
-              
+
               {isCountryDropdownOpen && (
                 <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 10, background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", marginTop: "4px", padding: "0.5rem", boxShadow: "0 10px 25px rgba(0,0,0,0.8)" }}>
-                  <input 
-                    type="text" 
-                    placeholder="Search country..." 
+                  <input
+                    type="text"
+                    placeholder="Search country..."
                     value={countrySearch}
                     onChange={e => setCountrySearch(e.target.value)}
                     onClick={e => e.stopPropagation()}
@@ -386,14 +386,14 @@ function AuthContent() {
                   />
                   <div className="auth-dropdown-scroll" style={{ maxHeight: "180px", overflowY: "auto", paddingRight: "4px" }}>
                     {ALL_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => (
-                      <div 
+                      <div
                         key={c.code}
                         onClick={() => {
                           setCountry(c.code);
                           setIsCountryDropdownOpen(false);
                           setCountrySearch("");
                         }}
-                        style={{ padding: "0.6rem", cursor: "pointer", borderRadius: "4px", background: country === c.code ? "rgba(88,178,173,0.15)" : "transparent", color: country === c.code ? "#58b2ad" : "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem", transition: "background 0.2s" }}
+                        style={{ padding: "0.6rem", cursor: "pointer", borderRadius: "4px", background: country === c.code ? "rgba(88,178,173,0.15)" : "transparent", color: country === c.code ? "#4ecdc4" : "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem", transition: "background 0.2s" }}
                         onMouseEnter={e => e.currentTarget.style.background = country === c.code ? "rgba(88,178,173,0.25)" : "rgba(255,255,255,0.05)"}
                         onMouseLeave={e => e.currentTarget.style.background = country === c.code ? "rgba(88,178,173,0.15)" : "transparent"}
                       >
@@ -410,7 +410,7 @@ function AuthContent() {
             </div>
 
             <div className="auth-checkbox-container" onClick={() => setIsBusiness(!isBusiness)}>
-              <input type="checkbox" className="auth-checkbox" checked={isBusiness} onChange={() => {}} />
+              <input type="checkbox" className="auth-checkbox" checked={isBusiness} onChange={() => { }} />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <span style={{ fontWeight: 700, fontSize: "0.9rem" }}>I'm buying for a business</span>
                 <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.7)", marginTop: "2px" }}>Get invoices with company VAT for tax deduction.</span>
@@ -465,7 +465,7 @@ function AuthContent() {
         {tab === "otp" && (
           <form onSubmit={handleVerifyOtp}>
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 500, fontSize: "0.85rem", color: "rgba(255,255,255,0.7)", marginBottom: "1.5rem", textAlign: "center", lineHeight: 1.5 }}>
-              We sent a code to <br/><strong style={{ color: "#4ecdc4" }}>{email}</strong>
+              We sent a code to <br /><strong style={{ color: "#4ecdc4" }}>{email}</strong>
             </p>
             <input className="auth-input" type="text" placeholder="6-digit code" maxLength={6} value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))} style={{ textAlign: "center", fontSize: "1.5rem", letterSpacing: "0.5em", fontWeight: 700 }} required />
             <button type="submit" className="auth-btn" disabled={loading}>{loading ? "Verifying…" : "Verify Account"}</button>
@@ -482,7 +482,7 @@ function AuthContent() {
         {tab === "forgot_otp" && (
           <form onSubmit={handleResetVerify}>
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 500, fontSize: "0.85rem", color: "rgba(255,255,255,0.7)", marginBottom: "1.5rem", textAlign: "center", lineHeight: 1.5 }}>
-              We sent a recovery code to <br/><strong style={{ color: "#4ecdc4" }}>{resetEmail}</strong>
+              We sent a recovery code to <br /><strong style={{ color: "#4ecdc4" }}>{resetEmail}</strong>
             </p>
             <input className="auth-input" type="text" placeholder="6-digit code" maxLength={6} value={resetOtpCode} onChange={e => setResetOtpCode(e.target.value.replace(/\D/g, ''))} style={{ textAlign: "center", fontSize: "1.5rem", letterSpacing: "0.5em", fontWeight: 700, marginBottom: "0.5rem" }} required />
             <input className="auth-input" type="password" placeholder="New Password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />

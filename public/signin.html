@@ -95,7 +95,7 @@
     }
 
     .auth-tab.active {
-      background: #58b2ad;
+      background: #4ecdc4;
       color: #fff;
     }
 
@@ -119,13 +119,13 @@
     }
 
     .auth-input:focus {
-      border-color: #58b2ad;
+      border-color: #4ecdc4;
     }
 
     .auth-btn {
       width: 100%;
       padding: 0.9rem;
-      background: #58b2ad;
+      background: #4ecdc4;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -162,7 +162,7 @@
     }
 
     .auth-link {
-      color: #58b2ad;
+      color: #4ecdc4;
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 500;
@@ -266,10 +266,10 @@
       // Redirect to the real Next.js auth page immediately
       window.location.href = "/auth";
     }
-    
+
     // Auto-redirect if accessed directly to prevent confusion
     if (window.location.pathname.includes('signin.html')) {
-       window.location.href = "/auth";
+      window.location.href = "/auth";
     }
   </script>
 </body>

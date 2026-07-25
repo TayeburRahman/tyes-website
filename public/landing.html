@@ -37,7 +37,7 @@
       theme: {
         extend: {
           colors: {
-            accent: '#58b2ad',
+            accent: '#4ecdc4',
             muted: '#6B6B6B',
             dark: '#050505',
           },
@@ -86,13 +86,13 @@
       }, 1500);
     })();
   </script>
-  
+
   <script>
     // Intercept clicks on the React-rendered buttons
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       const target = e.target.closest('a') || e.target.closest('button');
       if (!target) return;
-      
+
       const text = target.textContent || "";
       if (text.includes('Get Your Free Image')) {
         e.preventDefault();

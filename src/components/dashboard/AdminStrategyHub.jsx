@@ -13,6 +13,8 @@ export default function AdminStrategyHub({ supabase, addToast }) {
   const [sendingId, setSendingId] = useState(null);
   const [expandedRow, setExpandedRow] = useState(null);
   const [statusChangingId, setStatusChangingId] = useState(null);
+  const [assignName, setAssignName] = useState('');
+  const [assigningId, setAssigningId] = useState(null);
 
   useEffect(() => {
     fetchRequests();
@@ -119,6 +121,26 @@ export default function AdminStrategyHub({ supabase, addToast }) {
     setStatusChangingId(null);
   };
 
+  const handleAssign = async (id) => {
+    setAssigningId(id);
+    try {
+      const res = await fetch(`/api/admin/strategy-requests/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assigned_to: assignName })
+      });
+      if (res.ok) {
+        addToast('Assigned strategist updated', 'success');
+        fetchRequests();
+      } else {
+        addToast('Failed to update strategist', 'error');
+      }
+    } catch (e) {
+      addToast('Error updating strategist', 'error');
+    }
+    setAssigningId(null);
+  };
+
   const formatStatus = (status) => {
     switch(status) {
       case 'new': return { label: 'New', color: '#FBBF24', bg: 'rgba(251, 191, 36, 0.1)' };
@@ -194,8 +216,9 @@ export default function AdminStrategyHub({ supabase, addToast }) {
               const isActive = activeTab === tab.id;
               return (
                 <button 
-                  key={tab.id} 
-                  onClick={() => setActiveTab(tab.id)} 
+                  key={tab.id}
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveTab(tab.id); }} 
                   style={{ 
                     padding: '6px 12px', 
                     background: isActive ? '#fff' : 'transparent', 
@@ -231,6 +254,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
               <tr style={{ color: '#9ca3af', borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left' }}>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Brand</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Client</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Order ID</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Source</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Category</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Tier</th>
@@ -248,14 +272,27 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                 
                 return (
                   <React.Fragment key={req.id}>
-                    <tr onClick={() => setExpandedRow(isExpanded ? null : req.id)} style={{ borderBottom: isExpanded ? 'none' : '1px solid rgba(255,255,255,0.05)', cursor: 'pointer', background: isExpanded ? 'rgba(255,255,255,0.02)' : 'transparent' }}>
+                    <tr onClick={() => {
+                        if (isExpanded) {
+                          setExpandedRow(null);
+                        } else {
+                          setExpandedRow(req.id);
+                          setAssignName(req.assigned_to || '');
+                        }
+                      }} style={{ borderBottom: isExpanded ? 'none' : '1px solid rgba(255,255,255,0.05)', cursor: 'pointer', background: isExpanded ? 'rgba(255,255,255,0.02)' : 'transparent' }}>
                       <td style={{ padding: '12px 8px', color: '#2DD4BF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', fontSize: 14 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                           {brandInfo.brandName || 'Unknown'}
                         </div>
                       </td>
-                      <td style={{ padding: '12px 8px', color: '#fff' }}>{req.profiles?.full_name || req.profiles?.email?.split('@')[0]}</td>
+                      <td style={{ padding: '12px 8px', color: '#fff' }}>
+                        <div>{req.profiles?.full_name || req.orders?.customer_name || 'Unknown'}</div>
+                        <div style={{ fontSize: 10, color: '#9ca3af' }}>{req.profiles?.email || req.orders?.customer_email || 'No email'}</div>
+                      </td>
+                      <td style={{ padding: '12px 8px', color: '#9ca3af', fontSize: 11, fontFamily: 'monospace' }}>
+                        {req.order_id || 'N/A'}
+                      </td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{req.source}</td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{brandInfo.category || 'N/A'}</td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{req.tier || 'Standard'}</td>
@@ -264,7 +301,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                           {sFormat.label}
                         </span>
                       </td>
-                      <td style={{ padding: '12px 8px', color: '#fff' }}>Raluca (auto)</td>
+                      <td style={{ padding: '12px 8px', color: '#fff' }}>{req.assigned_to || 'Unassigned'}</td>
                       <td style={{ padding: '12px 8px' }}>
                         <span style={{ padding: '2px 6px', borderRadius: 4, fontSize: 10, fontWeight: 600, background: req.orders?.status === 'paid' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(251, 191, 36, 0.1)', color: req.orders?.status === 'paid' ? '#34d399' : '#fbbf24' }}>
                           {req.orders?.status === 'paid' ? 'Paid' : 'Pending'}
@@ -276,11 +313,11 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                     {/* Detail View */}
                     {isExpanded && (
                       <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                        <td colSpan="9" style={{ padding: '0 24px 24px 24px' }}>
+                        <td colSpan="10" style={{ padding: '0 24px 24px 24px' }}>
                           <div style={{ background: '#0A0A0A', padding: '20px 24px', borderRadius: 4 }}>
                             <div style={{ fontSize: 10, color: sFormat.color, letterSpacing: '2pt', textTransform: 'uppercase', fontWeight: 700, marginBottom: 8 }}>Status · {sFormat.label}</div>
                             <div style={{ fontSize: 20, color: '#FFFFFF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', marginBottom: 8 }}>{brandInfo.brandName || 'Unknown'} · Strategy Request</div>
-                            <div style={{ fontSize: 11, color: '#888', marginBottom: 20 }}>Submitted {new Date(req.created_at).toLocaleDateString()} · From Order {req.order_id} ({req.tier}) · {req.profiles?.full_name} ({req.profiles?.email})</div>
+                            <div style={{ fontSize: 11, color: '#888', marginBottom: 20 }}>Submitted {new Date(req.created_at).toLocaleDateString()} · From Order {req.order_id || 'N/A'} ({req.tier}) · {req.profiles?.full_name || req.orders?.customer_name || 'Unknown'} ({req.profiles?.email || req.orders?.customer_email || 'No email'})</div>
 
                             <div style={{ borderTop: '1px solid #2A2A2A', paddingTop: 16, marginBottom: 16 }}>
                               <div style={{ fontSize: 10, letterSpacing: '2pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Essential Brand Info</div>
@@ -312,7 +349,21 @@ export default function AdminStrategyHub({ supabase, addToast }) {
 
                             <div style={{ borderTop: '1px solid #2A2A2A', paddingTop: 16 }}>
                               <div style={{ fontSize: 10, letterSpacing: '2pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Admin Actions</div>
-                              <div style={{ fontSize: 11, color: '#B8B8B8', marginBottom: 12, fontFamily: '"Montserrat", sans-serif' }}>Auto-assigned to <strong style={{color:'#FFFFFF'}}>Raluca — Brand Growth &amp; AI Strategy Lead</strong>. No "assign strategist" step — she is the only strategist.</div>
+                              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.03)', padding: '6px 12px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.1)' }}>
+                                  <span style={{ fontSize: 11, color: '#9ca3af' }}>Strategist:</span>
+                                  <input 
+                                    type="text" 
+                                    placeholder="Enter name..."
+                                    value={assignName}
+                                    onChange={(e) => setAssignName(e.target.value)}
+                                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: 11, outline: 'none', width: 120 }}
+                                  />
+                                  <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAssign(req.id); }} disabled={assigningId === req.id} style={{ background: '#2DD4BF', border: 'none', color: '#0A0A0A', padding: '4px 10px', borderRadius: 999, fontSize: 10, fontWeight: 700, cursor: 'pointer' }}>
+                                    {assigningId === req.id ? 'Saving...' : 'Assign'}
+                                  </button>
+                                </div>
+                              </div>
                               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                                 
                                 <select 
@@ -334,11 +385,11 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                                   <input type="file" accept=".pdf" style={{ display: 'none' }} onChange={(e) => handlePdfUpload(req.id, e.target.files[0])} />
                                 </label>
 
-                                <button onClick={() => handleSendToClient(req.id)} disabled={sendingId === req.id || req.status === 'sent'} style={{ background: req.status === 'sent' ? '#333' : '#2DD4BF', border: 'none', color: req.status === 'sent' ? '#888' : '#0A0A0A', padding: '6px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: req.status === 'sent' ? 'not-allowed' : 'pointer' }}>
+                                <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSendToClient(req.id); }} disabled={sendingId === req.id || req.status === 'sent'} style={{ background: req.status === 'sent' ? '#333' : '#2DD4BF', border: 'none', color: req.status === 'sent' ? '#888' : '#0A0A0A', padding: '6px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: req.status === 'sent' ? 'not-allowed' : 'pointer' }}>
                                   {sendingId === req.id ? 'Sending...' : 'Send to client'}
                                 </button>
 
-                                <button onClick={() => handleFlagDeepDive(req.id)} disabled={req.status === 'converted_to_deep_dive'} style={{ background: 'transparent', border: '1.5px solid #FBBF24', color: '#FBBF24', padding: '6px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: req.status === 'converted_to_deep_dive' ? 0.5 : 1 }}>
+                                <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleFlagDeepDive(req.id); }} disabled={req.status === 'converted_to_deep_dive'} style={{ background: 'transparent', border: '1.5px solid #FBBF24', color: '#FBBF24', padding: '6px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: req.status === 'converted_to_deep_dive' ? 0.5 : 1 }}>
                                   Flag for Deep Dive nudge
                                 </button>
 
@@ -359,7 +410,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
               })}
               {paginatedRequests.length === 0 && (
                 <tr>
-                  <td colSpan="9" style={{ padding: 24, textAlign: 'center', color: '#9ca3af' }}>No requests found.</td>
+                  <td colSpan="10" style={{ padding: 24, textAlign: 'center', color: '#9ca3af' }}>No requests found.</td>
                 </tr>
               )}
             </tbody>
@@ -370,8 +421,9 @@ export default function AdminStrategyHub({ supabase, addToast }) {
         {!loading && totalPages > 1 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 24 }}>
             <button 
+              type="button"
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage(prev => prev - 1)}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentPage(prev => prev - 1); }}
               style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.05)', border: 'none', color: currentPage === 1 ? '#4b5563' : '#fff', borderRadius: 8, cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
             >
               Previous
@@ -380,8 +432,9 @@ export default function AdminStrategyHub({ supabase, addToast }) {
               Page {currentPage} of {totalPages}
             </span>
             <button 
+              type="button"
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(prev => prev + 1)}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentPage(prev => prev + 1); }}
               style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.05)', border: 'none', color: currentPage === totalPages ? '#4b5563' : '#fff', borderRadius: 8, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
             >
               Next

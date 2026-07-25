@@ -56,7 +56,9 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { status } = body;
+    const updates: any = {};
+    if (body.status !== undefined) updates.status = body.status;
+    if (body.assigned_to !== undefined) updates.assigned_to = body.assigned_to;
 
     const supabaseAdmin = createClientBase(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,7 +67,7 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from('brand_strategy_requests')
-      .update({ status })
+      .update(updates)
       .eq('id', id)
       .select()
       .single();

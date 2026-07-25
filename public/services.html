@@ -245,7 +245,7 @@
           }
 
           .ap-card.default .card-glow {
-            background-image: linear-gradient(45deg, #58b2ad, #22c55e);
+            background-image: linear-gradient(45deg, #4ecdc4, #22c55e);
           }
 
           .ap-card.featured {
@@ -254,7 +254,7 @@
           }
 
           .ap-card.featured .card-glow {
-            background-image: linear-gradient(45deg, #58b2ad, #0e7a74);
+            background-image: linear-gradient(45deg, #4ecdc4, #0e7a74);
           }
 
           @keyframes gradAnim {
@@ -348,7 +348,7 @@
           }
 
           .ap-feat .ic {
-            color: #58b2ad;
+            color: #4ecdc4;
           }
 
           .ap-feat .it {
@@ -375,12 +375,12 @@
           }
 
           .ap-btn.fill {
-            background: #58b2ad;
+            background: #4ecdc4;
             color: #fff;
           }
 
           .ap-btn.ghost {
-            background: #58b2ad;
+            background: #4ecdc4;
             color: #fff;
           }
 
@@ -389,7 +389,7 @@
           }
 
           .ap-btn.accent {
-            background: #58b2ad;
+            background: #4ecdc4;
             color: #fff;
           }
 
@@ -429,8 +429,8 @@
           }
 
           .ap-nav button:hover {
-            border-color: #58b2ad;
-            color: #58b2ad;
+            border-color: #4ecdc4;
+            color: #4ecdc4;
           }
         </style>
 
@@ -443,169 +443,224 @@
         </div>
 
         <div class="padding-global" style="position:relative;z-index:1;">
-          <div class="container-large" style="display:flex;flex-direction:column;align-items:center;text-align:center; width:100%;">
+          <div class="container-large"
+            style="display:flex;flex-direction:column;align-items:center;text-align:center; width:100%;">
 
-          <!-- Scrollable Cards -->
-          <div class="ap-scroll" id="ap-scroll" style="width:100%; text-align:left;">
+            <!-- Scrollable Cards -->
+            <div class="ap-scroll" id="ap-scroll" style="width:100%; text-align:left;">
 
-<style>
-.skeleton-shimmer {
-  background: #1f1f22;
-  background-image: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
-}
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-</style>
+              <style>
+                .skeleton-shimmer {
+                  background: #1f1f22;
+                  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
+                  background-size: 200% 100%;
+                  animation: shimmer 1.5s infinite linear;
+                }
 
-<div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
-    <div class="skeleton-shimmer" style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
-    <div class="skeleton-shimmer" style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div style="margin: 0;">
-      <div class="skeleton-shimmer" style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
-    </div>
-    
-    <div style="flex-grow:1;min-height:24px;"></div>
-    <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
-  </div>
-</div>
+                @keyframes shimmer {
+                  0% {
+                    background-position: 200% 0;
+                  }
 
-<div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
-    <div class="skeleton-shimmer" style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
-    <div class="skeleton-shimmer" style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div style="margin: 0;">
-      <div class="skeleton-shimmer" style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
-    </div>
-    
-    <div style="flex-grow:1;min-height:24px;"></div>
-    <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
-  </div>
-</div>
+                  100% {
+                    background-position: -200% 0;
+                  }
+                }
+              </style>
 
-<div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
-    <div class="skeleton-shimmer" style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
-    <div class="skeleton-shimmer" style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div style="margin: 0;">
-      <div class="skeleton-shimmer" style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
-    </div>
-    
-    <div style="flex-grow:1;min-height:24px;"></div>
-    <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
-  </div>
-</div>
+              <div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
+                <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
+                  <div class="skeleton-shimmer"
+                    style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
 
-<div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
-    <div class="skeleton-shimmer" style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
-    <div class="skeleton-shimmer" style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div style="margin: 0;">
-      <div class="skeleton-shimmer" style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
-    </div>
-    
-    <div style="flex-grow:1;min-height:24px;"></div>
-    <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
-  </div>
-</div>
+                  <div class="skeleton-shimmer"
+                    style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
 
-<div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
-    <div class="skeleton-shimmer" style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
-    <div class="skeleton-shimmer" style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div style="margin: 0;">
-      <div class="skeleton-shimmer" style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
-    </div>
-    
-    <div style="flex-grow:1;min-height:24px;"></div>
-    <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
-  </div>
-</div>
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
 
-<div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
-    <div class="skeleton-shimmer" style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
-    <div class="skeleton-shimmer" style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
-    
-    <div class="skeleton-shimmer" style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
-    
-    <div style="margin: 0;">
-      <div class="skeleton-shimmer" style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
-      <div class="skeleton-shimmer" style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
-    </div>
-    
-    <div style="flex-grow:1;min-height:24px;"></div>
-    <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
-  </div>
-</div>
+                  <div style="margin: 0;">
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
+                  </div>
 
-          </div>
+                  <div style="flex-grow:1;min-height:24px;"></div>
+                  <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
+                </div>
+              </div>
 
-          <!-- Nav arrows -->
-          <div style="display:flex;justify-content:center;">
-            <div class="ap-nav">
-              <button
-                onclick="var s=document.getElementById('ap-scroll');s.scrollBy({left:-s.offsetWidth,behavior:'smooth'})"><svg
-                  xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2">
-                  <polyline points="15 18 9 12 15 6" />
-                </svg></button>
-              <button
-                onclick="var s=document.getElementById('ap-scroll');s.scrollBy({left:s.offsetWidth,behavior:'smooth'})"><svg
-                  xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg></button>
+              <div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
+                <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
+                  <div class="skeleton-shimmer"
+                    style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div style="margin: 0;">
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
+                  </div>
+
+                  <div style="flex-grow:1;min-height:24px;"></div>
+                  <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
+                </div>
+              </div>
+
+              <div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
+                <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
+                  <div class="skeleton-shimmer"
+                    style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div style="margin: 0;">
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
+                  </div>
+
+                  <div style="flex-grow:1;min-height:24px;"></div>
+                  <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
+                </div>
+              </div>
+
+              <div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
+                <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
+                  <div class="skeleton-shimmer"
+                    style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div style="margin: 0;">
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
+                  </div>
+
+                  <div style="flex-grow:1;min-height:24px;"></div>
+                  <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
+                </div>
+              </div>
+
+              <div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
+                <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
+                  <div class="skeleton-shimmer"
+                    style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div style="margin: 0;">
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
+                  </div>
+
+                  <div style="flex-grow:1;min-height:24px;"></div>
+                  <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
+                </div>
+              </div>
+
+              <div class="ap-card default" style="border: 1px solid rgba(255,255,255,0.05); cursor: default;">
+                <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;">
+                  <div class="skeleton-shimmer"
+                    style="height: 20px; width: 50%; border-radius: 4px; margin-bottom: 6px;"></div>
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 70%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 36px; width: 30%; border-radius: 6px; margin-bottom: 12px;"></div>
+
+                  <div class="skeleton-shimmer"
+                    style="height: 14px; width: 60%; border-radius: 4px; margin-bottom: 16px;"></div>
+
+                  <div style="margin: 0;">
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 85%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 90%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 75%; border-radius: 4px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-shimmer"
+                      style="height: 14px; width: 80%; border-radius: 4px; margin-bottom: 10px;"></div>
+                  </div>
+
+                  <div style="flex-grow:1;min-height:24px;"></div>
+                  <div class="skeleton-shimmer" style="height: 42px; width: 100%; border-radius: 8px;"></div>
+                </div>
+              </div>
+
             </div>
-          </div>
+
+            <!-- Nav arrows -->
+            <div style="display:flex;justify-content:center;">
+              <div class="ap-nav">
+                <button
+                  onclick="var s=document.getElementById('ap-scroll');s.scrollBy({left:-s.offsetWidth,behavior:'smooth'})"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg></button>
+                <button
+                  onclick="var s=document.getElementById('ap-scroll');s.scrollBy({left:s.offsetWidth,behavior:'smooth'})"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg></button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -654,7 +709,7 @@
               style="margin-top:2rem;margin-bottom:3rem;padding:1rem 0;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;font-family:'Montserrat',sans-serif;font-weight:500;font-size:0.9rem;color:rgba(255,255,255,0.8);">
               <span>All visuals are AI-generated &amp; retouched by real people</span>
               <span style="color:rgba(255,255,255,0.3);">|</span>
-              <a href="ai-disclaimer.html" style="color:#58b2ad;text-decoration:underline;">Read our AI Disclaimer</a>
+              <a href="ai-disclaimer.html" style="color:#4ecdc4;text-decoration:underline;">Read our AI Disclaimer</a>
             </div>
             <div class="w-layout-grid footer-main-grid"
               style="grid-template-columns:1fr 1fr 1fr;font-family:'Montserrat',sans-serif;font-weight:500;">
@@ -772,28 +827,28 @@
         const res = await fetch('/api/plans');
         if (!res.ok) throw new Error('Failed to fetch');
         const plans = await res.json();
-        
+
         const scrollEl = document.getElementById('ap-scroll');
         scrollEl.innerHTML = '';
-        
+
         plans.forEach(plan => {
           const isFeatured = plan.name === 'Deep Dive Brand Strategy' || plan.name === 'Campaign 5';
           const cardClass = isFeatured ? 'ap-card featured' : 'ap-card default';
-          
+
           let badgeHtml = '';
           if (plan.badge) {
             badgeHtml = `<div class="ap-badge">${plan.badge}</div>`;
           }
-          
+
           const priceDisplay = plan.price === 0 && plan.name === 'Deep Dive Brand Strategy' ? 'Priced per scope' : `${plan.price}`;
-          
+
           let featuresHtml = '';
           if (plan.features && Array.isArray(plan.features)) {
             featuresHtml = plan.features.map(f => {
               if (f.text.startsWith('+')) {
                 return `<div style="border-top: 1px dashed #2DD4BF; margin-top: 12px; padding-top: 12px;"><div class="ap-feat" style="color: #2DD4BF; font-weight: 600;">${f.text}</div></div>`;
               }
-              const svg = f.icon === 'clock' 
+              const svg = f.icon === 'clock'
                 ? `<svg class="it" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#2DD4BF"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>`
                 : `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#2DD4BF"><polyline points="20 6 9 17 4 12" /></svg>`;
               return `<div class="ap-feat">${svg}<span style="color:#C8C8C8">${f.text}</span></div>`;
@@ -813,7 +868,7 @@
           } else if (plan.name === 'Social Media Pack') {
             btnText = 'Get a Quote';
           }
-          
+
           let qtyDesc = `${plan.images} AI image${plan.images !== 1 ? 's' : ''}`;
           if (plan.name === 'Free Image' || plan.name === 'Free Test') qtyDesc = '1 AI image · Quality assurance';
           if (plan.name === 'Social Media Pack') qtyDesc = '7 images · 7-day visual story';

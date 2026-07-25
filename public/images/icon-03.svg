@@ -4,7 +4,7 @@
 <path d="M200 0H0V200H200V0Z" fill="white"/>
 </mask>
 <g mask="url(#mask0_289_555)">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M100 0H0L100 100H0L100 200H200L100 100H200L100 0Z" fill="#58b2ad"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M100 0H0L100 100H0L100 200H200L100 100H200L100 0Z" fill="#4ecdc4"/>
 </g>
 </g>
 <defs>

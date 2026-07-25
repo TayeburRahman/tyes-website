@@ -2384,8 +2384,6 @@ export default function TyesClient() {
             {collapsed && <button onClick={() => setCollapsed(false)} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}><Menu size={18} /></button>}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <span style={{ padding: "3px 10px", borderRadius: 20, background: "rgba(78,205,196,0.12)", color: "#4ecdc4", fontSize: 11, fontWeight: 600 }}>Pro</span>
-
             {/* Notification Bell */}
             <div style={{ position: "relative" }}>
               <button onClick={() => { setShowNotifDrop(!showNotifDrop); setShowProfileDrop(false); if (!showNotifDrop) markNotifsRead(); }} style={{ position: "relative", background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}>

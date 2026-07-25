@@ -5,6 +5,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: Nohemi;
   src: url('../fonts/Nohemi-ExtraLight-BF6438cc57e06d5.woff2') format("woff2");
@@ -138,7 +139,7 @@
   --white: #fafafa;
   --black-03: #3d3d3d;
   --black-02: #1b1b1b;
-  --pink: #58b2ad;
+  --pink: #4ecdc4;
   --black-04: #404040;
   --white\<deleted\|variable-5a5f875c-e3ec-703c-c6e6-43088244a2be\>: #f2f2f2;
 }
@@ -394,7 +395,8 @@
   display: flex;
 }
 
-.w-commerce-commercequickcheckoutgoogleicon, .w-commerce-commercequickcheckoutmicrosofticon {
+.w-commerce-commercequickcheckoutgoogleicon,
+.w-commerce-commercequickcheckoutmicrosofticon {
   margin-right: 8px;
   display: block;
 }
@@ -909,7 +911,8 @@
   color: #999;
 }
 
-.w-commerce-commercecheckoutcardnumber:focus, .w-commerce-commercecheckoutcardnumber.-wfp-focus {
+.w-commerce-commercecheckoutcardnumber:focus,
+.w-commerce-commercecheckoutcardnumber.-wfp-focus {
   border-color: #3898ec;
   outline-style: none;
 }
@@ -933,7 +936,8 @@
   color: #999;
 }
 
-.w-commerce-commercecheckoutcardexpirationdate:focus, .w-commerce-commercecheckoutcardexpirationdate.-wfp-focus {
+.w-commerce-commercecheckoutcardexpirationdate:focus,
+.w-commerce-commercecheckoutcardexpirationdate.-wfp-focus {
   border-color: #3898ec;
   outline-style: none;
 }
@@ -957,7 +961,8 @@
   color: #999;
 }
 
-.w-commerce-commercecheckoutcardsecuritycode:focus, .w-commerce-commercecheckoutcardsecuritycode.-wfp-focus {
+.w-commerce-commercecheckoutcardsecuritycode:focus,
+.w-commerce-commercecheckoutcardsecuritycode.-wfp-focus {
   border-color: #3898ec;
   outline-style: none;
 }
@@ -1192,7 +1197,8 @@
   margin-bottom: 20px;
 }
 
-.w-commerce-commercecheckoutsummarylineitem, .w-commerce-commercecheckoutordersummaryextraitemslistitem {
+.w-commerce-commercecheckoutsummarylineitem,
+.w-commerce-commercecheckoutordersummaryextraitemslistitem {
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 8px;
@@ -1237,7 +1243,8 @@
   margin-bottom: 20px;
 }
 
-.w-commerce-commercecheckoutsummaryitem, .w-commerce-commercecheckoutsummarylabel {
+.w-commerce-commercecheckoutsummaryitem,
+.w-commerce-commercecheckoutsummarylabel {
   margin-bottom: 8px;
 }
 
@@ -1296,7 +1303,8 @@
     align-items: stretch;
   }
 
-  .w-commerce-commercecartcontainerwrapper--cartType-leftDropdown, .w-commerce-commercecartcontainerwrapper--cartType-rightDropdown {
+  .w-commerce-commercecartcontainerwrapper--cartType-leftDropdown,
+  .w-commerce-commercecartcontainerwrapper--cartType-rightDropdown {
     flex-direction: row;
     justify-content: center;
     align-items: stretch;
@@ -1305,7 +1313,12 @@
     inset: 0;
   }
 
-  .w-commerce-commercecartquantity, .w-commerce-commerceaddtocartquantityinput, .w-commerce-commercecheckoutemailinput, .w-commerce-commercecheckoutshippingfullname, .w-commerce-commercecheckoutshippingstreetaddress, .w-commerce-commercecheckoutshippingstreetaddressoptional {
+  .w-commerce-commercecartquantity,
+  .w-commerce-commerceaddtocartquantityinput,
+  .w-commerce-commercecheckoutemailinput,
+  .w-commerce-commercecheckoutshippingfullname,
+  .w-commerce-commercecheckoutshippingstreetaddress,
+  .w-commerce-commercecheckoutshippingstreetaddressoptional {
     font-size: 16px;
   }
 
@@ -1313,7 +1326,20 @@
     flex-direction: column;
   }
 
-  .w-commerce-commercecheckoutshippingcity, .w-commerce-commercecheckoutshippingstateprovince, .w-commerce-commercecheckoutshippingzippostalcode, .w-commerce-commercecheckoutshippingcountryselector, .w-commerce-commercecheckoutcardnumber, .w-commerce-commercecheckoutcardexpirationdate, .w-commerce-commercecheckoutcardsecuritycode, .w-commerce-commercecheckoutbillingfullname, .w-commerce-commercecheckoutbillingstreetaddress, .w-commerce-commercecheckoutbillingstreetaddressoptional, .w-commerce-commercecheckoutbillingcity, .w-commerce-commercecheckoutbillingstateprovince, .w-commerce-commercecheckoutbillingzippostalcode, .w-commerce-commercecheckoutbillingcountryselector {
+  .w-commerce-commercecheckoutshippingcity,
+  .w-commerce-commercecheckoutshippingstateprovince,
+  .w-commerce-commercecheckoutshippingzippostalcode,
+  .w-commerce-commercecheckoutshippingcountryselector,
+  .w-commerce-commercecheckoutcardnumber,
+  .w-commerce-commercecheckoutcardexpirationdate,
+  .w-commerce-commercecheckoutcardsecuritycode,
+  .w-commerce-commercecheckoutbillingfullname,
+  .w-commerce-commercecheckoutbillingstreetaddress,
+  .w-commerce-commercecheckoutbillingstreetaddressoptional,
+  .w-commerce-commercecheckoutbillingcity,
+  .w-commerce-commercecheckoutbillingstateprovince,
+  .w-commerce-commercecheckoutbillingzippostalcode,
+  .w-commerce-commercecheckoutbillingcountryselector {
     font-size: 16px;
   }
 }
@@ -1394,7 +1420,8 @@ a {
   text-decoration: none;
 }
 
-ul, ol {
+ul,
+ol {
   margin-top: 0;
   margin-bottom: 10px;
   padding-left: 40px;
@@ -1453,7 +1480,10 @@ blockquote {
   transition: all .35s;
 }
 
-.form-input:hover, .form-input:active, .form-input:focus, .form-input.-wfp-focus {
+.form-input:hover,
+.form-input:active,
+.form-input:focus,
+.form-input.-wfp-focus {
   border-color: #9b9b9b;
 }
 
@@ -1923,7 +1953,7 @@ blockquote {
 }
 
 .form-message-error {
-  color: #58b2ad;
+  color: #4ecdc4;
   text-align: center;
   background-color: #fce9ec;
   margin-top: 2rem;
@@ -1957,8 +1987,8 @@ blockquote {
   color: #fafafa;
   text-align: center;
   text-transform: uppercase;
-  background-color: #58b2ad;
-  border: 1px solid #58b2ad;
+  background-color: #4ecdc4;
+  border: 1px solid #4ecdc4;
   border-radius: 0;
   justify-content: center;
   align-items: center;
@@ -2501,7 +2531,9 @@ blockquote {
   display: flex;
 }
 
-.checkout-form, .paypal-checkout-form, .order-confirmation-form {
+.checkout-form,
+.paypal-checkout-form,
+.order-confirmation-form {
   background-color: #0000;
   padding: 0;
 }
@@ -2718,7 +2750,7 @@ blockquote {
 }
 
 .featured-text {
-  color: #58B2AD;
+  color: #4ecdc4;
   text-transform: capitalize;
   padding-right: 10px;
   font-family: Gliker, serif;
@@ -3240,7 +3272,9 @@ blockquote {
   display: flex;
 }
 
-.newsletter-form-wrapper:hover, .newsletter-form-wrapper:active, .newsletter-form-wrapper:focus {
+.newsletter-form-wrapper:hover,
+.newsletter-form-wrapper:active,
+.newsletter-form-wrapper:focus {
   border-color: #bfbfbf40;
 }
 
@@ -3375,7 +3409,7 @@ blockquote {
 }
 
 .testimonial-arrow:hover {
-  background-color: #58b2ad;
+  background-color: #4ecdc4;
   transform: scale(1.1);
 }
 
@@ -3727,7 +3761,7 @@ blockquote {
 
 .contact-icon {
   color: #fff;
-  background-color: #58b2ad;
+  background-color: #4ecdc4;
   width: 2.5rem;
   height: 2.5rem;
   padding: 8px;
@@ -4299,7 +4333,8 @@ blockquote {
   width: 100%;
 }
 
-.cart-quantity-label, .add-cart-quantity {
+.cart-quantity-label,
+.add-cart-quantity {
   display: none;
 }
 
@@ -4888,7 +4923,8 @@ blockquote {
     padding-top: 17rem;
   }
 
-  .header-text, .shadow-text {
+  .header-text,
+  .shadow-text {
     font-size: 8vw;
   }
 
@@ -4964,7 +5000,8 @@ blockquote {
     min-height: 30rem;
   }
 
-  .cta-image-04, .cta-image-02 {
+  .cta-image-04,
+  .cta-image-02 {
     width: 30vw;
     height: auto;
   }
@@ -5021,7 +5058,8 @@ blockquote {
     grid-row-gap: 3rem;
   }
 
-  .team-component-grid, .blog-component-grid {
+  .team-component-grid,
+  .blog-component-grid {
     grid-template-columns: 1fr;
   }
 
@@ -5029,7 +5067,8 @@ blockquote {
     font-size: 3.5rem;
   }
 
-  .pricing-component-grid, .pricing-content-grid {
+  .pricing-component-grid,
+  .pricing-content-grid {
     grid-template-columns: 1fr;
   }
 
@@ -5323,7 +5362,8 @@ blockquote {
     width: 14rem;
   }
 
-  .header-text, .shadow-text {
+  .header-text,
+  .shadow-text {
     font-size: 10vw;
   }
 
@@ -5361,7 +5401,8 @@ blockquote {
     height: 25em;
   }
 
-  .chooose-us-component-grid, .how-it-works-component-grid {
+  .chooose-us-component-grid,
+  .how-it-works-component-grid {
     grid-template-columns: 1fr;
   }
 
@@ -5451,7 +5492,8 @@ blockquote {
     padding-bottom: 8rem;
   }
 
-  .about-intro-grid, .mission-component-grid {
+  .about-intro-grid,
+  .mission-component-grid {
     grid-template-columns: 1fr;
   }
 
@@ -5511,7 +5553,8 @@ blockquote {
     height: 1.15rem;
   }
 
-  .logo, .alternate-logo {
+  .logo,
+  .alternate-logo {
     width: 6.5rem;
   }
 
@@ -5643,7 +5686,9 @@ blockquote {
     font-size: 1.25rem;
   }
 
-  .checkout-form, .paypal-checkout-form, .order-confirmation-form {
+  .checkout-form,
+  .paypal-checkout-form,
+  .order-confirmation-form {
     padding: 0;
   }
 
@@ -5698,7 +5743,8 @@ blockquote {
     width: 10rem;
   }
 
-  .header-text, .shadow-text {
+  .header-text,
+  .shadow-text {
     font-size: 11vw;
   }
 
@@ -5707,7 +5753,8 @@ blockquote {
     overflow: hidden;
   }
 
-  .partner-row-wrapper, .partner-component-grid {
+  .partner-row-wrapper,
+  .partner-component-grid {
     grid-column-gap: 2rem;
     grid-row-gap: 2rem;
   }
@@ -6002,11 +6049,29 @@ blockquote {
   }
 }
 
-#w-node-_1c8c9783-bf90-5bee-fc68-92d0a1336a15-8ed3299f, #w-node-_6fad5648-67d9-5902-1805-d162beb6963c-8ed3299f {
+#w-node-_1c8c9783-bf90-5bee-fc68-92d0a1336a15-8ed3299f,
+#w-node-_6fad5648-67d9-5902-1805-d162beb6963c-8ed3299f {
   grid-area: 1 / 1 / 2 / 2;
 }
 
-#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe8e-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe90-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe92-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe94-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe96-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe98-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe9b-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe9d-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe9f-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea1-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea3-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea5-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea8-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeaa-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeac-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeae-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeb0-8ed3299f, #w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeb2-8ed3299f {
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe8e-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe90-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe92-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe94-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe96-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe98-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe9b-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe9d-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffe9f-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea1-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea3-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea5-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffea8-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeaa-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeac-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeae-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeb0-8ed3299f,
+#w-node-ba484692-b5b8-26e5-8653-bcfb6d2ffeb2-8ed3299f {
   align-self: center;
 }
 
@@ -6042,7 +6107,8 @@ blockquote {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
-#w-node-f4ef5579-b80a-6535-3e05-ab791ca6bac5-1ca6ba96, #w-node-f4ef5579-b80a-6535-3e05-ab791ca6baeb-1ca6ba96 {
+#w-node-f4ef5579-b80a-6535-3e05-ab791ca6bac5-1ca6ba96,
+#w-node-f4ef5579-b80a-6535-3e05-ab791ca6baeb-1ca6ba96 {
   grid-area: span 1 / span 1 / span 1 / span 1;
   justify-self: center;
 }
@@ -6142,11 +6208,20 @@ blockquote {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
-#w-node-aab53833-6355-e599-7fd0-21ecb94a9f30-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94a9f35-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94a9f3a-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94a9f3f-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94a9f45-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94a9f4b-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94a9f51-8ed329a0 {
+#w-node-aab53833-6355-e599-7fd0-21ecb94a9f30-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94a9f35-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94a9f3a-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94a9f3f-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94a9f45-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94a9f4b-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94a9f51-8ed329a0 {
   justify-self: start;
 }
 
-#w-node-aab53833-6355-e599-7fd0-21ecb94aa034-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa03c-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa053-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa06c-8ed329a0 {
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa034-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa03c-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa053-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa06c-8ed329a0 {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
@@ -6162,11 +6237,29 @@ blockquote {
   justify-self: start;
 }
 
-#w-node-aab53833-6355-e599-7fd0-21ecb94aa0c6-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa0d0-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa0d1-8ed329a0 {
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa0c6-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa0d0-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa0d1-8ed329a0 {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
-#w-node-aab53833-6355-e599-7fd0-21ecb94aa145-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa14a-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa14f-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa154-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa159-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa15e-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa168-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa16d-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa172-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa177-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa17c-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa181-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa186-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa18b-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa190-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa195-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa19a-8ed329a0 {
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa145-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa14a-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa14f-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa154-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa159-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa15e-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa168-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa16d-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa172-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa177-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa17c-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa181-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa186-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa18b-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa190-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa195-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa19a-8ed329a0 {
   justify-self: start;
 }
 
@@ -6174,7 +6267,27 @@ blockquote {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
-#w-node-aab53833-6355-e599-7fd0-21ecb94aa19f-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1a4-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1a9-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1ae-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1c3-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1c8-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1cd-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1d2-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1d7-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1dc-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1e6-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1eb-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1f0-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1f5-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1fa-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa1ff-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa204-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa209-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa20e-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa213-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa218-8ed329a0 {
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa19f-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1a4-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1a9-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1ae-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1c3-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1c8-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1cd-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1d2-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1d7-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1dc-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1e6-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1eb-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1f0-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1f5-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1fa-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa1ff-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa204-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa209-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa20e-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa213-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa218-8ed329a0 {
   justify-self: start;
 }
 
@@ -6182,7 +6295,20 @@ blockquote {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
-#w-node-aab53833-6355-e599-7fd0-21ecb94aa21d-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa222-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa227-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa22c-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa23e-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa243-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa248-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa24d-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa252-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa257-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa25c-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa261-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa266-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa26b-8ed329a0 {
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa21d-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa222-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa227-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa22c-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa23e-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa243-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa248-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa24d-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa252-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa257-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa25c-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa261-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa266-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa26b-8ed329a0 {
   justify-self: start;
 }
 
@@ -6194,7 +6320,9 @@ blockquote {
   justify-self: start;
 }
 
-#w-node-aab53833-6355-e599-7fd0-21ecb94aa273-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa2f6-8ed329a0, #w-node-aab53833-6355-e599-7fd0-21ecb94aa323-8ed329a0 {
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa273-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa2f6-8ed329a0,
+#w-node-aab53833-6355-e599-7fd0-21ecb94aa323-8ed329a0 {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
@@ -6212,7 +6340,8 @@ blockquote {
   place-self: start end;
 }
 
-#w-node-d7b8b13f-0193-65cb-205b-e3c001097522-8ed329a1, #w-node-d7b8b13f-0193-65cb-205b-e3c00109752a-8ed329a1 {
+#w-node-d7b8b13f-0193-65cb-205b-e3c001097522-8ed329a1,
+#w-node-d7b8b13f-0193-65cb-205b-e3c00109752a-8ed329a1 {
   grid-area: 1 / 1 / 2 / 2;
 }
 
@@ -6329,11 +6458,14 @@ blockquote {
     grid-area: 1 / 1 / 2 / 2;
   }
 
-  #w-node-f4ef5579-b80a-6535-3e05-ab791ca6bac5-1ca6ba96, #w-node-f4ef5579-b80a-6535-3e05-ab791ca6baeb-1ca6ba96, #w-node-f4ef5579-b80a-6535-3e05-ab791ca6bb05-1ca6ba96 {
+  #w-node-f4ef5579-b80a-6535-3e05-ab791ca6bac5-1ca6ba96,
+  #w-node-f4ef5579-b80a-6535-3e05-ab791ca6baeb-1ca6ba96,
+  #w-node-f4ef5579-b80a-6535-3e05-ab791ca6bb05-1ca6ba96 {
     justify-self: start;
   }
 
-  #w-node-cd2531db-ef9f-2da8-59e8-8040bf800953-bf800947, #w-node-cd2531db-ef9f-2da8-59e8-8040bf80097c-bf800947 {
+  #w-node-cd2531db-ef9f-2da8-59e8-8040bf800953-bf800947,
+  #w-node-cd2531db-ef9f-2da8-59e8-8040bf80097c-bf800947 {
     align-self: start;
   }
 
@@ -6362,7 +6494,8 @@ blockquote {
     justify-self: start;
   }
 
-  #w-node-_6d92db2b-4f63-5607-1707-4992633cef66-8ed329b2, #w-node-_5778e078-494f-7670-13a7-4161e655879b-8ed329b2 {
+  #w-node-_6d92db2b-4f63-5607-1707-4992633cef66-8ed329b2,
+  #w-node-_5778e078-494f-7670-13a7-4161e655879b-8ed329b2 {
     order: -9999;
   }
 }
@@ -6376,7 +6509,8 @@ blockquote {
     grid-area: 3 / 1 / 4 / 3;
   }
 
-  #w-node-cd2531db-ef9f-2da8-59e8-8040bf800953-bf800947, #w-node-cd2531db-ef9f-2da8-59e8-8040bf80097c-bf800947 {
+  #w-node-cd2531db-ef9f-2da8-59e8-8040bf800953-bf800947,
+  #w-node-cd2531db-ef9f-2da8-59e8-8040bf80097c-bf800947 {
     grid-column: 1 / 4;
   }
 
@@ -6384,7 +6518,8 @@ blockquote {
     align-self: center;
   }
 
-  #w-node-_4026c4f8-a2ec-c39c-42ab-e41e64010e83-8ed329a1, #w-node-_4026c4f8-a2ec-c39c-42ab-e41e64010eb3-8ed329a1 {
+  #w-node-_4026c4f8-a2ec-c39c-42ab-e41e64010e83-8ed329a1,
+  #w-node-_4026c4f8-a2ec-c39c-42ab-e41e64010eb3-8ed329a1 {
     justify-self: start;
   }
 }
@@ -6397,6 +6532,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Nohemi';
   src: url('../fonts/Nohemi-SemiBold-BF6438cc588b5e5.woff2') format('woff2');
@@ -6404,6 +6540,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Nohemi';
   src: url('../fonts/Nohemi-Black-BF6438cc5874bd2.woff2') format('woff2');
@@ -6411,6 +6548,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Nohemi';
   src: url('../fonts/Nohemi-Thin-BF6438cc577ef3b.woff2') format('woff2');
@@ -6418,6 +6556,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Nohemi';
   src: url('../fonts/Nohemi-Bold-BF6438cc5812315.woff2') format('woff2');
@@ -6425,6 +6564,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Nohemi';
   src: url('../fonts/Nohemi-Light-BF6438cc583f70b.woff2') format('woff2');
@@ -6432,6 +6572,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Nohemi';
   src: url('../fonts/Nohemi-Medium-BF6438cc581a509.woff2') format('woff2');
@@ -6439,6 +6580,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Nohemi';
   src: url('../fonts/Nohemi-Regular-BF6438cc58b98fc.woff2') format('woff2');
@@ -6446,6 +6588,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Switzer';
   src: url('../fonts/Switzer-Thin.woff2') format('woff2');
@@ -6453,6 +6596,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Switzer';
   src: url('../fonts/Switzer-Black.woff2') format('woff2');
@@ -6460,6 +6604,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Switzer';
   src: url('../fonts/Switzer-Extralight.woff2') format('woff2');
@@ -6467,6 +6612,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Switzer';
   src: url('../fonts/Switzer-Extrabold.woff2') format('woff2');
@@ -6474,6 +6620,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Switzer';
   src: url('../fonts/Switzer-Light.woff2') format('woff2');
@@ -6481,6 +6628,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Switzer';
   src: url('../fonts/Switzer-Medium.woff2') format('woff2');
@@ -6488,6 +6636,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Switzer';
   src: url('../fonts/Switzer-Semibold.woff2') format('woff2');
@@ -6495,6 +6644,7 @@ blockquote {
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Mazius Display';
   src: url('../fonts/Mazius-Display-Extraitalic.woff2') format('woff2');
@@ -6516,9 +6666,11 @@ blockquote {
   transition: border-color 0.35s;
   cursor: pointer;
 }
+
 .cta-claim-btn:hover {
   border-color: #f2f2f2;
 }
+
 .cta-claim-btn::before {
   content: '';
   position: absolute;
@@ -6528,9 +6680,11 @@ blockquote {
   transition: transform 0.4s ease;
   z-index: 0;
 }
+
 .cta-claim-btn:hover::before {
   transform: translateX(0%);
 }
+
 .cta-claim-icon {
   z-index: 1;
   background-color: var(--pink);
@@ -6542,6 +6696,7 @@ blockquote {
   color: var(--white);
   position: relative;
 }
+
 .cta-claim-text {
   z-index: 1;
   color: var(--white);
@@ -6554,18 +6709,29 @@ blockquote {
 
 /* Responsive CTA buttons */
 @media (max-width: 767px) {
-  .cta-claim-btn { width: 100%; justify-content: center; }
+  .cta-claim-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Cube section responsive */
 @media (max-width: 991px) {
-  .cube-section { height: 26rem; }
+  .cube-section {
+    height: 26rem;
+  }
 }
+
 @media (max-width: 767px) {
-  .cube-section { height: 20rem; }
+  .cube-section {
+    height: 20rem;
+  }
 }
+
 @media (max-width: 479px) {
-  .cube-section { height: 16rem; }
+  .cube-section {
+    height: 16rem;
+  }
 }
 
 /* 3D Image Carousel */
@@ -6577,23 +6743,49 @@ blockquote {
   top: 0;
   background-size: cover;
   background-position: center;
-  border: 2px solid rgba(255,255,255,0.1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   backface-visibility: hidden;
   border-radius: 12px;
 }
+
 @media (max-width: 767px) {
-  .carousel-3d__face { width: 200px; height: 280px; }
-  .carousel-3d { width: 200px !important; height: 280px !important; }
-  .carousel-3d-container { height: 280px !important; }
+  .carousel-3d__face {
+    width: 200px;
+    height: 280px;
+  }
+
+  .carousel-3d {
+    width: 200px !important;
+    height: 280px !important;
+  }
+
+  .carousel-3d-container {
+    height: 280px !important;
+  }
 }
+
 @media (max-width: 479px) {
-  .carousel-3d__face { width: 160px; height: 220px; }
-  .carousel-3d { width: 160px !important; height: 220px !important; }
-  .carousel-3d-container { height: 220px !important; }
+  .carousel-3d__face {
+    width: 160px;
+    height: 220px;
+  }
+
+  .carousel-3d {
+    width: 160px !important;
+    height: 220px !important;
+  }
+
+  .carousel-3d-container {
+    height: 220px !important;
+  }
 }
 
 /* Pure CSS 3D Carousel */
-.css3d-scene, .css3d-a3d { display: grid; }
+.css3d-scene,
+.css3d-a3d {
+  display: grid;
+}
+
 .css3d-scene {
   overflow: hidden;
   perspective: 35em;
@@ -6601,12 +6793,19 @@ blockquote {
   mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
   -webkit-mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
 }
+
 .css3d-a3d {
   place-self: center;
   transform-style: preserve-3d;
   animation: css3d-ry 13s linear infinite;
 }
-@keyframes css3d-ry { to { rotate: y 1turn; } }
+
+@keyframes css3d-ry {
+  to {
+    rotate: y 1turn;
+  }
+}
+
 .css3d-card {
   --w: 16em;
   --ba: calc(1turn / var(--n));
@@ -6618,29 +6817,47 @@ blockquote {
   backface-visibility: hidden;
   transform: rotatey(calc(var(--i) * var(--ba))) translatez(calc(-1 * (.5 * var(--w) + .5em) / tan(.5 * var(--ba))));
 }
-.css3d-a3d:hover { animation-play-state: running; }
-@media (max-width: 767px) {
-  .css3d-card { --w: 11em; }
-  .css3d-scene { perspective: 25em; }
+
+.css3d-a3d:hover {
+  animation-play-state: running;
 }
+
+@media (max-width: 767px) {
+  .css3d-card {
+    --w: 11em;
+  }
+
+  .css3d-scene {
+    perspective: 25em;
+  }
+}
+
 @media (max-width: 479px) {
-  .css3d-card { --w: 8em; }
-  .css3d-scene { perspective: 20em; }
+  .css3d-card {
+    --w: 8em;
+  }
+
+  .css3d-scene {
+    perspective: 20em;
+  }
 }
 
 /* Scroll reveal animation for headings */
 .scroll-reveal .heading-item {
   overflow: hidden;
 }
+
 .scroll-reveal .header-text,
 .scroll-reveal .shadow-text {
   transform: translateY(110%);
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .scroll-reveal.is-visible .header-text,
 .scroll-reveal.is-visible .shadow-text {
   transform: translateY(0);
 }
+
 .scroll-reveal .heading-flex .header-text,
 .scroll-reveal .heading-flex .shadow-text {
   transition-delay: 0.15s;

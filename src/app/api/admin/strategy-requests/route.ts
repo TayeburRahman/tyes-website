@@ -43,7 +43,7 @@ export async function GET(req: Request) {
     const orderIds = [...new Set(requests.map(r => r.order_id).filter(Boolean))];
 
     const { data: profiles } = userIds.length > 0 ? await supabaseAdmin.from('profiles').select('id, email, full_name').in('id', userIds) : { data: [] };
-    const { data: orders } = orderIds.length > 0 ? await supabaseAdmin.from('orders').select('id, status').in('id', orderIds) : { data: [] };
+    const { data: orders } = orderIds.length > 0 ? await supabaseAdmin.from('orders').select('id, status, customer_email, customer_name').in('id', orderIds) : { data: [] };
 
     const data = requests.map(req => ({
       ...req,

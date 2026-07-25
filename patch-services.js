@@ -14,9 +14,9 @@ if (startIndex !== -1 && endIndex !== -1) {
             <div style="color: #fff; padding: 40px; text-align: center; width: 100%;">Loading pricing plans...</div>
           </div>
           `;
-  
+
   content = content.substring(0, startIndex) + newScrollHtml + '\n          ' + content.substring(endIndex);
-  
+
   const scriptToInject = `
   <script>
     async function loadPlans() {
@@ -34,7 +34,7 @@ if (startIndex !== -1 && endIndex !== -1) {
           
           let badgeHtml = '';
           if (plan.badge) {
-            let bg = '#58b2ad'; let color = '#000';
+            let bg = '#4ecdc4'; let color = '#000';
             if (plan.badge.toLowerCase() === 'free') { bg = '#22c55e'; color = '#fff'; }
             else if (plan.badge.toLowerCase() === 'popular') { bg = '#ef4444'; color = '#fff'; }
             else if (plan.badge.toLowerCase() === 'new') { bg = '#ec4899'; color = '#fff'; }
@@ -96,7 +96,7 @@ if (startIndex !== -1 && endIndex !== -1) {
     loadPlans();
   </script>
 </body>`;
-  
+
   content = content.replace('</body>', scriptToInject);
   fs.writeFileSync(file, content, 'utf8');
   console.log('Patched successfully');
