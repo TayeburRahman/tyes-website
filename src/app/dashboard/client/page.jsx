@@ -213,7 +213,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
     if (typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(window.location.search);
       if (searchParams.get('intent') === 'deep-dive') {
-        const deepDivePlan = pricingPlans.find(p => p.name === 'Deep Dive Brand Strategy');
+        const deepDivePlan = pricingPlans.find(p => p.name === 'Custom');
         if (deepDivePlan) {
           setPlan(deepDivePlan.id);
           setAddStrategy(true);
@@ -563,17 +563,17 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               </div>
                               <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", fontFamily: '"League Spartan", sans-serif' }}>{cleanName}</div>
                               <div style={{ fontSize: 24, color: "#fff", fontWeight: 800, margin: "8px 0", fontFamily: '"League Spartan", sans-serif' }}>
-                                {cleanName === 'Deep Dive Brand Strategy' ? <span style={{ fontSize: 16, color: "#2DD4BF" }}>Get in Touch</span> : `$${p.price}`}
+                                {cleanName === 'Custom' ? <span style={{ fontSize: 16, color: "#2DD4BF" }}>Get in Touch</span> : `$${p.price}`}
                               </div>
                               <div style={{ fontSize: 11, color: "#9ca3af", lineHeight: 1.5, marginTop: 4 }}>
                                 {cleanName === 'Brand Strategy' ? "LLM audit · Viral angles · Retail shortlist · 3-day delivery" :
-                                  cleanName === 'Deep Dive Brand Strategy' ? "Priced per scope" :
+                                  cleanName === 'Custom' ? "Priced per scope" :
                                     `${p.images} image${p.images !== 1 ? 's' : ''} · ${p.max_revisions} rev/img · From 24H`}
                               </div>
                             </div>
 
                             {/* Strategy bonus badge */}
-                            {(cleanName === 'Campaign 5' || cleanName === 'Campaign 10' || cleanName === 'Deep Dive Brand Strategy' || cleanName === 'Free Image') && (
+                            {(cleanName === 'Campaign 5' || cleanName === 'Campaign 10' || cleanName === 'Custom' || cleanName === 'Free Image') && (
                               <div style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                                 {cleanName === 'Free Image' ? (
                                   <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 600, background: "rgba(45, 212, 191, 0.1)", padding: "4px 10px", borderRadius: 12, display: "inline-block" }}>
@@ -583,7 +583,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                                   <div style={{ fontSize: 10, color: (isSelected && !addStrategy) ? "#6b7280" : "#34d399", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 4, transition: "color 0.2s" }}>
                                     <Check size={12} color={(isSelected && !addStrategy) ? "#6b7280" : "#34d399"} /> 
                                     <span style={{ textDecoration: (isSelected && !addStrategy) ? "line-through" : "none" }}>
-                                      Strategy {cleanName === 'Deep Dive Brand Strategy' ? '+ 30-min call' : 'included'}
+                                      Strategy {cleanName === 'Custom' ? '+ 30-min call' : 'included'}
                                     </span>
                                   </div>
                                 )}
@@ -625,7 +625,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                         <input type="file" id="photoInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => {
                           const selectedPlan = plans.find(p => p.id === plan);
                           const cleanName = selectedPlan?.name?.replace(' (Strategy)', '');
-                          const limit = (selectedPlan && selectedPlan.images > 0) ? selectedPlan.images : (cleanName === 'Deep Dive Brand Strategy' ? 999 : 0);
+                          const limit = (selectedPlan && selectedPlan.images > 0) ? selectedPlan.images : (cleanName === 'Custom' ? 999 : 0);
                           const newFiles = Array.from(e.target.files);
                           if (limit > 0 && (productPhotos.length + newFiles.length > limit)) {
                             addToast(`Plan limit: ${limit} photos`, "warning");
@@ -845,7 +845,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                             style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
                             {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
                           </button>
-                          {(cleanName === 'Deep Dive Brand Strategy' || selectedPlan.strategy_call_included) && (
+                          {(cleanName === 'Custom' || selectedPlan.strategy_call_included) && (
                             <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(45, 212, 191, 0.08)', borderRadius: 12, border: '1px solid rgba(45, 212, 191, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
                               <div>
                                 <h4 style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: '0 0 4px' }}>Schedule your 30-min Discovery Call</h4>
@@ -1371,7 +1371,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
     const snapshotsDelivered = strategyRequests.filter(s => s.status === 'sent').length;
     const latestStrategy = strategyRequests[0];
     const hasStratAddon = activeOrder?.has_strategy_addon || activeOrder?.attachments?.has_strategy_addon || activeOrder?.plan?.includes('Strategy');
-    const isActiveOrderStrategyEligible = activeOrder && (hasStratAddon || ["Campaign 5", "Campaign 10", "Brand Strategy", "Custom", "Deep Dive Brand Strategy"].includes(activeOrder.plan));
+    const isActiveOrderStrategyEligible = activeOrder && (hasStratAddon || ["Campaign 5", "Campaign 10", "Brand Strategy", "Custom", "Custom"].includes(activeOrder.plan));
 
     return (
       <div>
