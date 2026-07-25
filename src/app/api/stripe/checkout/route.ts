@@ -10,7 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(req: Request) {
   try {
-    const { orderId, planName, price, customerEmail, customerName, billingCountry } = await req.json();
+    const { orderId, planName, price, customerEmail, customerName, billingCountry, isInvoice } = await req.json();
 
     if (!orderId || !planName || !price) {
       return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
@@ -128,7 +128,7 @@ export async function POST(req: Request) {
       metadata: {
         orderId,
       },
-      success_url: `${req.headers.get('origin')}/dashboard/client?paid=1&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${req.headers.get('origin')}/dashboard/client?paid=1${isInvoice ? '&invoice_payment=1' : ''}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get('origin')}/dashboard/client?cancel=true`,
     });
 

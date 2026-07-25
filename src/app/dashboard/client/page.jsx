@@ -981,7 +981,7 @@ const TawkToChat = () => {
 // SUCCESS PAGE
 // ══════════════════════════════════════
 const SuccessPage = ({ setPage }) => {
-  const isPayment = typeof window !== 'undefined' && (window.location.search.includes('paid=1') || window.location.search.includes('session_id='));
+  const isPayment = typeof window !== 'undefined' && window.location.search.includes('invoice_payment=1');
   
   return (
   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "40px 20px", textAlign: "center" }}>
@@ -1497,7 +1497,8 @@ export default function TyesClient() {
           price: order.revenue,
           customerEmail: user?.email || clientInfo?.email || order.customer_email,
           customerName: clientInfo?.name || user?.user_metadata?.first_name || order.customer_name,
-          billingCountry: clientInfo?.country || "RO"
+          billingCountry: clientInfo?.country || "RO",
+          isInvoice: true
         })
       });
       const data = await res.json();
