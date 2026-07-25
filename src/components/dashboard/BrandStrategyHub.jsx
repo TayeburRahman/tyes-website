@@ -70,8 +70,11 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
       await supabase.from("brand_strategy_requests").insert([{
         user_id: clientInfo.id,
         order_id: newOrder.id,
-        status: "pending",
-        brand_info: formData,
+        status: "new",
+        brand_data: formData,
+        source: 'Standalone Request',
+        tier: 'Brand Strategy',
+        assigned_to: 'Raluca',
         created_at: new Date().toISOString()
       }]);
       

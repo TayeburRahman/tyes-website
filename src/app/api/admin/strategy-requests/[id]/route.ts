@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { createClient as createClientBase } from '@supabase/supabase-js';
 
 export async function GET(
   req: Request,
@@ -14,15 +15,26 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    const supabaseAdmin = createClientBase(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const { data: request, error } = await supabaseAdmin
       .from('brand_strategy_requests')
-      .select('*, profiles:user_id (email, full_name)')
+      .select('*')
       .eq('id', id)
       .single();
 
-    if (error || !data) {
+    if (error || !request) {
       return NextResponse.json({ error: 'Request not found' }, { status: 404 });
     }
+
+    const { data: profileData } = request.user_id 
+      ? await supabaseAdmin.from('profiles').select('email, full_name').eq('id', request.user_id).single()
+      : { data: null };
+
+    const data = { ...request, profiles: profileData };
 
     return NextResponse.json({ data });
   } catch (error: any) {
@@ -46,7 +58,12 @@ export async function PATCH(
     const body = await req.json();
     const { status } = body;
 
-    const { data, error } = await supabase
+    const supabaseAdmin = createClientBase(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const { data, error } = await supabaseAdmin
       .from('brand_strategy_requests')
       .update({ status })
       .eq('id', id)

@@ -391,8 +391,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             await supabase.from("brand_strategy_requests").insert([{
               user_id: currentUser.id,
               order_id: newOrder.id,
-              status: "pending",
-              brand_info: brandData,
+              status: "new",
+              brand_data: brandData,
+              source: selectedPlan.name === 'Custom / Enterprise' ? 'custom' : (addStrategy ? `${selectedPlan.name.toLowerCase()}_addon_25` : 'standalone_25'),
+              tier: selectedPlan.name,
               created_at: new Date().toISOString()
             }]);
             localStorage.removeItem('tyes_brand_info');

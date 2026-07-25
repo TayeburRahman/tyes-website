@@ -1,7 +1,8 @@
+
 CREATE TABLE IF NOT EXISTS brand_strategy_requests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) NOT NULL,
-  order_id UUID REFERENCES orders(id),
+  order_id TEXT REFERENCES orders(id),
   brand_data JSONB NOT NULL,
   status TEXT NOT NULL DEFAULT 'new',
   assigned_to TEXT NOT NULL DEFAULT 'Raluca',

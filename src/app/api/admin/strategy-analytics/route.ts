@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { createClient as createClientBase } from '@supabase/supabase-js';
 
 export async function GET(req: Request) {
   try {
@@ -10,13 +11,18 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const supabaseAdmin = createClientBase(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
     // Total Requests
-    const { count: totalRequests } = await supabase
+    const { count: totalRequests } = await supabaseAdmin
       .from('brand_strategy_requests')
       .select('*', { count: 'exact', head: true });
 
     // Pending requests
-    const { count: pendingRequests } = await supabase
+    const { count: pendingRequests } = await supabaseAdmin
       .from('brand_strategy_requests')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'new');
@@ -24,7 +30,7 @@ export async function GET(req: Request) {
     // To calculate Avg Delivery time, we'd look at created_at vs updated_at where status = 'sent' or 'converted'
     // Since we don't have a specific `delivered_at` column, we'll estimate based on `updated_at`.
     // We can do this in JS.
-    const { data: deliveredRequests } = await supabase
+    const { data: deliveredRequests } = await supabaseAdmin
       .from('brand_strategy_requests')
       .select('created_at, updated_at')
       .in('status', ['sent', 'converted']);
@@ -48,7 +54,7 @@ export async function GET(req: Request) {
     
     // Strategy Revenue
     // Revenue from 'freeimage_addon_25' and 'standalone_25' ($25 each)
-    const { count: paidStrategyCount } = await supabase
+    const { count: paidStrategyCount } = await supabaseAdmin
       .from('brand_strategy_requests')
       .select('*', { count: 'exact', head: true })
       .in('source', ['freeimage_addon_25', 'standalone_25']);

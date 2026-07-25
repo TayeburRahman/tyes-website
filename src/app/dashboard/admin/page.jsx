@@ -249,12 +249,15 @@ const DashboardPage = ({ toast, goTo, orders, users }) => {
         <div style={{ flex: 1, minWidth: 260, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Recent Activity</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {orders.slice(0, 5).map((o, i) => (
-              <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", marginTop: 5, flexShrink: 0, background: statusConfig[o.status || 'pending'].color }} />
-                <div><div style={{ fontSize: 12, color: "#d1d5db", fontWeight: 500 }}>{statusConfig[o.status || 'pending'].label}: {o.id}</div><div style={{ fontSize: 11, color: "#6b7280" }}>From {o.customer}</div><div style={{ fontSize: 10, color: "#4b5563", marginTop: 2 }}>{o.date}</div></div>
-              </div>
-            ))}
+            {orders.slice(0, 5).map((o, i) => {
+              const conf = statusConfig[o.status] || statusConfig.pending;
+              return (
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", marginTop: 5, flexShrink: 0, background: conf.color }} />
+                  <div><div style={{ fontSize: 12, color: "#d1d5db", fontWeight: 500 }}>{conf.label}: {o.id}</div><div style={{ fontSize: 11, color: "#6b7280" }}>From {o.customer}</div><div style={{ fontSize: 10, color: "#4b5563", marginTop: 2 }}>{o.date}</div></div>
+                </div>
+              );
+            })}
             {orders.length === 0 && <p style={{ fontSize: 12, color: "#4b5563" }}>No recent activity.</p>}
           </div>
         </div>
@@ -704,7 +707,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
         ))}
       </div>
       <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search orders or clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }} /></div>
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden" }}>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "visible" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead><tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{["Order", "Client", "Plan", "Imgs", "Status", "Progress", "Revenue", "Payment", "Date", ""].map((h, i) => <th key={i} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>)}</tr></thead>
           <tbody>{paginatedOrders.map((o, idx) => (
