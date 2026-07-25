@@ -29,7 +29,8 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
   const openCalendly = (e) => {
     e.preventDefault();
     if (window.Calendly) {
-      window.Calendly.initPopupWidget({ url: 'https://calendly.com/tyes/deep-dive-call' });
+      const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/tayebrayhan101/client';
+      window.Calendly.initPopupWidget({ url: calendlyUrl });
     } else {
       const link = document.createElement('link');
       link.href = 'https://assets.calendly.com/assets/external/widget.css';
@@ -38,7 +39,10 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
       const script = document.createElement('script');
       script.src = 'https://assets.calendly.com/assets/external/widget.js';
       script.async = true;
-      script.onload = () => window.Calendly.initPopupWidget({ url: 'https://calendly.com/tyes/deep-dive-call' });
+      script.onload = () => {
+        const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/tayebrayhan101/client';
+        window.Calendly.initPopupWidget({ url: calendlyUrl });
+      };
       document.head.appendChild(script);
     }
   };
@@ -220,9 +224,11 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
           {delivered > 0 && (
             <div style={{ background: 'linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(10, 10, 10, 1))', border: '1px solid rgba(45, 212, 191, 0.3)', borderRadius: 6, padding: '32px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
               <div style={{ maxWidth: 500 }}>
-                <h2 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 12, fontFamily: '"League Spartan", sans-serif' }}>Ready for the Deep Dive?</h2>
+                <h2 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 12, fontFamily: '"League Spartan", sans-serif', lineHeight: 1.2 }}>
+                  Ready for more? The <span style={{ color: '#2DD4BF' }}>full playbook</span> that puts you in front of the buyer who says yes.
+                </h2>
                 <p style={{ color: '#9ca3af', fontSize: 13, lineHeight: 1.5, margin: 0 }}>
-                  A snapshot diagnoses the gaps. Our Deep Dive gives you the execution roadmap. Let's talk about retail intros, viral product concepts, and dominating your niche.
+                  Full LLM audit with implementation roadmap. Viral product concepts developed for your niche. Warm intros to retail buyers we know personally. 1-hour strategy call.
                 </p>
               </div>
               <div style={{ display: 'flex', gap: 12 }}>

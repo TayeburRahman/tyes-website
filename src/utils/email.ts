@@ -153,17 +153,35 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
       <meta charset="utf-8">
       <style>
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
-        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 40px; text-align: center; }
-        .btn { display: inline-block; background-color: #2DD4BF; color: #0A0A0A; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; margin-top: 24px; }
+        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+        .header { background-color: #111827; padding: 40px; text-align: center; }
+        .header p { color: #9ca3af; margin: 8px 0 0; font-size: 15px; }
+        .content { padding: 40px; text-align: center; }
+        .btn { display: inline-block; background-color: #4ecdc4; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-top: 24px; }
+        .btn-outline { display: inline-block; background-color: transparent; color: #4ecdc4; border: 1.5px solid #4ecdc4; text-decoration: none; padding: 13px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-top: 12px; }
+        .footer { padding: 24px 40px; background: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb; }
+        .footer p { margin: 0; font-size: 12px; color: #9ca3af; line-height: 1.5; }
       </style>
     </head>
     <body>
       <div class="container">
-        <h2>Your Brand Strategy Snapshot is Ready</h2>
-        <p>Hi there,</p>
-        <p>We've completed the Brand Strategy Snapshot for <strong>${props.brandName}</strong>.</p>
-        <p>You can download your snapshot PDF using the link below:</p>
-        <a href="${props.pdfUrl}" class="btn">Download Snapshot</a>
+        <div class="header">
+           <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
+           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+           <p>Strategy Snapshot</p>
+        </div>
+        <div class="content">
+          <h2 style="margin-top: 0;">Your Brand Strategy Snapshot is Ready</h2>
+          <p>Hi there,</p>
+          <p>We've completed the Brand Strategy Snapshot for <strong>${props.brandName}</strong>.</p>
+          <p>You can view and download your PDF using the button below. Ready for the execution roadmap? Book a Deep Dive call with us!</p>
+          <div style="margin-top: 24px;">
+            <a href="${props.pdfUrl}" class="btn" style="margin-top: 0; margin-bottom: 12px; display: block; max-width: 250px; margin-left: auto; margin-right: auto;">View & Download PDF</a>
+          </div>
+        </div>
+        <div class="footer">
+          <p>Tyes &middot; hello@tyes.app<br>tyes.app</p>
+        </div>
       </div>
     </body>
     </html>
@@ -183,6 +201,7 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
 
 export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: string }) => {
   const resendApiKey = process.env.RESEND_API_KEY;
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/tayebrayhan101/client';
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -190,17 +209,32 @@ export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: str
       <meta charset="utf-8">
       <style>
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
-        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 40px; text-align: center; }
-        .btn { display: inline-block; background-color: #2DD4BF; color: #0A0A0A; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; margin-top: 24px; }
+        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+        .header { background-color: #111827; padding: 40px; text-align: center; }
+        .header p { color: #9ca3af; margin: 8px 0 0; font-size: 15px; }
+        .content { padding: 40px; text-align: center; }
+        .btn { display: inline-block; background-color: #4ecdc4; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-top: 24px; }
+        .footer { padding: 24px 40px; background: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb; }
+        .footer p { margin: 0; font-size: 12px; color: #9ca3af; line-height: 1.5; }
       </style>
     </head>
     <body>
       <div class="container">
-        <h2>Ready for the full playbook?</h2>
-        <p>Hi there,</p>
-        <p>We see massive potential for <strong>${props.brandName}</strong> based on your recent snapshot. A Brand Strategy Snapshot diagnoses the gaps, but our Deep Dive Brand Strategy actually gives you the execution roadmap.</p>
-        <p>Let's talk about retail intros, viral product concepts, and how to dominate your niche.</p>
-        <a href="https://calendly.com/tyes/deep-dive-call" class="btn">Book a Deep Dive call &rarr;</a>
+        <div class="header">
+           <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
+           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+           <p>Brand Strategy Deep Dive</p>
+        </div>
+        <div class="content">
+          <h2 style="margin-top: 0;">Ready for the full playbook?</h2>
+          <p>Hi there,</p>
+          <p>We see massive potential for <strong>${props.brandName}</strong> based on your recent snapshot. A Brand Strategy Snapshot diagnoses the gaps, but our Deep Dive Brand Strategy actually gives you the execution roadmap.</p>
+          <p>Let's talk about retail intros, viral product concepts, and how to dominate your niche.</p>
+          <a href="${calendlyUrl}" class="btn">Book a Deep Dive call &rarr;</a>
+        </div>
+        <div class="footer">
+          <p>Tyes &middot; hello@tyes.app<br>tyes.app</p>
+        </div>
       </div>
     </body>
     </html>
