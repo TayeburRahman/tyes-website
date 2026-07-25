@@ -980,17 +980,15 @@ const TawkToChat = () => {
 // ══════════════════════════════════════
 // SUCCESS PAGE
 // ══════════════════════════════════════
-const SuccessPage = ({ setPage }) => {
-  const isPayment = typeof window !== 'undefined' && window.location.search.includes('invoice_payment=1');
-  
+const SuccessPage = ({ setPage, isInvoicePayment }) => {
   return (
   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "40px 20px", textAlign: "center" }}>
     <div style={{ width: 100, height: 100, borderRadius: "50%", background: "rgba(52,211,153,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
       <CheckCircle size={50} color="#34d399" />
     </div>
-    <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>{isPayment ? "Payment Successful!" : "Order Submitted Successfully!"}</h1>
+    <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>{isInvoicePayment ? "Payment Successful!" : "Order Submitted Successfully!"}</h1>
     <p style={{ fontSize: 16, color: "#9ca3af", maxWidth: 500, lineHeight: 1.6, marginBottom: 40 }}>
-      {isPayment 
+      {isInvoicePayment 
         ? "Thank you! Your payment was successful. We will notify you as soon as there are updates." 
         : "Thank you! Your order is now confirmed. We are already processing your request and will notify you as soon as there are updates."}
     </p>
@@ -1009,12 +1007,13 @@ export default function TyesClient() {
   const supabase = createClient();
   const { toasts, addToast } = useToast();
   const [page, setPage] = useState("overview");
-  const [strategyRequests, setStrategyRequests] = useState([]);
+const [strategyRequests, setStrategyRequests] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifDrop, setShowNotifDrop] = useState(false);
   const [showProfileDrop, setShowProfileDrop] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isInvoicePayment, setIsInvoicePayment] = useState(false);
   const [user, setUser] = useState(null);
   const [pricingPlans, setPricingPlans] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -1195,11 +1194,15 @@ export default function TyesClient() {
 
     if (intent === "deep-dive") {
       setPage("new-order");
+      if (typeof window !== 'undefined') window.history.replaceState(null, '', window.location.pathname);
     }
 
     if (sessionId || query.get("redirect_status") === "succeeded") {
+      if (query.get("invoice_payment") === "1") {
+        setIsInvoicePayment(true);
+      }
       setPage("success");
-      router.replace("/dashboard/client");
+      if (typeof window !== 'undefined') window.history.replaceState(null, '', window.location.pathname);
 
       // Call verify-session to mark order paid + send confirmation email with invoice
       if (sessionId) {
@@ -2162,7 +2165,7 @@ export default function TyesClient() {
       case "messages": return <MessagesPage />;
       case "invoices": return <InvoicesPage />;
       case "account": return <AccountPage />;
-      case "success": return <SuccessPage setPage={setPage} />;
+      case "success": return <SuccessPage setPage={setPage} isInvoicePayment={isInvoicePayment} />;
       case "brand-strategy": return <BrandStrategyHub supabase={supabase} clientInfo={clientInfo} setPage={setPage} />;
       default: return <OverviewPage />;
     }
