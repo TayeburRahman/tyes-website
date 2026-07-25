@@ -226,7 +226,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
                 </p>
               </div>
               <div style={{ display: 'flex', gap: 12 }}>
-                <a href="mailto:hello@tyes.app" style={{ padding: '12px 24px', background: '#2DD4BF', color: '#0A0A0A', fontWeight: 700, fontSize: 12, borderRadius: 999, textDecoration: 'none', border: '1.5px solid #2DD4BF', display: 'flex', alignItems: 'center' }}>
+                <a href="/contact.html" style={{ padding: '12px 24px', background: '#2DD4BF', color: '#0A0A0A', fontWeight: 700, fontSize: 12, borderRadius: 999, textDecoration: 'none', border: '1.5px solid #2DD4BF', display: 'flex', alignItems: 'center' }}>
                   Contact Us &rarr;
                 </a>
                 <a href="#" onClick={openCalendly} style={{ padding: '12px 24px', background: 'transparent', border: '1.5px solid #2DD4BF', color: '#2DD4BF', fontWeight: 700, fontSize: 12, borderRadius: 999, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>

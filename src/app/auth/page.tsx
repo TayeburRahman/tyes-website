@@ -150,8 +150,8 @@ function AuthContent() {
       });
 
       if (error) {
-        if (error.message.includes("already registered")) {
-          addToast("This email is already registered. Please sign in instead.", "warning");
+        if (error.message.includes("already registered") || error.message.includes("already exists")) {
+          addToast("User already exists", "warning");
           setTab("signin");
           return;
         }
@@ -161,7 +161,7 @@ function AuthContent() {
       if (data.user) {
         // Supabase returns an empty identities array for already registered emails to prevent enumeration.
         if (data.user.identities && data.user.identities.length === 0) {
-          addToast("This email is already registered. Please sign in instead.", "warning");
+          addToast("User already exists", "warning");
           setTab("signin");
           return;
         }

@@ -33,23 +33,25 @@ export default function AdminStrategyHub({ supabase, addToast }) {
     setAnalytics(json.data || null);
   };
 
-  const uploadPdfToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "tyes_preset");
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`, {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || "Upload failed");
-    return data.secure_url;
+  const uploadPdfToSupabase = async (file) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+    const filePath = `strategy-requests/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage.from('pdfs').upload(filePath, file, { upsert: true });
+    
+    if (uploadError) {
+      throw new Error(uploadError.message || "Failed to upload PDF to Supabase");
+    }
+
+    const { data } = supabase.storage.from('pdfs').getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
   const handlePdfUpload = async (id, file) => {
     setUploadingId(id);
     try {
-      const pdfUrl = await uploadPdfToCloudinary(file);
+      const pdfUrl = await uploadPdfToSupabase(file);
       const res = await fetch(`/api/admin/strategy-requests/${id}/upload-pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -286,10 +288,10 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                                 <strong style={{color:'#FFFFFF'}}>Brand:</strong> {brandInfo.brandName}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Website:</strong> {brandInfo.website}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Category:</strong> {brandInfo.category}<br/>
-                                <strong style={{color:'#FFFFFF'}}>SKUs:</strong> {brandInfo.skus}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Annual revenue:</strong> {brandInfo.revenue}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Marketing budget:</strong> {brandInfo.budget}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Countries selling:</strong> {brandInfo.countries}<br/>
+                                <strong style={{color:'#FFFFFF'}}>SKUs:</strong> {brandInfo.skus || brandInfo.skuCount}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Annual revenue:</strong> {brandInfo.revenue || brandInfo.annualRevenue}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Marketing budget:</strong> {brandInfo.budget || brandInfo.marketingBudget}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Countries selling:</strong> {brandInfo.countries || brandInfo.countriesSelling}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Retail presence:</strong> {Array.isArray(brandInfo.retailPresence) ? brandInfo.retailPresence.join(' · ') : brandInfo.retailPresence}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Distributors:</strong> {brandInfo.distributors}
                               </div>
@@ -299,12 +301,12 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                               <div style={{ fontSize: 10, letterSpacing: '2pt', color: '#FBBF24', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Bonus Info (if provided)</div>
                               <div style={{ fontSize: 12, color: '#C8C8C8', lineHeight: 1.75 }}>
                                 <strong style={{color:'#FFFFFF'}}>Brand age:</strong> {brandInfo.brandAge || 'N/A'}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Expand to:</strong> {brandInfo.expandTo || 'N/A'}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Target customer:</strong> {brandInfo.targetCustomer || 'N/A'}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Expand to:</strong> {brandInfo.expandTo || brandInfo.countriesExpand || 'N/A'}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Target customer:</strong> {brandInfo.targetCustomer || brandInfo.targetAudience || 'N/A'}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Competitors:</strong> {brandInfo.competitors || 'N/A'}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Social:</strong> {brandInfo.socials || 'N/A'}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Social:</strong> {brandInfo.socials || brandInfo.socialMedia || 'N/A'}<br/>
                                 <strong style={{color:'#FFFFFF'}}>USP:</strong> {brandInfo.usp || 'N/A'}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Goals:</strong> {brandInfo.goals || 'N/A'}
+                                <strong style={{color:'#FFFFFF'}}>Goals:</strong> {brandInfo.goals?.length ? brandInfo.goals.join(', ') : 'N/A'}
                               </div>
                             </div>
 
@@ -328,7 +330,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                                 </select>
 
                                 <label style={{ background: 'transparent', border: '1.5px solid #2DD4BF', color: '#2DD4BF', padding: '6px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
-                                  {uploadingId === req.id ? 'Uploading...' : 'Upload PDF'}
+                                  {uploadingId === req.id ? 'Uploading...' : (req.delivered_pdf_url ? 'Update PDF' : 'Upload PDF')}
                                   <input type="file" accept=".pdf" style={{ display: 'none' }} onChange={(e) => handlePdfUpload(req.id, e.target.files[0])} />
                                 </label>
 
