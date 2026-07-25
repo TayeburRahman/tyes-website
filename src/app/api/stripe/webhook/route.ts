@@ -48,10 +48,20 @@ export async function POST(req: Request) {
         }
       }
       
-      // Update the status of the order to 'paid'
+      // First, get the current order to access attachments
+      const { data: currentOrder } = await supabase
+        .from('orders')
+        .select('attachments')
+        .eq('id', orderId)
+        .single();
+
+      const updatedAttachments = { ...(currentOrder?.attachments || {}) };
+      updatedAttachments.payment_status = 'paid';
+
+      // Update the status of the order to 'paid' and update attachments
       const { data: order, error } = await supabase
         .from('orders')
-        .update({ status: 'paid' }) 
+        .update({ status: 'paid', attachments: updatedAttachments })
         .eq('id', orderId)
         .select()
         .single();
