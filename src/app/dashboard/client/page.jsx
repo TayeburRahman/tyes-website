@@ -596,35 +596,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     )}
                   </div>
 
-                        </div>
-                      );
-                    }
 
-                    // Campaign 5/10/Custom: default ON, can opt out
-                    return (
-                      <div
-                        onClick={() => setAddStrategy(v => !v)}
-                        style={{
-                          marginTop: 20, padding: "14px 20px", borderRadius: 12, cursor: "pointer", transition: "all 0.25s ease",
-                          background: addStrategy ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.02)",
-                          border: `1.5px solid ${addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.1)"}`,
-                          display: "flex", alignItems: "center", gap: 14
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          id="includeBrandInfo"
-                          checked={addStrategy}
-                          onChange={e => { e.stopPropagation(); setAddStrategy(e.target.checked); }}
-                          style={{ width: 18, height: 18, cursor: "pointer", accentColor: "#2DD4BF", flexShrink: 0 }}
-                        />
-                        <label htmlFor="includeBrandInfo" style={{ cursor: "pointer", userSelect: "none", flex: 1 }}>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2 }}>Include Brand Info</div>
-                          <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>Tell us about your brand so we can deliver better results. Uncheck to skip this step.</div>
-                        </label>
-                      </div>
-                    );
-                  })()}
 
                 </div>
               )}
