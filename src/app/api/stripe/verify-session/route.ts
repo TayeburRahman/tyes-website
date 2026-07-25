@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     // 2. Check if order is already processed (webhook may have already handled it)
     const { data: existingOrder } = await supabase
       .from('orders')
-      .select('status, customer_email, customer_name, title, plan, revenue, user_id, id')
+      .select('status, customer_email, customer_name, title, plan, revenue, user_id, id, attachments')
       .eq('id', orderId)
       .single();
 
@@ -65,10 +65,20 @@ export async function POST(req: Request) {
     }
 
     // 5. Mark order as paid
+    const updatedAttachments = { ...(existingOrder.attachments || {}) };
+    updatedAttachments.payment_status = 'paid';
+
     await supabase
       .from('orders')
-      .update({ status: 'paid' })
+      .update({ status: 'paid', attachments: updatedAttachments })
       .eq('id', orderId);
+
+    // Update brand_strategy_requests status if pending
+    await supabase
+      .from('brand_strategy_requests')
+      .update({ status: 'new' })
+      .eq('order_id', orderId)
+      .eq('status', 'pending');
 
     // 6. Save invoice record
     if (invoiceUrl && invoiceId) {

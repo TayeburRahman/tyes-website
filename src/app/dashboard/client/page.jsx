@@ -980,14 +980,19 @@ const TawkToChat = () => {
 // ══════════════════════════════════════
 // SUCCESS PAGE
 // ══════════════════════════════════════
-const SuccessPage = ({ setPage }) => (
+const SuccessPage = ({ setPage }) => {
+  const isPayment = typeof window !== 'undefined' && (window.location.search.includes('paid=1') || window.location.search.includes('session_id='));
+  
+  return (
   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "40px 20px", textAlign: "center" }}>
     <div style={{ width: 100, height: 100, borderRadius: "50%", background: "rgba(52,211,153,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
       <CheckCircle size={50} color="#34d399" />
     </div>
-    <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>Order Submitted Successfully!</h1>
+    <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>{isPayment ? "Payment Successful!" : "Order Submitted Successfully!"}</h1>
     <p style={{ fontSize: 16, color: "#9ca3af", maxWidth: 500, lineHeight: 1.6, marginBottom: 40 }}>
-      Thank you! Your payment was successful and your order is now confirmed. We are already processing your request and will notify you as soon as there are updates.
+      {isPayment 
+        ? "Thank you! Your payment was successful. We will notify you as soon as there are updates." 
+        : "Thank you! Your order is now confirmed. We are already processing your request and will notify you as soon as there are updates."}
     </p>
     <button
       onClick={() => setPage("orders")}
@@ -996,7 +1001,8 @@ const SuccessPage = ({ setPage }) => (
       <Package size={18} /> View My Orders
     </button>
   </div>
-);
+  );
+};
 
 export default function TyesClient() {
   const router = useRouter();
