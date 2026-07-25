@@ -386,19 +386,20 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       if (shouldCreateStrategy) {
         try {
           const savedBrandInfo = localStorage.getItem('tyes_brand_info');
-          let brandData = savedBrandInfo ? JSON.parse(savedBrandInfo) : null;
-          if (brandData) {
-            await supabase.from("brand_strategy_requests").insert([{
-              user_id: currentUser.id,
-              order_id: newOrder.id,
-              status: "new",
-              brand_data: brandData,
-              source: selectedPlan.name === 'Custom / Enterprise' ? 'custom' : (addStrategy ? `${selectedPlan.name.toLowerCase()}_addon_25` : 'standalone_25'),
-              tier: selectedPlan.name,
-              created_at: new Date().toISOString()
-            }]);
-            localStorage.removeItem('tyes_brand_info');
-          }
+          let brandData = savedBrandInfo ? JSON.parse(savedBrandInfo) : { brandName: customerName || 'Unknown', category: 'N/A' };
+          
+          const { error: stratError } = await supabase.from("brand_strategy_requests").insert([{
+            user_id: currentUser.id,
+            order_id: newOrder.id,
+            status: "new",
+            brand_data: brandData,
+            source: selectedPlan.name === 'Custom / Enterprise' ? 'custom' : (addStrategy ? `${selectedPlan.name.toLowerCase()}_addon_25` : 'standalone_25'),
+            tier: selectedPlan.name,
+            created_at: new Date().toISOString()
+          }]);
+          
+          if (stratError) throw stratError;
+          localStorage.removeItem('tyes_brand_info');
         } catch (stratErr) {
           console.error("Failed to create strategy request:", stratErr);
         }
