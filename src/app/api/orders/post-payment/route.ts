@@ -35,7 +35,11 @@ export async function POST(req: Request) {
     const updatedAttachments = { ...(order.attachments || {}) };
     
     if (!isCustom) {
-      updatedAttachments.payment_status = 'paid';
+      if (order.plan === 'Free Image' && order.revenue === 0) {
+        updatedAttachments.payment_status = 'free';
+      } else {
+        updatedAttachments.payment_status = 'paid';
+      }
     }
 
     await supabase

@@ -596,50 +596,6 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     )}
                   </div>
 
-                  {/* Brand Info toggle — behaviour differs per plan */}
-                  {(() => {
-                    const sp = plans.find(p => p.id === plan);
-                    if (!sp) return null;
-
-                    // Brand Strategy plan: always included, no toggle
-                    if (sp.name === 'Brand Strategy') {
-                      return (
-                        <div style={{ marginTop: 20, padding: "12px 18px", borderRadius: 12, background: "rgba(45,212,191,0.06)", border: "1.5px solid #2DD4BF", display: "flex", alignItems: "center", gap: 12 }}>
-                          <Check size={16} color="#2DD4BF" />
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Brand Info included</div>
-                            <div style={{ fontSize: 11, color: "#6b7280" }}>Required to complete your Brand Strategy order.</div>
-                          </div>
-                        </div>
-                      );
-                    }
-
-                    // Free Image: optional $25 add-on
-                    if (sp.name === 'Free Image') {
-                      return (
-                        <div
-                          onClick={() => setAddStrategy(v => !v)}
-                          style={{
-                            marginTop: 20, padding: "14px 20px", borderRadius: 12, cursor: "pointer", transition: "all 0.25s ease",
-                            background: addStrategy ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.02)",
-                            border: `1.5px solid ${addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.1)"}`,
-                            display: "flex", alignItems: "center", gap: 14
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="freeImageStrategyAddon"
-                            checked={addStrategy}
-                            onChange={e => { e.stopPropagation(); setAddStrategy(e.target.checked); }}
-                            style={{ width: 18, height: 18, cursor: "pointer", accentColor: "#2DD4BF", flexShrink: 0 }}
-                          />
-                          <label htmlFor="freeImageStrategyAddon" style={{ cursor: "pointer", userSelect: "none", flex: 1 }}>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-                              + Add Brand Strategy
-                              <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 8, background: addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.08)", color: addStrategy ? "#000" : "#9ca3af", fontWeight: 700 }}>$25</span>
-                            </div>
-                            <div style={{ fontSize: 11, color: "#6b7280", marginTop: 3, lineHeight: 1.5 }}>LLM visibility audit · Viral product angles · Retail shortlist. Delivered in 3 business days.</div>
-                          </label>
                         </div>
                       );
                     }
@@ -759,6 +715,84 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                       </div>
                     </div>
                   </div>
+                  
+                  {/* --- BRAND STRATEGY ADD-ON --- */}
+                  {(() => {
+                    if (isBrandStrategyPlan) {
+                      return (
+                        <div style={{ marginTop: 24, padding: "14px 20px", borderRadius: 12, background: "rgba(45,212,191,0.06)", border: "1.5px solid #2DD4BF", display: "flex", alignItems: "center", gap: 14 }}>
+                          <div style={{ width: 18, height: 18, borderRadius: 4, background: "#2DD4BF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <Check size={14} color="#000" />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Brand Info included</div>
+                            <div style={{ fontSize: 11, color: "#6b7280" }}>Required to complete your Brand Strategy order.</div>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    const sp = plans.find(p => p.id === plan);
+                    if (!sp) return null;
+
+                    // Free Image: optional $25 add-on
+                    if (sp.name === 'Free Image') {
+                      return (
+                        <div
+                          onClick={() => setAddStrategy(v => !v)}
+                          style={{
+                            marginTop: 24, padding: "14px 20px", borderRadius: 12, cursor: "pointer", transition: "all 0.25s ease",
+                            background: addStrategy ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.02)",
+                            border: `1.5px solid ${addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.1)"}`,
+                            display: "flex", alignItems: "center", gap: 14
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            id="freeImageStrategyAddon"
+                            checked={addStrategy}
+                            onChange={e => { e.stopPropagation(); setAddStrategy(e.target.checked); }}
+                            style={{ width: 18, height: 18, cursor: "pointer", accentColor: "#2DD4BF", flexShrink: 0 }}
+                          />
+                          <label htmlFor="freeImageStrategyAddon" style={{ cursor: "pointer", userSelect: "none", flex: 1 }}>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
+                              + Add Brand Strategy
+                              <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 8, background: addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.08)", color: addStrategy ? "#000" : "#9ca3af", fontWeight: 700 }}>$25</span>
+                            </div>
+                            <div style={{ fontSize: 11, color: "#6b7280", marginTop: 3, lineHeight: 1.5 }}>LLM visibility audit · Viral product angles · Retail shortlist. Delivered in 3 business days.</div>
+                          </label>
+                        </div>
+                      );
+                    }
+
+                    // Campaign 5/10/Custom: default ON, can opt out
+                    return (
+                      <div
+                        onClick={() => setAddStrategy(v => !v)}
+                        style={{
+                          marginTop: 24, padding: "14px 20px", borderRadius: 12, cursor: "pointer", transition: "all 0.25s ease",
+                          background: addStrategy ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.02)",
+                          border: `1.5px solid ${addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.1)"}`,
+                          display: "flex", alignItems: "center", gap: 14
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          id="includeBrandInfo"
+                          checked={addStrategy}
+                          onChange={e => { e.stopPropagation(); setAddStrategy(e.target.checked); }}
+                          style={{ width: 18, height: 18, cursor: "pointer", accentColor: "#2DD4BF", flexShrink: 0 }}
+                        />
+                        <label htmlFor="includeBrandInfo" style={{ cursor: "pointer", userSelect: "none", flex: 1 }}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2, display: "flex", alignItems: "center", gap: 8 }}>
+                            Include Brand Info
+                            <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 8, background: addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.08)", color: addStrategy ? "#000" : "#9ca3af", fontWeight: 700 }}>Free</span>
+                          </div>
+                          <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>Tell us about your brand so we can deliver better results. Uncheck to skip this step.</div>
+                        </label>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
