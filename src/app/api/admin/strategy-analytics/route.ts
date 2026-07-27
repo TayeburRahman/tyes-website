@@ -33,7 +33,7 @@ export async function GET(req: Request) {
     const { data: deliveredRequests } = await supabaseAdmin
       .from('brand_strategy_requests')
       .select('created_at, updated_at')
-      .in('status', ['sent', 'converted']);
+      .in('status', ['sent', 'converted_to_deep_dive']);
 
     let avgDeliveryDays = 0;
     if (deliveredRequests && deliveredRequests.length > 0) {

@@ -1333,12 +1333,26 @@ const AnalyticsPage = ({ users, orders }) => {
 
   const revisionRate = orders.length ? (revisionOrders.length / orders.length) * 100 : 0;
 
+  let avgDeliveryHrs = 0;
+  if (deliveredOrders.length > 0) {
+    const totalDeliveryMs = deliveredOrders.reduce((sum, o) => {
+      const created = new Date(o.created_at).getTime();
+      const updated = new Date(o.updated_at).getTime();
+      return sum + Math.max(0, updated - created);
+    }, 0);
+    avgDeliveryHrs = totalDeliveryMs / deliveredOrders.length / (1000 * 60 * 60);
+  }
+
+  const totalRevisions = orders.reduce((acc, o) => acc + (o.revisions || 0), 0);
+  const totalImagesWithRevs = orders.reduce((acc, o) => acc + (o.images_count || 0), 0);
+  const avgRevisionsPerImg = totalImagesWithRevs ? (totalRevisions / totalImagesWithRevs) : 0;
+
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 24px" }}>Analytics</h1>
       <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
-        <StatCard icon={Clock} label="Avg Delivery Time" value="1.8 hrs" change="-12%" positive sub="Target: 2 hrs" />
-        <StatCard icon={RefreshCw} label="Revision Rate" value={`${revisionRate.toFixed(1)}%`} change={revisionRate > 20 ? "+2%" : "-3%"} positive={revisionRate < 20} sub="Realtime tracking" />
+        <StatCard icon={Clock} label="Avg Delivery Time" value={`${avgDeliveryHrs.toFixed(1)} hrs`} change={avgDeliveryHrs > 24 ? "+12%" : "-5%"} positive={avgDeliveryHrs < 24} sub="Target: 24 hrs" />
+        <StatCard icon={RefreshCw} label="Avg Revisions/Img" value={avgRevisionsPerImg.toFixed(2)} change={avgRevisionsPerImg > 0.5 ? "+0.1" : "-0.1"} positive={avgRevisionsPerImg < 0.5} sub="Target: <0.5" />
       </div>
       <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: 400, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
@@ -1603,10 +1617,10 @@ const SettingsPage = ({ toast, studioInfo, setStudioInfo, supabase, users, setUs
 const navPages = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "orders", label: "Orders", icon: ShoppingCart },
+  { id: "brand-strategy", label: "Strategy", icon: Star },
   { id: "clients", label: "Clients", icon: Users },
   { id: "analytics", label: "Analytics", icon: BarChart2 },
-  { id: "brand-strategy", label: "Strategy", icon: Star },
-  { id: "pricing", label: "Pricing", icon: CreditCard },
+  { id: "pricing", label: "Config", icon: CreditCard },
   { id: "settings", label: "Settings", icon: Settings },
 ];
 

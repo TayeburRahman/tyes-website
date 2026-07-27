@@ -71,12 +71,38 @@ export async function POST(req: Request) {
          return NextResponse.json({ error: 'Database update failed' }, { status: 500 });
       }
 
-      // Update brand_strategy_requests status if pending
-      await supabase
+      // Handle brand_strategy_requests for this order
+      const { data: existingRequest } = await supabase
         .from('brand_strategy_requests')
-        .update({ status: 'new' })
+        .select('id, status')
         .eq('order_id', orderId)
-        .eq('status', 'pending');
+        .single();
+
+      if (existingRequest) {
+        if (existingRequest.status === 'pending' || existingRequest.status === 'new') {
+          await supabase
+            .from('brand_strategy_requests')
+            .update({ status: 'new', assigned_to: 'Raluca' })
+            .eq('id', existingRequest.id);
+        }
+      } else {
+        const plan = order.plan || '';
+        const hasStrategyAddon = order.attachments?.has_strategy_addon;
+        const needsStrategy = plan.includes('Campaign 5') || plan.includes('Campaign 10') || plan.includes('Custom') || plan === 'Brand Strategy' || hasStrategyAddon;
+        
+        if (needsStrategy) {
+          await supabase.from('brand_strategy_requests').insert([{
+             user_id: order.user_id,
+             order_id: orderId,
+             status: 'new',
+             brand_data: { brandName: order.customer_name || 'Unknown', category: 'N/A' },
+             source: plan === 'Brand Strategy' ? 'Standalone Request' : 'Order Add-on',
+             tier: plan,
+             assigned_to: 'Raluca',
+             created_at: new Date().toISOString()
+          }]);
+        }
+      }
 
       // Save the invoice to the invoices table
       if (invoiceUrl && invoiceId) {

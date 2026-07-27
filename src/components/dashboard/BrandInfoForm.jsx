@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const CATEGORIES = ["Beauty", "Personal Care", "Fragrance", "Fashion", "Other"];
+const CATEGORIES = ["Beauty", "Personal Care", "Fragrance", "Fashion"];
 const RETAIL_NETWORKS = ["Mass Market Retail", "Premium Retail", "Hyperstores", "Hyperpharmacies", "Marketplaces", "None yet"];
 const SKU_OPTIONS = ["<10", "10-50", "50-200", "200+"];
 const REVENUE_OPTIONS = ["<$50k", "$50-250k", "$250k-1M", "$1-5M", "$5M+"];

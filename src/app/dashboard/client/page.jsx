@@ -568,7 +568,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               <div style={{ fontSize: 11, color: "#9ca3af", lineHeight: 1.5, marginTop: 4 }}>
                                 {cleanName === 'Brand Strategy' ? "LLM audit · Viral angles · Retail shortlist · 3-day delivery" :
                                   cleanName === 'Deep Dive Brand Strategy' ? "Priced per scope" :
-                                    `${p.images} image${p.images !== 1 ? 's' : ''} · ${p.max_revisions} rev/img · From 24H`}
+                                    `${p.images} image${p.images !== 1 ? 's' : ''} · ${p.max_revisions} rev/img · From ${p.name === 'Free Image' ? '3H' : '24H'}`}
                               </div>
                             </div>
 
@@ -737,33 +737,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                       );
                     }
 
-                    // Campaign 5/10/Custom: default ON, can opt out
-                    return (
-                      <div
-                        onClick={() => setAddStrategy(v => !v)}
-                        style={{
-                          marginTop: 24, padding: "14px 20px", borderRadius: 12, cursor: "pointer", transition: "all 0.25s ease",
-                          background: addStrategy ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.02)",
-                          border: `1.5px solid ${addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.1)"}`,
-                          display: "flex", alignItems: "center", gap: 14
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          id="includeBrandInfo"
-                          checked={addStrategy}
-                          onChange={e => { e.stopPropagation(); setAddStrategy(e.target.checked); }}
-                          style={{ width: 18, height: 18, cursor: "pointer", accentColor: "#2DD4BF", flexShrink: 0 }}
-                        />
-                        <label htmlFor="includeBrandInfo" style={{ cursor: "pointer", userSelect: "none", flex: 1 }}>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2, display: "flex", alignItems: "center", gap: 8 }}>
-                            Include Brand Info
-                            <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 8, background: addStrategy ? "#2DD4BF" : "rgba(255,255,255,0.08)", color: addStrategy ? "#000" : "#9ca3af", fontWeight: 700 }}>Free</span>
-                          </div>
-                          <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>Tell us about your brand so we can deliver better results. Uncheck to skip this step.</div>
-                        </label>
-                      </div>
-                    );
+                    // Campaign 5/10/Custom: mandatory, no opt-out UI needed
+                    return null;
                   })()}
                 </div>
               )}
@@ -791,7 +766,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   { label: "Product Photos", val: `${productPhotos.length} files` },
                   { label: "Ref. Images", val: `${referencePhotos.length} files` },
                   { label: "Fonts / Labels", val: `${fontFiles.length} files` },
-                  { label: "Revisions", val: "3 included" },
+                  { label: "Revisions", val: selectedPlan?.max_revisions > 0 ? `${selectedPlan.max_revisions} per image` : (selectedPlan?.images > 0 ? "0 included" : "N/A") },
                 ];
                 if (selectedPlan.name === 'Free Image') {
                   orderSummary.push({ label: "Brand Strategy", val: addStrategy ? "Yes (+$25)" : "No" });
@@ -1149,7 +1124,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
             status: derivedStatus,
             progress: o.progress || 0,
             revisions: o.revisions || 0,
-            maxRevisions: o.max_revisions || 3,
+            maxRevisions: o.max_revisions ?? 0,
             items: items
           };
         }));
@@ -1555,7 +1530,18 @@ const [strategyRequests, setStrategyRequests] = useState([]);
     };
 
     const handleRequestRevision = (order, itemIndex = null) => {
-      setShowRevisionModal({ order, itemIndex });
+      const selectedPlan = plans.find(p => p.id === order.plan || p.name === order.plan_name);
+      const maxRevisions = selectedPlan?.max_revisions ?? 3; // Default 3 if not found
+      
+      const targetItem = itemIndex !== null ? order.items[itemIndex] : null;
+      const revisionsUsed = targetItem ? (targetItem.revisionsUsed || 0) : 0;
+
+      if (revisionsUsed >= maxRevisions) {
+        addToast(`You have reached the limit of ${maxRevisions} revisions for this image.`, "error");
+        return;
+      }
+
+      setShowRevisionModal({ order, itemIndex, maxRevisions, revisionsUsed });
     };
 
     return (
@@ -1605,7 +1591,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                         {(o.plan?.includes('Custom') || o.plan?.includes('Deep Dive')) ? "Quote Pending" : "Free"}
                       </div>
                     )}
-                    <div style={{ fontSize: 10, color: "#4b5563" }}>Rev {o.revisions}/{o.maxRevisions}</div>
+                    {o.images_count > 0 && <div style={{ fontSize: 10, color: "#4b5563" }}>Rev {o.revisions}/{o.maxRevisions}</div>}
                   </div>
                   <div style={{ width: 60 }}>
                     <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
@@ -1643,7 +1629,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                             )}
                             {item.status === "revision" && (
                               <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ padding: "6px 12px", borderRadius: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", color: "#fbbf24", cursor: "pointer", fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-                                <RefreshCw size={13} /> Reason
+                                <RefreshCw size={13} /> {item.revisionsUsed ? `Revision ${item.revisionsUsed}` : "Reason"}
                               </button>
                             )}
                           </div>
@@ -2286,8 +2272,13 @@ const [strategyRequests, setStrategyRequests] = useState([]);
             <div style={{ padding: 14, background: "rgba(251,191,36,0.05)", border: "1px solid rgba(251,191,36,0.15)", borderRadius: 12, display: "flex", gap: 12 }}>
               <AlertCircle size={20} color="#fbbf24" style={{ marginTop: 2, flexShrink: 0 }} />
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#fbbf24", marginBottom: 2 }}>Revision Guidelines</div>
-                <div style={{ fontSize: 11, color: "#9ca3af", lineHeight: "1.5" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fbbf24", marginBottom: 2 }}>Revision Guidelines</div>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: "#fbbf24", background: "rgba(251,191,36,0.1)", padding: "2px 8px", borderRadius: 10 }}>
+                    {showRevisionModal.revisionsUsed || 0} / {showRevisionModal.maxRevisions || 3} Revisions Used
+                  </div>
+                </div>
+                <div style={{ fontSize: 11, color: "#9ca3af", lineHeight: "1.5", marginTop: 4 }}>
                   Please be specific about what you'd like to change. Describe the desired result clearly to help our designers deliver exactly what you need.
                 </div>
               </div>
@@ -2330,12 +2321,18 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                       ...newItems[itemIndex],
                       status: "revision",
                       revisionReason: reason,
-                      revisionDate: new Date().toISOString()
+                      revisionDate: new Date().toISOString(),
+                      revisionsUsed: (newItems[itemIndex].revisionsUsed || 0) + 1
                     };
                   } else {
                     newItems.forEach((item, idx) => {
                       if (item.status === "delivered") {
-                        newItems[idx] = { ...item, status: "revision", revisionReason: reason };
+                        newItems[idx] = { 
+                          ...item, 
+                          status: "revision", 
+                          revisionReason: reason,
+                          revisionsUsed: (item.revisionsUsed || 0) + 1
+                        };
                       }
                     });
                   }

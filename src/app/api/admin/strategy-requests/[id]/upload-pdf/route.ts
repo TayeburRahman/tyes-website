@@ -34,7 +34,7 @@ export async function POST(
       .from('brand_strategy_requests')
       .update({ 
         delivered_pdf_url: pdf_url,
-        status: 'ready' // Usually changes to ready after uploading PDF
+        status: 'ready_to_send' 
       })
       .eq('id', id)
       .select()

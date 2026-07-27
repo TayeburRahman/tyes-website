@@ -51,6 +51,11 @@ export default function AdminStrategyHub({ supabase, addToast }) {
   };
 
   const handlePdfUpload = async (id, file) => {
+    if (!file) return;
+    if (file.type !== 'application/pdf') {
+      addToast('Only PDF files are allowed', 'error');
+      return;
+    }
     setUploadingId(id);
     try {
       const pdfUrl = await uploadPdfToSupabase(file);
@@ -184,7 +189,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
 
   return (
     <div style={{ padding: '0 24px', fontFamily: '"Montserrat", sans-serif' }}>
-      <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 24, fontFamily: '"League Spartan", sans-serif' }}>Section 3 · Strategy Requests · List + Detail</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 24, fontFamily: '"League Spartan", sans-serif' }}>Strategy Requests</h1>
       
       {/* Analytics Kpis */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
@@ -293,7 +298,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                       <td style={{ padding: '12px 8px', color: '#9ca3af', fontSize: 11, fontFamily: 'monospace' }}>
                         {req.order_id || 'N/A'}
                       </td>
-                      <td style={{ padding: '12px 8px', color: '#fff' }}>{req.source}</td>
+                      <td style={{ padding: '12px 8px', color: '#fff' }}>{req.source === 'checkout' ? 'Client Checkout' : (req.source === 'manual' ? 'Internal' : req.source)}</td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{brandInfo.category || 'N/A'}</td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{req.tier || 'Standard'}</td>
                       <td style={{ padding: '12px 8px' }}>
@@ -349,21 +354,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
 
                             <div style={{ borderTop: '1px solid #2A2A2A', paddingTop: 16 }}>
                               <div style={{ fontSize: 10, letterSpacing: '2pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Admin Actions</div>
-                              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.03)', padding: '6px 12px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.1)' }}>
-                                  <span style={{ fontSize: 11, color: '#9ca3af' }}>Strategist:</span>
-                                  <input 
-                                    type="text" 
-                                    placeholder="Enter name..."
-                                    value={assignName}
-                                    onChange={(e) => setAssignName(e.target.value)}
-                                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: 11, outline: 'none', width: 120 }}
-                                  />
-                                  <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAssign(req.id); }} disabled={assigningId === req.id} style={{ background: '#2DD4BF', border: 'none', color: '#0A0A0A', padding: '4px 10px', borderRadius: 999, fontSize: 10, fontWeight: 700, cursor: 'pointer' }}>
-                                    {assigningId === req.id ? 'Saving...' : 'Assign'}
-                                  </button>
-                                </div>
-                              </div>
+
                               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                                 
                                 <select 
