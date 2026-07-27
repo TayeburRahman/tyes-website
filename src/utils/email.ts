@@ -251,3 +251,35 @@ export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: str
     html: htmlContent,
   });
 };
+
+export const sendRevisionRequestEmail = async (props: { to: string; orderId: string; clientEmail: string; feedback: string }) => {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.log("No RESEND_API_KEY set. Skipping email.");
+    return;
+  }
+  
+  const { Resend } = require('resend');
+  const resend = new Resend(resendApiKey);
+
+  try {
+    await resend.emails.send({
+      from: 'TYES <noreply@updates.tyes.com>',
+      to: props.to,
+      subject: `New Revision Request for Order ${props.orderId}`,
+      html: `
+        <div style="font-family: sans-serif; padding: 20px;">
+          <h2>Revision Requested</h2>
+          <p><strong>Client:</strong> ${props.clientEmail}</p>
+          <p><strong>Order:</strong> ${props.orderId}</p>
+          <p><strong>Feedback:</strong></p>
+          <blockquote style="background: #f4f4f5; padding: 12px; border-left: 4px solid #fbb424; margin: 0;">
+            ${props.feedback}
+          </blockquote>
+        </div>
+      `,
+    });
+  } catch (err) {
+    console.error('Failed to send revision request email:', err);
+  }
+};

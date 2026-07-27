@@ -46,20 +46,60 @@ export async function GET(req: Request) {
     }
 
     // Free -> Paid conversion
-    // E.g. find all requests where source = 'freeimage_addon_25' or 'standalone_25'
-    // This is an estimation for now. A real metric might need more complex joining.
-    // Spec says: % of Free Image users who paid the $25 strategy add-on OR upgraded to Campaign after seeing a snapshot
-    // We will hardcode a mock for now, or just calculate a rough metric if possible.
-    const freeToPaidConversion = 21; // Placeholder as exact SQL logic depends on deeper cohort tracking
+    // Find all users who ordered "Free Image" at least once.
+    const { data: freeOrders } = await supabaseAdmin
+      .from('orders')
+      .select('user_id')
+      .eq('plan', 'Free Image');
+
+    let freeToPaidConversion = 0;
+    if (freeOrders && freeOrders.length > 0) {
+      const freeUserIds = Array.from(new Set(freeOrders.map(o => o.user_id)));
+      
+      // Check how many of these users have a paid order (not Free Image) or a paid strategy request
+      const { data: paidOrders } = await supabaseAdmin
+        .from('orders')
+        .select('user_id')
+        .neq('plan', 'Free Image')
+        .in('user_id', freeUserIds);
+
+      const { data: paidStrategy } = await supabaseAdmin
+        .from('brand_strategy_requests')
+        .select('user_id, tier, source')
+        .in('user_id', freeUserIds);
+        
+      const convertedUsers = new Set();
+      
+      (paidOrders || []).forEach(o => convertedUsers.add(o.user_id));
+      
+      // Filter paid strategies (tier = Brand Strategy, or source includes addon)
+      (paidStrategy || []).forEach(r => {
+        const isPaidStrat = r.tier === 'Brand Strategy' || (r.source && r.source.includes('addon'));
+        if (isPaidStrat) convertedUsers.add(r.user_id);
+      });
+
+      freeToPaidConversion = Math.round((convertedUsers.size / freeUserIds.length) * 100);
+    }
     
     // Strategy Revenue
-    // Revenue from 'freeimage_addon_25' and 'standalone_25' ($25 each)
-    const { count: paidStrategyCount } = await supabaseAdmin
+    // Revenue from $25 add-ons + standalones ($25 each)
+    const { data: allRequests } = await supabaseAdmin
       .from('brand_strategy_requests')
-      .select('*', { count: 'exact', head: true })
-      .in('source', ['freeimage_addon_25', 'standalone_25']);
+      .select('tier, source');
+      
+    let paidStrategyCount = 0;
+    if (allRequests) {
+      allRequests.forEach(r => {
+        const source = r.source || '';
+        const tier = r.tier || '';
+        // Paid if it's the standalone Brand Strategy tier, or if the source indicates an addon purchase
+        if (tier === 'Brand Strategy' || source.includes('addon_25') || source === 'Order Add-on') {
+          paidStrategyCount++;
+        }
+      });
+    }
 
-    const strategyRevenue = (paidStrategyCount || 0) * 25;
+    const strategyRevenue = paidStrategyCount * 25;
 
     return NextResponse.json({
       data: {

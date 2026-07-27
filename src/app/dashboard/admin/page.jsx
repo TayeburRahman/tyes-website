@@ -75,7 +75,6 @@ const statusConfig = {
   delivered: { label: "Delivered", bg: "rgba(78,205,196,0.15)", color: "#4ecdc4", icon: Package },
   approved: { label: "Approved", bg: "rgba(16,185,129,0.15)", color: "#34d399", icon: Check },
   cancelled: { label: "Cancelled", bg: "rgba(239,68,68,0.15)", color: "#ef4444", icon: X },
-  quote_sent: { label: "Quote Sent", bg: "rgba(168,85,247,0.15)", color: "#c084fc", icon: CreditCard },
 };
 const tierColors = { free: "#6b7280", starter: "#60a5fa", pro: "#4ecdc4", enterprise: "#f472b6" };
 const fmt = (n) => n >= 1000 ? `$${(n / 1000).toFixed(1)}k` : `$${n}`;
@@ -110,8 +109,13 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const StatCard = ({ icon: Icon, label, value, change, positive, sub }) => (
-  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 22px", flex: 1, minWidth: 200 }}>
+const StatCard = ({ icon: Icon, label, value, change, positive, sub, onClick }) => (
+  <div 
+    onClick={onClick}
+    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 22px", flex: 1, minWidth: 200, cursor: onClick ? "pointer" : "default", transition: "all 0.2s" }}
+    onMouseEnter={e => { if (onClick) e.currentTarget.style.background = "rgba(255,255,255,0.06)" }}
+    onMouseLeave={e => { if (onClick) e.currentTarget.style.background = "rgba(255,255,255,0.03)" }}
+  >
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
       <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={16} color="#fff" /></div>
       {change && <span style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11, fontWeight: 600, color: positive ? "#34d399" : "#f87171" }}>{positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />} {change}</span>}
@@ -137,7 +141,7 @@ const InputField = ({ label, value, onChange, placeholder, type }) => (
 
 // PAGES
 
-const DashboardPage = ({ toast, goTo, orders, users }) => {
+const DashboardPage = ({ toast, goTo, orders, users, strategyRequests }) => {
   // 1. Core Stats
   const totalRevenue = orders.reduce((sum, o) => sum + (o.revenue || 0), 0);
   const totalImages = orders.reduce((sum, o) => sum + (o.images || 0), 0);
@@ -193,6 +197,13 @@ const DashboardPage = ({ toast, goTo, orders, users }) => {
         <StatCard icon={ShoppingCart} label="Total Orders" value={orders.length} sub={`${orders.filter(o => o.status === 'completed' || o.status === 'delivered').length} completed`} />
         <StatCard icon={Users} label="Total Clients" value={activeClients} sub="Registered users" />
         <StatCard icon={Image} label="Images Delivered" value={totalImages} sub="Across all orders" />
+        <StatCard 
+          icon={Target} 
+          label="Strategy Requests" 
+          value={strategyRequests?.length || 0} 
+          sub={`${strategyRequests?.filter(r => r.status === 'new' || r.status === 'pending').length || 0} pending`} 
+          onClick={() => goTo('brand-strategy')} 
+        />
       </div>
 
       <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
@@ -293,7 +304,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       const numericPrice = parseFloat(newPrice) || 0;
       const targetOrderObj = orders.find(o => o.id === orderId) || viewOrder;
       const newPayStatus = numericPrice > 0 ? 'unpaid' : 'free';
-      const newStatus = numericPrice > 0 && targetOrderObj?.status === 'pending' ? 'quote_sent' : targetOrderObj?.status;
+      const newStatus = targetOrderObj?.status;
       const updatedAttachments = { ...(targetOrderObj?.attachments || {}), payment_status: newPayStatus };
 
       const { error } = await supabase
@@ -447,7 +458,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       if (!order) return;
 
       const newItems = [...(order.items || [])];
-      newItems[itemIndex] = { ...newItems[itemIndex], finishImage: url, status: "delivered" };
+      newItems[itemIndex] = { ...newItems[itemIndex], finishImage: url, status: "delivered", revisionReason: null, revisionDate: null };
 
       const allDelivered = newItems.every(i => i.status === "delivered" || i.status === "completed");
       const newOrderStatus = allDelivered ? "delivered" : "in_progress";
@@ -987,6 +998,13 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
   const [form, setForm] = useState({ name: "", images: 10, price: 99, features: [], description: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [strategyConfigActive, setStrategyConfigActive] = useState(true);
+
+  // Group revenue dynamically instead of hardcoded demo data
+  const revenueByPlan = plans.map(p => {
+    const rev = (orders || []).filter(o => o.plan === p.name && (o.status === 'completed' || o.status === 'delivered' || getPaymentStatus(o) === 'paid')).reduce((sum, o) => sum + (Number(o.revenue) || 0), 0);
+    return { plan: p.name, revenue: rev };
+  });
 
   const transactions = (orders || [])
     .filter(o => (o.revenue || 0) > 0)
@@ -1202,7 +1220,7 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
               </div>
             </div>
             <div style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 4 }}>{p.price === 0 ? "Free" : `$${p.price}`}</div>
-            <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 16 }}>{p.images === 0 ? "Custom pricing" : `${p.images} image${p.images > 1 ? "s" : ""}`}</div>
+            <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 16 }}>{p.images === 0 ? (p.price > 0 ? "Strategy access" : "Custom pricing") : `${p.images} image${p.images > 1 ? "s" : ""}`}</div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span onClick={() => togglePlan(p.id)} style={{ fontSize: 11, color: p.active ? "#34d399" : "#f87171", cursor: "pointer" }}><span style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block", background: p.active ? "#34d399" : "#f87171", marginRight: 6 }} />{p.active ? "Active" : "Inactive"}</span>
               {p.images > 0 && p.price > 0 && <span style={{ fontSize: 11, color: "#4b5563" }}>${(p.price / p.images).toFixed(0)}/image</span>}
@@ -1210,9 +1228,19 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
           </div>
         ))}
       </div>
+      <div style={{ marginTop: 24, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 4px" }}>Strategy Pricing Config</h3>
+          <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>Global $25 fee shared by Free Image add-on and Standalone tier.</p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#fff" }}>$25</div>
+          <button onClick={() => setStrategyConfigActive(!strategyConfigActive)} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: strategyConfigActive ? "#34d399" : "#f87171", color: strategyConfigActive ? "#000" : "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>{strategyConfigActive ? "ON" : "OFF"}</button>
+        </div>
+      </div>
       <div style={{ marginTop: 32, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Revenue by Plan (March)</h3>
-        <ResponsiveContainer width="100%" height={220}><BarChart data={[{ plan: "Free", revenue: 0 }, { plan: "Single", revenue: 280 }, { plan: "Starter", revenue: 2700 }, { plan: "Growth", revenue: 4800 }, { plan: "Social", revenue: 550 }, { plan: "Enterprise", revenue: 2870 }]} barSize={36}><CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" /><XAxis dataKey="plan" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} /><YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} /><Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} /><Bar dataKey="revenue" fill="#2ab7a9" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Revenue by Plan (YTD)</h3>
+        <ResponsiveContainer width="100%" height={220}><BarChart data={revenueByPlan} barSize={36}><CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" /><XAxis dataKey="plan" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} /><YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} /><Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} /><Bar dataKey="revenue" fill="#2ab7a9" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer>
       </div>
 
       <div style={{ marginTop: 32 }}>
@@ -1617,7 +1645,7 @@ const SettingsPage = ({ toast, studioInfo, setStudioInfo, supabase, users, setUs
 const navPages = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "orders", label: "Orders", icon: ShoppingCart },
-  { id: "brand-strategy", label: "Strategy", icon: Star },
+  { id: "brand-strategy", label: "Strategy Requests", icon: Star },
   { id: "clients", label: "Clients", icon: Users },
   { id: "analytics", label: "Analytics", icon: BarChart2 },
   { id: "pricing", label: "Config", icon: CreditCard },
@@ -1633,6 +1661,7 @@ export default function TyesAdmin() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [plans, setPlans] = useState([]);
+  const [strategyRequests, setStrategyRequests] = useState([]);
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -1707,6 +1736,12 @@ export default function TyesAdmin() {
       } else {
         setUsers([]);
       }
+      // 4. Fetch Strategy Requests
+      const { data: stratData } = await supabase
+        .from('brand_strategy_requests')
+        .select('*');
+      if (stratData) setStrategyRequests(stratData);
+
     } catch (err) {
       console.error("Fetch error:", err);
       addToast(`Database error: ${err.message || 'Check your tables'}`, "error");
@@ -1822,7 +1857,7 @@ export default function TyesAdmin() {
     );
 
     switch (page) {
-      case "dashboard": return <DashboardPage toast={addToast} goTo={setPage} orders={orders} users={users} />;
+      case "dashboard": return <DashboardPage toast={addToast} goTo={setPage} orders={orders} users={users} strategyRequests={strategyRequests} />;
       case "orders": return <OrdersPage orders={orders} setOrders={setOrders} toast={addToast} goTo={setPage} supabase={supabase} targetOrder={adminTargetOrder} setTargetOrder={setAdminTargetOrder} />;
       case "clients": return <UsersPage users={users} setUsers={setUsers} toast={addToast} supabase={supabase} />;
       case "analytics": return <AnalyticsPage users={users} orders={orders} />;

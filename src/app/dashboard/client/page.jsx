@@ -9,6 +9,29 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import { ALL_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 import BrandStrategyHub from "@/components/dashboard/BrandStrategyHub";
 import BrandInfoForm from "@/components/dashboard/BrandInfoForm";
+
+const CalendlyInlineWidget = ({ url }) => {
+  useEffect(() => {
+    const head = document.querySelector("head");
+    const script = document.createElement("script");
+    script.setAttribute("src", "https://assets.calendly.com/assets/external/widget.js");
+    script.setAttribute("async", "true");
+    head.appendChild(script);
+    
+    return () => {
+      head.removeChild(script);
+    };
+  }, []);
+
+  return (
+    <div 
+      className="calendly-inline-widget" 
+      data-url={url} 
+      style={{ minWidth: 320, height: 700 }} 
+    />
+  );
+};
+
 // stripePromise is lazy-loaded per component instance to avoid the global Stripe badge
 
 
@@ -227,8 +250,14 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   }, [clientInfo?.country]);
 
   const plans = pricingPlans;
-  // Brand Strategy on hold — show all active plans directly
-  const displayedPlans = plans;
+  // Filter out Deep Dive and push Custom to the end to match layout specs
+  const displayedPlans = [...plans]
+    .filter(p => !p.name.includes('Deep Dive'))
+    .sort((a, b) => {
+      if (a.name.includes('Custom')) return 1;
+      if (b.name.includes('Custom')) return -1;
+      return 0;
+    });
 
 
   useEffect(() => {
@@ -349,11 +378,13 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         }
       }
 
-      const structuredItems = productPhotos.map((file, index) => ({
-        name: file.name,
-        mainImage: photoUrls[index] || "",
+      const numItems = selectedPlan.images > 0 ? selectedPlan.images : Math.max(1, productPhotos.length);
+      const structuredItems = Array.from({ length: numItems }).map((_, index) => ({
+        name: `Deliverable ${index + 1}`,
+        mainImage: photoUrls[index] || photoUrls[0] || "",
         finishImage: "",
-        status: "pending"
+        status: "pending",
+        revisions_used: 0
       }));
 
       const customerName = clientInfo?.name || currentUser.email;
@@ -395,6 +426,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             brand_data: brandData,
             source: selectedPlan.name === 'Custom / Enterprise' ? 'custom' : (addStrategy ? `${selectedPlan.name.toLowerCase()}_addon_25` : 'standalone_25'),
             tier: selectedPlan.name,
+            assigned_to: 'Raluca',
             created_at: new Date().toISOString()
           }]);
           
@@ -563,17 +595,17 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               </div>
                               <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", fontFamily: '"League Spartan", sans-serif' }}>{cleanName}</div>
                               <div style={{ fontSize: 24, color: "#fff", fontWeight: 800, margin: "8px 0", fontFamily: '"League Spartan", sans-serif' }}>
-                                {cleanName === 'Custom' ? <span style={{ fontSize: 16, color: "#2DD4BF" }}>Get in Touch</span> : `$${p.price}`}
+                                {cleanName.includes('Custom') ? <span style={{ fontSize: 16, color: "#2DD4BF" }}>Get in Touch</span> : `$${p.price}`}
                               </div>
                               <div style={{ fontSize: 11, color: "#9ca3af", lineHeight: 1.5, marginTop: 4 }}>
                                 {cleanName === 'Brand Strategy' ? "LLM audit · Viral angles · Retail shortlist · 3-day delivery" :
-                                  cleanName === 'Custom' ? "Priced per scope" :
+                                  cleanName.includes('Custom') ? "Priced per scope" :
                                     `${p.images} image${p.images !== 1 ? 's' : ''} · ${p.max_revisions} rev/img · From ${p.name === 'Free Image' ? '3H' : '24H'}`}
                               </div>
                             </div>
 
                             {/* Strategy bonus badge */}
-                            {(cleanName === 'Campaign 5' || cleanName === 'Campaign 10' || cleanName === 'Custom' || cleanName === 'Free Image') && (
+                            {(cleanName === 'Campaign 5' || cleanName === 'Campaign 10' || cleanName.includes('Custom') || cleanName === 'Free Image') && (
                               <div style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                                 {cleanName === 'Free Image' ? (
                                   <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 600, background: "rgba(45, 212, 191, 0.1)", padding: "4px 10px", borderRadius: 12, display: "inline-block" }}>
@@ -583,7 +615,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                                   <div style={{ fontSize: 10, color: (isSelected && !addStrategy) ? "#6b7280" : "#34d399", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 4, transition: "color 0.2s" }}>
                                     <Check size={12} color={(isSelected && !addStrategy) ? "#6b7280" : "#34d399"} /> 
                                     <span style={{ textDecoration: (isSelected && !addStrategy) ? "line-through" : "none" }}>
-                                      Strategy {cleanName === 'Custom' ? '+ 30-min call' : 'included'}
+                                      Strategy {cleanName.includes('Custom') ? '+ 30-min call' : 'included'}
                                     </span>
                                   </div>
                                 )}
@@ -625,7 +657,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                         <input type="file" id="photoInput" multiple accept="image/*" style={{ display: "none" }} onChange={e => {
                           const selectedPlan = plans.find(p => p.id === plan);
                           const cleanName = selectedPlan?.name?.replace(' (Strategy)', '');
-                          const limit = (selectedPlan && selectedPlan.images > 0) ? selectedPlan.images : (cleanName === 'Custom' ? 999 : 0);
+                          const limit = (selectedPlan && selectedPlan.images > 0) ? selectedPlan.images : (cleanName.includes('Custom') ? 999 : 0);
                           const newFiles = Array.from(e.target.files);
                           if (limit > 0 && (productPhotos.length + newFiles.length > limit)) {
                             addToast(`Plan limit: ${limit} photos`, "warning");
@@ -750,6 +782,15 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     localStorage.setItem('tyes_brand_info', JSON.stringify(data));
                     setStep(step + 1);
                   }} />
+                  
+                  {plans.find(p => p.id === plan)?.name?.includes('Custom') && (
+                    <div style={{ marginTop: 32, padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                      <h3 style={{ fontSize: 18, color: "#fff", marginBottom: 8, textAlign: "center", fontWeight: 700 }}>Book your Strategy Call</h3>
+                      <p style={{ fontSize: 13, color: "#9ca3af", textAlign: "center", marginBottom: 24 }}>Select a time that works for you to discuss your custom project scope.</p>
+                      
+                      <CalendlyInlineWidget url={process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/tayebrayhan101/client"} />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -766,7 +807,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                   { label: "Product Photos", val: `${productPhotos.length} files` },
                   { label: "Ref. Images", val: `${referencePhotos.length} files` },
                   { label: "Fonts / Labels", val: `${fontFiles.length} files` },
-                  { label: "Revisions", val: selectedPlan?.max_revisions > 0 ? `${selectedPlan.max_revisions} per image` : (selectedPlan?.images > 0 ? "0 included" : "N/A") },
+                  { label: "Revisions", val: selectedPlan?.max_revisions > 0 ? `${selectedPlan.max_revisions * selectedPlan.images} total (${selectedPlan.max_revisions} per image)` : (selectedPlan?.images > 0 ? "0 included" : "N/A") },
                 ];
                 if (selectedPlan.name === 'Free Image') {
                   orderSummary.push({ label: "Brand Strategy", val: addStrategy ? "Yes (+$25)" : "No" });
@@ -820,7 +861,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                             style={{ width: "100%", padding: "14px", borderRadius: 10, border: "none", background: isSubmitting ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#34d399,#10b981)", color: isSubmitting ? "#4b5563" : "#fff", fontSize: 14, fontWeight: 700, cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
                             {isSubmitting ? <><RefreshCw size={14} className="animate-spin" /> Submitting...</> : <><Send size={14} /> Submit Order</>}
                           </button>
-                          {(cleanName === 'Custom' || selectedPlan.strategy_call_included) && (
+                          {(cleanName.includes('Custom') || selectedPlan.strategy_call_included) && (
                             <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(45, 212, 191, 0.08)', borderRadius: 12, border: '1px solid rgba(45, 212, 191, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
                               <div>
                                 <h4 style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: '0 0 4px' }}>Schedule your 30-min Discovery Call</h4>

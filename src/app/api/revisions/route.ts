@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { sendEmail } from '@/utils/email';
+import { sendRevisionRequestEmail } from '@/utils/email';
 
 export async function POST(req: Request) {
   try {
@@ -59,10 +59,11 @@ export async function POST(req: Request) {
       .eq('id', order_id);
 
     // Send email to admin
-    await sendEmail({
+    await sendRevisionRequestEmail({
       to: 'tayebur.tyes@gmail.com', // or env admin email
-      subject: `New Revision Request for Order ${order_id}`,
-      text: `Client ${user.email} has requested a revision on order ${order_id}.\n\nFeedback:\n${feedback_notes}`
+      orderId: order_id,
+      clientEmail: user.email || 'Unknown',
+      feedback: feedback_notes
     });
 
     return NextResponse.json({ data: revision });
