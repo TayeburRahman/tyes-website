@@ -180,7 +180,7 @@ export default function BrandInfoForm({ onComplete }) {
           )}
         </div>
 
-        <button type="submit" style={{ padding: '12px', background: '#2DD4BF', color: '#0A0A0A', fontWeight: 700, border: 'none', borderRadius: 4, cursor: 'pointer', marginTop: 12, fontSize: 12, letterSpacing: '0.5pt' }}>
+        <button type="submit" style={{ display: 'none' }}>
           Save Brand Info
         </button>
       </form>

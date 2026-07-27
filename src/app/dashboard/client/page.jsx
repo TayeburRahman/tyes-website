@@ -440,11 +440,13 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           }]);
           
           if (stratError) throw stratError;
-          localStorage.removeItem('tyes_brand_info');
         } catch (stratErr) {
           console.error("Failed to create strategy request:", stratErr);
         }
       }
+
+      // Always clear local brand info upon successful order creation
+      localStorage.removeItem('tyes_brand_info');
 
       if (isPaid) {
         // Redirect to Stripe Checkout Session
