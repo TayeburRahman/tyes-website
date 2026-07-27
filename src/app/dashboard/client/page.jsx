@@ -10,18 +10,26 @@ import { ALL_COUNTRIES_LIST } from "@/utils/eu-vat-rates";
 import BrandStrategyHub from "@/components/dashboard/BrandStrategyHub";
 import BrandInfoForm from "@/components/dashboard/BrandInfoForm";
 
-const CalendlyInlineWidget = ({ url }) => {
+const CalendlyInlineWidget = ({ url, onScheduled }) => {
   useEffect(() => {
     const head = document.querySelector("head");
     const script = document.createElement("script");
     script.setAttribute("src", "https://assets.calendly.com/assets/external/widget.js");
     script.setAttribute("async", "true");
     head.appendChild(script);
+
+    const handleMessage = (e) => {
+      if (e.data && e.data.event === 'calendly.event_scheduled') {
+        if (onScheduled) onScheduled();
+      }
+    };
+    window.addEventListener('message', handleMessage);
     
     return () => {
       head.removeChild(script);
+      window.removeEventListener('message', handleMessage);
     };
-  }, []);
+  }, [onScheduled]);
 
   return (
     <div 
@@ -231,6 +239,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   const [documentFiles, setDocumentFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [billingCountry, setBillingCountry] = useState(clientInfo?.country || "RO");
+  const [isCustomCallBooked, setIsCustomCallBooked] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -788,7 +797,10 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                       <h3 style={{ fontSize: 18, color: "#fff", marginBottom: 8, textAlign: "center", fontWeight: 700 }}>Book your Strategy Call</h3>
                       <p style={{ fontSize: 13, color: "#9ca3af", textAlign: "center", marginBottom: 24 }}>Select a time that works for you to discuss your custom project scope.</p>
                       
-                      <CalendlyInlineWidget url={process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/tayebrayhan101/client"} />
+                      <CalendlyInlineWidget 
+                        url={process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/tayebrayhan101/client"} 
+                        onScheduled={() => setIsCustomCallBooked(true)}
+                      />
                     </div>
                   )}
                 </div>
@@ -947,6 +959,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     if (currentStepName !== "Brand Info") {
                       setStep(step + 1);
                     } else {
+                      const selectedPlan = pricingPlans.find(p => p.id === plan);
+                      if (selectedPlan?.name?.includes('Custom') && !isCustomCallBooked) {
+                        addToast("Please book your strategy call before continuing", "warning");
+                        return;
+                      }
                       // Trigger form submit inside BrandInfoForm
                       const btn = document.querySelector('button[type="submit"]');
                       if (btn) btn.click();
