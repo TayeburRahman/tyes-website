@@ -458,7 +458,17 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       if (!order) return;
 
       const newItems = [...(order.items || [])];
-      newItems[itemIndex] = { ...newItems[itemIndex], finishImage: url, status: "delivered", revisionReason: null, revisionDate: null };
+      const currentItem = newItems[itemIndex];
+      const isRevision = currentItem.status === "Revision requested";
+      
+      newItems[itemIndex] = { 
+        ...currentItem, 
+        ...(isRevision ? { v2Image: url } : { finishImage: url }),
+        status: "delivered", 
+        deliveredAt: new Date().toISOString(),
+        revisionReason: null, 
+        revisionDate: null 
+      };
 
       const allDelivered = newItems.every(i => i.status === "delivered" || i.status === "completed");
       const newOrderStatus = allDelivered ? "delivered" : "in_progress";
@@ -647,12 +657,12 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                         <div onClick={() => window.open(item.mainImage, '_blank')} style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.mainImage}) center/cover`, border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", position: "relative" }} title="Original Image">
                           <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>ORIGINAL</span>
                         </div>
-                        <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.finishImage || ''}) center/cover`, border: item.finishImage ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(255,255,255,0.1)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.finishImage ? "Replace Delivery" : "Upload Delivery"}>
+                        <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.finishImage || ''}) center/cover`, border: item.finishImage ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(255,255,255,0.1)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.finishImage ? "Replace Delivery (V1)" : "Upload Delivery"}>
                           {!item.finishImage && <Upload size={14} color="#6b7280" />}
                           {item.finishImage && (
                             <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0}>
                               <RefreshCw size={14} color="#fff" />
-                              <div style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "#34d399", padding: "1px 4px", borderRadius: 4 }}>REPLACE</div>
+                              <div style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "#34d399", padding: "1px 4px", borderRadius: 4 }}>V1</div>
                             </div>
                           )}
                           {!item.finishImage && (
@@ -665,9 +675,33 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                             style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 10 }}
                             onChange={(e) => e.target.files[0] && uploadFinishImage(viewOrder.id, i, e.target.files[0])}
                             accept="image/*"
-                            title={item.finishImage ? "Replace Delivered Image" : "Upload Finished Image"}
+                            title={item.finishImage ? "Replace Delivered Image (V1)" : "Upload Finished Image"}
                           />
                         </div>
+                        
+                        {(item.status === 'revision' || item.v2Image) && (
+                          <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.v2Image || ''}) center/cover`, border: item.v2Image ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(251,191,36,0.5)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.v2Image ? "Replace V2" : "Upload Revision V2"}>
+                            {!item.v2Image && <Upload size={14} color="#fbbf24" />}
+                            {item.v2Image && (
+                              <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0}>
+                                <RefreshCw size={14} color="#fff" />
+                                <div style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "#34d399", padding: "1px 4px", borderRadius: 4 }}>V2</div>
+                              </div>
+                            )}
+                            {!item.v2Image && (
+                              <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fbbf24", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>
+                                REV V2
+                              </span>
+                            )}
+                            <input
+                              type="file"
+                              style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 10 }}
+                              onChange={(e) => e.target.files[0] && uploadFinishImage(viewOrder.id, i, e.target.files[0])}
+                              accept="image/*"
+                              title={item.v2Image ? "Replace V2 Image" : "Upload V2 Image"}
+                            />
+                          </div>
+                        )}
                       </div>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <StatusBadge status={item.status} />
@@ -680,10 +714,13 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                             <AlertCircle size={10} color="#fbbf24" />
                             <span style={{ fontSize: 10, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase" }}>Revision Requested</span>
                           </div>
-                          <div style={{ fontSize: 11, color: "#d1d5db", lineHeight: "1.4", fontStyle: "italic" }}>
+                          <div style={{ fontSize: 11, color: "#d1d5db", lineHeight: "1.4", fontStyle: "italic", marginBottom: 4 }}>
                             "{item.revisionReason}"
                           </div>
-                          {item.revisionDate && <div style={{ fontSize: 9, color: "#4b5563", marginTop: 4 }}>Requested on {new Date(item.revisionDate).toLocaleDateString()}</div>}
+                          {item.revisionReference && (
+                            <a href={item.revisionReference} target="_blank" rel="noreferrer" style={{ fontSize: 10, color: "#fbbf24", textDecoration: "underline", display: "inline-block", marginBottom: 4 }}>View Reference Image</a>
+                          )}
+                          {item.revisionDate && <div style={{ fontSize: 9, color: "#4b5563" }}>Requested on {new Date(item.revisionDate).toLocaleDateString()}</div>}
                         </div>
                       )}
                     </div>

@@ -11,11 +11,71 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { order_id, order_item_id, feedback_notes, attachment_urls } = await req.json();
+    const { order_id, item_index, feedback_notes, attachment_urls } = await req.json();
 
-    if (!order_id || !order_item_id || !feedback_notes) {
+    if (!order_id || item_index === undefined || !feedback_notes) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    if (feedback_notes.length < 20) {
+      return NextResponse.json({ error: 'Note must be at least 20 characters' }, { status: 400 });
+    }
+
+    // Fetch the order
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .select('*, max_revisions')
+      .eq('id', order_id)
+      .single();
+
+    if (orderError || !order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    if (['Approved', 'Cancelled'].includes(order.status)) {
+      return NextResponse.json({ error: 'Cannot request revision for Approved or Cancelled orders' }, { status: 400 });
+    }
+
+    const items = order.items || [];
+    const item = items[item_index];
+    
+    if (!item) {
+      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+    }
+
+    const max_revisions = order.max_revisions || 0;
+    const revisions_used = item.revisionsUsed || 0;
+
+    if (revisions_used >= max_revisions) {
+      return NextResponse.json({ error: 'Revision limit reached for this image' }, { status: 400 });
+    }
+
+    if (item.deliveredAt) {
+      const deliveredDate = new Date(item.deliveredAt);
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      
+      if (deliveredDate < sevenDaysAgo) {
+        return NextResponse.json({ error: 'Revision request period (7 days) has expired' }, { status: 400 });
+      }
+    } else {
+      // If no deliveredAt, it might not be delivered or it's old data. Spec says only on delivered items.
+      // If we strict enforce:
+      if (item.status !== 'delivered' && item.status !== 'Completed') {
+        return NextResponse.json({ error: 'Item is not delivered yet' }, { status: 400 });
+      }
+    }
+
+    // Update the items array
+    const updatedItems = [...items];
+    updatedItems[item_index] = {
+      ...item,
+      revisionsUsed: revisions_used + 1,
+      status: 'revision',
+      revisionReason: feedback_notes,
+      revisionReference: attachment_urls?.[0] || null,
+      revisionDate: new Date().toISOString()
+    };
 
     // Insert revision request
     const { data: revision, error: insertError } = await supabase
@@ -23,11 +83,11 @@ export async function POST(req: Request) {
       .insert([
         {
           order_id,
-          order_item_id,
+          item_index,
           customer_email: user.email,
-          feedback_notes,
-          attachment_urls: attachment_urls || [],
-          status: 'pending'
+          note: feedback_notes,
+          reference_url: attachment_urls?.[0] || null, // Assuming one reference url for now, or stringify if array
+          status: 'open'
         }
       ])
       .select()
@@ -37,25 +97,14 @@ export async function POST(req: Request) {
       throw insertError;
     }
 
-    // Increment revisions_used in order_items
-    // Since we might not know current count exactly, we can call an rpc or fetch and update
-    const { data: orderItem } = await supabase
-      .from('order_items')
-      .select('revisions_used')
-      .eq('id', order_item_id)
-      .single();
-
-    if (orderItem) {
-      await supabase
-        .from('order_items')
-        .update({ revisions_used: (orderItem.revisions_used || 0) + 1 })
-        .eq('id', order_item_id);
-    }
-
-    // Update order status to revision if it's currently completed/delivered
+    // Update order status and items
     await supabase
       .from('orders')
-      .update({ status: 'revision' })
+      .update({ 
+        status: 'revision',
+        items: updatedItems,
+        revisions: (order.revisions || 0) + 1 // Keep total revisions count updated
+      })
       .eq('id', order_id);
 
     // Send email to admin

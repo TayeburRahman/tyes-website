@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>tyes.app · Image Revisions Flow · Spec v1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
+    rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm 12mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 500;
+      color: #1a1a1a;
+      line-height: 1.55;
+      background: #FAFAF7;
+      padding: 15mm 10mm;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .doc-title {
+      font-family: "League Spartan", -apple-system, sans-serif;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.5pt;
+    }
+
+    .accent-italic {
+      font-family: "Montserrat", sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      color: #2DD4BF;
+    }
+
+    .doc-title {
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: -0.5pt;
+      color: #1a1a1a;
+      margin-bottom: 3mm;
+      line-height: 1.15;
+    }
+
+    .doc-title .brand {
+      color: #2DD4BF;
+    }
+
+    .doc-subtitle {
+      font-size: 11pt;
+      color: #666;
+      margin-bottom: 8mm;
+    }
+
+    .shift-box {
+      background: #E8F8F5;
+      border-left: 4px solid #2DD4BF;
+      padding: 5mm 6mm;
+      margin-bottom: 10mm;
+      font-size: 10pt;
+      color: #1a4a45;
+    }
+
+    .shift-box strong {
+      color: #0D5B54;
+    }
+
+    .question-box {
+      background: #FEF3C7;
+      border-left: 4px solid #F59E0B;
+      padding: 5mm 6mm;
+      margin-bottom: 10mm;
+      font-size: 10pt;
+      color: #713F12;
+    }
+
+    .question-box strong {
+      color: #92400E;
+    }
+
+    .section-header {
+      background: #1a1a1a;
+      color: #FFFFFF;
+      padding: 4mm 6mm;
+      border-radius: 3px;
+      margin: 12mm 0 6mm;
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 1pt;
+      text-transform: uppercase;
+    }
+
+    .section-header:first-of-type {
+      margin-top: 8mm;
+    }
+
+    .mockup {
+      background: #0A0A0A;
+      color: #FFFFFF;
+      border-radius: 6px;
+      padding: 10mm 8mm;
+      margin-bottom: 4mm;
+      position: relative;
+    }
+
+    .mockup .label {
+      position: absolute;
+      top: 3mm;
+      left: 4mm;
+      font-size: 7.5pt;
+      letter-spacing: 2pt;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .copy-block {
+      background: #FFFFFF;
+      border-left: 3px solid #2DD4BF;
+      padding: 4mm 5mm;
+      margin: 3mm 0;
+      border-radius: 0 3px 3px 0;
+    }
+
+    .copy-block .cb-label {
+      font-size: 8pt;
+      letter-spacing: 1.5pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 2mm;
+    }
+
+    .copy-block .cb-text {
+      font-size: 10pt;
+      color: #333;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    .copy-block .cb-text strong {
+      color: #1a1a1a;
+      font-style: normal;
+    }
+
+    .note-box {
+      background: #1a1a1a;
+      color: #EDEDED;
+      padding: 5mm 6mm;
+      border-radius: 4px;
+      margin: 5mm 0 6mm;
+      font-size: 9pt;
+      line-height: 1.6;
+    }
+
+    .note-box strong {
+      color: #2DD4BF;
+    }
+
+    .note-box code {
+      background: #000;
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: #2DD4BF;
+      font-family: 'Courier New', monospace;
+    }
+
+    h3 {
+      font-size: 11pt;
+      color: #1a1a1a;
+      margin: 6mm 0 3mm;
+    }
+
+    p {
+      font-size: 10pt;
+      color: #333;
+      margin-bottom: 3mm;
+      line-height: 1.6;
+    }
+
+    p strong {
+      color: #1a1a1a;
+    }
+
+    ul,
+    ol {
+      margin: 3mm 0 5mm 5mm;
+      font-size: 10pt;
+      color: #333;
+    }
+
+    li {
+      margin-bottom: 1.5mm;
+      line-height: 1.55;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4mm 0;
+      font-size: 9pt;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 2.5mm 3mm;
+      border-bottom: 1px solid #E5E5E5;
+    }
+
+    th {
+      background: #F5F5F0;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5pt;
+    }
+
+    .item-card {
+      background: #141414;
+      border-radius: 4px;
+      padding: 4mm 5mm;
+      margin: 3mm 0;
+    }
+
+    .item-card .ic-name {
+      font-size: 9pt;
+      color: #FFFFFF;
+      font-weight: 700;
+      margin-bottom: 2mm;
+    }
+
+    .item-card .ic-row {
+      display: flex;
+      gap: 3mm;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .item-card .thumb {
+      width: 22mm;
+      height: 16mm;
+      background: #0A0A0A;
+      border: 1px solid #333;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6.5pt;
+      color: #666;
+      letter-spacing: 1pt;
+    }
+
+    .item-card .badge {
+      font-size: 6.5pt;
+      letter-spacing: 1pt;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 1mm 2.5mm;
+      border-radius: 2px;
+    }
+
+    .item-card .badge.delivered {
+      background: rgba(45, 212, 191, 0.15);
+      color: #2DD4BF;
+    }
+
+    .item-card .badge.revreq {
+      background: rgba(251, 191, 36, 0.15);
+      color: #FBBF24;
+    }
+
+    .item-card .rev-btn {
+      border: 1.5px solid #2DD4BF;
+      color: #2DD4BF;
+      padding: 1.5mm 4mm;
+      border-radius: 999px;
+      font-size: 7.5pt;
+      font-weight: 700;
+    }
+
+    .item-card .rev-btn.disabled {
+      border-color: #444;
+      color: #666;
+    }
+
+    .item-card .counter {
+      font-size: 7pt;
+      color: #888;
+    }
+
+    .divider {
+      border-top: 1px solid #E5E5E5;
+      margin: 12mm 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="doc-title"><span class="brand">tyes.app</span> · Image Revisions Flow · <span class="accent-italic">Spec
+        v1.</span></div>
+    <div class="doc-subtitle">Defines the client-facing revision request flow and the admin resolution flow for
+      delivered images. Aligned with the v2 pricing model (revisions come from plan config, 1 per image on Campaign
+      tiers). Complements Client Dashboard v2 and Admin Dashboard v2 specs.</div>
+
+    <div class="question-box">
+      <strong>Question first:</strong> does the client currently have a "Request revision" button on delivered images,
+      or is the "Revision" status admin-only? (We saw "Revision: ORD-7BFD" in admin Recent Activity.) If the button
+      exists, align it to the rules below. If it doesn't, build the flow below.
+    </div>
+
+    <div class="shift-box">
+      <strong>Core principle:</strong> the revision allowance is NOT hardcoded. It reads
+      <strong>max_revisions_per_image</strong> from the plan config (already present in the admin Edit Plan modal): Free
+      Image = 0 · Campaign 5 = 1 · Campaign 10 = 1 · Custom = per scope. This also fixes the current bugs: checkout
+      summary showing "Revisions: 3 included" and My Orders showing "Rev 0/3".
+    </div>
+
+    <div class="section-header">Section 1 · Rules</div>
+    <ul>
+      <li>Counter is <strong>per image (order item)</strong>, not per order.</li>
+      <li>A revision can be requested only on a <strong>delivered</strong> item, within <strong>7 days</strong> of its
+        delivery.</li>
+      <li>No requests after the order is <strong>Approved</strong> or <strong>Cancelled</strong>.</li>
+      <li>Strategy-only orders (0 images): revisions UI hidden everywhere, including the "Rev X/Y" counter in My Orders.
+      </li>
+      <li>Free Image (0 revisions): "Request revision" button never shown.</li>
+      <li>All revision displays read from plan config: checkout summary ("1 revision / image"), My Orders counter ("Rev
+        0/1"), item buttons.</li>
+    </ul>
+
+    <div class="section-header">Section 2 · Client Flow (My Orders → Order Detail)</div>
+
+    <div class="mockup">
+      <div class="label">Delivered item · revision available vs. used</div>
+      <div class="item-card">
+        <div class="ic-name">campaign_image_01.jpg</div>
+        <div class="ic-row">
+          <div class="thumb">DELIVERED IMG</div>
+          <span class="badge delivered">Delivered</span>
+          <span class="rev-btn">Request revision</span>
+          <span class="counter">Revision 0/1 used · available 7 days after delivery</span>
+        </div>
+      </div>
+      <div class="item-card">
+        <div class="ic-name">campaign_image_02.jpg</div>
+        <div class="ic-row">
+          <div class="thumb">V2 DELIVERED</div>
+          <span class="badge revreq">Revision requested</span>
+          <span class="rev-btn disabled">Limit reached</span>
+          <span class="counter">Revision 1/1 used · v1 and v2 both downloadable</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">Request modal</div>
+      <div class="cb-text">Title: <strong>"What should we change?"</strong> · Required textarea (min 20 characters)
+        describing the change · Optional reference image upload · Submit button: <strong>"Send revision
+          request"</strong>. On submit: item status → "Revision requested", counter increments, button disabled at
+        limit, order status → <strong>Revision</strong>, in-app + email notification to admin.</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">After the limit</div>
+      <div class="cb-text">Button is replaced by a subtle link: <strong>"Revision limit reached — contact us"</strong>
+        (opens support chat/email). No hard dead-end.</div>
+    </div>
+
+    <div class="section-header">Section 3 · Admin Flow (Orders → Order Detail → Order Items)</div>
+    <ul>
+      <li>Item in "Revision requested" state shows the <strong>client's note + reference image</strong> inline.</li>
+      <li>Admin uploads the revised image <strong>to the same order item</strong> — stored as <strong>v2 alongside
+          v1</strong>, both remain downloadable for the client.</li>
+      <li>Clicking <strong>Deliver</strong> on the revised version: item returns to "Delivered", order status
+        recalculates (back to In Progress / Completed when no open revision requests remain), client receives in-app +
+        email: <strong>"Your revised image is ready."</strong></li>
+      <li>The existing <strong>Revision tab</strong> in Orders lists all orders with ≥1 open revision request.</li>
+    </ul>
+
+    <div class="section-header">Section 4 · Data &amp; Validation</div>
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      order_items.revisions_used → int, default 0<br>
+      order_items.delivered_at → timestamp (drives the 7-day window)<br><br>
+      revision_requests {<br>
+      &nbsp;&nbsp;id, order_item_id, note, reference_url,<br>
+      &nbsp;&nbsp;status: open | resolved,<br>
+      &nbsp;&nbsp;created_at, resolved_at<br>
+      }<br><br>
+      <span style="color:#888;">// Server-side validation (never trust the button state):</span><br>
+      reject if revisions_used >= plan.max_revisions_per_image<br>
+      reject if now() > delivered_at + 7 days<br>
+      reject if order.status in (Approved, Cancelled)<br>
+      reject if note.length < 20 </div>
+
+        <div class="section-header">Implementation Checklist</div>
+        <p>
+          ☐ Replace hardcoded "3" everywhere with plan.max_revisions_per_image (checkout summary, My Orders "Rev X/Y",
+          item counters)<br>
+          ☐ Hide revisions UI on strategy-only orders (0 images)<br>
+          ☐ Client: "Request revision" button on delivered items only, with counter and 7-day window<br>
+          ☐ Client: request modal (required note min 20 chars + optional reference upload)<br>
+          ☐ Order status → Revision on open request; auto-recalculate when resolved<br>
+          ☐ Admin: show client note + reference on the item; upload revised version as v2 (keep v1)<br>
+          ☐ Notifications: in-app + email in both directions (request → admin; delivery → client)<br>
+          ☐ Server-side validation per Section 4<br>
+          ☐ QA: Free Image shows no revision UI; Campaign 5/10 show "1 revision / image"; no em-dashes in copy
+        </p>
+
+        <div class="divider"></div>
+        <p style="text-align:center; font-size: 9pt; color: #999; margin-top: 8mm;"><span class="brand">tyes.app</span>
+          · Image Revisions Flow · Spec v1 · Dev-ready</p>
+
+    </div>
+</body>
+
+</html>
