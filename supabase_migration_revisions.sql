@@ -1,7 +1,7 @@
 -- Create revision_requests table
 CREATE TABLE IF NOT EXISTS revision_requests (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+    order_id TEXT REFERENCES orders(id) ON DELETE CASCADE,
     item_index INTEGER NOT NULL,
     customer_email TEXT,
     note TEXT,

@@ -124,7 +124,7 @@ export default function CookiePolicyPage() {
           <div className="bg-[#141414] border-l-4 border-[#2DD4BF] p-4 rounded-r-lg space-y-1 text-sm">
             <p className="font-bold text-white">tyes LLC</p>
             <p className="text-[#C8C8C8]">30 N Gould Street, Sheridan, WY 82801, USA</p>
-            <p className="text-[#C8C8C8]">Email: <a href="mailto:office@tyes.app" className="text-[#2DD4BF] hover:underline">office@tyes.app</a></p>
+            <p className="text-[#C8C8C8]">Email: <a href="mailto:hello@tyes.com" className="text-[#2DD4BF] hover:underline">hello@tyes.com</a></p>
           </div>
         </section>
 
@@ -134,7 +134,7 @@ export default function CookiePolicyPage() {
             <strong className="text-white">tyes LLC</strong> · 30 N Gould Street, Sheridan, WY 82801, USA
           </div>
           <div>
-            <a href="mailto:office@tyes.app" className="text-[#2DD4BF] hover:underline">office@tyes.app</a>
+            <a href="mailto:hello@tyes.com" className="text-[#2DD4BF] hover:underline">hello@tyes.com</a>
           </div>
         </div>
 

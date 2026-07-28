@@ -1590,7 +1590,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
     };
 
     const handleRequestRevision = (order, itemIndex = null) => {
-      const selectedPlan = plans.find(p => p.id === order.plan || p.name === order.plan_name);
+      const selectedPlan = pricingPlans.find(p => p.id === order.plan || p.name === order.plan || p.name === order.plan_name);
       const maxRevisions = selectedPlan?.max_revisions ?? 0;
       
       const targetItem = itemIndex !== null ? order.items[itemIndex] : null;
@@ -1659,7 +1659,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                         {(o.plan?.includes('Custom') || o.plan?.includes('Deep Dive')) ? "Quote Pending" : "Free"}
                       </div>
                     )}
-                    {o.images_count > 0 && (plans.find(p => p.id === o.plan || p.name === o.plan_name)?.max_revisions > 0) && <div style={{ fontSize: 10, color: "#4b5563" }}>Rev {o.revisions}/{plans.find(p => p.id === o.plan || p.name === o.plan_name)?.max_revisions}</div>}
+                    {o.images_count > 0 && (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions > 0) && <div style={{ fontSize: 10, color: "#4b5563" }}>Rev {o.revisions}/{pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions}</div>}
                   </div>
                   <div style={{ width: 60 }}>
                     <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
@@ -1681,6 +1681,14 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</div>
                               <div style={{ marginTop: 4 }}><StatusBadge status={item.status} /></div>
+                              {item.status === "delivered" && (() => {
+                                const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
+                                const revsUsed = item.revisionsUsed || 0;
+                                if (revsUsed >= maxRevisions && maxRevisions > 0) {
+                                  return <a href="mailto:hello@tyes.com" onClick={(e) => e.stopPropagation()} style={{ fontSize: 10, color: "#6b7280", textDecoration: "underline", display: "inline-block", marginTop: 6 }}>Revision limit reached — contact us</a>;
+                                }
+                                return null;
+                              })()}
                             </div>
                             {item.status === "delivered" && item.finishImage && (
                               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
@@ -1692,14 +1700,12 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                                 <div style={{ display: "flex", gap: 4 }}>
                                   <button onClick={(e) => { e.stopPropagation(); handleDownloadItem(item.name, item.finishImage); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(78,205,196,0.1)", border: "none", color: "#4ecdc4", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Download"><Download size={14} /></button>
                                   {(() => {
-                                    const maxRevisions = (plans.find(p => p.id === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
+                                    const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
                                     const revsUsed = item.revisionsUsed || 0;
                                     const deliveredDate = item.deliveredAt ? new Date(item.deliveredAt) : new Date();
                                     const isExpired = (new Date() - deliveredDate) > 7 * 24 * 60 * 60 * 1000;
-                                    if (revsUsed >= maxRevisions && maxRevisions > 0) {
-                                      return <a href="mailto:support@tyes.app" onClick={(e) => e.stopPropagation()} style={{ fontSize: 10, color: "#6b7280", textDecoration: "underline", marginLeft: 8 }}>Revision limit reached — contact us</a>;
-                                    } else if (!isExpired && maxRevisions > 0) {
-                                      return <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(251,191,36,0.1)", border: "none", color: "#fbbf24", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: 4 }} title="Request Revision"><RefreshCw size={14} /></button>;
+                                    if (revsUsed < maxRevisions && !isExpired && maxRevisions > 0) {
+                                      return <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(251,191,36,0.1)", border: "none", color: "#fbbf24", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Request Revision"><RefreshCw size={14} /></button>;
                                     }
                                     return null;
                                   })()}

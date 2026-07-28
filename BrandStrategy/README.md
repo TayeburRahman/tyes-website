@@ -56,4 +56,4 @@ tyes_launch_final/
 
 ## Company
 
-**tyes LLC** · 30 N Gould Street, Sheridan, WY 82801, USA · office@tyes.app
+**tyes LLC** · 30 N Gould Street, Sheridan, WY 82801, USA · hello@tyes.com

@@ -121,23 +121,68 @@
               style="font-family:'Montserrat',sans-serif;font-weight:500;font-size:1rem;color:rgba(255,255,255,0.6);text-align:center;margin-bottom:3rem;">
               We'd love to hear from you.</p>
             <div style="max-width:32rem;margin:0 auto;">
-              <form style="display:flex;flex-direction:column;gap:1rem;">
-                <input type="text" placeholder="Your Name"
+              <form id="contact-form" style="display:flex;flex-direction:column;gap:1rem;">
+                <input type="text" id="contact-name" placeholder="Your Name" required
                   style="width:100%;padding:0.85rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-family:'Montserrat',sans-serif;font-size:0.9rem;font-weight:500;outline:none;">
-                <input type="email" placeholder="Email Address"
+                <input type="email" id="contact-email" placeholder="Email Address" required
                   style="width:100%;padding:0.85rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-family:'Montserrat',sans-serif;font-size:0.9rem;font-weight:500;outline:none;">
-                <input type="text" placeholder="Subject"
+                <input type="text" id="contact-subject" placeholder="Subject" required
                   style="width:100%;padding:0.85rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-family:'Montserrat',sans-serif;font-size:0.9rem;font-weight:500;outline:none;">
-                <textarea placeholder="Your Message" rows="6"
+                <textarea id="contact-message" placeholder="Your Message" rows="6" required
                   style="width:100%;padding:0.85rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-family:'Montserrat',sans-serif;font-size:0.9rem;font-weight:500;outline:none;resize:vertical;"></textarea>
-                <button type="submit"
+                <button type="submit" id="contact-submit"
                   style="width:100%;padding:0.9rem;background:#4ecdc4;color:#fff;border:none;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.9rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;">Send
                   Message</button>
+                <div id="contact-status" style="text-align:center;font-family:'Montserrat',sans-serif;font-weight:500;font-size:0.9rem;color:#4ecdc4;display:none;"></div>
               </form>
+
+              <script>
+                document.getElementById('contact-form').addEventListener('submit', async function(e) {
+                  e.preventDefault();
+                  
+                  const submitBtn = document.getElementById('contact-submit');
+                  const statusDiv = document.getElementById('contact-status');
+                  const name = document.getElementById('contact-name').value;
+                  const email = document.getElementById('contact-email').value;
+                  const subject = document.getElementById('contact-subject').value;
+                  const message = document.getElementById('contact-message').value;
+
+                  submitBtn.innerText = 'Sending...';
+                  submitBtn.style.opacity = '0.7';
+                  submitBtn.disabled = true;
+                  statusDiv.style.display = 'none';
+
+                  try {
+                    const response = await fetch('/api/contact', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ name, email, subject, message })
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                      statusDiv.innerText = 'Message sent successfully! We will get back to you soon.';
+                      statusDiv.style.color = '#4ecdc4';
+                      document.getElementById('contact-form').reset();
+                    } else {
+                      statusDiv.innerText = 'Oops! Something went wrong. Please try emailing us directly.';
+                      statusDiv.style.color = '#ef4444';
+                    }
+                  } catch (err) {
+                    statusDiv.innerText = 'Oops! Failed to connect. Please try emailing us directly.';
+                    statusDiv.style.color = '#ef4444';
+                  } finally {
+                    statusDiv.style.display = 'block';
+                    submitBtn.innerText = 'Send Message';
+                    submitBtn.style.opacity = '1';
+                    submitBtn.disabled = false;
+                  }
+                });
+              </script>
               <div
                 style="text-align:center;margin-top:2.5rem;font-family:'Montserrat',sans-serif;font-weight:500;font-size:0.9rem;color:rgba(255,255,255,0.5);">
                 <p style="margin-bottom:0.5rem;">Or email us directly at</p>
-                <a href="mailto:office@tyes.app" style="color:#4ecdc4;text-decoration:none;">office@tyes.app</a>
+                <a href="mailto:hello@tyes.com" style="color:#4ecdc4;text-decoration:none;">hello@tyes.com</a>
               </div>
             </div>
           </div>

@@ -111,7 +111,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
         </div>
 
         <div class="footer">
-          <p>Tyes · hello@tyes.app<br>tyes.app</p>
+          <p>Tyes · hello@tyes.com<br>tyes.app</p>
         </div>
       </div>
     </body>
@@ -180,7 +180,7 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
           </div>
         </div>
         <div class="footer">
-          <p>Tyes &middot; hello@tyes.app<br>tyes.app</p>
+          <p>Tyes &middot; hello@tyes.com<br>tyes.app</p>
         </div>
       </div>
     </body>
@@ -233,7 +233,7 @@ export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: str
           <a href="${calendlyUrl}" class="btn">Book a Deep Dive call &rarr;</a>
         </div>
         <div class="footer">
-          <p>Tyes &middot; hello@tyes.app<br>tyes.app</p>
+          <p>Tyes &middot; hello@tyes.com<br>tyes.app</p>
         </div>
       </div>
     </body>
