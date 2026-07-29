@@ -856,6 +856,9 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                 ];
                 if (selectedPlan.name === 'Free Image') {
                   orderSummary.push({ label: "Brand Strategy", val: addStrategy ? "Yes (+$25)" : "No" });
+                } else if (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') {
+                  // For Campaign 5, Campaign 10, Custom, etc. where it's an included offer
+                  orderSummary.push({ label: "Brand Strategy", val: addStrategy ? "$0" : "No" });
                 }
                 if (isPaid) {
                   orderSummary.push({ label: "Taxes", val: "Calculated at checkout" });
