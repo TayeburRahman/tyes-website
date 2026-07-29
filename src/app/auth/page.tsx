@@ -271,6 +271,22 @@ function AuthContent() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      addToast(err.message || "Failed to initiate Google sign-in", "error");
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{
       fontFamily: "Montserrat, sans-serif",
@@ -337,7 +353,7 @@ function AuthContent() {
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0", color: "rgba(255,255,255,0.3)", fontSize: "0.8rem", fontWeight: 500 }}>
               <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} /> or <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
             </div>
-            <button type="button" className="auth-btn-outline" onClick={() => addToast("Google sign-in coming soon", "warning")}>Continue with Google</button>
+            <button type="button" className="auth-btn-outline" onClick={handleGoogleSignIn} disabled={loading}>Continue with Google</button>
           </form>
         )}
 
@@ -443,7 +459,7 @@ function AuthContent() {
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0", color: "rgba(255,255,255,0.3)", fontSize: "0.8rem", fontWeight: 500 }}>
               <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} /> or <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
             </div>
-            <button type="button" className="auth-btn-outline" onClick={() => addToast("Google sign-in coming soon", "warning")}>Continue with Google</button>
+            <button type="button" className="auth-btn-outline" onClick={handleGoogleSignIn} disabled={loading}>Continue with Google</button>
           </form>
         )}
 

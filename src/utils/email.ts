@@ -29,8 +29,8 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
       <style>
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
         .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
-        .header { background-color: #111827; padding: 40px; text-align: center; }
-        .header p { color: #9ca3af; margin: 8px 0 0; font-size: 15px; }
+        .header { background-color: #4ECDC4; padding: 40px; text-align: center; }
+        .header p { color: #ffffff; margin: 8px 0 0; font-size: 15px; }
         .content { padding: 40px; }
         .greeting { font-size: 18px; font-weight: 600; margin-top: 0; color: #111827; }
         .text { font-size: 15px; line-height: 1.6; color: #4b5563; }
@@ -154,8 +154,8 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
       <style>
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
         .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
-        .header { background-color: #111827; padding: 40px; text-align: center; }
-        .header p { color: #9ca3af; margin: 8px 0 0; font-size: 15px; }
+        .header { background-color: #4ECDC4; padding: 40px; text-align: center; }
+        .header p { color: #ffffff; margin: 8px 0 0; font-size: 15px; }
         .content { padding: 40px; text-align: center; }
         .btn { display: inline-block; background-color: #4ecdc4; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-top: 24px; }
         .btn-outline { display: inline-block; background-color: transparent; color: #4ecdc4; border: 1.5px solid #4ecdc4; text-decoration: none; padding: 13px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-top: 12px; }
@@ -210,8 +210,8 @@ export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: str
       <style>
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
         .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
-        .header { background-color: #111827; padding: 40px; text-align: center; }
-        .header p { color: #9ca3af; margin: 8px 0 0; font-size: 15px; }
+        .header { background-color: #4ECDC4; padding: 40px; text-align: center; }
+        .header p { color: #ffffff; margin: 8px 0 0; font-size: 15px; }
         .content { padding: 40px; text-align: center; }
         .btn { display: inline-block; background-color: #4ecdc4; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-top: 24px; }
         .footer { padding: 24px 40px; background: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb; }
