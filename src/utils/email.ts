@@ -146,6 +146,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
 
 export const sendStrategySnapshotEmail = async (props: { to: string; brandName: string; pdfUrl: string }) => {
   const resendApiKey = process.env.RESEND_API_KEY;
+  const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=strategy_email';
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -177,6 +178,7 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
           <p>You can view and download your PDF using the button below. Ready for the execution roadmap? Book a Deep Dive call with us!</p>
           <div style="margin-top: 24px;">
             <a href="${props.pdfUrl}" class="btn" style="margin-top: 0; margin-bottom: 12px; display: block; max-width: 250px; margin-left: auto; margin-right: auto;">View & Download PDF</a>
+            <a href="${calendlyUrl}" class="btn-outline" style="display: block; max-width: 250px; margin-left: auto; margin-right: auto;">Book a Deep Dive call</a>
           </div>
         </div>
         <div class="footer">
@@ -201,7 +203,7 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
 
 export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: string }) => {
   const resendApiKey = process.env.RESEND_API_KEY;
-  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/tayebrayhan101/client';
+  const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=deepdive_email';
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -258,7 +260,7 @@ export const sendRevisionRequestEmail = async (props: { to: string; orderId: str
     console.log("No RESEND_API_KEY set. Skipping email.");
     return;
   }
-  
+
   const { Resend } = require('resend');
   const resend = new Resend(resendApiKey);
 
@@ -282,4 +284,57 @@ export const sendRevisionRequestEmail = async (props: { to: string; orderId: str
   } catch (err) {
     console.error('Failed to send revision request email:', err);
   }
+};
+
+export const sendImageDeliveryEmail = async (props: { to: string; customerName: string; orderTitle: string; dashboardUrl: string }) => {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: #f4f7f6; margin: 0; padding: 40px 20px; color: #1f2937; }
+        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+        .header { background-color: #4ECDC4; padding: 40px; text-align: center; }
+        .header p { color: #ffffff; margin: 8px 0 0; font-size: 15px; }
+        .content { padding: 40px; text-align: center; }
+        .btn { display: inline-block; background-color: #4ecdc4; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-top: 24px; }
+        .footer { padding: 24px 40px; background: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb; }
+        .footer p { margin: 0; font-size: 12px; color: #9ca3af; line-height: 1.5; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+           <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
+           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+           <p>Images Delivered</p>
+        </div>
+        <div class="content">
+          <h2 style="margin-top: 0;">Your images are ready!</h2>
+          <p>Hi ${props.customerName},</p>
+          <p>Great news! The images for your order <strong>${props.orderTitle}</strong> have been delivered and are ready for review.</p>
+          <p>You can view, download, or request revisions directly from your dashboard.</p>
+          <a href="${props.dashboardUrl}" class="btn">View Images in Dashboard &rarr;</a>
+        </div>
+        <div class="footer">
+          <p>Tyes &middot; hello@tyes.com<br>tyes.app</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  if (!resendApiKey) {
+    console.log("[MOCK EMAIL] Image Delivery:", props.to);
+    return { success: true, mocked: true, htmlContent };
+  }
+  const { Resend } = require('resend');
+  const resend = new Resend(resendApiKey);
+  return await resend.emails.send({
+    from: 'Tyes <hello@tyes.app>',
+    to: props.to,
+    subject: `Your images are ready - ${props.orderTitle}`,
+    html: htmlContent,
+  });
 };

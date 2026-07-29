@@ -29,7 +29,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
   const openCalendly = (e) => {
     e.preventDefault();
     if (window.Calendly) {
-      const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/tayebrayhan101/client';
+      const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=strategy_hub';
       window.Calendly.initPopupWidget({ url: calendlyUrl });
     } else {
       const link = document.createElement('link');
@@ -40,7 +40,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
       script.src = 'https://assets.calendly.com/assets/external/widget.js';
       script.async = true;
       script.onload = () => {
-        const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/tayebrayhan101/client';
+        const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=strategy_hub';
         window.Calendly.initPopupWidget({ url: calendlyUrl });
       };
       document.head.appendChild(script);
@@ -63,7 +63,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
         revenue: 25,
         revisions: 0,
         max_revisions: 0,
-        has_strategy_addon: false,
+        attachments: { photos: [], has_strategy_addon: false },
         progress: 0,
         created_at: new Date().toISOString()
       }]).select().single();
@@ -81,7 +81,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
         assigned_to: 'Raluca',
         created_at: new Date().toISOString()
       }]);
-      
+
       // Checkout
       const checkoutRes = await fetch('/api/stripe/checkout', {
         method: 'POST',
@@ -91,14 +91,16 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
           price: 25,
           planName: 'Brand Strategy',
           customerEmail: clientInfo.email,
-          billingCountry: 'US' // fallback
+          customerName: clientInfo.name,
+          billingCountry: clientInfo.country || 'US'
         })
       });
-      const { url } = await checkoutRes.json();
-      if (url) {
-        window.location.href = url;
+      const checkoutData = await checkoutRes.json();
+      if (!checkoutRes.ok) throw new Error(checkoutData.error || 'Failed to initialize checkout');
+      if (checkoutData.url) {
+        window.location.href = checkoutData.url;
       } else {
-        throw new Error("Failed to generate checkout link.");
+        throw new Error("Failed to generate checkout link: no url returned");
       }
     } catch (err) {
       console.error(err);
@@ -109,16 +111,48 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
 
   const latestRequest = requests.length > 0 ? requests[0] : null;
   let userRetailPresence = [];
-  if (latestRequest && latestRequest.brand_info && latestRequest.brand_info.retailPresence) {
-    userRetailPresence = latestRequest.brand_info.retailPresence;
+  let brandCategory = '';
+  let brandPositioning = '';
+  let countriesSelling = '';
+  let countriesExpand = '';
+
+  if (latestRequest && latestRequest.brand_info) {
+    userRetailPresence = latestRequest.brand_info.retailPresence || [];
+    brandCategory = latestRequest.brand_info.category || '';
+    brandPositioning = latestRequest.brand_info.positioning || '';
+    countriesSelling = latestRequest.brand_info.countriesSelling || '';
+    countriesExpand = latestRequest.brand_info.countriesExpand || '';
   }
+
+  let mappedChannels = [];
+  const isBeauty = ['Beauty', 'Personal Care', 'Fragrance'].includes(brandCategory);
+
+  if (brandPositioning === 'Mass market') {
+    mappedChannels = ['Mass Market Retail', 'Hyperstores', 'Marketplaces'];
+    if (isBeauty) mappedChannels.push('Hyperpharmacies');
+  } else if (brandPositioning === 'Masstige') {
+    mappedChannels = ['Mass Market Retail', 'Premium Retail', 'Hyperstores', 'Marketplaces'];
+    if (isBeauty) mappedChannels.push('Hyperpharmacies');
+  } else if (brandPositioning === 'Premium') {
+    mappedChannels = ['Premium Retail', 'Marketplaces'];
+    if (isBeauty) mappedChannels.push('Hyperpharmacies'); // dermocosmetics
+  } else if (brandPositioning === 'High-end') {
+    mappedChannels = ['Premium Retail', 'Marketplaces'];
+  } else {
+    // Default fallback
+    mappedChannels = ['Mass Market Retail', 'Premium Retail', 'Hyperstores', 'Marketplaces'];
+    if (isBeauty) mappedChannels.push('Hyperpharmacies');
+  }
+
+  let coverageArray = [countriesSelling, countriesExpand].filter(Boolean);
+  let coverageText = coverageArray.length > 0 ? coverageArray.join(' · ') : 'Not specified';
 
   const RETAIL_TYPES = [
     { num: '01', name: 'Mass Market Retail', label: 'Mass Market Retail' },
     { num: '02', name: 'Premium Retail', label: 'Premium Retail' },
     { num: '03', name: 'Hyperstores', label: 'Hyperstores' },
     { num: '04', name: 'Hyperpharmacies', label: 'Hyperpharmacies' },
-    { num: '05', name: 'Marketplaces', label: 'Marketplaces' }
+    { num: '05', name: brandPositioning === 'High-end' ? 'Marketplaces (Selective)' : 'Marketplaces', label: 'Marketplaces' }
   ];
 
   return (
@@ -127,7 +161,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
         <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: 0, fontFamily: '"League Spartan", sans-serif' }}>Brand Strategy</h1>
         <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>Free brand growth audit covering LLM visibility, viral SKU gaps, and retail distribution.</p>
       </div>
-      
+
       {requests.length === 0 ? (
         <div style={{ background: '#0A0A0A', padding: '32px 24px', borderRadius: 6, margin: '16px 0', textAlign: 'center', border: '1px solid #141414' }}>
           <div style={{ fontSize: 10, letterSpacing: '3pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 16 }}>Get Your First Snapshot</div>
@@ -159,7 +193,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
               You have <strong style={{ color: '#2DD4BF' }}>{delivered} Snapshots delivered</strong> &middot; {inProgress} in progress.
             </div>
             <div style={{ fontSize: 11, color: '#6b7280', marginTop: 4 }}>
-              Last updated: {lastUpdated} 
+              Last updated: {lastUpdated}
               {latestRequest?.brand_info?.brandName && ` · For ${latestRequest.brand_info.brandName}`}
               {latestRequest?.brand_info?.category && ` · Category: ${latestRequest.brand_info.category}`}
             </div>
@@ -170,18 +204,28 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
             <div style={{ display: 'inline-block', background: 'rgba(45,212,191,0.15)', color: '#2DD4BF', padding: '4px 10px', borderRadius: 999, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1pt', marginBottom: 12 }}>Unlocked with your Strategy</div>
             <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>Your <span style={{ color: '#2DD4BF' }}>Retail Network</span> access</div>
             <div style={{ fontSize: 11, color: '#B8B8B8', marginBottom: 20 }}>Based on your Brand Info, we've mapped which retail categories fit your brand. Deep Dive introductions target these buyers.</div>
-            
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 8, marginBottom: 8 }}>
               {RETAIL_TYPES.map((rt, idx) => {
-                const isMatch = userRetailPresence.includes(rt.label);
+                const isPresent = userRetailPresence.includes(rt.label);
+                const isMapped = mappedChannels.includes(rt.label);
+                const isActive = isPresent || isMapped;
+
                 return (
-                  <div key={idx} style={{ background: '#141414', borderLeft: isMatch ? '2px solid #2DD4BF' : '2px solid #222', borderTop: '1px solid #222', borderRight: '1px solid #222', borderBottom: '1px solid #222', padding: '12px 16px', borderRadius: 4, color: isMatch ? '#fff' : '#E5E5E5', fontSize: 11, fontWeight: 600 }}>
-                    {rt.num} &middot; {rt.name} {isMatch && <span style={{ float: 'right', color: '#2DD4BF' }}>✓</span>}
+                  <div key={idx} style={{ background: '#141414', borderLeft: isPresent ? '2px solid #2DD4BF' : (isMapped ? '2px solid #F97316' : '2px solid #222'), borderTop: '1px solid #222', borderRight: '1px solid #222', borderBottom: '1px solid #222', padding: '12px 16px', borderRadius: 4, color: isActive ? '#fff' : '#6b7280', fontSize: 11, fontWeight: 600 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span>{rt.num} &middot; {rt.name}</span>
+                      {isPresent ? (
+                        <span style={{ fontSize: 9, background: 'rgba(45,212,191,0.15)', color: '#2DD4BF', padding: '2px 6px', borderRadius: 4, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5pt' }}>Already present</span>
+                      ) : isMapped ? (
+                        <span style={{ fontSize: 9, background: 'rgba(249,115,22,0.15)', color: '#F97316', padding: '2px 6px', borderRadius: 4, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5pt' }}>Opportunity</span>
+                      ) : null}
+                    </div>
                   </div>
                 );
               })}
             </div>
-            <div style={{ fontSize: 10, color: '#6b7280', marginTop: 12, fontWeight: 600 }}>Coverage: 🇺🇸 United States &middot; 🇪🇺 Europe</div>
+            <div style={{ fontSize: 10, color: '#6b7280', marginTop: 12, fontWeight: 600 }}>Coverage: {coverageText}</div>
           </div>
 
           {/* Section C: My Snapshots Archive */}
@@ -196,11 +240,11 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
             {showStandaloneForm && (
               <div style={{ background: '#111', padding: '24px', borderRadius: 6, marginBottom: 16, border: '1px solid #222' }}>
                 <h3 style={{ fontSize: 16, color: '#fff', marginBottom: 16 }}>Request a New Snapshot</h3>
-                <BrandInfoForm onComplete={handleStandaloneSubmit} />
+                <BrandInfoForm onComplete={handleStandaloneSubmit} hideSubmit={false} submitLabel="Submit Request ($25)" />
                 {isSubmitting && <p style={{ color: '#2DD4BF', marginTop: 12 }}>Redirecting to secure checkout...</p>}
               </div>
             )}
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {requests.map(req => (
                 <div key={req.id} style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', borderRadius: 6, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

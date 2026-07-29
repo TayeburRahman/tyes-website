@@ -110,7 +110,7 @@ const StatusBadge = ({ status }) => {
 };
 
 const StatCard = ({ icon: Icon, label, value, change, positive, sub, onClick }) => (
-  <div 
+  <div
     onClick={onClick}
     style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 22px", flex: 1, minWidth: 200, cursor: onClick ? "pointer" : "default", transition: "all 0.2s" }}
     onMouseEnter={e => { if (onClick) e.currentTarget.style.background = "rgba(255,255,255,0.06)" }}
@@ -197,12 +197,12 @@ const DashboardPage = ({ toast, goTo, orders, users, strategyRequests }) => {
         <StatCard icon={ShoppingCart} label="Total Orders" value={orders.length} sub={`${orders.filter(o => o.status === 'completed' || o.status === 'delivered').length} completed`} />
         <StatCard icon={Users} label="Total Clients" value={activeClients} sub="Registered users" />
         <StatCard icon={Image} label="Images Delivered" value={totalImages} sub="Across all orders" />
-        <StatCard 
-          icon={Target} 
-          label="Strategy Requests" 
-          value={strategyRequests?.length || 0} 
-          sub={`${strategyRequests?.filter(r => r.status === 'new' || r.status === 'pending').length || 0} pending`} 
-          onClick={() => goTo('brand-strategy')} 
+        <StatCard
+          icon={Target}
+          label="Strategy Requests"
+          value={strategyRequests?.length || 0}
+          sub={`${strategyRequests?.filter(r => r.status === 'new' || r.status === 'pending').length || 0} pending`}
+          onClick={() => goTo('brand-strategy')}
         />
       </div>
 
@@ -277,14 +277,32 @@ const DashboardPage = ({ toast, goTo, orders, users, strategyRequests }) => {
   );
 };
 
-const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, setTargetOrder }) => {
+const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, setTargetOrder, initialSearch = "", onSearchChange }) => {
   const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialSearch);
+  const [searchInput, setSearchInput] = useState(initialSearch);
   const [menuOpen, setMenuOpen] = useState(null);
   const [viewOrder, setViewOrder] = useState(null);
   const [priceInput, setPriceInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setSearch(searchInput);
+      setCurrentPage(1);
+      // Keep global navbar search in sync
+      if (onSearchChange) onSearchChange(searchInput);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  // Sync if globalSearch changes externally (e.g. navbar clear)
+  useEffect(() => {
+    if (initialSearch !== searchInput) {
+      setSearchInput(initialSearch);
+    }
+  }, [initialSearch]);
 
   useEffect(() => {
     if (targetOrder) {
@@ -460,14 +478,14 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       const newItems = [...(order.items || [])];
       const currentItem = newItems[itemIndex];
       const isRevision = currentItem.status === "Revision requested";
-      
-      newItems[itemIndex] = { 
-        ...currentItem, 
+
+      newItems[itemIndex] = {
+        ...currentItem,
         ...(isRevision ? { v2Image: url } : { finishImage: url }),
-        status: "delivered", 
+        status: "delivered",
         deliveredAt: new Date().toISOString(),
-        revisionReason: null, 
-        revisionDate: null 
+        revisionReason: null,
+        revisionDate: null
       };
 
       const allDelivered = newItems.every(i => i.status === "delivered" || i.status === "completed");
@@ -489,6 +507,31 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       setOrders(updateFunc);
       if (viewOrder && viewOrder.id === orderId) {
         setViewOrder({ ...viewOrder, items: newItems, status: newOrderStatus, progress: newProgress });
+      }
+
+      // Item 12: Send image delivery email to client when all items are delivered
+      if (allDelivered) {
+        try {
+          const deliveredOrder = orders.find(o => o.id === orderId);
+          const clientEmail = deliveredOrder?.customer_email || deliveredOrder?.email;
+          const clientName = deliveredOrder?.customer || deliveredOrder?.customer_name || 'Client';
+          const orderTitle = deliveredOrder?.title || `Order ${orderId.slice(0,8)}`;
+          if (clientEmail) {
+            await fetch('/api/email/image-delivery', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                to: clientEmail,
+                customerName: clientName,
+                orderTitle,
+                dashboardUrl: process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client` : 'https://tyes.app/dashboard/client'
+              })
+            });
+          }
+        } catch (emailErr) {
+          // Non-blocking: log but don't fail the delivery
+          console.error('Failed to send delivery email:', emailErr);
+        }
       }
 
       toast("Item delivered!");
@@ -678,7 +721,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                             title={item.finishImage ? "Replace Delivered Image (V1)" : "Upload Finished Image"}
                           />
                         </div>
-                        
+
                         {(item.status === 'revision' || item.v2Image) && (
                           <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.v2Image || ''}) center/cover`, border: item.v2Image ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(251,191,36,0.5)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.v2Image ? "Replace V2" : "Upload Revision V2"}>
                             {!item.v2Image && <Upload size={14} color="#fbbf24" />}
@@ -754,7 +797,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
           </button>
         ))}
       </div>
-      <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search orders or clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }} /></div>
+      <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={searchInput} onChange={e => { setSearchInput(e.target.value); }} placeholder="Search orders or clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }} /></div>
       <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "visible" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead><tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{["Order", "Client", "Plan", "Imgs", "Status", "Progress", "Revenue", "Payment", "Date", ""].map((h, i) => <th key={i} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>)}</tr></thead>
@@ -1705,6 +1748,7 @@ export default function TyesAdmin() {
   const [studioInfo, setStudioInfo] = useState(null);
   const [adminUser, setAdminUser] = useState(null);
   const [adminTargetOrder, setAdminTargetOrder] = useState(null);
+  const [globalSearch, setGlobalSearch] = useState("");
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -1774,10 +1818,15 @@ export default function TyesAdmin() {
         setUsers([]);
       }
       // 4. Fetch Strategy Requests
-      const { data: stratData } = await supabase
-        .from('brand_strategy_requests')
-        .select('*');
-      if (stratData) setStrategyRequests(stratData);
+      try {
+        const stratRes = await fetch('/api/admin/strategy-requests');
+        const stratJson = await stratRes.json();
+        if (stratJson.data) {
+          setStrategyRequests(stratJson.data);
+        }
+      } catch (e) {
+        console.error("Strategy Fetch Error:", e);
+      }
 
     } catch (err) {
       console.error("Fetch error:", err);
@@ -1895,7 +1944,7 @@ export default function TyesAdmin() {
 
     switch (page) {
       case "dashboard": return <DashboardPage toast={addToast} goTo={setPage} orders={orders} users={users} strategyRequests={strategyRequests} />;
-      case "orders": return <OrdersPage orders={orders} setOrders={setOrders} toast={addToast} goTo={setPage} supabase={supabase} targetOrder={adminTargetOrder} setTargetOrder={setAdminTargetOrder} />;
+      case "orders": return <OrdersPage orders={orders} setOrders={setOrders} toast={addToast} goTo={setPage} supabase={supabase} targetOrder={adminTargetOrder} setTargetOrder={setAdminTargetOrder} initialSearch={globalSearch} onSearchChange={setGlobalSearch} />;
       case "clients": return <UsersPage users={users} setUsers={setUsers} toast={addToast} supabase={supabase} />;
       case "analytics": return <AnalyticsPage users={users} orders={orders} />;
       case "brand-strategy": return <AdminStrategyHub supabase={supabase} addToast={addToast} />;
@@ -1943,7 +1992,7 @@ export default function TyesAdmin() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 28px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {collapsed && <button onClick={() => setCollapsed(false)} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}><Menu size={18} /></button>}
-            <div style={{ position: "relative" }}><Search size={14} style={{ position: "absolute", left: 10, top: 9, color: "#4b5563" }} /><input placeholder="Search anything..." style={{ padding: "7px 12px 7px 32px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none", width: 260 }} /></div>
+            <div style={{ position: "relative" }}><Search size={14} style={{ position: "absolute", left: 10, top: 9, color: "#4b5563" }} /><input placeholder="Search orders..." value={globalSearch} onChange={e => setGlobalSearch(e.target.value)} style={{ padding: "7px 12px 7px 32px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none", width: 260 }} /></div>
             <button onClick={fetchDashboardData} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer", padding: 4, display: "flex", alignItems: "center" }} title="Refresh data"><RefreshCw size={14} className={loading ? "animate-spin" : ""} /></button>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>

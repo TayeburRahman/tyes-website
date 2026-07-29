@@ -24,7 +24,7 @@ const CalendlyInlineWidget = ({ url, onScheduled }) => {
       }
     };
     window.addEventListener('message', handleMessage);
-    
+
     return () => {
       head.removeChild(script);
       window.removeEventListener('message', handleMessage);
@@ -32,10 +32,10 @@ const CalendlyInlineWidget = ({ url, onScheduled }) => {
   }, [onScheduled]);
 
   return (
-    <div 
-      className="calendly-inline-widget" 
-      data-url={url} 
-      style={{ minWidth: 320, height: 700 }} 
+    <div
+      className="calendly-inline-widget"
+      data-url={url}
+      style={{ minWidth: 320, height: 700 }}
     />
   );
 };
@@ -225,7 +225,7 @@ const navPages = [
 // ════════════════════════════ 
 // NEW ORDER PAGE
 // ════════════════════════════ 
-const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData }) => {
+const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, fetchData, orders = [] }) => {
   const [step, setStep] = useState(1);
   const [plan, setPlan] = useState("");
   const [addStrategy, setAddStrategy] = useState(false);
@@ -296,7 +296,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   }, [plans]);
 
   const openCalendly = (customUrl) => {
-    const calendlyUrl = customUrl || process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/tayebrayhan101/client";
+    const baseUrl = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/raluca-tyes/30min";
+    const calendlyUrl = customUrl || baseUrl;
     if (typeof window !== "undefined") {
       if (window.Calendly) {
         window.Calendly.initPopupWidget({ url: calendlyUrl });
@@ -366,6 +367,20 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
       const isPaid = selectedPlan.price > 0 || (addStrategy && selectedPlan.name === 'Free Image');
 
+      // Item 13: Server-side pre-flight — block duplicate Free Image orders
+      if (selectedPlan.name === 'Free Image' && !addStrategy) {
+        const { data: existingFreeOrders } = await supabase
+          .from('orders')
+          .select('id')
+          .or(`user_id.eq.${currentUser.id},customer_email.eq.${currentUser.email}`)
+          .eq('plan', 'Free Image')
+          .eq('revenue', 0)
+          .limit(1);
+        if (existingFreeOrders && existingFreeOrders.length > 0) {
+          throw new Error("You've already claimed your free image. Please upgrade to Campaign 5 to place another order.");
+        }
+      }
+
 
       // --- Upload files ---
       let photoUrls = [];
@@ -427,7 +442,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         try {
           const savedBrandInfo = localStorage.getItem('tyes_brand_info');
           let brandData = savedBrandInfo ? JSON.parse(savedBrandInfo) : { brandName: customerName || 'Unknown', category: 'N/A' };
-          
+
           const { error: stratError } = await supabase.from("brand_strategy_requests").insert([{
             user_id: currentUser.id,
             order_id: newOrder.id,
@@ -438,7 +453,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             assigned_to: 'Raluca',
             created_at: new Date().toISOString()
           }]);
-          
+
           if (stratError) throw stratError;
         } catch (stratErr) {
           console.error("Failed to create strategy request:", stratErr);
@@ -567,11 +582,20 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                       displayedPlans.map(p => {
                         const isSelected = plan === p.id;
                         const isFreeImage = p.name === 'Free Image';
+                        // Item 13: detect if the user already claimed a Free Image order
+                        const hasFreeImageOrder = isFreeImage && orders.some(o =>
+                          (o.plan === 'Free Image' || o.plan_name === 'Free Image') && o.revenue === 0
+                        );
                         const cleanName = p.name.replace(' (Strategy)', '');
                         return (
                           <div
                             key={p.id}
                             onClick={() => {
+                              // Item 13: block re-claiming Free Image
+                              if (hasFreeImageOrder) {
+                                addToast("You've already claimed your free image. Upgrade to Campaign 5 to order again.", "warning");
+                                return;
+                              }
                               setPlan(p.id);
                               // Brand Strategy → always includes brand info, no toggle needed
                               // Campaign 5/10/Custom → default ON (opt-out available)
@@ -585,11 +609,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               }
                             }}
                             style={{
-                              background: isSelected ? "rgba(45,212,191,0.06)" : "#0A0A0A",
-                              border: `1.5px solid ${isSelected ? "#2DD4BF" : "rgba(255,255,255,0.08)"}`,
+                              background: hasFreeImageOrder ? 'rgba(255,255,255,0.02)' : isSelected ? "rgba(45,212,191,0.06)" : "#0A0A0A",
+                              border: `1.5px solid ${hasFreeImageOrder ? 'rgba(255,255,255,0.05)' : isSelected ? "#2DD4BF" : "rgba(255,255,255,0.08)"}`,
                               borderRadius: 12,
                               padding: "20px 16px",
-                              cursor: "pointer",
+                              cursor: hasFreeImageOrder ? "not-allowed" : "pointer",
                               transition: "all 0.25s ease",
                               position: "relative",
                               textAlign: "center",
@@ -597,12 +621,13 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               flexDirection: "column",
                               justifyContent: "space-between",
                               minHeight: 180,
-                              boxShadow: isSelected ? "0 8px 24px rgba(45, 212, 191, 0.15)" : "none"
+                              boxShadow: isSelected ? "0 8px 24px rgba(45, 212, 191, 0.15)" : "none",
+                              opacity: hasFreeImageOrder ? 0.55 : 1,
                             }}
                           >
                             <div>
-                              <div style={{ fontSize: 10, letterSpacing: "1.5px", color: p.badge === 'Popular' ? "#4ecdc4" : "#2DD4BF", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>
-                                {p.badge ? p.badge : (isFreeImage ? 'Free' : (cleanName === 'Brand Strategy' ? 'Strategy-First' : ''))}
+                              <div style={{ fontSize: 10, letterSpacing: "1.5px", color: hasFreeImageOrder ? '#6b7280' : p.badge === 'Popular' ? "#4ecdc4" : "#2DD4BF", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>
+                                {hasFreeImageOrder ? 'Claimed' : p.badge ? p.badge : (isFreeImage ? 'Free' : (cleanName === 'Brand Strategy' ? 'Strategy-First' : ''))}
                               </div>
                               <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", fontFamily: '"League Spartan", sans-serif' }}>{cleanName}</div>
                               <div style={{ fontSize: 24, color: "#fff", fontWeight: 800, margin: "8px 0", fontFamily: '"League Spartan", sans-serif' }}>
@@ -615,16 +640,22 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               </div>
                             </div>
 
-                            {/* Strategy bonus badge */}
+                            {/* Strategy bonus badge / claimed state */}
                             {(cleanName === 'Campaign 5' || cleanName === 'Campaign 10' || cleanName.includes('Custom') || cleanName === 'Free Image') && (
                               <div style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                                 {cleanName === 'Free Image' ? (
-                                  <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 600, background: "rgba(45, 212, 191, 0.1)", padding: "4px 10px", borderRadius: 12, display: "inline-block" }}>
-                                    + Add Strategy for $25
-                                  </div>
+                                  hasFreeImageOrder ? (
+                                    <div style={{ fontSize: 10, color: "#FBBF24", fontWeight: 700, background: "rgba(251,191,36,0.08)", padding: "6px 10px", borderRadius: 8, lineHeight: 1.4 }}>
+                                      Already claimed — upgrade to Campaign 5
+                                    </div>
+                                  ) : (
+                                    <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 600, background: "rgba(45, 212, 191, 0.1)", padding: "4px 10px", borderRadius: 12, display: "inline-block" }}>
+                                      + Add Strategy for $25
+                                    </div>
+                                  )
                                 ) : (
                                   <div style={{ fontSize: 10, color: (isSelected && !addStrategy) ? "#6b7280" : "#34d399", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 4, transition: "color 0.2s" }}>
-                                    <Check size={12} color={(isSelected && !addStrategy) ? "#6b7280" : "#34d399"} /> 
+                                    <Check size={12} color={(isSelected && !addStrategy) ? "#6b7280" : "#34d399"} />
                                     <span style={{ textDecoration: (isSelected && !addStrategy) ? "line-through" : "none" }}>
                                       Strategy {cleanName.includes('Custom') ? '+ 30-min call' : 'included'}
                                     </span>
@@ -730,7 +761,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* --- BRAND STRATEGY ADD-ON --- */}
                   {(() => {
                     if (isBrandStrategyPlan) {
@@ -793,14 +824,14 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     localStorage.setItem('tyes_brand_info', JSON.stringify(data));
                     setStep(step + 1);
                   }} />
-                  
+
                   {plans.find(p => p.id === plan)?.name?.includes('Custom') && (
                     <div style={{ marginTop: 32, padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                       <h3 style={{ fontSize: 18, color: "#fff", marginBottom: 8, textAlign: "center", fontWeight: 700 }}>Book your Strategy Call</h3>
                       <p style={{ fontSize: 13, color: "#9ca3af", textAlign: "center", marginBottom: 24 }}>Select a time that works for you to discuss your custom project scope.</p>
-                      
-                      <CalendlyInlineWidget 
-                        url={process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/tayebrayhan101/client"} 
+
+                      <CalendlyInlineWidget
+                        url={(process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || "https://calendly.com/raluca-tyes/30min") + "?utm_source=order_flow"}
                         onScheduled={() => setIsCustomCallBooked(true)}
                       />
                     </div>
@@ -883,7 +914,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                               </div>
                               <button
                                 type="button"
-                                onClick={() => openCalendly()}
+                                onClick={() => openCalendly((process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=review_step')}
                                 style={{ padding: '10px 20px', borderRadius: 20, background: 'linear-gradient(135deg,#4ecdc4,#2ab7a9)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 12px rgba(45, 212, 191, 0.3)' }}
                               >
                                 <Clock size={16} /> Book Call via Calendly
@@ -1017,23 +1048,23 @@ const TawkToChat = () => {
 // ══════════════════════════════════════
 const SuccessPage = ({ setPage, isInvoicePayment }) => {
   return (
-  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "40px 20px", textAlign: "center" }}>
-    <div style={{ width: 100, height: 100, borderRadius: "50%", background: "rgba(52,211,153,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
-      <CheckCircle size={50} color="#34d399" />
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "40px 20px", textAlign: "center" }}>
+      <div style={{ width: 100, height: 100, borderRadius: "50%", background: "rgba(52,211,153,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
+        <CheckCircle size={50} color="#34d399" />
+      </div>
+      <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>{isInvoicePayment ? "Payment Successful!" : "Order Submitted Successfully!"}</h1>
+      <p style={{ fontSize: 16, color: "#9ca3af", maxWidth: 500, lineHeight: 1.6, marginBottom: 40 }}>
+        {isInvoicePayment
+          ? "Thank you! Your payment was successful. We will notify you as soon as there are updates."
+          : "Thank you! Your order is now confirmed. We are already processing your request and will notify you as soon as there are updates."}
+      </p>
+      <button
+        onClick={() => setPage("orders")}
+        style={{ padding: "14px 32px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", gap: 10, alignSelf: "center" }}
+      >
+        <Package size={18} /> View My Orders
+      </button>
     </div>
-    <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 16 }}>{isInvoicePayment ? "Payment Successful!" : "Order Submitted Successfully!"}</h1>
-    <p style={{ fontSize: 16, color: "#9ca3af", maxWidth: 500, lineHeight: 1.6, marginBottom: 40 }}>
-      {isInvoicePayment 
-        ? "Thank you! Your payment was successful. We will notify you as soon as there are updates." 
-        : "Thank you! Your order is now confirmed. We are already processing your request and will notify you as soon as there are updates."}
-    </p>
-    <button
-      onClick={() => setPage("orders")}
-      style={{ padding: "14px 32px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", gap: 10, alignSelf: "center" }}
-    >
-      <Package size={18} /> View My Orders
-    </button>
-  </div>
   );
 };
 
@@ -1042,7 +1073,7 @@ export default function TyesClient() {
   const supabase = createClient();
   const { toasts, addToast } = useToast();
   const [page, setPage] = useState("overview");
-const [strategyRequests, setStrategyRequests] = useState([]);
+  const [strategyRequests, setStrategyRequests] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifDrop, setShowNotifDrop] = useState(false);
   const [showProfileDrop, setShowProfileDrop] = useState(false);
@@ -1078,6 +1109,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
         // Fall back to user_metadata.country if the DB column is not yet populated
         const resolvedCountry = profile.country || authUser.user_metadata?.country || null;
         setClientInfo({
+          id: authUser.id,
           name: fullName,
           email: profile.email,
           tier: profile.tier || "starter",
@@ -1104,6 +1136,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
           : authUser.email;
 
         setClientInfo({
+          id: authUser.id,
           name: fullName,
           email: authUser.email,
           tier: "starter",
@@ -1210,6 +1243,16 @@ const [strategyRequests, setStrategyRequests] = useState([]);
           due: i.due_date,
           url: i.invoice_url
         })));
+      }
+
+      // 6. Fetch Strategy Requests
+      const { data: stratData, error: stratError } = await supabase
+        .from('brand_strategy_requests')
+        .select('*')
+        .eq('user_id', authUser.id);
+
+      if (stratData) {
+        setStrategyRequests(stratData);
       }
 
     } catch (err) {
@@ -1403,7 +1446,9 @@ const [strategyRequests, setStrategyRequests] = useState([]);
   // ══════════════════════════════════════
   const OverviewPage = () => {
     const activeOrder = orders.find(o => o.status !== "delivered");
-    const snapshotsDelivered = strategyRequests.filter(s => s.status === 'sent').length;
+    // Use both 'sent' and 'delivered' as terminal statuses for the snapshot counter
+    const snapshotsDelivered = strategyRequests.filter(s => s.status === 'sent' || s.status === 'delivered').length;
+    const snapshotsInProgress = strategyRequests.filter(s => s.status !== 'sent' && s.status !== 'delivered' && s.status !== 'lost').length;
     const latestStrategy = strategyRequests[0];
     const hasStratAddon = activeOrder?.has_strategy_addon || activeOrder?.attachments?.has_strategy_addon || activeOrder?.plan?.includes('Strategy');
     const isActiveOrderStrategyEligible = activeOrder && (hasStratAddon || ["Campaign 5", "Campaign 10", "Brand Strategy", "Custom", "Custom"].includes(activeOrder.plan));
@@ -1418,14 +1463,17 @@ const [strategyRequests, setStrategyRequests] = useState([]);
           <StatCard icon={Package} label="Total Orders" value={orders.length} onClick={() => setPage("orders")} />
           <StatCard icon={Image} label="Images Delivered" value={orders.filter(o => o.status === "delivered").reduce((s, o) => s + o.images, 0)} onClick={() => setPage("orders")} />
           <StatCard icon={CreditCard} label="Total Spent" value={`$${orders.reduce((s, o) => s + o.revenue, 0)}`} accent="#34d399" onClick={() => setPage("invoices")} />
-          <StatCard icon={Star} label="Strategy Snapshots" value={snapshotsDelivered} onClick={() => setPage("brand-strategy")} />
+          <StatCard icon={Star} label="Strategy Snapshots" value={snapshotsDelivered} accent={snapshotsInProgress > 0 ? '#fbbf24' : undefined} onClick={() => setPage("brand-strategy")} />
         </div>
 
         {activeOrder && (
           <div style={{ background: "#0A0A0A", borderLeft: "2px solid #2DD4BF", borderRadius: 4, padding: "16px 20px", marginBottom: 16, cursor: "pointer" }} onClick={() => { setPage("orders"); }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
               <div>
-                <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", marginBottom: 8 }}>Active Order</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                  <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px" }}>Active Order</div>
+                  <div style={{ fontSize: 9, color: '#4b5563', fontFamily: 'monospace', background: 'rgba(255,255,255,0.04)', padding: '2px 7px', borderRadius: 4 }}>{activeOrder.id ? `ORD-${activeOrder.id.slice(0,8).toUpperCase()}` : ''}</div>
+                </div>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{activeOrder.title} · {activeOrder.plan} · {activeOrder.images} images</h3>
               </div>
               <StatusBadge status={activeOrder.status} />
@@ -1445,10 +1493,10 @@ const [strategyRequests, setStrategyRequests] = useState([]);
           {latestStrategy ? (
             <>
               <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>
-                {latestStrategy.status === 'sent' ? 'Your strategy snapshot is ready.' : 'Your free strategy snapshot is being prepared.'}
+                {latestStrategy.status === 'sent' || latestStrategy.status === 'delivered' ? 'Your strategy snapshot is ready.' : 'Your free strategy snapshot is being prepared.'}
               </div>
               <div style={{ fontSize: 11, color: "#B8B8B8" }}>
-                {latestStrategy.status === 'sent' ? 'Ready for more? Book a Deep Dive call.' : 'Estimated delivery: 3 business days.'}
+                {snapshotsDelivered > 0 ? `${snapshotsDelivered} delivered${snapshotsInProgress > 0 ? ` · ${snapshotsInProgress} in progress` : ''}` : 'Estimated delivery: 3 business days.'}
               </div>
             </>
           ) : (
@@ -1592,7 +1640,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
     const handleRequestRevision = (order, itemIndex = null) => {
       const selectedPlan = pricingPlans.find(p => p.id === order.plan || p.name === order.plan || p.name === order.plan_name);
       const maxRevisions = selectedPlan?.max_revisions ?? 0;
-      
+
       const targetItem = itemIndex !== null ? order.items[itemIndex] : null;
       const revisionsUsed = targetItem ? (targetItem.revisionsUsed || 0) : 0;
 
@@ -1690,32 +1738,36 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                                 return null;
                               })()}
                             </div>
-                            {item.status === "delivered" && item.finishImage && (
+                            {(item.status === "delivered" || item.status === "revision") && item.finishImage && (
                               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-                                <div
-                                  onClick={() => window.open(item.finishImage, '_blank')}
-                                  style={{ width: 36, height: 36, borderRadius: 8, background: `url(${item.finishImage}) center/cover`, border: "2px solid rgba(16,185,129,0.3)", cursor: "pointer", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
-                                  title="Preview"
-                                />
-                                <div style={{ display: "flex", gap: 4 }}>
-                                  <button onClick={(e) => { e.stopPropagation(); handleDownloadItem(item.name, item.finishImage); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(78,205,196,0.1)", border: "none", color: "#4ecdc4", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Download"><Download size={14} /></button>
-                                  {(() => {
-                                    const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
-                                    const revsUsed = item.revisionsUsed || 0;
-                                    const deliveredDate = item.deliveredAt ? new Date(item.deliveredAt) : new Date();
-                                    const isExpired = (new Date() - deliveredDate) > 7 * 24 * 60 * 60 * 1000;
-                                    if (revsUsed < maxRevisions && !isExpired && maxRevisions > 0) {
-                                      return <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(251,191,36,0.1)", border: "none", color: "#fbbf24", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Request Revision"><RefreshCw size={14} /></button>;
-                                    }
-                                    return null;
-                                  })()}
+                                <div style={{ position: 'relative' }}>
+                                  <div
+                                    onClick={() => item.status === "delivered" && window.open(item.finishImage, '_blank')}
+                                    style={{ width: 36, height: 36, borderRadius: 8, background: `url(${item.finishImage}) center/cover`, border: "2px solid rgba(16,185,129,0.3)", cursor: item.status === "delivered" ? "pointer" : "default", boxShadow: "0 4px 12px rgba(0,0,0,0.2)", filter: item.status === "revision" ? "grayscale(100%) opacity(0.5)" : "none" }}
+                                    title={item.status === "revision" ? "Revision in progress" : "Preview"}
+                                  />
+                                  {item.status === "revision" && (
+                                    <div style={{ position: 'absolute', top: -4, right: -4, background: '#fbbf24', color: '#000', fontSize: 8, fontWeight: 800, padding: '2px 4px', borderRadius: 4, whiteSpace: 'nowrap', zIndex: 10 }}>
+                                      IN REVISION
+                                    </div>
+                                  )}
                                 </div>
+                                {item.status === "delivered" && (
+                                  <div style={{ display: "flex", gap: 4 }}>
+                                    <button onClick={(e) => { e.stopPropagation(); handleDownloadItem(item.name, item.finishImage); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(78,205,196,0.1)", border: "none", color: "#4ecdc4", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Download"><Download size={14} /></button>
+                                    {(() => {
+                                      const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
+                                      const revsUsed = item.revisionsUsed || 0;
+                                      const deliveredDate = item.deliveredAt ? new Date(item.deliveredAt) : new Date();
+                                      const isExpired = (new Date() - deliveredDate) > 7 * 24 * 60 * 60 * 1000;
+                                      if (revsUsed < maxRevisions && !isExpired && maxRevisions > 0) {
+                                        return <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(251,191,36,0.1)", border: "none", color: "#fbbf24", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Request Revision"><RefreshCw size={14} /></button>;
+                                      }
+                                      return null;
+                                    })()}
+                                  </div>
+                                )}
                               </div>
-                            )}
-                            {item.status === "revision" && (
-                              <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ padding: "6px 12px", borderRadius: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", color: "#fbbf24", cursor: "pointer", fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-                                <RefreshCw size={13} /> {item.revisionsUsed ? `Revision ${item.revisionsUsed}` : "Reason"}
-                              </button>
                             )}
                           </div>
                         ))}
@@ -1731,9 +1783,18 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                       {o.status === "delivered" && (
                         <button onClick={() => handleDownloadAll(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Download All</button>
                       )}
-                      {o.status === "revision" && (
-                        <button onClick={() => handleRequestRevision(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(251,191,36,0.3)", background: "rgba(251,191,36,0.1)", color: "#fbbf24", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><RefreshCw size={12} /> Request Revision</button>
-                      )}
+                      {o.status === "delivered" && (() => {
+                        const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
+                        const hasRevisionsLeft = o.items && o.items.some(item => {
+                          const revsUsed = item.revisionsUsed || 0;
+                          const deliveredDate = item.deliveredAt ? new Date(item.deliveredAt) : new Date();
+                          const isExpired = (new Date() - deliveredDate) > 7 * 24 * 60 * 60 * 1000;
+                          return revsUsed < maxRevisions && !isExpired && maxRevisions > 0;
+                        });
+                        return hasRevisionsLeft ? (
+                          <button onClick={() => handleRequestRevision(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(251,191,36,0.3)", background: "rgba(251,191,36,0.1)", color: "#fbbf24", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><RefreshCw size={12} /> Request Revision</button>
+                        ) : null;
+                      })()}
                     </div>
                   </div>
                 )}
@@ -2232,7 +2293,7 @@ const [strategyRequests, setStrategyRequests] = useState([]);
     switch (page) {
       case "overview": return <OverviewPage />;
       case "orders": return <OrdersPage />;
-      case "new-order": return <NewOrderPage supabase={supabase} addToast={addToast} clientInfo={clientInfo} pricingPlans={pricingPlans} setPage={setPage} fetchData={fetchData} />;
+      case "new-order": return <NewOrderPage supabase={supabase} addToast={addToast} clientInfo={clientInfo} pricingPlans={pricingPlans} setPage={setPage} fetchData={fetchData} orders={orders} />;
       case "messages": return <MessagesPage />;
       case "invoices": return <InvoicesPage />;
       case "account": return <AccountPage />;
@@ -2412,9 +2473,9 @@ const [strategyRequests, setStrategyRequests] = useState([]);
                   } else {
                     newItems.forEach((item, idx) => {
                       if (item.status === "delivered") {
-                        newItems[idx] = { 
-                          ...item, 
-                          status: "revision", 
+                        newItems[idx] = {
+                          ...item,
+                          status: "revision",
                           revisionReason: reason,
                           revisionsUsed: (item.revisionsUsed || 0) + 1
                         };

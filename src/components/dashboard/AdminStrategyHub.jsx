@@ -273,6 +273,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Order ID</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Source</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Category</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Positioning</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Tier</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Status</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600 }}>Assigned</th>
@@ -310,6 +311,23 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                       </td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{formatSource(req.source)}</td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{brandInfo.category || 'N/A'}</td>
+                      <td style={{ padding: '12px 8px' }}>
+                        {(() => {
+                          const pos = brandInfo.positioning;
+                          if (!pos) return <span style={{ color: '#6b7280', fontSize: 11 }}>N/A</span>;
+                          const cfg = {
+                            'Mass market':  { color: '#9ca3af', bg: 'rgba(156,163,175,0.12)' },
+                            'Masstige':     { color: '#60a5fa', bg: 'rgba(96,165,250,0.12)' },
+                            'Premium':      { color: '#a78bfa', bg: 'rgba(167,139,250,0.12)' },
+                            'High-end':     { color: '#FBBF24', bg: 'rgba(251,191,36,0.12)' },
+                          }[pos] || { color: '#9ca3af', bg: 'rgba(156,163,175,0.12)' };
+                          return (
+                            <span style={{ padding: '2px 7px', borderRadius: 4, fontSize: 10, fontWeight: 700, background: cfg.bg, color: cfg.color, whiteSpace: 'nowrap' }}>
+                              {pos}
+                            </span>
+                          );
+                        })()}
+                      </td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>{req.tier || 'Standard'}</td>
                       <td style={{ padding: '12px 8px' }}>
                         <span style={{ padding: '2px 6px', borderRadius: 4, fontSize: 10, fontWeight: 700, background: sFormat.bg, color: sFormat.color }}>
@@ -337,7 +355,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                     {/* Detail View */}
                     {isExpanded && (
                       <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                        <td colSpan="10" style={{ padding: '0 24px 24px 24px' }}>
+                        <td colSpan="11" style={{ padding: '0 24px 24px 24px' }}>
                           <div style={{ background: '#0A0A0A', padding: '20px 24px', borderRadius: 4 }}>
                             <div style={{ fontSize: 10, color: sFormat.color, letterSpacing: '2pt', textTransform: 'uppercase', fontWeight: 700, marginBottom: 8 }}>Status · {sFormat.label}</div>
                             <div style={{ fontSize: 20, color: '#FFFFFF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', marginBottom: 8 }}>{brandInfo.brandName || 'Unknown'} · Strategy Request</div>
@@ -349,6 +367,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                                 <strong style={{color:'#FFFFFF'}}>Brand:</strong> {brandInfo.brandName}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Website:</strong> {brandInfo.website}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Category:</strong> {brandInfo.category}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Positioning:</strong> {brandInfo.positioning || 'N/A'}<br/>
                                 <strong style={{color:'#FFFFFF'}}>SKUs:</strong> {brandInfo.skus || brandInfo.skuCount}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Annual revenue:</strong> {brandInfo.revenue || brandInfo.annualRevenue}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Marketing budget:</strong> {brandInfo.budget || brandInfo.marketingBudget}<br/>
@@ -421,7 +440,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
               })}
               {paginatedRequests.length === 0 && (
                 <tr>
-                  <td colSpan="10" style={{ padding: 24, textAlign: 'center', color: '#9ca3af' }}>No requests found.</td>
+                  <td colSpan="11" style={{ padding: 24, textAlign: 'center', color: '#9ca3af' }}>No requests found.</td>
                 </tr>
               )}
             </tbody>
