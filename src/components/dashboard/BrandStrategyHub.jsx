@@ -29,7 +29,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
   const openCalendly = (e) => {
     e.preventDefault();
     if (window.Calendly) {
-      const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=strategy_hub';
+      const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DEEPDIVE_URL || 'https://calendly.com/raluca-tyes/60-minute-tyes-deep-dive-strategy-session') + '?utm_source=strategy_hub';
       window.Calendly.initPopupWidget({ url: calendlyUrl });
     } else {
       const link = document.createElement('link');
@@ -40,7 +40,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
       script.src = 'https://assets.calendly.com/assets/external/widget.js';
       script.async = true;
       script.onload = () => {
-        const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=strategy_hub';
+        const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DEEPDIVE_URL || 'https://calendly.com/raluca-tyes/60-minute-tyes-deep-dive-strategy-session') + '?utm_source=strategy_hub';
         window.Calendly.initPopupWidget({ url: calendlyUrl });
       };
       document.head.appendChild(script);
@@ -109,20 +109,21 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
     }
   };
 
-  const latestRequest = requests.length > 0 ? requests[0] : null;
-  let userRetailPresence = [];
-  let brandCategory = '';
-  let brandPositioning = '';
-  let countriesSelling = '';
-  let countriesExpand = '';
+  // Find latest request with valid brand_data or brand_info
+  const reqWithData = requests.find(r => (r.brand_data && Object.keys(r.brand_data).length > 0) || (r.brand_info && Object.keys(r.brand_info).length > 0));
+  let savedLocal = null;
+  try {
+    const rawLocal = typeof window !== 'undefined' ? localStorage.getItem('tyes_brand_info') : null;
+    if (rawLocal) savedLocal = JSON.parse(rawLocal);
+  } catch (e) {}
 
-  if (latestRequest && latestRequest.brand_info) {
-    userRetailPresence = latestRequest.brand_info.retailPresence || [];
-    brandCategory = latestRequest.brand_info.category || '';
-    brandPositioning = latestRequest.brand_info.positioning || '';
-    countriesSelling = latestRequest.brand_info.countriesSelling || '';
-    countriesExpand = latestRequest.brand_info.countriesExpand || '';
-  }
+  const activeBrandData = (reqWithData ? (reqWithData.brand_data || reqWithData.brand_info) : null) || savedLocal || {};
+
+  const userRetailPresence = activeBrandData.retailPresence || activeBrandData.retail_presence || [];
+  const brandCategory = activeBrandData.category || '';
+  const brandPositioning = activeBrandData.positioning || '';
+  const countriesSelling = activeBrandData.countriesSelling || activeBrandData.countriesSellingIn || activeBrandData.countries_selling || '';
+  const countriesExpand = activeBrandData.countriesExpand || activeBrandData.countriesToExpand || activeBrandData.countries_expand || '';
 
   let mappedChannels = [];
   const isBeauty = ['Beauty', 'Personal Care', 'Fragrance'].includes(brandCategory);
@@ -154,6 +155,19 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
     { num: '04', name: 'Hyperpharmacies', label: 'Hyperpharmacies' },
     { num: '05', name: brandPositioning === 'High-end' ? 'Marketplaces (Selective)' : 'Marketplaces', label: 'Marketplaces' }
   ];
+
+  const getStatusBadge = (status) => {
+    if (!status) return { label: 'New', bg: 'rgba(251,191,36,0.15)', color: '#FBBF24' };
+    const s = status.toLowerCase();
+    if (s.includes('converted')) {
+      return { label: 'Converted to Deep Dive', bg: 'rgba(167,139,250,0.15)', color: '#A78BFA' };
+    }
+    if (s === 'sent' || s === 'delivered' || s === 'completed') {
+      return { label: 'Delivered', bg: 'rgba(45,212,191,0.15)', color: '#2DD4BF' };
+    }
+    const formatted = status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return { label: formatted, bg: 'rgba(251,191,36,0.15)', color: '#FBBF24' };
+  };
 
   return (
     <div style={{ maxWidth: 820, margin: '0 auto' }}>
@@ -194,8 +208,8 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
             </div>
             <div style={{ fontSize: 11, color: '#6b7280', marginTop: 4 }}>
               Last updated: {lastUpdated}
-              {latestRequest?.brand_info?.brandName && ` · For ${latestRequest.brand_info.brandName}`}
-              {latestRequest?.brand_info?.category && ` · Category: ${latestRequest.brand_info.category}`}
+              {activeBrandData?.brandName && ` · For ${activeBrandData.brandName}`}
+              {activeBrandData?.category && ` · Category: ${activeBrandData.category}`}
             </div>
           </div>
 
@@ -207,7 +221,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 8, marginBottom: 8 }}>
               {RETAIL_TYPES.map((rt, idx) => {
-                const isPresent = userRetailPresence.includes(rt.label);
+                const isPresent = userRetailPresence.some(p => typeof p === 'string' && (p.toLowerCase().trim() === rt.label.toLowerCase().trim() || p.toLowerCase().trim() === rt.name.toLowerCase().trim()));
                 const isMapped = mappedChannels.includes(rt.label);
                 const isActive = isPresent || isMapped;
 
@@ -246,21 +260,28 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {requests.map(req => (
-                <div key={req.id} style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', borderRadius: 6, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h4 style={{ color: '#fff', fontWeight: 600, fontSize: 14, margin: '0 0 4px', fontFamily: '"League Spartan", sans-serif' }}>{req.brand_info?.brandName || 'Brand Strategy'}</h4>
-                    <p style={{ color: '#9ca3af', fontSize: 11, margin: 0 }}>
-                      {new Date(req.created_at).toLocaleDateString()} &middot; 3-5 pages &middot; Status: <span style={{ color: req.status === 'sent' || req.status === 'delivered' ? '#2DD4BF' : '#fbbf24', textTransform: 'capitalize' }}>{req.status}</span>
-                    </p>
+              {requests.map(req => {
+                const badgeInfo = getStatusBadge(req.status);
+                const reqBrandName = req.brand_data?.brandName || req.brand_info?.brandName || 'Brand Strategy';
+                return (
+                  <div key={req.id} style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', borderRadius: 6, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <h4 style={{ color: '#fff', fontWeight: 600, fontSize: 14, margin: '0 0 6px', fontFamily: '"League Spartan", sans-serif' }}>{reqBrandName}</h4>
+                      <div style={{ color: '#9ca3af', fontSize: 11, margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span>{new Date(req.created_at).toLocaleDateString()} &middot; 3-5 pages</span>
+                        <span style={{ background: badgeInfo.bg, color: badgeInfo.color, padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5pt' }}>
+                          {badgeInfo.label}
+                        </span>
+                      </div>
+                    </div>
+                    {req.delivered_pdf_url && (
+                      <a href={`/api/strategy-pdf/${req.id}`} target="_blank" rel="noopener noreferrer" style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: 4, textDecoration: 'none', fontSize: 11, fontWeight: 600 }}>
+                        Download PDF &darr;
+                      </a>
+                    )}
                   </div>
-                  {req.delivered_pdf_url && (
-                    <a href={req.delivered_pdf_url} target="_blank" rel="noopener noreferrer" style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: 4, textDecoration: 'none', fontSize: 11, fontWeight: 600 }}>
-                      Download PDF &darr;
-                    </a>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

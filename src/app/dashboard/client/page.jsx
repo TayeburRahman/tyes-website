@@ -437,7 +437,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       if (insertError) throw insertError;
 
       // Handle Brand Strategy Request creation if applicable
-      const shouldCreateStrategy = selectedPlan.strategy_included || addStrategy;
+      const isBrandStrategyPlan = Boolean(selectedPlan && (selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)' || selectedPlan.name.includes('Strategy')));
+      const shouldCreateStrategy = selectedPlan.strategy_included || addStrategy || isBrandStrategyPlan;
       if (shouldCreateStrategy) {
         try {
           const savedBrandInfo = localStorage.getItem('tyes_brand_info');
@@ -532,7 +533,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           {(() => {
             const selectedPlan = plans.find(p => p.id === plan);
             const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
-            const isBrandStrategyPlan = selectedPlan?.name === 'Brand Strategy';
+            const isBrandStrategyPlan = Boolean(selectedPlan && (selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)' || selectedPlan.name.includes('Strategy') || selectedPlan.strategy_included));
             const showBrandInfo = isBrandStrategyPlan || addStrategy;
 
 
@@ -557,7 +558,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         {(() => {
           const selectedPlan = plans.find(p => p.id === plan);
           const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
-          const isBrandStrategyPlan = selectedPlan?.name === 'Brand Strategy';
+          const isBrandStrategyPlan = Boolean(selectedPlan && (selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)' || selectedPlan.name.includes('Strategy') || selectedPlan.strategy_included));
           const showBrandInfo = isBrandStrategyPlan || addStrategy;
 
 
@@ -964,7 +965,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         {(() => {
           const selectedPlan = plans.find(p => p.id === plan);
           const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
-          const isBrandStrategyPlan = selectedPlan?.name === 'Brand Strategy';
+          const isBrandStrategyPlan = Boolean(selectedPlan && (selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)' || selectedPlan.name.includes('Strategy') || selectedPlan.strategy_included));
           const showBrandInfo = isBrandStrategyPlan || addStrategy;
 
 
@@ -1075,7 +1076,41 @@ export default function TyesClient() {
   const router = useRouter();
   const supabase = createClient();
   const { toasts, addToast } = useToast();
-  const [page, setPage] = useState("overview");
+  const [page, setPageInternal] = useState("overview");
+
+  const setPage = (newPage, orderId = null) => {
+    setPageInternal(newPage);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', newPage);
+      if (orderId) {
+        url.searchParams.set('id', orderId);
+      } else {
+        url.searchParams.delete('id');
+      }
+      window.history.pushState({ page: newPage, orderId }, '', url.toString());
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab) {
+        setPageInternal(tab);
+      }
+    }
+
+    const handlePopstate = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab') || 'overview';
+      setPageInternal(tab);
+    };
+
+    window.addEventListener('popstate', handlePopstate);
+    return () => window.removeEventListener('popstate', handlePopstate);
+  }, []);
+
   const [strategyRequests, setStrategyRequests] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifDrop, setShowNotifDrop] = useState(false);
@@ -1258,6 +1293,65 @@ export default function TyesClient() {
         setStrategyRequests(stratData);
       }
 
+      // 7. Generate Real Notifications from User Events
+      const realNotifs = [];
+      (ordersData || []).forEach(o => {
+        const formattedId = o.id ? (o.id.toUpperCase().startsWith('ORD-') ? o.id.toUpperCase() : `ORD-${o.id.slice(0, 8).toUpperCase()}`) : '';
+        const items = o.items || [];
+        const deliveredItems = items.filter(i => i.finishImage || i.v2Image);
+        const v2Items = items.filter(i => i.v2Image);
+
+        if (deliveredItems.length > 0) {
+          if (deliveredItems.length === items.length) {
+            realNotifs.push({
+              id: `notif-del-${o.id}`,
+              text: `Images delivered for ${formattedId}`,
+              time: o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recently',
+              read: o.status === 'completed'
+            });
+          } else {
+            realNotifs.push({
+              id: `notif-part-${o.id}`,
+              text: `${deliveredItems.length} of ${items.length} images delivered for ${formattedId}`,
+              time: o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recently',
+              read: false
+            });
+          }
+        }
+        if (v2Items.length > 0) {
+          realNotifs.push({
+            id: `notif-v2-${o.id}`,
+            text: `Revision V2 re-delivered for ${formattedId}`,
+            time: o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recently',
+            read: false
+          });
+        }
+      });
+
+      (stratData || []).forEach(s => {
+        if (s.status === 'sent' || s.status === 'delivered' || s.delivered_pdf_url) {
+          const bName = s.brand_data?.brandName || s.brand_info?.brandName || 'your brand';
+          realNotifs.push({
+            id: `notif-strat-${s.id}`,
+            text: `Strategy Snapshot ready for ${bName}`,
+            time: s.created_at ? new Date(s.created_at).toLocaleDateString() : 'Recently',
+            read: false
+          });
+        }
+      });
+
+      (invoicesData || []).forEach((inv, idx) => {
+        const invNum = `INV-${String(idx + 1).padStart(4, '0')}`;
+        realNotifs.push({
+          id: `notif-inv-${inv.id}`,
+          text: `Invoice ${invNum} generated`,
+          time: inv.created_at ? new Date(inv.created_at).toLocaleDateString() : 'Recently',
+          read: false
+        });
+      });
+
+      setNotifications(realNotifs);
+
     } catch (err) {
       console.error("Error fetching dashboard data:", err);
     } finally {
@@ -1368,11 +1462,7 @@ export default function TyesClient() {
   const [invoices, setInvoices] = useState([]);
 
   // ── Notifications ──
-  const [notifications, setNotifications] = useState([
-    { id: 1, text: "Revision ready for ORD-3011", time: "10 min ago", read: false },
-    { id: 2, text: "Invoice INV-0087 generated", time: "2 hrs ago", read: false },
-    { id: 3, text: "ORD-2988 delivered", time: "1 day ago", read: true },
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   // ── Account Prefs State ──
   const [prefs, setPrefs] = useState({ orderNotif: true, msgNotif: true, weeklyReport: false });
@@ -1465,7 +1555,14 @@ export default function TyesClient() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
           <StatCard icon={Package} label="Total Orders" value={orders.length} onClick={() => setPage("orders")} />
           <StatCard icon={Image} label="Images Delivered" value={orders.filter(o => o.status === "delivered").reduce((s, o) => s + o.images, 0)} onClick={() => setPage("orders")} />
-          <StatCard icon={CreditCard} label="Total Spent" value={`$${orders.reduce((s, o) => s + o.revenue, 0)}`} accent="#34d399" onClick={() => setPage("invoices")} />
+          {(() => {
+            const totalSpentGross = invoices.length > 0
+              ? invoices.reduce((sum, i) => sum + Number(i.amount_gross || i.amount || 0), 0)
+              : orders.reduce((sum, o) => sum + Number(o.gross_revenue || o.total_amount || (o.revenue + (o.tax_amount || 0))), 0);
+            return (
+              <StatCard icon={CreditCard} label="Total Spent" value={`$${totalSpentGross > 0 ? totalSpentGross.toFixed(2) : '0.00'}`} accent="#34d399" onClick={() => setPage("invoices")} />
+            );
+          })()}
           <StatCard icon={Star} label="Strategy Snapshots" value={snapshotsDelivered} accent={snapshotsInProgress > 0 ? '#fbbf24' : undefined} onClick={() => setPage("brand-strategy")} />
         </div>
 
@@ -1475,7 +1572,7 @@ export default function TyesClient() {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                   <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px" }}>Active Order</div>
-                  <div style={{ fontSize: 9, color: '#4b5563', fontFamily: 'monospace', background: 'rgba(255,255,255,0.04)', padding: '2px 7px', borderRadius: 4 }}>{activeOrder.id ? `ORD-${activeOrder.id.slice(0,8).toUpperCase()}` : ''}</div>
+                  <div style={{ fontSize: 9, color: '#4b5563', fontFamily: 'monospace', background: 'rgba(255,255,255,0.04)', padding: '2px 7px', borderRadius: 4 }}>{activeOrder.id ? (activeOrder.id.toUpperCase().startsWith('ORD-') ? activeOrder.id.toUpperCase() : `ORD-${activeOrder.id.slice(0,8).toUpperCase()}`) : ''}</div>
                 </div>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{activeOrder.title} · {activeOrder.plan} · {activeOrder.images} images</h3>
               </div>
@@ -1904,10 +2001,22 @@ export default function TyesClient() {
   // ══════════════════════════════════════
   const InvoicesPage = () => {
     const combinedInvoices = [
-      ...invoices,
-      ...orders.filter(o => o.revenue > 0 && !invoices.some(i => i.order === o.title || i.rawOrder?.id === o.id)).map(o => {
+      ...invoices.map((i, idx) => ({
+        displayId: `INV-${String(idx + 1).padStart(4, '0')}`,
+        stripeId: i.stripe_invoice_id || i.id,
+        id: i.id,
+        order: i.orders?.title || `ORD-${i.order_id ? i.order_id.slice(0, 8) : ''}`,
+        amount: i.amount,
+        status: i.status,
+        date: i.created_at ? new Date(i.created_at).toISOString().split('T')[0] : i.due_date,
+        due: i.due_date || 'Paid',
+        url: i.invoice_url
+      })),
+      ...orders.filter(o => o.revenue > 0 && !invoices.some(i => i.order === o.title || i.rawOrder?.id === o.id)).map((o, idx) => {
         const paid = isOrderPaid(o);
         return {
+          displayId: `INV-${String(invoices.length + idx + 1).padStart(4, '0')}`,
+          stripeId: null,
           id: `INV-${o.id.toString().slice(0, 8)}`,
           order: o.title || `Order ${o.id}`,
           amount: o.revenue,
@@ -1938,7 +2047,12 @@ export default function TyesClient() {
             <tbody>
               {combinedInvoices.length > 0 ? combinedInvoices.map(inv => (
                 <tr key={inv.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                  <td style={{ padding: "12px 16px", fontSize: 12, color: "#7dd8d0", fontWeight: 600 }}>{inv.id}</td>
+                  <td style={{ padding: "12px 16px" }}>
+                    <div style={{ fontSize: 12, color: "#7dd8d0", fontWeight: 600 }}>{inv.displayId}</div>
+                    {inv.stripeId && (
+                      <div style={{ fontSize: 9, color: "#4b5563", fontFamily: "monospace" }}>{inv.stripeId}</div>
+                    )}
+                  </td>
                   <td style={{ padding: "12px 16px", fontSize: 12, color: "#9ca3af", cursor: "pointer" }} onClick={() => setPage("orders")}>{inv.order}</td>
                   <td style={{ padding: "12px 16px", fontSize: 13, color: "#fff", fontWeight: 600 }}>${inv.amount}</td>
                   <td style={{ padding: "12px 16px" }}>

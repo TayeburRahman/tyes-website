@@ -165,106 +165,30 @@ export default function BrandInfoForm({ onComplete, hideSubmit = true, submitLab
         {/* ── Retail Channel Mapping ────────────────────────────────────────── */}
         <div>
           <label style={labelStyle}>Current Retail Presence (multi-select) <span style={{ color: '#2DD4BF' }}>*</span></label>
-          {formData.positioning && (
-            <div style={{ fontSize: 9, color: '#555', marginBottom: 8, letterSpacing: '0.5pt' }}>
-              Based on your <strong style={{ color: '#2DD4BF' }}>{formData.positioning}</strong> positioning
-              {formData.category && !['Other ', 'Other'].includes(formData.category) ? ` · ${formData.category}` : ''}
-              {' '}— recommended channels are highlighted
-            </div>
-          )}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
             {RETAIL_NETWORKS.map(r => {
-              const channelStatus = getChannelStatus(r, formData.positioning, formData.category);
               const isSelected = formData.retailPresence.includes(r);
-              const isNoneYet = r === 'None yet';
-
-              // Colour-coding for recommendation
-              const isRecommended = channelStatus === 'yes';
-              const isSweetSpot = channelStatus === 'sweet_spot';
-              const isUnavailable = channelStatus === 'no';
-
-              let borderColor = '#333';
-              let bgColor = '#141414';
-              let textColor = '#B8B8B8';
-              let fontWeight = 400;
-              let opacity = 1;
-
-              if (isSelected) {
-                borderColor = '#2DD4BF';
-                bgColor = 'rgba(45,212,191,0.15)';
-                textColor = '#2DD4BF';
-                fontWeight = 700;
-              } else if (!isNoneYet && formData.positioning) {
-                if (isSweetSpot) {
-                  borderColor = '#FBBF24';
-                  bgColor = 'rgba(251,191,36,0.06)';
-                  textColor = '#FBBF24';
-                  fontWeight = 600;
-                } else if (isRecommended) {
-                  borderColor = 'rgba(45,212,191,0.35)';
-                  bgColor = 'rgba(45,212,191,0.04)';
-                  textColor = '#8FDED8';
-                } else if (isUnavailable) {
-                  opacity = 0.35;
-                  textColor = '#555';
-                }
-              }
-
-              // Inline badge
-              const badge = !isNoneYet && formData.positioning
-                ? isSweetSpot ? ' ★'
-                : isRecommended ? ' ✓'
-                : isUnavailable ? ' ✗'
-                : ''
-                : '';
-
               return (
                 <span
                   key={r}
                   onClick={() => toggleArrayItem('retailPresence', r)}
-                  title={
-                    isSweetSpot ? 'Sweet spot — dermocosmetics excel here'
-                    : isRecommended ? 'Recommended for your positioning'
-                    : isUnavailable ? 'Not typically available for your positioning'
-                    : undefined
-                  }
                   style={{
-                    background: bgColor,
-                    border: `1px solid ${borderColor}`,
-                    color: textColor,
+                    background: isSelected ? 'rgba(45,212,191,0.15)' : '#141414',
+                    border: `1px solid ${isSelected ? '#2DD4BF' : '#333'}`,
+                    color: isSelected ? '#2DD4BF' : '#B8B8B8',
                     fontSize: 10,
                     padding: '6px 12px',
                     borderRadius: 999,
                     cursor: 'pointer',
-                    fontWeight,
-                    opacity,
-                    transition: 'all 0.15s',
-                    position: 'relative',
+                    fontWeight: isSelected ? 700 : 400,
+                    transition: 'all 0.15s'
                   }}
                 >
-                  {r}{badge}
+                  {r}
                 </span>
               );
             })}
           </div>
-
-          {/* Legend */}
-          {formData.positioning && (
-            <div style={{ display: 'flex', gap: 16, marginTop: 10, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 9, color: '#8FDED8', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, border: '1px solid rgba(45,212,191,0.35)', display: 'inline-block' }} />
-                ✓ Recommended
-              </span>
-              <span style={{ fontSize: 9, color: '#FBBF24', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, border: '1px solid #FBBF24', background: 'rgba(251,191,36,0.06)', display: 'inline-block' }} />
-                ★ Sweet spot
-              </span>
-              <span style={{ fontSize: 9, color: '#555', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, border: '1px solid #333', opacity: 0.35, display: 'inline-block' }} />
-                ✗ Not typical
-              </span>
-            </div>
-          )}
         </div>
 
         <div>

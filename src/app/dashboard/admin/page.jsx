@@ -686,54 +686,62 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               {Object.keys(statusConfig).map(s => <button key={s} onClick={() => { updateStatus(viewOrder.id, s); setViewOrder({ ...viewOrder, status: s }); }} style={{ padding: "4px 10px", borderRadius: 16, border: `1px solid ${statusConfig[s].color}33`, background: viewOrder.status === s ? statusConfig[s].bg : "transparent", color: statusConfig[s].color, fontSize: 11, cursor: "pointer" }}>{statusConfig[s].label}</button>)}
             </div>
 
-            {viewOrder.items && viewOrder.items.length > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <span style={{ fontSize: 11, color: "#6b7280", display: "block", marginBottom: 8, textTransform: "uppercase" }}>Order Items</span>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                  {viewOrder.items.map((item, i) => (
-                    <div key={i} style={{ padding: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12 }}>
-                      <div style={{ fontSize: 12, color: "#fff", fontWeight: 600, marginBottom: 8, display: "flex", justifyContent: "space-between" }}>
-                        <span>{item.name}</span>
-                        {item.finishImage && <Check size={14} color="#34d399" />}
-                      </div>
-                      <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-                        <div onClick={() => window.open(item.mainImage, '_blank')} style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.mainImage}) center/cover`, border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", position: "relative" }} title="Original Image">
-                          <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>ORIGINAL</span>
+            {Boolean(viewOrder.plan === 'Brand Strategy' || viewOrder.plan?.includes('Brand Strategy') || viewOrder.images_count === 0) ? (
+              <div style={{ marginTop: 16, padding: 16, background: "rgba(45,212,191,0.05)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 12 }}>
+                <div style={{ fontSize: 11, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>
+                  ✦ Brand Strategy Deliverable Order
+                </div>
+                <p style={{ fontSize: 12, color: "#9ca3af", margin: "0 0 12px 0" }}>
+                  This is a Brand Strategy order (0 image deliverables). Strategy deliverables and PDF snapshots are managed directly in the Brand Strategy Hub.
+                </p>
+                <button
+                  onClick={() => {
+                    setViewOrder(null);
+                    setPage('strategy');
+                  }}
+                  style={{
+                    padding: "8px 16px",
+                    borderRadius: 6,
+                    background: "#2DD4BF",
+                    color: "#000",
+                    fontWeight: 700,
+                    fontSize: 12,
+                    border: "none",
+                    cursor: "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6
+                  }}
+                >
+                  Open Strategy Hub →
+                </button>
+              </div>
+            ) : (
+              viewOrder.items && viewOrder.items.length > 0 && (
+                <div style={{ marginTop: 16 }}>
+                  <span style={{ fontSize: 11, color: "#6b7280", display: "block", marginBottom: 8, textTransform: "uppercase" }}>Order Items</span>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    {viewOrder.items.map((item, i) => (
+                      <div key={i} style={{ padding: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12 }}>
+                        <div style={{ fontSize: 12, color: "#fff", fontWeight: 600, marginBottom: 8, display: "flex", justifyContent: "space-between" }}>
+                          <span>{item.name}</span>
+                          {item.finishImage && <Check size={14} color="#34d399" />}
                         </div>
-                        <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.finishImage || ''}) center/cover`, border: item.finishImage ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(255,255,255,0.1)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.finishImage ? "Replace Delivery (V1)" : "Upload Delivery"}>
-                          {!item.finishImage && <Upload size={14} color="#6b7280" />}
-                          {item.finishImage && (
-                            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0}>
-                              <RefreshCw size={14} color="#fff" />
-                              <div style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "#34d399", padding: "1px 4px", borderRadius: 4 }}>V1</div>
-                            </div>
-                          )}
-                          {!item.finishImage && (
-                            <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>
-                              DELIVER
-                            </span>
-                          )}
-                          <input
-                            type="file"
-                            style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 10 }}
-                            onChange={(e) => e.target.files[0] && uploadFinishImage(viewOrder.id, i, e.target.files[0])}
-                            accept="image/*"
-                            title={item.finishImage ? "Replace Delivered Image (V1)" : "Upload Finished Image"}
-                          />
-                        </div>
-
-                        {(item.status === 'revision' || item.v2Image) && (
-                          <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.v2Image || ''}) center/cover`, border: item.v2Image ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(251,191,36,0.5)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.v2Image ? "Replace V2" : "Upload Revision V2"}>
-                            {!item.v2Image && <Upload size={14} color="#fbbf24" />}
-                            {item.v2Image && (
+                        <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                          <div onClick={() => window.open(item.mainImage, '_blank')} style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.mainImage}) center/cover`, border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", position: "relative" }} title="Original Image">
+                            <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>ORIGINAL</span>
+                          </div>
+                          <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.finishImage || ''}) center/cover`, border: item.finishImage ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(255,255,255,0.1)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.finishImage ? "Replace Delivery (V1)" : "Upload Delivery"}>
+                            {!item.finishImage && <Upload size={14} color="#6b7280" />}
+                            {item.finishImage && (
                               <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0}>
                                 <RefreshCw size={14} color="#fff" />
-                                <div style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "#34d399", padding: "1px 4px", borderRadius: 4 }}>V2</div>
+                                <div style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "#34d399", padding: "1px 4px", borderRadius: 4 }}>V1</div>
                               </div>
                             )}
-                            {!item.v2Image && (
-                              <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fbbf24", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>
-                                REV V2
+                            {!item.finishImage && (
+                              <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>
+                                DELIVER
                               </span>
                             )}
                             <input
@@ -741,35 +749,59 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                               style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 10 }}
                               onChange={(e) => e.target.files[0] && uploadFinishImage(viewOrder.id, i, e.target.files[0])}
                               accept="image/*"
-                              title={item.v2Image ? "Replace V2 Image" : "Upload V2 Image"}
+                              title={item.finishImage ? "Replace Delivered Image (V1)" : "Upload Finished Image"}
                             />
+                          </div>
+
+                          {(item.status === 'revision' || item.v2Image) && (
+                            <div style={{ flex: 1, height: 60, borderRadius: 8, background: `url(${item.v2Image || ''}) center/cover`, border: item.v2Image ? "1px solid rgba(52,211,153,0.3)" : "1px dashed rgba(251,191,36,0.5)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} title={item.v2Image ? "Replace V2" : "Upload Revision V2"}>
+                              {!item.v2Image && <Upload size={14} color="#fbbf24" />}
+                              {item.v2Image && (
+                                <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0}>
+                                  <RefreshCw size={14} color="#fff" />
+                                  <div style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fff", background: "#34d399", padding: "1px 4px", borderRadius: 4 }}>V2</div>
+                                </div>
+                              )}
+                              {!item.v2Image && (
+                                <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 8, color: "#fbbf24", background: "rgba(0,0,0,0.5)", padding: "1px 4px", borderRadius: 4 }}>
+                                  REV V2
+                                </span>
+                              )}
+                              <input
+                                type="file"
+                                style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 10 }}
+                                onChange={(e) => e.target.files[0] && uploadFinishImage(viewOrder.id, i, e.target.files[0])}
+                                accept="image/*"
+                                title={item.v2Image ? "Replace V2 Image" : "Upload V2 Image"}
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <StatusBadge status={item.status} />
+                          {!item.finishImage && <span style={{ fontSize: 10, color: "#6b7280" }}>Click + to deliver</span>}
+                        </div>
+
+                        {item.status === "revision" && item.revisionReason && (
+                          <div style={{ marginTop: 10, padding: 8, borderRadius: 8, background: "rgba(251,191,36,0.05)", border: "1px solid rgba(251,191,36,0.15)" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                              <AlertCircle size={10} color="#fbbf24" />
+                              <span style={{ fontSize: 10, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase" }}>Revision Requested</span>
+                            </div>
+                            <div style={{ fontSize: 11, color: "#d1d5db", lineHeight: "1.4", fontStyle: "italic", marginBottom: 4 }}>
+                              "{item.revisionReason}"
+                            </div>
+                            {item.revisionReference && (
+                              <a href={item.revisionReference} target="_blank" rel="noreferrer" style={{ fontSize: 10, color: "#fbbf24", textDecoration: "underline", display: "inline-block", marginBottom: 4 }}>View Reference Image</a>
+                            )}
+                            {item.revisionDate && <div style={{ fontSize: 9, color: "#4b5563" }}>Requested on {new Date(item.revisionDate).toLocaleDateString()}</div>}
                           </div>
                         )}
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <StatusBadge status={item.status} />
-                        {!item.finishImage && <span style={{ fontSize: 10, color: "#6b7280" }}>Click + to deliver</span>}
-                      </div>
-
-                      {item.status === "revision" && item.revisionReason && (
-                        <div style={{ marginTop: 10, padding: 8, borderRadius: 8, background: "rgba(251,191,36,0.05)", border: "1px solid rgba(251,191,36,0.15)" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                            <AlertCircle size={10} color="#fbbf24" />
-                            <span style={{ fontSize: 10, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase" }}>Revision Requested</span>
-                          </div>
-                          <div style={{ fontSize: 11, color: "#d1d5db", lineHeight: "1.4", fontStyle: "italic", marginBottom: 4 }}>
-                            "{item.revisionReason}"
-                          </div>
-                          {item.revisionReference && (
-                            <a href={item.revisionReference} target="_blank" rel="noreferrer" style={{ fontSize: 10, color: "#fbbf24", textDecoration: "underline", display: "inline-block", marginBottom: 4 }}>View Reference Image</a>
-                          )}
-                          {item.revisionDate && <div style={{ fontSize: 9, color: "#4b5563" }}>Requested on {new Date(item.revisionDate).toLocaleDateString()}</div>}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )
             )}
           </div>
         )}
@@ -1736,7 +1768,41 @@ export default function TyesAdmin() {
   const router = useRouter();
   const supabase = createClient();
   const { toasts, addToast } = useToast();
-  const [page, setPage] = useState("dashboard");
+  const [page, setPageInternal] = useState("dashboard");
+
+  const setPage = (newPage, orderId = null) => {
+    setPageInternal(newPage);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', newPage);
+      if (orderId) {
+        url.searchParams.set('id', orderId);
+      } else {
+        url.searchParams.delete('id');
+      }
+      window.history.pushState({ page: newPage, orderId }, '', url.toString());
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab) {
+        setPageInternal(tab);
+      }
+    }
+
+    const handlePopstate = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab') || 'dashboard';
+      setPageInternal(tab);
+    };
+
+    window.addEventListener('popstate', handlePopstate);
+    return () => window.removeEventListener('popstate', handlePopstate);
+  }, []);
+
   const [collapsed, setCollapsed] = useState(false);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);

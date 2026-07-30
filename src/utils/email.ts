@@ -146,7 +146,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
 
 export const sendStrategySnapshotEmail = async (props: { to: string; brandName: string; pdfUrl: string }) => {
   const resendApiKey = process.env.RESEND_API_KEY;
-  const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=strategy_email';
+  const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DEEPDIVE_URL || 'https://calendly.com/raluca-tyes/60-minute-tyes-deep-dive-strategy-session') + '?utm_source=strategy_email';
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -203,7 +203,7 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
 
 export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: string }) => {
   const resendApiKey = process.env.RESEND_API_KEY;
-  const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL || 'https://calendly.com/raluca-tyes/30min') + '?utm_source=deepdive_email';
+  const calendlyUrl = (process.env.NEXT_PUBLIC_CALENDLY_DEEPDIVE_URL || 'https://calendly.com/raluca-tyes/60-minute-tyes-deep-dive-strategy-session') + '?utm_source=deepdive_email';
   const htmlContent = `
     <!DOCTYPE html>
     <html>
