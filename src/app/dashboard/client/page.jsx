@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -1506,10 +1506,32 @@ export default function TyesClient() {
   const [companyName, setCompanyName] = useState("Glossier Inc.");
   const [companyEmail, setCompanyEmail] = useState("studio@glossier.com");
 
-  const spendingData = [
-    { month: "Jan", spent: 10 }, { month: "Feb", spent: 125 },
-    { month: "Mar", spent: 170 }, { month: "Apr", spent: 80 },
-  ];
+  const spendingData = useMemo(() => {
+    const data = [];
+    const today = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const monthLabel = d.toLocaleString('default', { month: 'short' });
+      data.push({ month: monthLabel, spent: 0, yearMonth: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` });
+    }
+    
+    invoices.filter(inv => inv.status === 'paid').forEach(inv => {
+      const invDate = new Date(inv.date || inv.created_at || new Date());
+      const ym = `${invDate.getFullYear()}-${String(invDate.getMonth() + 1).padStart(2, '0')}`;
+      const match = data.find(d => d.yearMonth === ym);
+      if (match) match.spent += Number(inv.amount || 0);
+    });
+
+    orders.filter(o => o.revenue > 0 && (o.status === 'in-progress' || o.status === 'completed' || o.status === 'delivered' || o.status === 'paid')).forEach(o => {
+      if (invoices.some(i => i.order_id === o.id || i.rawOrder?.id === o.id)) return;
+      const oDate = new Date(o.date || o.created_at || new Date());
+      const ym = `${oDate.getFullYear()}-${String(oDate.getMonth() + 1).padStart(2, '0')}`;
+      const match = data.find(d => d.yearMonth === ym);
+      if (match) match.spent += Number(o.revenue || 0);
+    });
+
+    return data;
+  }, [invoices, orders]);
 
   const unreadNotifs = notifications.filter(n => !n.read).length;
   const unreadMsgs = messagesList.filter(m => !m.read && m.from === "team").length;
