@@ -1122,8 +1122,8 @@ export default function TyesClient() {
   const [pricingPlans, setPricingPlans] = useState([]);
   const [orders, setOrders] = useState([]);
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       // 1. Get User
       const { data: { user: authUser } } = await supabase.auth.getUser();
@@ -1405,7 +1405,7 @@ export default function TyesClient() {
           .then(d => {
             if (d.success) {
               console.log('[Checkout] Order verified. Invoice URL:', d.invoiceUrl || '(none)');
-              fetchData(); // Refresh the dashboard data so the new invoice appears
+              fetchData(true); // Refresh the dashboard data so the new invoice appears
             } else {
               console.warn('[Checkout] Verify session issue:', d.error);
             }
@@ -1419,14 +1419,14 @@ export default function TyesClient() {
       .channel('custom-all-channel')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
         console.log('Real-time order change received!', payload);
-        fetchData();
+        fetchData(true);
         addToast("An order update was received!", "info");
       })
       .subscribe();
 
     // Fallback polling every 30 seconds to guarantee UI updates
     const pollInterval = setInterval(() => {
-      fetchData();
+      fetchData(true);
     }, 30000);
 
     return () => {
