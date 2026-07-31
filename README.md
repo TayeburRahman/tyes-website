@@ -5,12 +5,12 @@ Tyes is a full-stack web application designed for brands to order and manage AI-
 ## 📸 Project Previews
 
 ### Landing Page
-![Tyes Landing Page](./public/images/landing-preview.jpg)
+![Tyes Landing Page](./public/images/landing-preview.png)
 
 ### Client Dashboard
-![Tyes Client Dashboard](./public/images/dashboard-preview.jpg)
+![Tyes Client Dashboard](./public/images/dashboard-preview.png)
 
-*(Note: Ensure you place your screenshot images in the `public/images/` folder with the names `landing-preview.jpg` and `dashboard-preview.jpg` so they appear here!)*
+*(Note: Screenshots have been added!)*
 
 ---
 
