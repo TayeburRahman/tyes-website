@@ -1274,7 +1274,8 @@ export default function TyesClient() {
       } else if (invoicesData) {
         setInvoices(invoicesData.map(i => ({
           id: i.stripe_invoice_id ? i.stripe_invoice_id : `INV-${i.id.slice(0, 8)}`,
-          order: i.orders?.title || `ORD-${i.order_id.slice(0, 8)}`,
+          order: i.orders?.title || (i.order_id ? (i.order_id.startsWith('ORD-') ? i.order_id : `ORD-${i.order_id}`) : 'Unknown Order'),
+          order_id: i.order_id,
           amount: i.amount,
           status: i.status,
           date: i.created_at ? new Date(i.created_at).toISOString().split('T')[0] : i.due_date,
@@ -2055,7 +2056,7 @@ export default function TyesClient() {
         displayId: `INV-${String(idx + 1).padStart(4, '0')}`,
         stripeId: i.stripe_invoice_id || i.id,
         id: i.id,
-        order: i.orders?.title || `ORD-${i.order_id ? i.order_id.slice(0, 8) : ''}`,
+        order: i.order, // correctly formatted in fetchData
         amount: i.amount,
         status: i.status,
         date: i.created_at ? new Date(i.created_at).toISOString().split('T')[0] : i.due_date,
