@@ -70,8 +70,12 @@ STRIPE_SECRET_KEY=your_stripe_secret_key
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_pub_key
 STRIPE_WEBHOOK_SECRET=your_webhook_secret
 
-# URLs
+# Emails (Resend)
+RESEND_API_KEY=your_resend_api_key
+
+# URLs & Optional Configurations
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_CALENDLY_DEEPDIVE_URL=https://calendly.com/your-calendly-link
 ```
 
 ### 3. Run the Development Server
