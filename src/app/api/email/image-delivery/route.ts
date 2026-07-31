@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { to, customerName, orderTitle, dashboardUrl } = await req.json();
+    const { to, customerName, orderTitle, dashboardUrl, deliveredCount, totalImages, isRevision } = await req.json();
 
     if (!to || !orderTitle) {
       return NextResponse.json({ error: 'Missing required fields: to, orderTitle' }, { status: 400 });
@@ -22,6 +22,9 @@ export async function POST(req: Request) {
       customerName: customerName || 'Client',
       orderTitle,
       dashboardUrl: dashboardUrl || 'https://tyes.app/dashboard/client',
+      deliveredCount,
+      totalImages,
+      isRevision
     });
 
     return NextResponse.json({ success: true, result });

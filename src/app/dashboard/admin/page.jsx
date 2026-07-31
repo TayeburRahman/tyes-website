@@ -509,29 +509,33 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
         setViewOrder({ ...viewOrder, items: newItems, status: newOrderStatus, progress: newProgress });
       }
 
-      // Item 12: Send image delivery email to client when all items are delivered
-      if (allDelivered) {
-        try {
-          const deliveredOrder = orders.find(o => o.id === orderId);
-          const clientEmail = deliveredOrder?.customer_email || deliveredOrder?.email;
-          const clientName = deliveredOrder?.customer || deliveredOrder?.customer_name || 'Client';
-          const orderTitle = deliveredOrder?.title || `Order ${orderId.slice(0,8)}`;
-          if (clientEmail) {
-            await fetch('/api/email/image-delivery', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                to: clientEmail,
-                customerName: clientName,
-                orderTitle,
-                dashboardUrl: process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client` : 'https://tyes.app/dashboard/client'
-              })
-            });
-          }
-        } catch (emailErr) {
-          // Non-blocking: log but don't fail the delivery
-          console.error('Failed to send delivery email:', emailErr);
+      // Send image delivery email to client for every delivery (partial or full, or revision)
+      try {
+        const deliveredOrder = orders.find(o => o.id === orderId);
+        const clientEmail = deliveredOrder?.customer_email || deliveredOrder?.email;
+        const clientName = deliveredOrder?.customer || deliveredOrder?.customer_name || 'Client';
+        const orderTitle = deliveredOrder?.title || `Order ${orderId.slice(0, 8)}`;
+        if (clientEmail) {
+          const deliveredCount = newItems.filter(i => i.finishImage || i.v2Image).length;
+          const totalImages = newItems.length;
+          
+          await fetch('/api/email/image-delivery', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: clientEmail,
+              customerName: clientName,
+              orderTitle,
+              dashboardUrl: process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client` : 'https://tyes.app/dashboard/client',
+              deliveredCount,
+              totalImages,
+              isRevision
+            })
+          });
         }
+      } catch (emailErr) {
+        // Non-blocking: log but don't fail the delivery
+        console.error('Failed to send delivery email:', emailErr);
       }
 
       toast("Item delivered!");

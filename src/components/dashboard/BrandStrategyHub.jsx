@@ -115,7 +115,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
   try {
     const rawLocal = typeof window !== 'undefined' ? localStorage.getItem('tyes_brand_info') : null;
     if (rawLocal) savedLocal = JSON.parse(rawLocal);
-  } catch (e) {}
+  } catch (e) { }
 
   const activeBrandData = (reqWithData ? (reqWithData.brand_data || reqWithData.brand_info) : null) || savedLocal || {};
 

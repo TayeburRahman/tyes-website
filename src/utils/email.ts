@@ -286,8 +286,27 @@ export const sendRevisionRequestEmail = async (props: { to: string; orderId: str
   }
 };
 
-export const sendImageDeliveryEmail = async (props: { to: string; customerName: string; orderTitle: string; dashboardUrl: string }) => {
+export const sendImageDeliveryEmail = async (props: { to: string; customerName: string; orderTitle: string; dashboardUrl: string; deliveredCount?: number; totalImages?: number; isRevision?: boolean }) => {
   const resendApiKey = process.env.RESEND_API_KEY;
+  const { isRevision, deliveredCount, totalImages } = props;
+  
+  let title = "Your images are ready!";
+  let subtitle = "Images Delivered";
+  let messageText = `Great news! The images for your order <strong>${props.orderTitle}</strong> have been delivered and are ready for review.`;
+  let subjectText = `Your images are ready - ${props.orderTitle}`;
+  
+  if (isRevision) {
+    title = "Revision V2 re-delivered!";
+    subtitle = "Revision Delivered";
+    messageText = `Great news! The revision for your order <strong>${props.orderTitle}</strong> has been re-delivered and is ready for review.`;
+    subjectText = `Revision V2 re-delivered - ${props.orderTitle}`;
+  } else if (deliveredCount !== undefined && totalImages !== undefined && deliveredCount < totalImages) {
+    title = `${deliveredCount} of ${totalImages} images delivered!`;
+    subtitle = "Partial Delivery";
+    messageText = `Great news! ${deliveredCount} of ${totalImages} images for your order <strong>${props.orderTitle}</strong> have been delivered and are ready for review. We are working on the rest!`;
+    subjectText = `${deliveredCount} of ${totalImages} images delivered - ${props.orderTitle}`;
+  }
+
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -309,12 +328,12 @@ export const sendImageDeliveryEmail = async (props: { to: string; customerName: 
         <div class="header">
            <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
            <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
-           <p>Images Delivered</p>
+           <p>${subtitle}</p>
         </div>
         <div class="content">
-          <h2 style="margin-top: 0;">Your images are ready!</h2>
+          <h2 style="margin-top: 0;">${title}</h2>
           <p>Hi ${props.customerName},</p>
-          <p>Great news! The images for your order <strong>${props.orderTitle}</strong> have been delivered and are ready for review.</p>
+          <p>${messageText}</p>
           <p>You can view, download, or request revisions directly from your dashboard.</p>
           <a href="${props.dashboardUrl}" class="btn">View Images in Dashboard &rarr;</a>
         </div>
@@ -334,7 +353,7 @@ export const sendImageDeliveryEmail = async (props: { to: string; customerName: 
   return await resend.emails.send({
     from: 'Tyes <hello@tyes.app>',
     to: props.to,
-    subject: `Your images are ready - ${props.orderTitle}`,
+    subject: subjectText,
     html: htmlContent,
   });
 };

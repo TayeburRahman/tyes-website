@@ -1572,7 +1572,7 @@ export default function TyesClient() {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                   <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px" }}>Active Order</div>
-                  <div style={{ fontSize: 9, color: '#4b5563', fontFamily: 'monospace', background: 'rgba(255,255,255,0.04)', padding: '2px 7px', borderRadius: 4 }}>{activeOrder.id ? (activeOrder.id.toUpperCase().startsWith('ORD-') ? activeOrder.id.toUpperCase() : `ORD-${activeOrder.id.slice(0,8).toUpperCase()}`) : ''}</div>
+                  <div style={{ fontSize: 9, color: '#4b5563', fontFamily: 'monospace', background: 'rgba(255,255,255,0.04)', padding: '2px 7px', borderRadius: 4 }}>{activeOrder.id ? (activeOrder.id.toUpperCase().startsWith('ORD-') ? activeOrder.id.toUpperCase() : `ORD-${activeOrder.id.slice(0, 8).toUpperCase()}`) : ''}</div>
                 </div>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{activeOrder.title} · {activeOrder.plan} · {activeOrder.images} images</h3>
               </div>
