@@ -2432,7 +2432,7 @@ export default function TyesClient() {
   }
 
   return (
-    <div style={{ display: "flex", height: "100vh", background: "#0a0a0a", fontFamily: "'Inter',-apple-system,sans-serif", color: "#fff", overflow: "hidden" }}>
+    <div suppressHydrationWarning style={{ display: "flex", height: "100vh", background: "#0a0a0a", fontFamily: "'Inter',-apple-system,sans-serif", color: "#fff", overflow: "hidden" }}>
       <ToastContainer toasts={toasts} />
       <MissingCountryModal open={showMissingCountryModal} onClose={() => setShowMissingCountryModal(false)} onSubmit={handleUpdateCountry} loading={updatingCountry} />
 
