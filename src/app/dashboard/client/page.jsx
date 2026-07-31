@@ -1164,10 +1164,7 @@ export default function TyesClient() {
         });
         setCompanyName(profile.company_name || authUser.user_metadata?.company_name || fullName);
         setCompanyEmail(profile.email);
-        // If profile.country is missing but user_metadata has it, silently back-fill the DB
-        if (!profile.country && authUser.user_metadata?.country) {
-          supabase.from('profiles').update({ country: authUser.user_metadata.country }).eq('id', authUser.id).then(() => { });
-        }
+        // If profile.country is missing but user_metadata has it, do nothing (user_metadata is authoritative)
       } else {
         const fullName = authUser.user_metadata?.first_name
           ? `${authUser.user_metadata.first_name} ${authUser.user_metadata.last_name || ''}`.trim()
@@ -2232,7 +2229,6 @@ export default function TyesClient() {
       setSaving(true);
       try {
         await supabase.auth.updateUser({ data: { country: selectedCode } });
-        supabase.from('profiles').update({ country: selectedCode }).eq('id', user.id).then(() => { });
         setClientInfo(prev => ({ ...prev, country: selectedCode }));
         addToast("Country updated!", "success");
         setEditing(false);
@@ -2312,7 +2308,6 @@ export default function TyesClient() {
         await supabase.auth.updateUser({
           data: { is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }
         });
-        supabase.from('profiles').update({ is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }).eq('id', user.id).then(() => { });
         addToast("Business details updated!", "success");
         setEditing(false);
       } catch (err) {

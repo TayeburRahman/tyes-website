@@ -15,32 +15,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
     }
 
-    // Fetch the user profile to get the stripe_customer_id
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('stripe_customer_id, email, first_name, last_name, country')
-      .eq('id', userId)
-      .single();
-
-    if (profileError || !profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    // Fetch the user profile from auth
+    const { data: userAuth, error: authError } = await supabase.auth.admin.getUserById(userId);
+    
+    if (authError || !userAuth?.user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    let stripeCustomerId = profile.stripe_customer_id;
+    const metadata = userAuth.user.user_metadata || {};
+    let stripeCustomerId = metadata.stripe_customer_id;
 
     if (!stripeCustomerId) {
       // If they don't have a Stripe customer ID, create one
       const customer = await stripe.customers.create({
-        email: profile.email,
-        name: `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
-        address: profile.country ? { country: profile.country } : undefined,
+        email: userAuth.user.email,
+        name: `${metadata.first_name || ''} ${metadata.last_name || ''}`.trim(),
+        address: metadata.country ? { country: metadata.country } : undefined,
       });
       stripeCustomerId = customer.id;
       
-      await supabase
-        .from('profiles')
-        .update({ stripe_customer_id: stripeCustomerId })
-        .eq('id', userId);
+      await supabase.auth.admin.updateUserById(userId, {
+        user_metadata: { ...metadata, stripe_customer_id: stripeCustomerId }
+      });
     }
 
     // Create the Stripe Customer Portal session

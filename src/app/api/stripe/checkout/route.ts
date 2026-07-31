@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     const selectedCountry = billingCountry || fallbackCountry;
 
     // 4. Get or create Stripe Customer
-    let stripeCustomerId = profile.stripe_customer_id;
+    let stripeCustomerId = userAuth?.user?.user_metadata?.stripe_customer_id;
 
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
@@ -55,11 +55,10 @@ export async function POST(req: Request) {
       
       stripeCustomerId = customer.id;
 
-      // Update profile with the new Stripe Customer ID
-      await supabase
-        .from('profiles')
-        .update({ stripe_customer_id: stripeCustomerId })
-        .eq('id', profile.id);
+      // Update auth metadata with the new Stripe Customer ID
+      await supabase.auth.admin.updateUserById(order.user_id, {
+        user_metadata: { ...userAuth?.user?.user_metadata, stripe_customer_id: stripeCustomerId }
+      });
     } else {
       // Ensure customer has the default country set
       await stripe.customers.update(stripeCustomerId, {
