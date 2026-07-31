@@ -221,7 +221,11 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 8, marginBottom: 8 }}>
               {RETAIL_TYPES.map((rt, idx) => {
-                const isPresent = userRetailPresence.some(p => typeof p === 'string' && (p.toLowerCase().trim() === rt.label.toLowerCase().trim() || p.toLowerCase().trim() === rt.name.toLowerCase().trim()));
+                const isPresent = userRetailPresence.some(p => {
+                  if (typeof p !== 'string') return false;
+                  const cleanP = p.replace(/[✓✗★]/g, '').toLowerCase().trim();
+                  return cleanP === rt.label.toLowerCase().trim() || cleanP === rt.name.toLowerCase().trim();
+                });
                 const isMapped = mappedChannels.includes(rt.label);
                 const isActive = isPresent || isMapped;
 

@@ -1287,7 +1287,8 @@ export default function TyesClient() {
       const { data: stratData, error: stratError } = await supabase
         .from('brand_strategy_requests')
         .select('*')
-        .eq('user_id', authUser.id);
+        .eq('user_id', authUser.id)
+        .order('created_at', { ascending: false });
 
       if (stratData) {
         setStrategyRequests(stratData);
