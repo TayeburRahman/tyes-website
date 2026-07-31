@@ -2080,11 +2080,41 @@ export default function TyesClient() {
       })
     ];
 
+    const exportToCSV = () => {
+      addToast("Exporting all invoices as CSV...", "info");
+      
+      const headers = ["Invoice ID", "Order", "Amount", "Status", "Date", "Due Date", "Stripe ID"];
+      const csvRows = [headers.join(',')];
+
+      combinedInvoices.forEach(inv => {
+        const row = [
+          inv.displayId,
+          inv.order || '',
+          inv.amount || 0,
+          inv.status || '',
+          inv.date || '',
+          inv.due || '',
+          inv.stripeId || ''
+        ].map(v => `"${String(v).replace(/"/g, '""')}"`);
+        csvRows.push(row.join(','));
+      });
+
+      const csvString = csvRows.join('\n');
+      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `invoices_export_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Invoices</h1>
-          <button onClick={() => { addToast("Exporting all invoices as CSV...", "info"); }} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Export CSV</button>
+          <button onClick={exportToCSV} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Export CSV</button>
         </div>
         <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
