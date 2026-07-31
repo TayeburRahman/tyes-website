@@ -518,7 +518,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
         if (clientEmail) {
           const deliveredCount = newItems.filter(i => i.finishImage || i.v2Image).length;
           const totalImages = newItems.length;
-          
+
           await fetch('/api/email/image-delivery', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1819,6 +1819,16 @@ export default function TyesAdmin() {
   const [adminUser, setAdminUser] = useState(null);
   const [adminTargetOrder, setAdminTargetOrder] = useState(null);
   const [globalSearch, setGlobalSearch] = useState("");
+  const [adminReadNotifs, setAdminReadNotifs] = useState([]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('tyes_admin_read_notifs');
+      if (stored) {
+        try { setAdminReadNotifs(JSON.parse(stored)); } catch(e){}
+      }
+    }
+  }, []);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -1846,7 +1856,7 @@ export default function TyesAdmin() {
       const { data: ordersData } = await supabase
         .from('orders')
         .select('*')
-        .order('created_at', { descending: true });
+        .order('created_at', { ascending: false });
       if (ordersData) {
         const mappedOrders = ordersData.map(o => {
           let items = o.items || [];
@@ -2067,13 +2077,24 @@ export default function TyesAdmin() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <div style={{ position: "relative" }}>
-              <button onClick={() => { setNotifOpen(!notifOpen); setProfileOpen(false); }} style={{ position: "relative", background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}>
-                <Bell size={17} /><span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: "50%", background: "#ef4444" }} />
+              <button onClick={() => { 
+                setNotifOpen(!notifOpen); 
+                setProfileOpen(false); 
+                if (!notifOpen) {
+                  const newReadIds = Array.from(new Set([...adminReadNotifs, ...orders.slice(0, 7).map(o => o.id)]));
+                  setAdminReadNotifs(newReadIds);
+                  if (typeof window !== 'undefined') localStorage.setItem('tyes_admin_read_notifs', JSON.stringify(newReadIds));
+                }
+              }} style={{ position: "relative", background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}>
+                <Bell size={17} />
+                {orders.slice(0, 7).filter(o => !adminReadNotifs.includes(o.id)).length > 0 && (
+                  <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: "50%", background: "#ef4444" }} />
+                )}
               </button>
               {notifOpen && (
                 <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, width: 300, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, zIndex: 100, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
                   <div style={{ padding: "8px 12px", fontSize: 13, fontWeight: 700, color: "#fff", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>Recent Notifications</div>
-                  {orders.length ? orders.slice(0, 5).map((o, i) => {
+                  {orders.length ? orders.slice(0, 7).map((o, i) => {
                     const isCustom = o.plan?.includes('Custom');
                     return (
                       <div key={i} onClick={() => { setPage("orders"); setNotifOpen(false); setAdminTargetOrder(o); }} style={{ display: "flex", gap: 10, padding: "10px 12px", cursor: "pointer", borderRadius: 8, background: isCustom ? "rgba(251,191,36,0.05)" : "transparent" }} onMouseEnter={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.1)" : "rgba(255,255,255,0.03)"} onMouseLeave={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.05)" : "transparent"}>
