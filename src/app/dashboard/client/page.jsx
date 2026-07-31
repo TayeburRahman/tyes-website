@@ -2471,7 +2471,29 @@ export default function TyesClient() {
                     <div style={{ fontSize: 13, color: "#e5e7eb" }}>Visa ending in 4242</div>
                     <div style={{ fontSize: 11, color: "#4b5563" }}>Expires 08/2028</div>
                   </div>
-                  <button onClick={() => addToast("Payment method update — redirecting to billing portal...", "info")} style={{ fontSize: 12, color: "#4ecdc4", background: "none", border: "none", cursor: "pointer", fontWeight: 500 }}>Change</button>
+                  <button 
+                    onClick={async () => { 
+                      addToast("Redirecting to billing portal...", "info");
+                      try {
+                        const res = await fetch('/api/stripe/create-portal', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ userId: clientInfo.id })
+                        });
+                        const data = await res.json();
+                        if (data.url) {
+                          window.location.href = data.url;
+                        } else {
+                          addToast(data.error || "Failed to load billing portal", "error");
+                        }
+                      } catch (err) {
+                        addToast("Network error", "error");
+                      }
+                    }} 
+                    style={{ fontSize: 12, color: "#4ecdc4", background: "none", border: "none", cursor: "pointer", fontWeight: 500 }}
+                  >
+                    Change
+                  </button>
                 </div>
               </div>
               <button onClick={() => addToast("Account deletion request sent — our team will contact you", "warning")} style={{ padding: "10px 0", borderRadius: 10, border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.06)", color: "#f87171", fontSize: 13, fontWeight: 500, cursor: "pointer" }}>Delete Account</button>
