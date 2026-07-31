@@ -1293,6 +1293,15 @@ export default function TyesClient() {
         setStrategyRequests(stratData);
       }
 
+      // Load read notifications from local storage
+      let readNotifs = [];
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('tyes_read_notifs');
+        if (stored) {
+          try { readNotifs = JSON.parse(stored); } catch(e){}
+        }
+      }
+
       // 7. Generate Real Notifications from User Events
       const realNotifs = [];
       (ordersData || []).forEach(o => {
@@ -1303,27 +1312,30 @@ export default function TyesClient() {
 
         if (deliveredItems.length > 0) {
           if (deliveredItems.length === items.length) {
+            const nId = `notif-del-${o.id}`;
             realNotifs.push({
-              id: `notif-del-${o.id}`,
+              id: nId,
               text: `Images delivered for ${formattedId}`,
               time: o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recently',
-              read: o.status === 'completed'
+              read: o.status === 'completed' || readNotifs.includes(nId)
             });
           } else {
+            const nId = `notif-part-${o.id}-${deliveredItems.length}`;
             realNotifs.push({
-              id: `notif-part-${o.id}`,
+              id: nId,
               text: `${deliveredItems.length} of ${items.length} images delivered for ${formattedId}`,
               time: o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recently',
-              read: false
+              read: readNotifs.includes(nId)
             });
           }
         }
         if (v2Items.length > 0) {
+          const nId = `notif-v2-${o.id}-${v2Items.length}`;
           realNotifs.push({
-            id: `notif-v2-${o.id}`,
+            id: nId,
             text: `Revision V2 re-delivered for ${formattedId}`,
             time: o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recently',
-            read: false
+            read: readNotifs.includes(nId)
           });
         }
       });
@@ -1331,22 +1343,24 @@ export default function TyesClient() {
       (stratData || []).forEach(s => {
         if (s.status === 'sent' || s.status === 'delivered' || s.delivered_pdf_url) {
           const bName = s.brand_data?.brandName || s.brand_info?.brandName || 'your brand';
+          const nId = `notif-strat-${s.id}`;
           realNotifs.push({
-            id: `notif-strat-${s.id}`,
+            id: nId,
             text: `Strategy Snapshot ready for ${bName}`,
             time: s.created_at ? new Date(s.created_at).toLocaleDateString() : 'Recently',
-            read: false
+            read: readNotifs.includes(nId)
           });
         }
       });
 
       (invoicesData || []).forEach((inv, idx) => {
         const invNum = `INV-${String(idx + 1).padStart(4, '0')}`;
+        const nId = `notif-inv-${inv.id}`;
         realNotifs.push({
-          id: `notif-inv-${inv.id}`,
+          id: nId,
           text: `Invoice ${invNum} generated`,
           time: inv.created_at ? new Date(inv.created_at).toLocaleDateString() : 'Recently',
-          read: false
+          read: readNotifs.includes(nId)
         });
       });
 
@@ -1398,6 +1412,26 @@ export default function TyesClient() {
           .catch(err => console.error('[Checkout] verify-session error:', err));
       }
     }
+
+    // Subscribe to realtime order updates (requires Replication enabled in Supabase)
+    const ordersSubscription = supabase
+      .channel('custom-all-channel')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
+        console.log('Real-time order change received!', payload);
+        fetchData();
+        addToast("An order update was received!", "info");
+      })
+      .subscribe();
+
+    // Fallback polling every 30 seconds to guarantee UI updates
+    const pollInterval = setInterval(() => {
+      fetchData();
+    }, 30000);
+
+    return () => {
+      supabase.removeChannel(ordersSubscription);
+      clearInterval(pollInterval);
+    };
   }, [supabase, router, addToast]);
 
   const handleLogout = async () => {
@@ -1478,7 +1512,22 @@ export default function TyesClient() {
   const unreadNotifs = notifications.filter(n => !n.read).length;
   const unreadMsgs = messagesList.filter(m => !m.read && m.from === "team").length;
 
-  const markNotifsRead = () => setNotifications(n => n.map(x => ({ ...x, read: true })));
+  const markNotifsRead = () => {
+    setNotifications(n => n.map(x => ({ ...x, read: true })));
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('tyes_read_notifs');
+      let readNotifs = [];
+      if (stored) {
+        try { readNotifs = JSON.parse(stored); } catch(e){}
+      }
+      notifications.forEach(n => {
+        if (!readNotifs.includes(n.id)) {
+          readNotifs.push(n.id);
+        }
+      });
+      localStorage.setItem('tyes_read_notifs', JSON.stringify(readNotifs));
+    }
+  };
 
   const downloadAsZip = async (urlsToDownload, zipFilename) => {
     if (!urlsToDownload || urlsToDownload.length === 0) {
