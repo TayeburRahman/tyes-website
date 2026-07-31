@@ -1274,7 +1274,7 @@ export default function TyesClient() {
       } else if (invoicesData) {
         setInvoices(invoicesData.map(i => ({
           id: i.stripe_invoice_id ? i.stripe_invoice_id : `INV-${i.id.slice(0, 8)}`,
-          order: i.orders?.title || (i.order_id ? (i.order_id.startsWith('ORD-') ? i.order_id : `ORD-${i.order_id}`) : 'Unknown Order'),
+          order: i.order_id ? (i.order_id.startsWith('ORD-') ? i.order_id : `ORD-${i.order_id}`) : (i.orders?.title || 'Unknown Order'),
           order_id: i.order_id,
           amount: i.amount,
           status: i.status,
@@ -2059,8 +2059,8 @@ export default function TyesClient() {
         order: i.order, // correctly formatted in fetchData
         amount: i.amount,
         status: i.status,
-        date: i.created_at ? new Date(i.created_at).toISOString().split('T')[0] : i.due_date,
-        due: i.due_date || 'Paid',
+        date: i.date || '',
+        due: i.due || 'Paid',
         url: i.invoice_url
       })),
       ...orders.filter(o => o.revenue > 0 && !invoices.some(i => i.order === o.title || i.rawOrder?.id === o.id)).map((o, idx) => {
