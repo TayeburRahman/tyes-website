@@ -382,6 +382,21 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       }
 
 
+      // Ensure Brand Info is completed and valid category exists
+      const savedBrandInfo = localStorage.getItem('tyes_brand_info');
+      let parsedBrandData = null;
+      if (savedBrandInfo) {
+        try { parsedBrandData = JSON.parse(savedBrandInfo); } catch (e) {}
+      }
+
+      if (!parsedBrandData || !parsedBrandData.category || parsedBrandData.category === 'N/A' || parsedBrandData.category.trim() === '' || parsedBrandData.category === 'Other ') {
+        addToast("Please fill out your Brand Info & Category before completing your order.", "warning");
+        setIsSubmitting(false);
+        // Switch wizard step to Brand Info step
+        setStep(3);
+        return;
+      }
+
       // --- Upload files ---
       let photoUrls = [];
       let refUrls = [];
@@ -426,7 +441,8 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         revisions: 0,
         max_revisions: selectedPlan.max_revisions || 3,
         progress: 0,
-        attachments: { photos: photoUrls, has_strategy_addon: addStrategy },
+        category: parsedBrandData.category,
+        attachments: { photos: photoUrls, has_strategy_addon: addStrategy, brand_info: parsedBrandData, category: parsedBrandData.category },
         reference_images: refUrls,
         font_label_files: fontUrls,
         items: structuredItems,
@@ -442,14 +458,11 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       const shouldCreateStrategy = selectedPlan.strategy_included || addStrategy || isBrandStrategyPlan;
       if (shouldCreateStrategy) {
         try {
-          const savedBrandInfo = localStorage.getItem('tyes_brand_info');
-          let brandData = savedBrandInfo ? JSON.parse(savedBrandInfo) : { brandName: customerName || 'Unknown', category: 'N/A' };
-
           const { error: stratError } = await supabase.from("brand_strategy_requests").insert([{
             user_id: currentUser.id,
             order_id: newOrder.id,
             status: "new",
-            brand_data: brandData,
+            brand_data: parsedBrandData,
             source: selectedPlan.name === 'Custom / Enterprise' ? 'custom' : (addStrategy ? `${selectedPlan.name.toLowerCase()}_addon_25` : 'standalone_25'),
             tier: selectedPlan.name,
             assigned_to: 'Raluca',
@@ -535,7 +548,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             const selectedPlan = plans.find(p => p.id === plan);
             const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
             const isBrandStrategyPlan = Boolean(selectedPlan && (selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)' || selectedPlan.name.includes('Strategy') || selectedPlan.strategy_included));
-            const showBrandInfo = isBrandStrategyPlan || addStrategy;
+            const showBrandInfo = true;
 
 
             const steps = ["Choose Plan"];
@@ -560,7 +573,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           const selectedPlan = plans.find(p => p.id === plan);
           const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
           const isBrandStrategyPlan = Boolean(selectedPlan && (selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)' || selectedPlan.name.includes('Strategy') || selectedPlan.strategy_included));
-          const showBrandInfo = isBrandStrategyPlan || addStrategy;
+          const showBrandInfo = true;
 
 
 
@@ -967,7 +980,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           const selectedPlan = plans.find(p => p.id === plan);
           const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
           const isBrandStrategyPlan = Boolean(selectedPlan && (selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)' || selectedPlan.name.includes('Strategy') || selectedPlan.strategy_included));
-          const showBrandInfo = isBrandStrategyPlan || addStrategy;
+          const showBrandInfo = true;
 
 
           const steps = ["Choose Plan"];
