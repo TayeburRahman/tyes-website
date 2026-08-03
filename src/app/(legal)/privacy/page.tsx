@@ -37,7 +37,7 @@ export default function PrivacyPage() {
           <div className="bg-[#141414] border-l-4 border-[#2DD4BF] p-4 rounded-r-lg space-y-1 text-sm">
             <p><strong className="text-white">Data Controller:</strong> tyes LLC, a Wyoming limited liability company.</p>
             <p className="text-[#C8C8C8]">30 N Gould Street, Sheridan, WY 82801, USA</p>
-            <p className="text-[#C8C8C8]">Contact: <a href="mailto:hello@tyes.com" className="text-[#2DD4BF] hover:underline">hello@tyes.com</a></p>
+            <p className="text-[#C8C8C8]">Contact: <a href="mailto:office@tyes.app" className="text-[#2DD4BF] hover:underline">office@tyes.app</a></p>
           </div>
         </section>
 
@@ -138,7 +138,7 @@ export default function PrivacyPage() {
             <li><strong className="text-white">Lodge a complaint</strong> with your local data protection authority.</li>
           </ul>
           <p className="text-sm text-[#C8C8C8] leading-relaxed mt-2">
-            To exercise your rights, contact us at <a href="mailto:hello@tyes.com" className="text-[#2DD4BF] hover:underline">hello@tyes.com</a>. We will respond within 30 days.
+            To exercise your rights, contact us at <a href="mailto:office@tyes.app" className="text-[#2DD4BF] hover:underline">office@tyes.app</a>. We will respond within 30 days.
           </p>
         </section>
 
@@ -154,7 +154,7 @@ export default function PrivacyPage() {
             <li>To not be discriminated against for exercising these rights.</li>
           </ul>
           <p className="text-sm text-[#C8C8C8] leading-relaxed mt-2">
-            To exercise these rights, email us at <a href="mailto:hello@tyes.com" className="text-[#2DD4BF] hover:underline">hello@tyes.com</a>.
+            To exercise these rights, email us at <a href="mailto:office@tyes.app" className="text-[#2DD4BF] hover:underline">office@tyes.app</a>.
           </p>
         </section>
 
@@ -188,7 +188,7 @@ export default function PrivacyPage() {
           <div className="bg-[#141414] border-l-4 border-[#2DD4BF] p-4 rounded-r-lg space-y-1 text-sm">
             <p className="font-bold text-white">tyes LLC — Privacy</p>
             <p className="text-[#C8C8C8]">30 N Gould Street, Sheridan, WY 82801, USA</p>
-            <p className="text-[#C8C8C8]">Email: <a href="mailto:hello@tyes.com" className="text-[#2DD4BF] hover:underline">hello@tyes.com</a></p>
+            <p className="text-[#C8C8C8]">Email: <a href="mailto:office@tyes.app" className="text-[#2DD4BF] hover:underline">office@tyes.app</a></p>
           </div>
         </section>
 
@@ -198,7 +198,7 @@ export default function PrivacyPage() {
             <strong className="text-white">tyes LLC</strong> · 30 N Gould Street, Sheridan, WY 82801, USA
           </div>
           <div>
-            <a href="mailto:hello@tyes.com" className="text-[#2DD4BF] hover:underline">hello@tyes.com</a>
+            <a href="mailto:office@tyes.app" className="text-[#2DD4BF] hover:underline">office@tyes.app</a>
           </div>
         </div>
 

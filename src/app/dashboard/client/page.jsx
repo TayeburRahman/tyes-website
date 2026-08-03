@@ -1927,7 +1927,7 @@ export default function TyesClient() {
                                 const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
                                 const revsUsed = item.revisionsUsed || 0;
                                 if (revsUsed >= maxRevisions && maxRevisions > 0) {
-                                  return <a href="mailto:hello@tyes.com" onClick={(e) => e.stopPropagation()} style={{ fontSize: 10, color: "#6b7280", textDecoration: "underline", display: "inline-block", marginTop: 6 }}>Revision limit reached — contact us</a>;
+                                  return <a href="mailto:office@tyes.app" onClick={(e) => e.stopPropagation()} style={{ fontSize: 10, color: "#6b7280", textDecoration: "underline", display: "inline-block", marginTop: 6 }}>Revision limit reached — contact us</a>;
                                 }
                                 return null;
                               })()}

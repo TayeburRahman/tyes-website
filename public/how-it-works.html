@@ -1,232 +1,359 @@
 <!DOCTYPE html>
-<!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Mar 31 2026 19:49:31 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="69caf4c24ea53d378ed329a1" data-wf-site="69caf4bf4ea53d378ed32936" lang="en">
 
 <head>
   <meta charset="utf-8">
-  <title>tyes — How It Works</title>
-  <meta
-    content="Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter. Here's exactly what happens, step by step."
-    name="description">
-  <meta content="tyes — How It Works" property="og:title">
-  <meta
-    content="Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter."
-    property="og:description">
-  <meta content="images/open-graph-image.jpg" property="og:image">
-  <meta content="tyes — How It Works" property="twitter:title">
-  <meta
-    content="Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter."
-    property="twitter:description">
-  <meta content="images/open-graph-image.jpg" property="twitter:image">
-  <meta property="og:type" content="website">
-  <meta content="summary_large_image" name="twitter:card">
+  <title>tyes | How It Works</title>
+  <meta content="Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter." name="description">
+  <meta content="tyes – How It Works" property="og:title">
+  <meta content="Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter." property="og:description">
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <meta content="Webflow" name="generator">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="css/tyes-d93dec.webflow.css" rel="stylesheet" type="text/css">
-  <script
-    type="text/javascript">!function (o, c) { var n = c.documentElement, t = " w-mod-"; n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n.className += t + "touch") }(window, document);</script>
+  <link href="css/tyes-d93dec.webflow.css?v=4" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+  <script type="text/javascript">!function (o, c) { var n = c.documentElement, t = " w-mod-"; n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n.className += t + "touch") }(window, document);</script>
   <link href="images/tyes-logo-new.svg" rel="shortcut icon" type="image/x-icon">
   <link href="images/tyes-logo-new.svg" rel="apple-touch-icon">
-  <link
-    href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
-    rel="stylesheet">
   <style>
-    .hiw-accent {
-      font-family: "Montserrat", sans-serif;
+    @font-face {
+      font-family: Gliker;
+      src: url('fonts/gliker-regular.ttf') format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "Montserrat", -apple-system, sans-serif;
+      background: #0A0A0A;
+      color: #EDEDED;
+    }
+
+    .how-container {
+      max-width: 1300px;
+      margin: 60px auto 0;
+      padding: 100px 24px 60px;
+    }
+
+    .brand {
+      font-family: "Gliker", "Grandstander", "Fraunces", sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.5pt;
+    }
+
+    .accent {
+      font-family: "Montserrat", -apple-system, sans-serif;
       font-style: italic;
       font-weight: 700;
       color: #2DD4BF;
     }
 
-    .hiw-tagline {
-      font-family: "Montserrat", sans-serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.3em;
+    .tagline {
+      font-size: 10pt;
+      letter-spacing: 5pt;
       text-transform: uppercase;
       color: #2DD4BF;
       font-weight: 600;
-      margin-bottom: 1.25rem;
+      margin-bottom: 24px;
     }
 
-    .hiw-lead {
-      font-family: "Montserrat", sans-serif;
-      font-size: clamp(0.95rem, 2vw, 1.1rem);
-      color: #B8B8B8;
-      line-height: 1.7;
-      max-width: 660px;
-      margin-bottom: 3rem;
-    }
-
-    .hiw-lead strong {
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .hiw-h2 {
+    h1.how-h1 {
       font-family: "League Spartan", sans-serif;
-      font-size: clamp(1.35rem, 3vw, 1.75rem);
+      font-size: 46pt;
       font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.03em;
-      margin-top: 3.5rem;
-      margin-bottom: 1.25rem;
+      line-height: 1.08;
+      letter-spacing: -1.2pt;
+      color: #FFFFFF;
+      margin-bottom: 24px;
+      max-width: 1000px;
     }
 
-    .hiw-h3 {
+    .lead-text {
+      font-size: 16pt;
+      color: #B8B8B8;
+      line-height: 1.6;
+      max-width: 1000px;
+      margin-bottom: 48px;
+      font-weight: 400;
+    }
+
+    h2.how-h2 {
       font-family: "League Spartan", sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.5rem;
+      font-size: 26pt;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #FFFFFF;
+      letter-spacing: -0.4pt;
+      margin-top: 56px;
+      margin-bottom: 20px;
     }
 
-    .hiw-body {
-      font-family: "Montserrat", sans-serif;
-      font-size: 0.9rem;
+    .how-p {
+      font-size: 13pt;
+      margin-bottom: 20px;
       color: #C8C8C8;
       line-height: 1.7;
-      margin-bottom: 0.75rem;
+      max-width: 1000px;
     }
 
-    .hiw-body strong {
-      color: #fff;
+    .how-p strong {
+      color: #FFFFFF;
+      font-weight: 700;
     }
 
+    /* GRID 3 COLUMNS FOR ENGINES */
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin: 1rem 0 2rem;
-    }
-
-    @media(max-width:700px) {
-      .grid-3 {
-        grid-template-columns: 1fr;
-      }
+      gap: 24px;
+      margin: 28px 0 40px;
     }
 
     .card {
       background: #141414;
-      padding: 1.5rem;
-      border-radius: 10px;
+      padding: 32px 28px;
+      border-radius: 12px;
       border-top: 3px solid #2DD4BF;
+      border-left: 1px solid #222;
+      border-right: 1px solid #222;
+      border-bottom: 1px solid #222;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .card-tag {
-      font-family: "Montserrat", sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
+    .card .tag {
+      font-size: 8.5pt;
+      letter-spacing: 3pt;
       text-transform: uppercase;
       color: #2DD4BF;
       font-weight: 700;
-      margin-bottom: 0.6rem;
+      margin-bottom: 12px;
     }
 
+    .card h3 {
+      font-family: "League Spartan", sans-serif;
+      font-size: 18pt;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .card p {
+      font-size: 11.5pt;
+      color: #B4B4B4;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* PRICING INFO BOX */
+    .pricing-info-box {
+      background: rgba(45,212,191,0.06);
+      border: 1px solid rgba(45,212,191,0.35);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 24px 0 48px;
+      font-size: 11.5pt;
+      color: #C8C8C8;
+      line-height: 1.7;
+      max-width: 1000px;
+    }
+
+    .pricing-info-box strong {
+      color: #FFFFFF;
+    }
+
+    /* BUYER NETWORK GRID */
     .buyer-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin: 1rem 0 1.5rem;
-    }
-
-    @media(max-width:600px) {
-      .buyer-grid {
-        grid-template-columns: 1fr;
-      }
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin: 28px 0;
     }
 
     .buyer-card {
       background: #141414;
-      padding: 1.25rem 1.5rem;
-      border-radius: 10px;
+      padding: 28px 28px;
+      border-radius: 12px;
       border-left: 3px solid #2DD4BF;
+      border-top: 1px solid #222;
+      border-right: 1px solid #222;
+      border-bottom: 1px solid #222;
     }
 
-    .buyer-cat {
-      font-family: "Montserrat", sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
+    .buyer-card .cat {
+      font-size: 8.5pt;
+      letter-spacing: 3pt;
       text-transform: uppercase;
       color: #2DD4BF;
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      margin-bottom: 10px;
     }
 
+    .buyer-card h3 {
+      font-family: "League Spartan", sans-serif;
+      font-size: 18pt;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 10px;
+    }
+
+    .buyer-card p {
+      font-size: 11.5pt;
+      color: #B4B4B4;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* GEOGRAPHIC COVERAGE */
     .geo-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin: 1rem 0 2rem;
-    }
-
-    @media(max-width:600px) {
-      .geo-row {
-        grid-template-columns: 1fr;
-      }
+      gap: 24px;
+      margin: 28px 0;
     }
 
     .geo-block {
       background: #141414;
-      padding: 1.25rem 1.5rem;
-      border-radius: 8px;
+      padding: 24px 28px;
+      border-radius: 10px;
+      border: 1px solid #222;
     }
 
-    .geo-flag {
-      font-family: "Montserrat", sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
+    .geo-block .flag {
+      font-size: 10pt;
+      letter-spacing: 3pt;
       text-transform: uppercase;
       color: #2DD4BF;
       font-weight: 700;
-      margin-bottom: 0.6rem;
+      margin-bottom: 10px;
+    }
+
+    .geo-block p {
+      font-size: 11.5pt;
+      margin-bottom: 0;
+      color: #C8C8C8;
+      line-height: 1.6;
+    }
+
+    /* LISTS & INFO BOX */
+    .fast-list {
+      margin: 20px 0 36px 20px;
+      max-width: 1000px;
+    }
+
+    .fast-list li {
+      font-size: 12.5pt;
+      color: #C8C8C8;
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+
+    .fast-list li strong {
+      color: #FFFFFF;
     }
 
     .info-box {
       background: #141414;
       border-left: 3px solid #2DD4BF;
-      padding: 1.25rem 1.75rem;
-      border-radius: 0 8px 8px 0;
-      margin: 1rem 0 1.5rem;
+      padding: 24px 28px;
+      border-radius: 0 10px 10px 0;
+      margin: 28px 0;
+      max-width: 1000px;
+      border-top: 1px solid #222;
+      border-right: 1px solid #222;
+      border-bottom: 1px solid #222;
     }
 
-    .pricing-callout {
-      background: rgba(45, 212, 191, 0.06);
-      border: 1px solid rgba(45, 212, 191, 0.35);
-      padding: 1.25rem 1.5rem;
-      border-radius: 8px;
-      margin: 1rem 0 2rem;
-    }
-
-    .hiw-list {
-      margin: 0.5rem 0 1.5rem 1.25rem;
-    }
-
-    .hiw-list li {
-      font-family: "Montserrat", sans-serif;
-      font-size: 0.9rem;
+    .info-box p {
+      margin-bottom: 14px;
+      font-size: 12pt;
       color: #C8C8C8;
-      line-height: 1.7;
-      margin-bottom: 0.5rem;
+      line-height: 1.65;
     }
 
-    .hiw-list li strong {
-      color: #fff;
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-box p strong {
+      color: #FFFFFF;
+    }
+
+    /* READY TO TRY CTA ROW */
+    .cta-row {
+      margin-top: 32px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn-primary {
+      display: inline-block;
+      background: #2DD4BF;
+      color: #0A0A0A;
+      padding: 14px 32px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 11pt;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .cta-btn-secondary {
+      display: inline-block;
+      background: transparent;
+      border: 1.5px solid #2DD4BF;
+      color: #2DD4BF;
+      padding: 13px 32px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 11pt;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .cta-btn-primary:hover, .cta-btn-secondary:hover {
+      opacity: 0.85;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 991px) {
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .buyer-grid {
+        grid-template-columns: 1fr;
+      }
+      h1.how-h1 {
+        font-size: 34pt;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .how-container {
+        padding: 40px 16px 40px;
+      }
+      .geo-row {
+        grid-template-columns: 1fr;
+      }
+      h1.how-h1 {
+        font-size: 28pt;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="page-wrapper">
-    <!-- Navbar -->
+    <!-- MAIN WEBSITE NAVBAR -->
     <div data-animation="default" data-collapse="all" data-duration="0" data-easing="ease" data-easing2="ease"
       role="banner" class="navbar w-nav">
       <div class="padding-global">
         <div class="container-large">
           <div class="w-layout-grid nav-component-grid">
-            <a href="index.html" id="w-node-_3bbba632-e3d9-9b38-7010-fa4415a242ef-bf800947"
-              data-w-id="3bbba632-e3d9-9b38-7010-fa4415a242ef" class="brand-link w-inline-block">
+            <a href="index.html" class="brand-link w-inline-block">
               <div class="brand-wrapper">
                 <img src="images/tyes-wordmark.svg" alt="tyes" style="height:66px;">
               </div>
@@ -243,6 +370,12 @@
                       </a>
                     </div>
                     <div class="nav-link-overflow">
+                      <a href="how-it-works.html" aria-current="page" class="nav-link w-inline-block w--current">
+                        <div class="nav-link-text">How It Works</div>
+                        <div class="nav-link-text is-hover">How It Works</div>
+                      </a>
+                    </div>
+                    <div class="nav-link-overflow">
                       <a href="about.html" class="nav-link w-inline-block">
                         <div class="nav-link-text">About</div>
                         <div class="nav-link-text is-hover">About</div>
@@ -255,13 +388,13 @@
                       </a>
                     </div>
                     <div class="nav-link-overflow">
-                      <a href="services.html" class="nav-link w-inline-block">
+                      <a href="pricing.html" class="nav-link w-inline-block">
                         <div class="nav-link-text">Pricing</div>
                         <div class="nav-link-text is-hover">Pricing</div>
                       </a>
                     </div>
                     <div class="nav-link-overflow">
-                      <a href="contact.html" class="nav-link w-inline-block">
+                      <a href="contact-us.html" class="nav-link w-inline-block">
                         <div class="nav-link-text">Contact</div>
                         <div class="nav-link-text is-hover">Contact</div>
                       </a>
@@ -289,318 +422,226 @@
       </div>
     </div>
 
-    <!-- Main Content -->
     <main class="main-wrapper">
-      <section class="padding-global" style="padding-top:8rem;padding-bottom:4rem;">
-        <div class="container-large" style="max-width:820px;">
+      <div class="how-container">
+        <!-- HEADER & TAGLINE -->
+        <div class="tagline">Product</div>
+        <h1 class="how-h1">How It <span class="accent">Works.</span></h1>
 
-          <div class="hiw-tagline">Product</div>
-          <h1
-            style="font-family:'League Spartan',sans-serif;font-weight:800;font-size:clamp(2.8rem,7vw,4.5rem);color:#fff;letter-spacing:-0.03em;line-height:1.05;margin-bottom:1.5rem;">
-            How It <span class="hiw-accent">Works.</span>
-          </h1>
-          <p class="hiw-lead">
-            Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter.
-            Here's exactly what happens, step by step.
-          </p>
+        <p class="lead-text">
+          Two engines, one platform. Send a brief. Get shelf-ready visuals and a plan to reach the buyers who matter.
+          Here's exactly what happens, step by step.
+        </p>
 
-          <div style="border-top:1px solid #2A2A2A;margin-bottom:0.5rem;"></div>
-
-          <!-- Engine 01 -->
-          <h2 class="hiw-h2">Engine 01 — Campaign Imagery.</h2>
-          <div class="grid-3">
-            <div class="card">
-              <div class="card-tag">Step 01</div>
-              <h3 class="hiw-h3">Brief</h3>
-              <p class="hiw-body">Upload your product, brand guidelines, and reference direction. Describe the scene,
-                mood, and use case. Takes 5 minutes.</p>
+        <!-- ENGINE 01 -->
+        <h2 class="how-h2">Engine 01, Campaign Imagery.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <div>
+              <div class="tag">Step 01</div>
+              <h3>Brief</h3>
             </div>
-            <div class="card">
-              <div class="card-tag">Step 02</div>
-              <h3 class="hiw-h3">Generate</h3>
-              <p class="hiw-body">AI produces visual options aligned with your brand. You review, pick favorites,
-                request revisions directly in the platform.</p>
-            </div>
-            <div class="card">
-              <div class="card-tag">Step 03</div>
-              <h3 class="hiw-h3">Polish &amp; Deliver</h3>
-              <p class="hiw-body">Our graphic designers fix color, logo, text, and detail issues. Final assets delivered
-                in production-ready formats within hours.</p>
-            </div>
+            <p>Upload your product, brand guidelines, and reference direction. Describe the scene, mood, and use case. Takes 5 minutes.</p>
           </div>
-
-          <!-- Engine 02 -->
-          <h2 class="hiw-h2">Engine 02 — Strategy + <span class="hiw-accent">Retail Access.</span></h2>
-          <div class="grid-3">
-            <div class="card">
-              <div class="card-tag">Step 01 · Included</div>
-              <h3 class="hiw-h3">Snapshot</h3>
-              <p class="hiw-body">3-day scan of your brand: LLM visibility gaps, viral product angles, and a shortlist
-                of retail buyers who fit your brand.</p>
-              <p
-                style="font-family:'Montserrat',sans-serif;font-size:0.75rem;color:#2DD4BF;font-weight:700;margin-top:0.75rem;margin-bottom:0;">
-                $25 standalone · $25 add-on on Free Image · Free with any Campaign</p>
+          <div class="card">
+            <div>
+              <div class="tag">Step 02</div>
+              <h3>Generate</h3>
             </div>
-            <div class="card">
-              <div class="card-tag">Step 02 · Custom scope</div>
-              <h3 class="hiw-h3">Deep Dive</h3>
-              <p class="hiw-body">Full strategic package: positioning refinement, competitive map, product roadmap, and
-                named retail buyers with contact context we already work with.</p>
-              <p
-                style="font-family:'Montserrat',sans-serif;font-size:0.75rem;color:#fff;font-weight:700;margin-top:0.75rem;margin-bottom:0;">
-                Separate engagement · Priced per scope</p>
-            </div>
-            <div class="card">
-              <div class="card-tag">Step 03 · With Deep Dive</div>
-              <h3 class="hiw-h3">Introduction &amp; Journey</h3>
-              <p class="hiw-body">When positioning is tight and product is ready, we introduce you to the right retail
-                buyers and assist you through your journey to retail: pitch prep, buyer follow-through, and guidance at
-                each step.</p>
-              <p
-                style="font-family:'Montserrat',sans-serif;font-size:0.75rem;color:#fff;font-weight:700;margin-top:0.75rem;margin-bottom:0;">
-                Delivered as part of Deep Dive</p>
-            </div>
+            <p>AI produces visual options aligned with your brand. You review, pick favorites, request revisions directly in the platform.</p>
           </div>
-
-          <!-- Pricing callout -->
-          <div class="pricing-callout">
-            <p class="hiw-body" style="margin-bottom:0;"><strong>How the pricing works.</strong> The Snapshot is the
-              entry point in three ways: <strong>$25 standalone tier</strong>, <strong>$25 add-on on Free
-                Image</strong>, or <strong>bundled free</strong> with any Campaign order. The Deep Dive is a separate
-              strategic engagement, quoted per scope depending on your brand size, target markets, and retail ambition.
-              The Warm Introduction (Step 03) is delivered as part of every Deep Dive engagement, not sold separately.
-            </p>
-          </div>
-
-          <!-- The Retail Network -->
-          <h2 class="hiw-h2">The Retail <span class="hiw-accent">Network.</span></h2>
-          <p class="hiw-body" style="max-width:640px;">
-            Not a directory. Not cold outreach. A working network of buyer relationships across
-            <strong>5 retail categories</strong> — the same buyers we already send briefs to on behalf of other brands.
-          </p>
-
-          <div class="buyer-grid">
-            <div class="buyer-card">
-              <div class="buyer-cat">01 · Mass Market</div>
-              <h3 class="hiw-h3">Mass Market Retail</h3>
-              <p class="hiw-body" style="margin-bottom:0;">National chain drugstores, big-box discount, national
-                supermarkets. Where volume and shelf visibility matter most.</p>
+          <div class="card">
+            <div>
+              <div class="tag">Step 03</div>
+              <h3>Polish &amp; Deliver</h3>
             </div>
-            <div class="buyer-card">
-              <div class="buyer-cat">02 · Prestige</div>
-              <h3 class="hiw-h3">Premium Retail</h3>
-              <p class="hiw-body" style="margin-bottom:0;">High-end and prestige beauty chains, curated boutique
-                retailers, department store beauty halls.</p>
-            </div>
-            <div class="buyer-card">
-              <div class="buyer-cat">03 · Volume</div>
-              <h3 class="hiw-h3">Hyperstores</h3>
-              <p class="hiw-body" style="margin-bottom:0;">Warehouse clubs, cash &amp; carry, hypermarkets. Volume plays
-                with strong price positioning.</p>
-            </div>
-            <div class="buyer-card">
-              <div class="buyer-cat">04 · Beauty Pharmacy</div>
-              <h3 class="hiw-h3">Hyperpharmacies</h3>
-              <p class="hiw-body" style="margin-bottom:0;">Drugstore beauty chains, the fast-growing channel for
-                accessible skincare, personal care, and fragrance.</p>
-            </div>
+            <p>Our graphic designers fix color, logo, text, and detail issues. Final assets delivered in production-ready formats within hours.</p>
           </div>
-
-          <div class="buyer-card" style="margin-bottom:2rem;">
-            <div class="buyer-cat">05 · Digital-First</div>
-            <h3 class="hiw-h3">Marketplaces</h3>
-            <p class="hiw-body" style="margin-bottom:0;">Curated online marketplaces, D2C wholesale platforms, and
-              beauty-forward e-commerce destinations where discovery happens.</p>
-          </div>
-
-          <!-- Geographic Coverage -->
-          <h2 class="hiw-h2">Geographic <span class="hiw-accent">Coverage.</span></h2>
-          <div class="geo-row">
-            <div class="geo-block">
-              <div class="geo-flag">🇺🇸 United States</div>
-              <p class="hiw-body" style="margin-bottom:0;">National retail chains, regional grocery, beauty prestige
-                channels, and marketplace category managers.</p>
-            </div>
-            <div class="geo-block">
-              <div class="geo-flag">🇪🇺 Europe</div>
-              <p class="hiw-body" style="margin-bottom:0;">Coverage across Europe. Retail HQ contacts plus regional
-                buyers.</p>
-            </div>
-          </div>
-
-          <!-- What Makes It Fast -->
-          <h2 class="hiw-h2">What Makes It <span class="hiw-accent">Fast.</span></h2>
-          <ul class="hiw-list">
-            <li><strong>AI does the heavy lifting</strong> — hours of studio work compressed into minutes.</li>
-            <li><strong>Humans do the fine work</strong> — our graphic designers catch what AI misses.</li>
-            <li><strong>Strategy is baked in</strong> — no separate consulting engagement required.</li>
-            <li><strong>Retail access is real</strong> — an existing network of buyer relationships, not cold outreach.
-            </li>
-          </ul>
-
-          <!-- Who's in the Loop -->
-          <h2 class="hiw-h2">Who's In the <span class="hiw-accent">Loop.</span></h2>
-          <div class="info-box">
-            <p class="hiw-body"><strong>You:</strong> brand owner, marketing lead, or founder driving the launch.</p>
-            <p class="hiw-body"><strong>tyes AI:</strong> generates initial imagery and surfaces strategic insights.</p>
-            <p class="hiw-body"><strong>tyes team:</strong> our graphic designers, strategists, and buyer-network
-              operators.</p>
-            <p class="hiw-body" style="margin-bottom:0;"><strong>Retail buyers (Engine 02 only):</strong> introduced by
-              us, at your direction, only when you're ready.</p>
-          </div>
-
-          <!-- Ready to Try -->
-          <h2 class="hiw-h2">Ready to <span class="hiw-accent">Try It.</span></h2>
-          <p class="hiw-body">
-            Start with a Brand Strategy Snapshot ($25 standalone, $25 add-on to Free Image, or included free with any
-            Campaign). Or upload a product and see how the imagery engine handles it in your first campaign.
-          </p>
-
-          <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;">
-            <a href="services.html"
-              style="display:inline-block;background:#2DD4BF;color:#0A0A0A;padding:0.8rem 2rem;border-radius:999px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.9rem;text-decoration:none;">See
-              pricing →</a>
-            <a href="contact-us.html"
-              style="display:inline-block;background:transparent;border:1.5px solid #2DD4BF;color:#2DD4BF;padding:0.75rem 2rem;border-radius:999px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.9rem;text-decoration:none;">Get
-              in touch →</a>
-          </div>
-
-          <div
-            style="margin-top:3rem;padding-top:1.5rem;border-top:1px solid #2A2A2A;font-family:'Montserrat',sans-serif;font-weight:500;font-size:0.8rem;color:#777;">
-            <strong style="color:#fff;">tyes LLC</strong> · 30 N Gould Street, Sheridan, WY 82801, USA · <a
-              href="mailto:hello@tyes.com" style="color:#2DD4BF;text-decoration:none;">hello@tyes.com</a>
-          </div>
-
         </div>
-      </section>
+
+        <!-- ENGINE 02 -->
+        <h2 class="how-h2">Engine 02, Strategy + <span class="accent">Retail Access.</span></h2>
+        <div class="grid-3">
+          <div class="card">
+            <div>
+              <div class="tag">Step 01 · Included</div>
+              <h3>Snapshot</h3>
+              <p>3-day scan of your brand: LLM visibility gaps, viral product angles, and a shortlist of retail buyers who fit your brand.</p>
+            </div>
+            <p style="margin-top: 16px; font-size: 9pt; color: #2DD4BF; font-weight: 700;">$25 standalone · $25 add-on on Free Image · Free with any Campaign</p>
+          </div>
+          <div class="card">
+            <div>
+              <div class="tag">Step 02 · Custom scope</div>
+              <h3>Deep Dive</h3>
+              <p>Full strategic package: positioning refinement, competitive map, product roadmap, and named retail buyers with contact context we already work with.</p>
+            </div>
+            <p style="margin-top: 16px; font-size: 9pt; color: #FFFFFF; font-weight: 700;">Separate engagement · Priced per scope</p>
+          </div>
+          <div class="card">
+            <div>
+              <div class="tag">Step 03 · With Deep Dive</div>
+              <h3>Introduction &amp; Journey</h3>
+              <p>When positioning is tight and product is ready, we introduce you to the right retail buyers and assist you through your journey to retail: pitch prep, buyer follow-through, and guidance at each step.</p>
+            </div>
+            <p style="margin-top: 16px; font-size: 9pt; color: #FFFFFF; font-weight: 700;">Delivered as part of Deep Dive</p>
+          </div>
+        </div>
+
+        <!-- PRICING EXPLANATION INFO BOX -->
+        <div class="pricing-info-box">
+          <strong>How the pricing works.</strong> The Snapshot is the entry point, in three ways: <strong>$25 standalone tier</strong>, <strong>$25 add-on on Free Image</strong>, or <strong>bundled free</strong> with any Campaign order. The Deep Dive is a separate strategic engagement, quoted per scope depending on your brand size, target markets, and retail ambition. The Warm Introduction (Step 03) is delivered as part of every Deep Dive engagement, not sold separately.
+        </div>
+
+        <!-- RETAIL NETWORK -->
+        <h2 class="how-h2">The Retail <span class="accent">Network.</span></h2>
+        <p class="how-p" style="max-width:800px;">
+          Not a directory. Not cold outreach. A working network of buyer relationships across <strong>5 retail categories</strong>, the same buyers we already send briefs to on behalf of other brands.
+        </p>
+
+        <div class="buyer-grid">
+          <div class="buyer-card">
+            <div class="cat">01 · Mass Market</div>
+            <h3>Mass Market Retail</h3>
+            <p>National chain drugstores, big-box discount, national supermarkets. Where volume and shelf visibility matter most.</p>
+          </div>
+          <div class="buyer-card">
+            <div class="cat">02 · Prestige</div>
+            <h3>Premium Retail</h3>
+            <p>High-end and prestige beauty chains, curated boutique retailers, department store beauty halls.</p>
+          </div>
+          <div class="buyer-card">
+            <div class="cat">03 · Volume</div>
+            <h3>Hyperstores</h3>
+            <p>Warehouse clubs, cash &amp; carry, hypermarkets. Volume plays with strong price positioning.</p>
+          </div>
+          <div class="buyer-card">
+            <div class="cat">04 · Beauty Pharmacy</div>
+            <h3>Hyperpharmacies</h3>
+            <p>Drugstore beauty chains, the fast-growing channel for accessible skincare, personal care, and fragrance.</p>
+          </div>
+        </div>
+
+        <div class="buyer-card" style="margin-top: 24px;">
+          <div class="cat">05 · Digital-First</div>
+          <h3>Marketplaces</h3>
+          <p>Curated online marketplaces, D2C wholesale platforms, and beauty-forward e-commerce destinations where discovery happens.</p>
+        </div>
+
+        <!-- GEOGRAPHIC COVERAGE -->
+        <h2 class="how-h2">Geographic <span class="accent">Coverage.</span></h2>
+        <div class="geo-row">
+          <div class="geo-block">
+            <div class="flag">🇺🇸 United States</div>
+            <p>National retail chains, regional grocery, beauty prestige channels, and marketplace category managers.</p>
+          </div>
+          <div class="geo-block">
+            <div class="flag">🇪🇺 Europe</div>
+            <p>Coverage across Europe. Retail HQ contacts plus regional buyers.</p>
+          </div>
+        </div>
+
+        <!-- WHAT MAKES IT FAST -->
+        <h2 class="how-h2">What Makes It <span class="accent">Fast.</span></h2>
+        <ul class="fast-list">
+          <li><strong>AI does the heavy lifting</strong>, hours of studio work compressed into minutes.</li>
+          <li><strong>Humans do the fine work</strong>, our graphic designers catch what AI misses.</li>
+          <li><strong>Strategy is baked in</strong>, no separate consulting engagement required.</li>
+          <li><strong>Retail access is real</strong>, an existing network of buyer relationships, not cold outreach.</li>
+        </ul>
+
+        <!-- WHO IS IN THE LOOP -->
+        <h2 class="how-h2">Who's In the <span class="accent">Loop.</span></h2>
+        <div class="info-box">
+          <p><strong>You:</strong> brand owner, marketing lead, or founder driving the launch.</p>
+          <p><strong>tyes AI:</strong> generates initial imagery and surfaces strategic insights.</p>
+          <p><strong>tyes team:</strong> our graphic designers, strategists, and buyer-network operators.</p>
+          <p><strong>Retail buyers (Engine 02 only):</strong> introduced by us, at your direction, only when you're ready.</p>
+        </div>
+
+        <!-- READY TO TRY IT -->
+        <h2 class="how-h2">Ready to <span class="accent">Try It.</span></h2>
+        <p class="how-p">
+          Start with a Brand Strategy Snapshot ($25 standalone, $25 add-on to Free Image, or included free with any Campaign). Or upload a product and see how the imagery engine handles it in your first campaign.
+        </p>
+
+        <div class="cta-row">
+          <a href="pricing.html" class="cta-btn-primary">See Pricing →</a>
+          <a href="signin.html?intent=free-image" class="cta-btn-secondary">Get Started Free →</a>
+        </div>
+      </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div data-w-id="f4ef5579-b80a-6535-3e05-ab791ca6ba97" class="footer-line"></div>
+    <!-- MAIN WEBSITE FOOTER -->
+    <footer class="footer-component">
       <div class="padding-global">
         <div class="container-large">
-          <div class="padding-footer">
-            <div class="w-layout-grid footer-top-grid">
+          <div class="footer-content">
+            <div class="w-layout-grid footer-grid">
               <div id="w-node-f4ef5579-b80a-6535-3e05-ab791ca6ba9c-1ca6ba96" class="footer-grid-block">
-                <a href="index.html" class="footer-logo-link w-inline-block"
-                  style="display:flex;align-items:center;gap:0.5rem;"><img loading="lazy" src="images/tyes-logo-new.svg"
-                    alt="tyes Logo" class="footer-icon"><span
-                    style="font-family:'Gliker',serif;font-size:2rem;color:var(--white);text-transform:lowercase;">tyes</span></a>
+                <a href="index.html" class="footer-logo-link w-inline-block" style="display:flex;align-items:center;gap:0.5rem;">
+                  <img loading="lazy" src="images/tyes-logo-new.svg" alt="tyes Logo" class="footer-icon">
+                  <span style="font-family:'Gliker',serif;font-size:2rem;color:var(--white);text-transform:lowercase;">tyes</span>
+                </a>
                 <div class="spacer-medium"></div>
-                <div class="text-size-medium"
-                  style="font-family:'Montserrat',sans-serif;font-weight:500;text-transform:uppercase;">AI tied with a
-                  pulse</div>
+                <div class="text-size-medium" style="font-family:'Montserrat',sans-serif;font-weight:500;text-transform:uppercase;">AI tied with a pulse</div>
               </div>
               <div id="w-node-f4ef5579-b80a-6535-3e05-ab791ca6baa4-1ca6ba96" class="footer-grid-block">
                 <div class="newsletter-flex-wrap">
                   <div class="text-size-regular">Subscribe to our newsletter for the latest updates</div>
                   <div class="newsletter-form-block w-form">
-                    <form id="wf-form-hiw-newsletter" name="wf-form-Newsletter-Email-Form"
-                      data-name="Newsletter Email Form" method="get" class="newsletter-form-wrapper"><input
-                        class="form-text-field w-input" maxlength="256" name="Newsletter-Email" placeholder="Your Email"
-                        type="email" id="Newsletter-Email-HIW" required=""><input type="submit"
-                        data-wait="Please wait..." class="form-button w-button" value="Submit"></form>
-                    <div class="form-message-success w-form-done">
-                      <div>Thank you! Your submission has been received!</div>
-                    </div>
-                    <div class="form-message-error w-form-fail">
-                      <div>Oops! Something went wrong while submitting the form.</div>
-                    </div>
+                    <form id="wf-form-Newsletter-Email-Form" name="wf-form-Newsletter-Email-Form" data-name="Newsletter Email Form" method="get" class="newsletter-form-wrapper">
+                      <input class="form-text-field w-input" maxlength="256" name="Newsletter-Email" data-name="Newsletter Email" placeholder="Your Email" type="email" id="Newsletter-Email" required="">
+                      <input type="submit" data-wait="Please wait..." class="form-button w-button" value="Submit">
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              style="margin-top:2rem;margin-bottom:3rem;padding:1rem 0;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;font-family:'Montserrat',sans-serif;font-weight:500;font-size:0.9rem;color:rgba(255,255,255,0.8);">
+
+            <!-- AI Disclaimer Banner -->
+            <div style="margin-top:1rem;margin-bottom:1.25rem;padding:0.5rem 0;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;font-family:'Montserrat',sans-serif;font-weight:500;font-size:0.9rem;color:rgba(255,255,255,0.8);">
               <span>All visuals are AI-generated &amp; retouched by real people</span>
               <span style="color:rgba(255,255,255,0.3);">|</span>
               <a href="ai-disclaimer.html" style="color:#4ecdc4;text-decoration:underline;">Read our AI Disclaimer</a>
             </div>
-            <div class="w-layout-grid footer-main-grid"
-              style="grid-template-columns:1fr 1fr 1fr;font-family:'Montserrat',sans-serif;font-weight:500;">
-              <!-- PRODUCT -->
+
+            <div class="w-layout-grid footer-main-grid" style="grid-template-columns:1fr 1fr 1fr;font-family:'Montserrat',sans-serif;font-weight:500;">
               <div class="footer-grid-block">
                 <div class="footer-flex-item">
-                  <div class="link-text"
-                    style="font-weight:700;margin-bottom:1rem;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">
-                    Product</div>
-                  <a href="how-it-works.html" style="text-decoration:none;">
-                    <div class="link-text" style="font-weight:500;color:#2DD4BF;margin-bottom:0.75rem;cursor:pointer;">
-                      How It Works</div>
-                  </a>
-                  <a href="services.html" style="text-decoration:none;">
-                    <div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);">Pricing</div>
-                  </a>
+                  <div class="link-text" style="font-weight:700;margin-bottom:1rem;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">Product</div>
+                  <a href="how-it-works.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">How It Works</div></a>
+                  <a href="pricing.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;">Pricing</div></a>
                 </div>
               </div>
-              <!-- COMPANY -->
               <div class="footer-grid-block">
                 <div class="footer-flex-item">
-                  <div class="link-text"
-                    style="font-weight:700;margin-bottom:1rem;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">
-                    Company</div>
-                  <a href="about.html" style="text-decoration:none;">
-                    <div class="link-text"
-                      style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">About Us
-                    </div>
-                  </a>
-                  <a href="story.html" style="text-decoration:none;">
-                    <div class="link-text"
-                      style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">Our
-                      Story</div>
-                  </a>
-                  <a href="contact-us.html" style="text-decoration:none;">
-                    <div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;">Contact
-                    </div>
-                  </a>
+                  <div class="link-text" style="font-weight:700;margin-bottom:1rem;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">Company</div>
+                  <a href="about.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">About Us</div></a>
+                  <a href="contact-us.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;">Contact</div></a>
                 </div>
               </div>
-              <!-- LEGAL -->
               <div class="footer-grid-block">
                 <div class="footer-flex-item">
-                  <div class="link-text"
-                    style="font-weight:700;margin-bottom:1rem;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">
-                    Legal</div>
-                  <a href="terms.html" style="text-decoration:none;">
-                    <div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;">
-                      Terms of Service</div>
-                  </a>
-                  <a href="privacy.html" style="text-decoration:none;">
-                    <div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;">
-                      Privacy Policy</div>
-                  </a>
-                  <a href="cookies.html" style="text-decoration:none;">
-                    <div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;">
-                      Cookie Policy</div>
-                  </a>
-                  <a href="ai-disclaimer.html" style="text-decoration:none;">
-                    <div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);">AI Disclaimer</div>
-                  </a>
+                  <div class="link-text" style="font-weight:700;margin-bottom:1rem;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">Legal</div>
+                  <a href="terms.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">Terms of Service</div></a>
+                  <a href="privacy.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">Privacy Policy</div></a>
+                  <a href="cookies.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">Cookie Policy</div></a>
+                  <a href="ai-disclaimer.html" style="text-decoration:none;"><div class="link-text" style="font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;">AI Disclaimer</div></a>
                 </div>
               </div>
             </div>
+
             <div style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
-              <a href="https://twitter.com/" target="_blank" class="link-item w-inline-block">
-                <div class="link-wrap">
-                  <div class="link-text">Twitter - X</div>
-                </div>
-              </a>
-              <a href="https://www.linkedin.com/" target="_blank" class="link-item w-inline-block">
-                <div class="link-wrap">
-                  <div class="link-text">Linkedin</div>
-                </div>
-              </a>
-              <a href="https://www.instagram.com/" target="_blank" class="link-item w-inline-block">
-                <div class="link-wrap">
-                  <div class="link-text">Instagram</div>
-                </div>
-              </a>
+              <a href="https://twitter.com/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Twitter - X</div></div></a>
+              <a href="https://www.linkedin.com/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Linkedin</div></div></a>
+              <a href="https://www.instagram.com/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Instagram</div></div></a>
             </div>
+
             <div class="footer-bottom-content">
-              <div class="footer-small-text"></div>
               <div class="horizontal-flex">
-                <div style="font-family:'Montserrat',sans-serif;font-weight:500;">©️ 2026 All Rights Reserved</div>
+                <div style="font-family:'Montserrat',sans-serif;font-weight:500;">©️ 2026 tyes LLC. All Rights Reserved</div>
+                <div style="font-family:'Montserrat',sans-serif;font-weight:500;color:#2DD4BF;">office@tyes.app</div>
               </div>
             </div>
           </div>
@@ -608,6 +649,7 @@
       </div>
     </footer>
   </div>
+
   <script src="js/jquery-3.5.1.min.js" type="text/javascript"></script>
   <script src="js/webflow.js" type="text/javascript"></script>
 </body>
