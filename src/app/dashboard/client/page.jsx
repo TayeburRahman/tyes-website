@@ -402,8 +402,9 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         }
       }
 
-      const numItems = selectedPlan.images > 0 ? selectedPlan.images : Math.max(1, productPhotos.length);
-      const structuredItems = Array.from({ length: numItems }).map((_, index) => ({
+      const isStrategyPlan = selectedPlan && (selectedPlan.images === 0 || selectedPlan.name === 'Brand Strategy' || selectedPlan.name === 'Brand Strategy (Only)');
+      const numItems = isStrategyPlan ? 0 : (selectedPlan.images > 0 ? selectedPlan.images : Math.max(1, productPhotos.length));
+      const structuredItems = isStrategyPlan ? [] : Array.from({ length: numItems }).map((_, index) => ({
         name: `Deliverable ${index + 1}`,
         mainImage: photoUrls[index] || photoUrls[0] || "",
         finishImage: "",
@@ -1608,7 +1609,7 @@ export default function TyesClient() {
   // OVERVIEW PAGE
   // ══════════════════════════════════════
   const OverviewPage = () => {
-    const activeOrder = orders.find(o => o.status !== "delivered");
+    const activeOrder = orders.find(o => o.status !== "delivered" && o.status !== "completed");
     // Use both 'sent' and 'delivered' as terminal statuses for the snapshot counter
     const snapshotsDelivered = strategyRequests.filter(s => s.status === 'sent' || s.status === 'delivered').length;
     const snapshotsInProgress = strategyRequests.filter(s => s.status !== 'sent' && s.status !== 'delivered' && s.status !== 'lost').length;
@@ -1624,7 +1625,16 @@ export default function TyesClient() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
           <StatCard icon={Package} label="Total Orders" value={orders.length} onClick={() => setPage("orders")} />
-          <StatCard icon={Image} label="Images Delivered" value={orders.filter(o => o.status === "delivered").reduce((s, o) => s + o.images, 0)} onClick={() => setPage("orders")} />
+          {(() => {
+            const totalDeliveredImages = orders.reduce((sum, o) => {
+              const items = o.items || [];
+              const deliveredCount = items.filter(i => i.finishImage || i.v2Image).length;
+              return sum + (deliveredCount > 0 ? deliveredCount : (o.status === "delivered" ? (o.images || 0) : 0));
+            }, 0);
+            return (
+              <StatCard icon={Image} label="Images Delivered" value={totalDeliveredImages} onClick={() => setPage("orders")} />
+            );
+          })()}
           {(() => {
             const totalSpentGross = invoices.length > 0
               ? invoices.reduce((sum, i) => sum + Number(i.amount_gross || i.amount || 0), 0)
@@ -1889,7 +1899,21 @@ export default function TyesClient() {
                 </div>
                 {expanded === o.id && (
                   <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", padding: "16px 20px" }}>
-                    {o.items && o.items.length > 0 ? (
+                    {Boolean(o.plan === 'Brand Strategy' || o.plan === 'Brand Strategy (Only)' || (o.images_count === 0 && !o.plan?.includes('Campaign'))) ? (
+                      <div style={{ background: "rgba(45, 212, 191, 0.05)", border: "1px solid rgba(45, 212, 191, 0.2)", borderRadius: 12, padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                            <Star size={14} color="#2DD4BF" /> Brand Strategy Deliverable
+                          </div>
+                          <div style={{ fontSize: 11, color: "#9ca3af" }}>
+                            This is a Brand Strategy Order. Your Brand Strategy Snapshot PDF and retail analysis are accessed in the Brand Strategy Hub.
+                          </div>
+                        </div>
+                        <button onClick={(e) => { e.stopPropagation(); setPage("brand-strategy"); }} style={{ background: "#2DD4BF", color: "#0A0A0A", padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
+                          View Strategy Hub →
+                        </button>
+                      </div>
+                    ) : o.items && o.items.length > 0 ? (
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
                         {o.items.map((item, i) => (
                           <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)", transition: "all 0.2s" }}>
@@ -2787,14 +2811,30 @@ export default function TyesClient() {
                 {unreadNotifs > 0 && <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: "50%", background: "#ef4444" }} />}
               </button>
               {showNotifDrop && (
-                <div style={{ position: "absolute", right: 0, top: "100%", zIndex: 100, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, minWidth: 260, boxShadow: "0 12px 40px rgba(0,0,0,0.5)", marginTop: 8 }}>
-                  <div style={{ padding: "8px 12px", fontSize: 12, fontWeight: 700, color: "#fff", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4 }}>Notifications</div>
-                  {notifications.map(n => (
-                    <div key={n.id} style={{ padding: "8px 12px", borderRadius: 8, fontSize: 12, color: n.read ? "#6b7280" : "#e5e7eb", cursor: "pointer" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                      <div>{n.text}</div>
-                      <div style={{ fontSize: 10, color: "#4b5563", marginTop: 2 }}>{n.time}</div>
-                    </div>
-                  ))}
+                <div style={{ position: "absolute", right: 0, top: "100%", zIndex: 100, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, minWidth: 280, maxWidth: 340, boxShadow: "0 12px 40px rgba(0,0,0,0.5)", marginTop: 8 }}>
+                  <div style={{ padding: "8px 12px", fontSize: 12, fontWeight: 700, color: "#fff", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span>Notifications</span>
+                    {notifications.length > 0 && <span style={{ fontSize: 10, color: "#6b7280", fontWeight: 400 }}>{notifications.length} total</span>}
+                  </div>
+                  <div style={{ maxHeight: 300, overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
+                    {notifications.length > 0 ? notifications.map(n => (
+                      <div key={n.id} onClick={() => {
+                        setShowNotifDrop(false);
+                        if (n.id && n.id.startsWith('notif-strat-')) {
+                          setPage("brand-strategy");
+                        } else if (n.id && n.id.startsWith('notif-inv-')) {
+                          setPage("invoices");
+                        } else {
+                          setPage("orders");
+                        }
+                      }} style={{ padding: "8px 12px", borderRadius: 8, fontSize: 12, color: n.read ? "#6b7280" : "#e5e7eb", cursor: "pointer" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                        <div>{n.text}</div>
+                        <div style={{ fontSize: 10, color: "#4b5563", marginTop: 2 }}>{n.time}</div>
+                      </div>
+                    )) : (
+                      <div style={{ padding: "16px 12px", textAlign: "center", color: "#6b7280", fontSize: 12 }}>No notifications yet</div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

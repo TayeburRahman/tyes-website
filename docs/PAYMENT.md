@@ -4,6 +4,8 @@ The automatic tax calculation system has been fully integrated and is ready on t
 
 How the system works:
 
+///
+
 - US customers → Stripe Tax automatically applies US sales tax (only if a US tax registration is active).
 - EU B2C customers (without a VAT ID)→ The customer's local VAT is applied automatically.
 - EU B2B customers (with a valid VAT ID)→ A 0% reverse charge is applied automatically. 

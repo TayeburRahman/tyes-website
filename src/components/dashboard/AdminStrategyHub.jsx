@@ -32,6 +32,42 @@ const formatSource = (source) => {
   return source;
 };
 
+const ISO_COUNTRY_MAP = {
+  ro: 'Romania', rom: 'Romania', us: 'United States', usa: 'United States',
+  uk: 'United Kingdom', gb: 'United Kingdom', ca: 'Canada', can: 'Canada',
+  de: 'Germany', deu: 'Germany', fr: 'France', fra: 'France',
+  it: 'Italy', ita: 'Italy', es: 'Spain', esp: 'Spain',
+  nl: 'Netherlands', nld: 'Netherlands', au: 'Australia', aus: 'Australia',
+  ae: 'United Arab Emirates', uae: 'United Arab Emirates', in: 'India', ind: 'India',
+  br: 'Brazil', bra: 'Brazil', mx: 'Mexico', mex: 'Mexico',
+  jp: 'Japan', jpn: 'Japan', cn: 'China', chn: 'China',
+  sg: 'Singapore', sgp: 'Singapore', ch: 'Switzerland', che: 'Switzerland',
+  se: 'Sweden', swe: 'Sweden', no: 'Norway', nor: 'Norway',
+  fi: 'Finland', fin: 'Finland', dk: 'Denmark', dnk: 'Denmark',
+  pl: 'Poland', pol: 'Poland', be: 'Belgium', bel: 'Belgium',
+  at: 'Austria', aut: 'Austria', ie: 'Ireland', irl: 'Ireland',
+  nz: 'New Zealand', nzl: 'New Zealand'
+};
+
+const formatCountryName = (countryStr) => {
+  if (!countryStr) return '';
+  if (typeof countryStr !== 'string') return String(countryStr);
+  return countryStr
+    .split(/[,/;]+/)
+    .map(part => {
+      const trimmed = part.trim();
+      if (!trimmed) return '';
+      const lower = trimmed.toLowerCase();
+      if (ISO_COUNTRY_MAP[lower]) return ISO_COUNTRY_MAP[lower];
+      return trimmed
+        .split(/\s+/)
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+    })
+    .filter(Boolean)
+    .join(', ');
+};
+
 export default function AdminStrategyHub({ supabase, addToast }) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +81,8 @@ export default function AdminStrategyHub({ supabase, addToast }) {
   const [expandedRow, setExpandedRow] = useState(null);
   const [statusChangingId, setStatusChangingId] = useState(null);
 
+  const [errorMsg, setErrorMsg] = useState(null);
+
   useEffect(() => {
     fetchRequests();
     fetchAnalytics();
@@ -52,16 +90,35 @@ export default function AdminStrategyHub({ supabase, addToast }) {
 
   const fetchRequests = async () => {
     setLoading(true);
-    const res = await fetch('/api/admin/strategy-requests');
-    const json = await res.json();
-    setRequests(json.data || []);
+    setErrorMsg(null);
+    try {
+      const res = await fetch('/api/admin/strategy-requests');
+      const json = await res.json();
+      if (!res.ok) {
+        const msg = json.error || `Error ${res.status}: Failed to fetch strategy requests`;
+        setErrorMsg(msg);
+        setRequests([]);
+        if (addToast) addToast(msg, 'error');
+      } else {
+        setRequests(json.data || []);
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'Network error');
+      if (addToast) addToast('Failed to connect to server', 'error');
+    }
     setLoading(false);
   };
 
   const fetchAnalytics = async () => {
-    const res = await fetch('/api/admin/strategy-analytics');
-    const json = await res.json();
-    setAnalytics(json.data || null);
+    try {
+      const res = await fetch('/api/admin/strategy-analytics');
+      const json = await res.json();
+      if (res.ok) {
+        setAnalytics(json.data || null);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const uploadPdfToSupabase = async (file) => {
@@ -200,8 +257,12 @@ export default function AdminStrategyHub({ supabase, addToast }) {
 
   return (
     <div style={{ padding: '0 24px', fontFamily: '"Montserrat", sans-serif' }}>
-      <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 24, fontFamily: '"League Spartan", sans-serif' }}>Strategy Requests</h1>
-      
+      {errorMsg && (
+        <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: 10, padding: '12px 16px', color: '#f87171', fontSize: 13, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span>⚠️</span> <span>{errorMsg === 'Unauthorized' ? 'Unauthorized: Please log in to your admin account to view strategy requests.' : errorMsg}</span>
+        </div>
+      )}
+
       {/* Analytics Kpis */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
         {['Strategy Requests', 'Avg Delivery', 'Free → Paid', 'Strategy Revenue'].map((title, i) => (
@@ -371,7 +432,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                                 <strong style={{color:'#FFFFFF'}}>SKUs:</strong> {brandInfo.skus || brandInfo.skuCount}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Annual revenue:</strong> {brandInfo.revenue || brandInfo.annualRevenue}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Marketing budget:</strong> {brandInfo.budget || brandInfo.marketingBudget}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Countries selling:</strong> {brandInfo.countries || brandInfo.countriesSelling}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Countries selling:</strong> {formatCountryName(brandInfo.countries || brandInfo.countriesSelling) || 'N/A'}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Retail presence:</strong> {Array.isArray(brandInfo.retailPresence) ? brandInfo.retailPresence.join(' · ') : brandInfo.retailPresence}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Distributors:</strong> {brandInfo.distributors}
                               </div>
@@ -381,7 +442,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                               <div style={{ fontSize: 10, letterSpacing: '2pt', color: '#FBBF24', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Bonus Info (if provided)</div>
                               <div style={{ fontSize: 12, color: '#C8C8C8', lineHeight: 1.75 }}>
                                 <strong style={{color:'#FFFFFF'}}>Brand age:</strong> {brandInfo.brandAge || 'N/A'}<br/>
-                                <strong style={{color:'#FFFFFF'}}>Expand to:</strong> {brandInfo.expandTo || brandInfo.countriesExpand || 'N/A'}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Expand to:</strong> {formatCountryName(brandInfo.expandTo || brandInfo.countriesExpand) || 'N/A'}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Target customer:</strong> {brandInfo.targetCustomer || brandInfo.targetAudience || 'N/A'}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Competitors:</strong> {brandInfo.competitors || 'N/A'}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Social:</strong> {brandInfo.socials || brandInfo.socialMedia || 'N/A'}<br/>

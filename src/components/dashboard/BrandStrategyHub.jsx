@@ -145,7 +145,43 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
     if (isBeauty) mappedChannels.push('Hyperpharmacies');
   }
 
-  let coverageArray = [countriesSelling, countriesExpand].filter(Boolean);
+  const ISO_COUNTRY_MAP = {
+    ro: 'Romania', rom: 'Romania', us: 'United States', usa: 'United States',
+    uk: 'United Kingdom', gb: 'United Kingdom', ca: 'Canada', can: 'Canada',
+    de: 'Germany', deu: 'Germany', fr: 'France', fra: 'France',
+    it: 'Italy', ita: 'Italy', es: 'Spain', esp: 'Spain',
+    nl: 'Netherlands', nld: 'Netherlands', au: 'Australia', aus: 'Australia',
+    ae: 'United Arab Emirates', uae: 'United Arab Emirates', in: 'India', ind: 'India',
+    br: 'Brazil', bra: 'Brazil', mx: 'Mexico', mex: 'Mexico',
+    jp: 'Japan', jpn: 'Japan', cn: 'China', chn: 'China',
+    sg: 'Singapore', sgp: 'Singapore', ch: 'Switzerland', che: 'Switzerland',
+    se: 'Sweden', swe: 'Sweden', no: 'Norway', nor: 'Norway',
+    fi: 'Finland', fin: 'Finland', dk: 'Denmark', dnk: 'Denmark',
+    pl: 'Poland', pol: 'Poland', be: 'Belgium', bel: 'Belgium',
+    at: 'Austria', aut: 'Austria', ie: 'Ireland', irl: 'Ireland',
+    nz: 'New Zealand', nzl: 'New Zealand'
+  };
+
+  const formatCountryName = (countryStr) => {
+    if (!countryStr) return '';
+    if (typeof countryStr !== 'string') return String(countryStr);
+    return countryStr
+      .split(/[,/;]+/)
+      .map(part => {
+        const trimmed = part.trim();
+        if (!trimmed) return '';
+        const lower = trimmed.toLowerCase();
+        if (ISO_COUNTRY_MAP[lower]) return ISO_COUNTRY_MAP[lower];
+        return trimmed
+          .split(/\s+/)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(' ');
+      })
+      .filter(Boolean)
+      .join(', ');
+  };
+
+  let coverageArray = [formatCountryName(countriesSelling), formatCountryName(countriesExpand)].filter(Boolean);
   let coverageText = coverageArray.length > 0 ? coverageArray.join(' · ') : 'Not specified';
 
   const RETAIL_TYPES = [

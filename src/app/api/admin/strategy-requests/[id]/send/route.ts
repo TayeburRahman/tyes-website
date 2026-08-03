@@ -78,6 +78,37 @@ export async function POST(
       return NextResponse.json({ error: 'Failed to update request status' }, { status: 500 });
     }
 
+    if (request.order_id) {
+      const { data: linkedOrder } = await supabaseAdmin
+        .from('orders')
+        .select('*')
+        .eq('id', request.order_id)
+        .single();
+
+      if (linkedOrder) {
+        const hasNoImages = linkedOrder.images_count === 0 || linkedOrder.plan === 'Brand Strategy' || linkedOrder.plan === 'Brand Strategy (Only)';
+        const items = linkedOrder.items || [];
+        const deliveredItems = items.filter((i: any) => i.finishImage || i.v2Image || i.status === 'delivered' || i.status === 'completed');
+        const allImagesDelivered = items.length === 0 || deliveredItems.length === items.length;
+
+        if (hasNoImages || allImagesDelivered) {
+          await supabaseAdmin
+            .from('orders')
+            .update({ status: 'completed', progress: 100 })
+            .eq('id', request.order_id);
+        } else {
+          const newProgress = Math.round((deliveredItems.length / items.length) * 100);
+          await supabaseAdmin
+            .from('orders')
+            .update({
+              status: linkedOrder.status === 'pending' ? 'in_progress' : linkedOrder.status,
+              progress: newProgress
+            })
+            .eq('id', request.order_id);
+        }
+      }
+    }
+
     return NextResponse.json({ success: true, data: updatedRequest });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

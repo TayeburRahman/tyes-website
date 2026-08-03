@@ -701,7 +701,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                 <button
                   onClick={() => {
                     setViewOrder(null);
-                    setPage('strategy');
+                    if (goTo) goTo('brand-strategy');
                   }}
                   style={{
                     padding: "8px 16px",
@@ -938,8 +938,8 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
   const [search, setSearch] = useState("");
   const [viewUser, setViewUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(null);
-  // Only show users with the 'client' role on this page
-  const clients = users.filter(u => u.role === "client");
+  // Show all client accounts (excluding admin/super_admin team members)
+  const clients = users.filter(u => u.role !== "admin" && u.role !== "super_admin");
   const filtered = clients.filter(u => !search || u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()));
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -1479,24 +1479,33 @@ const AnalyticsPage = ({ users, orders }) => {
 
   let avgDeliveryHrs = 0;
   if (deliveredOrders.length > 0) {
+    let validCount = 0;
     const totalDeliveryMs = deliveredOrders.reduce((sum, o) => {
-      const created = new Date(o.created_at).getTime();
-      const updated = new Date(o.updated_at).getTime();
-      return sum + Math.max(0, updated - created);
+      const createdTime = o.created_at ? new Date(o.created_at).getTime() : null;
+      const updatedTime = o.updated_at ? new Date(o.updated_at).getTime() : null;
+      if (createdTime && updatedTime && !isNaN(createdTime) && !isNaN(updatedTime)) {
+        validCount++;
+        return sum + Math.max(0, updatedTime - createdTime);
+      }
+      return sum;
     }, 0);
-    avgDeliveryHrs = totalDeliveryMs / deliveredOrders.length / (1000 * 60 * 60);
+    if (validCount > 0) {
+      avgDeliveryHrs = totalDeliveryMs / validCount / (1000 * 60 * 60);
+    }
   }
+  const displayAvgHrs = (isNaN(avgDeliveryHrs) || !isFinite(avgDeliveryHrs)) ? '0.0' : avgDeliveryHrs.toFixed(1);
 
   const totalRevisions = orders.reduce((acc, o) => acc + (o.revisions || 0), 0);
   const totalImagesWithRevs = orders.reduce((acc, o) => acc + (o.images_count || 0), 0);
   const avgRevisionsPerImg = totalImagesWithRevs ? (totalRevisions / totalImagesWithRevs) : 0;
+  const displayAvgRevs = (isNaN(avgRevisionsPerImg) || !isFinite(avgRevisionsPerImg)) ? '0.00' : avgRevisionsPerImg.toFixed(2);
 
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 24px" }}>Analytics</h1>
       <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
-        <StatCard icon={Clock} label="Avg Delivery Time" value={`${avgDeliveryHrs.toFixed(1)} hrs`} change={avgDeliveryHrs > 24 ? "+12%" : "-5%"} positive={avgDeliveryHrs < 24} sub="Target: 24 hrs" />
-        <StatCard icon={RefreshCw} label="Avg Revisions/Img" value={avgRevisionsPerImg.toFixed(2)} change={avgRevisionsPerImg > 0.5 ? "+0.1" : "-0.1"} positive={avgRevisionsPerImg < 0.5} sub="Target: <0.5" />
+        <StatCard icon={Clock} label="Avg Delivery Time" value={`${displayAvgHrs} hrs`} change={avgDeliveryHrs > 24 ? "+12%" : "-5%"} positive={avgDeliveryHrs < 24} sub="Target: 24 hrs" />
+        <StatCard icon={RefreshCw} label="Avg Revisions/Img" value={displayAvgRevs} change={avgRevisionsPerImg > 0.5 ? "+0.1" : "-0.1"} positive={avgRevisionsPerImg < 0.5} sub="Target: <0.5" />
       </div>
       <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: 400, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
@@ -1886,13 +1895,22 @@ export default function TyesAdmin() {
         .order('created_at', { descending: true });
 
       if (profilesData) {
-        const mappedUsers = profilesData.map(u => ({
-          ...u,
-          name: `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email,
-          spent: u.total_spent || 0,
-          orders: u.orders_count || 0,
-          joined: new Date(u.created_at).toISOString().split('T')[0]
-        }));
+        const rawOrders = ordersData || [];
+        const mappedUsers = profilesData.map(u => {
+          const clientOrders = rawOrders.filter(o =>
+            (o.user_id && o.user_id === u.id) ||
+            (o.customer_email && u.email && o.customer_email.toLowerCase().trim() === u.email.toLowerCase().trim())
+          );
+          const totalSpent = clientOrders.reduce((sum, o) => sum + Number(o.revenue || 0), 0);
+
+          return {
+            ...u,
+            name: `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email,
+            spent: totalSpent > 0 ? totalSpent : (u.total_spent || 0),
+            orders: clientOrders.length > 0 ? clientOrders.length : (u.orders_count || 0),
+            joined: new Date(u.created_at).toISOString().split('T')[0]
+          };
+        });
         setUsers(mappedUsers);
       } else {
         setUsers([]);
@@ -2092,24 +2110,26 @@ export default function TyesAdmin() {
                 )}
               </button>
               {notifOpen && (
-                <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, width: 300, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, zIndex: 100, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
-                  <div style={{ padding: "8px 12px", fontSize: 13, fontWeight: 700, color: "#fff", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>Recent Notifications</div>
-                  {orders.length ? orders.slice(0, 7).map((o, i) => {
-                    const isCustom = o.plan?.includes('Custom');
-                    return (
-                      <div key={i} onClick={() => { setPage("orders"); setNotifOpen(false); setAdminTargetOrder(o); }} style={{ display: "flex", gap: 10, padding: "10px 12px", cursor: "pointer", borderRadius: 8, background: isCustom ? "rgba(251,191,36,0.05)" : "transparent" }} onMouseEnter={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.1)" : "rgba(255,255,255,0.03)"} onMouseLeave={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.05)" : "transparent"}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", marginTop: 4, background: isCustom ? "#fbbf24" : (statusConfig[o.status || 'pending']?.color || '#34d399') }} />
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 12, color: "#d1d5db", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                            <span>{statusConfig[o.status || 'pending']?.label || 'Pending'}: {o.id}</span>
-                            {isCustom && <span style={{ fontSize: 9, padding: "1px 6px", borderRadius: 4, background: "rgba(251, 191, 36, 0.2)", color: "#fbbf24", fontWeight: 700 }}>Custom</span>}
+                <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, width: 320, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, zIndex: 100, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
+                  <div style={{ padding: "8px 12px", fontSize: 13, fontWeight: 700, color: "#fff", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4 }}>Recent Notifications</div>
+                  <div style={{ maxHeight: 300, overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
+                    {orders.length ? orders.slice(0, 15).map((o, i) => {
+                      const isCustom = o.plan?.includes('Custom');
+                      return (
+                        <div key={i} onClick={() => { setPage("orders"); setNotifOpen(false); setAdminTargetOrder(o); }} style={{ display: "flex", gap: 10, padding: "10px 12px", cursor: "pointer", borderRadius: 8, background: isCustom ? "rgba(251,191,36,0.05)" : "transparent" }} onMouseEnter={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.1)" : "rgba(255,255,255,0.03)"} onMouseLeave={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.05)" : "transparent"}>
+                          <div style={{ width: 8, height: 8, borderRadius: "50%", marginTop: 4, background: isCustom ? "#fbbf24" : (statusConfig[o.status || 'pending']?.color || '#34d399') }} />
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: 12, color: "#d1d5db", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                              <span>{statusConfig[o.status || 'pending']?.label || 'Pending'}: {o.id}</span>
+                              {isCustom && <span style={{ fontSize: 9, padding: "1px 6px", borderRadius: 4, background: "rgba(251, 191, 36, 0.2)", color: "#fbbf24", fontWeight: 700 }}>Custom</span>}
+                            </div>
+                            <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 2 }}>{o.customer} · {o.plan}</div>
+                            <div style={{ fontSize: 10, color: "#4b5563", marginTop: 2 }}>{o.date} {o.created_at ? `at ${new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}</div>
                           </div>
-                          <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 2 }}>{o.customer} · {o.plan}</div>
-                          <div style={{ fontSize: 10, color: "#4b5563", marginTop: 2 }}>{o.date} {o.created_at ? `at ${new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}</div>
                         </div>
-                      </div>
-                    );
-                  }) : <div style={{ padding: 20, textAlign: "center", color: "#4b5563", fontSize: 12 }}>No notifications.</div>}
+                      );
+                    }) : <div style={{ padding: 20, textAlign: "center", color: "#4b5563", fontSize: 12 }}>No notifications.</div>}
+                  </div>
                   <button onClick={() => { setNotifOpen(false); setPage("orders"); }} style={{ width: "100%", padding: "8px", border: "none", background: "transparent", color: "#4ecdc4", fontSize: 11, cursor: "pointer", borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 4 }}>View all orders</button>
                 </div>
               )}
