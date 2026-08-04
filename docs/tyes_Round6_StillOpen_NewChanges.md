@@ -6,6 +6,7 @@ A. STILL NOT DONE from the previous document
     3. Google sign-in button: still missing the Google "G" logo on "Continue with Google".
     4. FAQ: "NEW" badges still there → remove.
     5. Footer: still shows Twitter–X → replace with Facebook (keep LinkedIn + Instagram).
+    
     6. Newsletter → Resend: endpoint still not wired; code was provided in the previous doc.
     7. Brands logo marquee: still missing (full code in the previous doc; logos come from Sheika).
     8. The Retail Network section: still missing (copy in the approved homepage doc).
