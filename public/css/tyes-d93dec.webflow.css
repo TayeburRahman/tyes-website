@@ -6917,3 +6917,52 @@ footer,
     gap: 0.5rem !important;
   }
 }
+/* Brands Marquee CSS */
+.brands-marquee {
+  background: transparent;
+  padding: 40px 0 48px;
+  overflow: hidden;
+}
+.brands-marquee .eyebrow {
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  letter-spacing: 3pt;
+  text-transform: uppercase;
+  color: #2DD4BF;
+  font-size: 11pt;
+  margin-bottom: 24px;
+}
+.brands-marquee .marquee-track {
+  display: flex;
+  gap: 80px;
+  align-items: center;
+  width: max-content;
+  animation: scrollLeft 30s linear infinite;
+}
+.brands-marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+.brands-marquee img {
+  height: 60px;
+  width: auto;
+  filter: grayscale(100%) invert(1) opacity(0.55);
+  transition: filter 0.3s ease;
+}
+.brands-marquee img:hover {
+  filter: grayscale(0%) invert(0) brightness(1.5) opacity(1);
+}
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brands-marquee .marquee-track { animation: none; justify-content: center; flex-wrap: wrap; }
+}
+
+/* ============ GLOBAL BUTTON STYLES ============ */
+.cta-pill { display: inline-flex; align-items: center; justify-content: center; background: #2DD4BF; color: #0A0A0A; font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px; padding: 14px 34px; border-radius: 999px; text-decoration: none; transition: background 0.2s ease, transform 0.2s ease; }
+.cta-pill:hover { background: #26b3a1; transform: translateY(-2px); color: #0A0A0A; text-decoration: none; }
+.cta-ghost { display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 2px solid #2DD4BF; color: #2DD4BF; font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px; padding: 12px 32px; border-radius: 999px; text-decoration: none; transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+.cta-ghost:hover { background: #2DD4BF; color: #0A0A0A; transform: translateY(-2px); text-decoration: none; }
