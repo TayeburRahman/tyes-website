@@ -30,21 +30,25 @@
       width: 0px;
       background: transparent;
     }
-  </style>
+    /* ENFORCE ACCENT FOR REACT */
+  .font-accent, .accent, .text-accent { font-family: "Montserrat", sans-serif !important; font-style: italic !important; font-weight: 700 !important; color: #2DD4BF !important; }
+  h1, h2, h3, h4, h5, h6 { font-family: "League Spartan", sans-serif !important; font-weight: 800 !important; color: #FFFFFF !important; }
+  .tyes-brand, .brand { font-family: "Gliker", serif !important; }
+</style>
   <script>
     tailwind.config = {
       safelist: ['h-[10000vh]'],
       theme: {
         extend: {
           colors: {
-            accent: '#4ecdc4',
+            accent: '#2DD4BF',
             muted: '#6B6B6B',
             dark: '#050505',
           },
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
-            heading: ['Inter', 'sans-serif'],
-            accent: ['Gliker', 'serif'],
+            heading: ['League Spartan', 'sans-serif'],
+            accent: ['Montserrat', 'sans-serif'],
           }
         }
       }
@@ -97,11 +101,11 @@
       if (text.includes('Get Your Free Image')) {
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = '/auth';
-      } else if (text.includes('Get Your Free Strategy')) {
+        window.location.href = 'signin.html';
+      } else if (text.includes('Get Your Free Strategy') || text.includes('Get Started') || text.includes('Get My Free Strategy')) {
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = 'main.html';
+        window.location.href = 'signin.html';
       }
     }, true); // Use capture phase to intercept before React handles it
   </script>

@@ -2749,13 +2749,13 @@ blockquote {
   height: 5px;
 }
 
-.featured-text {
-  color: #4ecdc4;
+.featured-text, .accent {
+  color: #2DD4BF;
   text-transform: capitalize;
   padding-right: 10px;
-  font-family: Gliker, serif;
-  font-style: normal;
-  font-weight: 400;
+  font-family: 'Montserrat', sans-serif !important;
+  font-style: italic !important;
+  font-weight: 700 !important;
   letter-spacing: 0;
 }
 
@@ -5086,7 +5086,7 @@ blockquote {
   }
 
   .preloader-line {
-    width: 90%;
+    width: 100%;
     max-width: none;
   }
 }
@@ -5442,139 +5442,138 @@ blockquote {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
   }
-  }
+}
 
-  .testimonial-arrow {
-    bottom: 0;
-  }
+.testimonial-arrow {
+  bottom: 0;
+}
 
-  .testimonial-name {
-    font-size: 1.5rem;
-  }
+.testimonial-name {
+  font-size: 1.5rem;
+}
 
-  .testimonial-mask {
-    width: 90%;
-  }
+.testimonial-mask {
+  width: 90%;
+}
 
-  .slide-image-block {
-    min-height: 25rem;
-  }
+.slide-image-block {
+  min-height: 25rem;
+}
 
-  .cta-content {
-    max-width: 18rem;
-  }
+.cta-content {
+  max-width: 18rem;
+}
 
-  .nav-menu-container {
-    padding-top: 4rem;
-  }
+.nav-menu-container {
+  padding-top: 4rem;
+}
 
-  .nav-link {
-    height: 3rem;
-  }
+.nav-link {
+  height: 3rem;
+}
 
-  .nav-link-text {
-    font-size: 3rem;
-  }
+.nav-link-text {
+  font-size: 3rem;
+}
 
-  .contact-inner-grid {
-    grid-template-columns: 1fr;
-  }
+.contact-inner-grid {
+  grid-template-columns: 1fr;
+}
 
-  .plus-block {
-    background-image: none;
-  }
+.plus-block {
+  background-image: none;
+}
 
-  .accordion-answer-text {
-    padding-top: 2rem;
-  }
+.accordion-answer-text {
+  padding-top: 2rem;
+}
 
-  .accordion-heading {
-    font-size: 1.25rem;
-  }
+.accordion-heading {
+  font-size: 1.25rem;
+}
 
-  .section-about-header {
-    padding-bottom: 8rem;
-  }
+.section-about-header {
+  padding-bottom: 8rem;
+}
 
-  .about-intro-grid,
-  .mission-component-grid {
-    grid-template-columns: 1fr;
-  }
+.about-intro-grid,
+.mission-component-grid {
+  grid-template-columns: 1fr;
+}
 
-  .numbers-content-wrapper {
-    padding-top: 1rem;
-  }
+.numbers-content-wrapper {
+  padding-top: 1rem;
+}
 
-  .sticky-wrapper {
-    position: static;
-  }
+.sticky-wrapper {
+  position: static;
+}
 
-  .service-inner-grid {
-    grid-template-columns: 1fr;
-  }
+.service-inner-grid {
+  grid-template-columns: 1fr;
+}
 
-  .service-content-block {
-    padding-left: 0;
-    padding-right: 0;
-  }
+.service-content-block {
+  padding-left: 0;
+  padding-right: 0;
+}
 
-  .blog-post-title {
-    font-size: 1.5rem;
-  }
+.blog-post-title {
+  font-size: 1.5rem;
+}
 
-  .blog-post-heading {
-    font-size: 2.25rem;
-  }
+.blog-post-heading {
+  font-size: 2.25rem;
+}
 
-  .blog-posts-grid {
-    grid-template-columns: 1fr;
-  }
+.blog-posts-grid {
+  grid-template-columns: 1fr;
+}
 
-  .pricing-content-wrapper {
-    padding: 2rem 1.5rem;
-  }
+.pricing-content-wrapper {
+  padding: 2rem 1.5rem;
+}
 
-  .case-name {
-    font-size: 2rem;
-  }
+.case-name {
+  font-size: 2rem;
+}
 
-  .case-name-wrap {
-    height: 1.75rem;
-  }
+.case-name-wrap {
+  height: 1.75rem;
+}
 
-  .use-case-name-wrap {
-    grid-column-gap: 0rem;
-    grid-row-gap: 0rem;
-  }
+.use-case-name-wrap {
+  grid-column-gap: 0rem;
+  grid-row-gap: 0rem;
+}
 
-  .case-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+.case-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
 
-  .brand-icon {
-    width: 1.15rem;
-    height: 1.15rem;
-  }
+.brand-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
 
-  .logo,
-  .alternate-logo {
-    width: 6.5rem;
-  }
+.logo,
+.alternate-logo {
+  width: 6.5rem;
+}
 
-  .case-number {
-    top: 1rem;
-    left: 1.5rem;
-  }
+.case-number {
+  top: 1rem;
+  left: 1.5rem;
+}
 
-  .preloader-padding {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+.preloader-padding {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
 
-  .preloader-line {
-    width: 100%;
-  }
+.preloader-line {
+  width: 100%;
 }
 
 @media screen and (max-width: 479px) {
@@ -6868,7 +6867,9 @@ blockquote {
 }
 
 /* UNIFIED SITEWIDE FOOTER COMPONENT STYLING */
-footer, .footer, .footer-component {
+footer,
+.footer,
+.footer-component {
   position: relative;
   background: #050505 !important;
   padding-top: 2.5rem !important;
@@ -6895,7 +6896,10 @@ footer, .footer, .footer-component {
 }
 
 @media (max-width: 768px) {
-  footer, .footer, .footer-component {
+
+  footer,
+  .footer,
+  .footer-component {
     padding-top: 1.5rem !important;
     padding-bottom: 1.5rem !important;
   }
