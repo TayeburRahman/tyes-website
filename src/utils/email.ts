@@ -126,7 +126,7 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
   try {
     const resend = new Resend(resendApiKey);
     const { data, error } = await resend.emails.send({
-      from: 'Tyes <hello@tyes.app>',
+      from: 'Tyes <office@tyes.app>',
       to: props.to,
       subject: `Order Confirmation - ${props.orderTitle}`,
       html: htmlContent,
@@ -194,7 +194,7 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
   }
   const resend = new Resend(resendApiKey);
   return await resend.emails.send({
-    from: 'Tyes <hello@tyes.app>',
+    from: 'Tyes <office@tyes.app>',
     to: props.to,
     subject: `Your Brand Strategy Snapshot - ${props.brandName}`,
     html: htmlContent,
@@ -247,7 +247,7 @@ export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: str
   }
   const resend = new Resend(resendApiKey);
   return await resend.emails.send({
-    from: 'Tyes <hello@tyes.app>',
+    from: 'Tyes <office@tyes.app>',
     to: props.to,
     subject: `Ready for the full playbook?`,
     html: htmlContent,
@@ -289,12 +289,12 @@ export const sendRevisionRequestEmail = async (props: { to: string; orderId: str
 export const sendImageDeliveryEmail = async (props: { to: string; customerName: string; orderTitle: string; dashboardUrl: string; deliveredCount?: number; totalImages?: number; isRevision?: boolean }) => {
   const resendApiKey = process.env.RESEND_API_KEY;
   const { isRevision, deliveredCount, totalImages } = props;
-  
+
   let title = "Your images are ready!";
   let subtitle = "Images Delivered";
   let messageText = `Great news! The images for your order <strong>${props.orderTitle}</strong> have been delivered and are ready for review.`;
   let subjectText = `Your images are ready - ${props.orderTitle}`;
-  
+
   if (isRevision) {
     title = "Revision V2 re-delivered!";
     subtitle = "Revision Delivered";
@@ -351,7 +351,7 @@ export const sendImageDeliveryEmail = async (props: { to: string; customerName: 
   const { Resend } = require('resend');
   const resend = new Resend(resendApiKey);
   return await resend.emails.send({
-    from: 'Tyes <hello@tyes.app>',
+    from: 'Tyes <office@tyes.app>',
     to: props.to,
     subject: subjectText,
     html: htmlContent,

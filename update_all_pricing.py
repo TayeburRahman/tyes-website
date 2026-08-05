@@ -69,7 +69,7 @@ pricing_html = """<section class="pricing" id="pricing">
       <ul><li>Full LLM audit + 90-day roadmap</li><li>Viral product concepts for your niche</li><li>Warm intros to retail buyers we know</li><li>Packaging &amp; positioning direction</li><li>1-hour strategy call</li></ul>
       <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
         <a class="cta-pill" href="services.html" style="flex:1;">Contact Us →</a>
-        <a class="cta-ghost" href="https://calendly.com/tyes/deep-dive-call" style="flex:1; text-align:center;">Book a Call →</a>
+        <a class="cta-ghost" href="https://calendly.com/raluca-tyes/30min" style="flex:1; text-align:center;">Book a Call →</a>
       </div>
     </div>
   </div>
@@ -82,7 +82,7 @@ pricing_html = """<section class="pricing" id="pricing">
     </div>
     <div style="display:flex; gap:12px; flex-wrap:wrap;">
       <a class="cta-pill" href="services.html">Contact Us →</a>
-      <a class="cta-ghost" href="https://calendly.com/tyes/discovery-call">Book a Call →</a>
+      <a class="cta-ghost" href="https://calendly.com/raluca-tyes/30min">Book a Call →</a>
     </div>
   </div>
 </section>

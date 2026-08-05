@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const resend = new Resend(resendApiKey);
 
     const { data, error } = await resend.emails.send({
-      from: 'Tyes Contact Form <hello@tyes.app>',
+      from: 'Tyes Contact Form <office@tyes.app>',
       to: 'office@tyes.app',
       replyTo: email,
       subject: `New Contact Form Submission: ${subject || 'No Subject'}`,

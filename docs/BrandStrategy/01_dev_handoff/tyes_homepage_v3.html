@@ -1,1381 +1,1896 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>tyes.app · Homepage v3, Aligned with New Pricing + About Us + How It Works</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
-<!-- Paste your licensed Gliker kit <link> or @font-face here if you have one. -->
-<style>
- @page { size: A4; margin: 12mm 12mm; }
- * { box-sizing: border-box; margin: 0; padding: 0; }
- body {
- font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
- font-weight: 500;
- color: #1a1a1a; line-height: 1.55;
- background: #FAFAF7;
- padding: 15mm 10mm;
- }
- h1, h2, h3, h4, .doc-title, .mock-headline, .pricing-card h4 {
- font-family: "League Spartan", -apple-system, sans-serif;
- font-weight: 700;
- }
- .mock-cta, button, .cta {
- font-family: "Montserrat", -apple-system, sans-serif;
- font-weight: 500;
- }
- .container { max-width: 800px; margin: 0 auto; }
+    <meta charset="UTF-8">
+    <title>tyes.app · Homepage v3, Aligned with New Pricing + About Us + How It Works</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
+        rel="stylesheet">
+    <!-- Paste your licensed Gliker kit <link> or @font-face here if you have one. -->
+    <style>
+        @page {
+            size: A4;
+            margin: 12mm 12mm;
+        }
 
- /* Brand marks, SAME as other pages */
- .brand {
- font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif;
- font-weight: 700; letter-spacing: -0.5pt;
- }
- .accent-italic {
- font-family: "Montserrat", -apple-system, sans-serif;
- font-style: italic; font-weight: 700; color: #2DD4BF;
- }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
- /* Doc header */
- .doc-title {
- font-size: 22pt; font-weight: 800; letter-spacing: -0.5pt;
- color: #1a1a1a; margin-bottom: 3mm; line-height: 1.15;
- }
- .doc-title .brand { color: #2DD4BF; }
- .doc-subtitle {
- font-size: 11pt; color: #666; margin-bottom: 8mm;
- }
+        body {
+            font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            font-weight: 500;
+            color: #1a1a1a;
+            line-height: 1.55;
+            background: #FAFAF7;
+            padding: 15mm 10mm;
+        }
 
- /* Strategic shift box (green) */
- .shift-box {
- background: #E8F8F5;
- border-left: 4px solid #2DD4BF;
- padding: 5mm 6mm; margin-bottom: 10mm;
- font-size: 10pt; color: #1a4a45;
- }
- .shift-box strong { color: #0D5B54; }
- .shift-box .accent {
- background: #B8ECDF; padding: 0 1mm; font-weight: 700;
- color: #0D5B54;
- }
+        h1,
+        h2,
+        h3,
+        h4,
+        .doc-title,
+        .mock-headline,
+        .pricing-card h4 {
+            font-family: "League Spartan", -apple-system, sans-serif;
+            font-weight: 700;
+        }
 
- /* Section header (black bar) */
- .section-header {
- background: #1a1a1a; color: #FFFFFF;
- padding: 4mm 6mm; border-radius: 3px;
- margin: 12mm 0 6mm;
- font-size: 10pt; font-weight: 700; letter-spacing: 1pt;
- text-transform: uppercase;
- }
- .section-header:first-of-type { margin-top: 8mm; }
+        .mock-cta,
+        button,
+        .cta {
+            font-family: "Montserrat", -apple-system, sans-serif;
+            font-weight: 500;
+        }
 
- /* Version label */
- .version-label {
- font-size: 10pt; font-weight: 700; letter-spacing: 1pt;
- color: #2DD4BF; text-transform: uppercase;
- margin-bottom: 3mm;
- }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
- /* Mockup box (dark) */
- .mockup {
- background: #0A0A0A; color: #FFFFFF;
- border-radius: 6px;
- padding: 12mm 8mm; margin-bottom: 4mm;
- position: relative;
- }
- .mockup .label {
- position: absolute; top: 3mm; left: 4mm;
- font-size: 7.5pt; letter-spacing: 2pt; color: #666;
- text-transform: uppercase; font-weight: 700;
- }
- .mockup .dashed {
- border-top: 1px dashed #333;
- margin: 6mm 0 4mm;
- }
- .mockup.tall { padding: 15mm 8mm 10mm; }
+        /* Brand marks, SAME as other pages */
+        .brand {
+            font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.5pt;
+        }
 
- /* Mockup content typography, League Spartan Bold for titles */
- .mock-headline {
- font-family: "League Spartan", -apple-system, sans-serif;
- font-size: 30pt; font-weight: 700; letter-spacing: -1pt;
- color: #FFFFFF; text-align: center; line-height: 1.05;
- margin: 4mm 0;
- }
- .mock-headline .accent {
- color: #2DD4BF;
- font-family: "Montserrat", sans-serif;
- font-style: italic; font-weight: 700;
- }
- .mock-headline-serif {
- font-family: "Montserrat", sans-serif;
- font-style: italic; font-weight: 700;
- color: #2DD4BF;
- }
- .mock-sub {
- font-size: 10.5pt; color: #B8B8B8; text-align: center;
- max-width: 520px; margin: 0 auto 6mm; line-height: 1.55;
- font-weight: 400;
- }
- .mock-sub strong { color: #FFFFFF; font-weight: 700; }
- .mock-sub .accent-italic {
- color: #2DD4BF;
- font-family: "Montserrat", sans-serif;
- font-style: italic; font-weight: 700;
- }
- .mock-eyebrow {
- font-size: 7pt; letter-spacing: 3pt; color: #2DD4BF;
- text-transform: uppercase; text-align: center;
- font-weight: 700; margin-bottom: 3mm;
- }
- .mock-cta-row {
- display: flex; gap: 3mm; justify-content: center;
- margin: 6mm 0 3mm; flex-wrap: wrap;
- }
- .mock-cta {
- padding: 2.5mm 5mm; border-radius: 999px;
- font-size: 9pt; font-weight: 500; letter-spacing: 0.2pt;
- white-space: nowrap;
- }
- .mock-cta.primary { background: #2DD4BF; color: #0A0A0A; font-weight: 500; }
- .mock-cta.secondary { background: transparent; border: 1px solid #2DD4BF; color: #2DD4BF; font-weight: 500; }
- .mock-cta.ghost { background: transparent; color: #B8B8B8; padding: 2.5mm 2mm; font-weight: 400; }
- .mock-trust {
- font-size: 7.5pt; color: #666; text-align: center;
- margin-top: 2mm;
- }
- .mock-trust strong { color: #2DD4BF; }
+        .accent-italic {
+            font-family: "Montserrat", -apple-system, sans-serif;
+            font-style: italic;
+            font-weight: 700;
+            color: #2DD4BF;
+        }
 
- /* Category chip row inside mockups */
- .mock-categories {
- text-align: center; margin-top: 4mm;
- font-size: 9.5pt; color: #B8B8B8; letter-spacing: 1pt;
- }
- .mock-categories strong { color: #FFFFFF; font-weight: 700; }
+        /* Doc header */
+        .doc-title {
+            font-size: 22pt;
+            font-weight: 800;
+            letter-spacing: -0.5pt;
+            color: #1a1a1a;
+            margin-bottom: 3mm;
+            line-height: 1.15;
+        }
 
- /* Pricing cards mockup */
- .pricing-mockup-grid {
- display: grid; grid-template-columns: 1fr 1fr 1fr;
- gap: 3mm; margin-top: 4mm;
- }
- .pricing-card {
- background: #141414; border: 1px solid #2A2A2A;
- padding: 5mm 5mm; border-radius: 5px; position: relative;
- }
- .pricing-card.popular {
- background: #1a1a1a; border: 1.5px solid #2DD4BF;
- }
- .pricing-card .cat-tag {
- font-size: 6.5pt; letter-spacing: 2pt; color: #2DD4BF;
- text-transform: uppercase; font-weight: 700; margin-bottom: 2mm;
- }
- .pricing-card h4 {
- font-size: 10pt; color: #FFFFFF; margin-bottom: 1mm;
- }
- .pricing-card .price {
- font-size: 16pt; color: #FFFFFF; font-weight: 800;
- margin: 2mm 0 3mm;
- }
- .pricing-card ul {
- list-style: none; padding: 0; margin: 0;
- font-size: 8pt; color: #B4B4B4; line-height: 1.5;
- }
- .pricing-card ul li { margin-bottom: 1mm; }
- .pricing-card ul li::before { content: "✓ "; color: #2DD4BF; }
- .pricing-card .bonus {
- border-top: 1px dashed #2DD4BF;
- padding-top: 2mm; margin-top: 3mm;
- font-size: 7.5pt; color: #2DD4BF; font-weight: 700;
- }
- .pricing-card .bonus::before { content: "+ "; }
+        .doc-title .brand {
+            color: #2DD4BF;
+        }
 
- /* Copy breakdown blocks */
- .copy-block {
- background: #FFFFFF; border-left: 3px solid #2DD4BF;
- padding: 4mm 5mm; margin: 3mm 0;
- border-radius: 0 3px 3px 0;
- }
- .copy-block .cb-label {
- font-size: 8pt; letter-spacing: 1.5pt; color: #2DD4BF;
- text-transform: uppercase; font-weight: 700; margin-bottom: 2mm;
- }
- .copy-block .cb-text {
- font-size: 10pt; color: #333; line-height: 1.55;
- font-style: italic;
- }
- .copy-block .cb-text strong { color: #1a1a1a; font-style: normal; }
+        .doc-subtitle {
+            font-size: 11pt;
+            color: #666;
+            margin-bottom: 8mm;
+        }
 
- /* Note box */
- .note-box {
- background: #1a1a1a; color: #EDEDED;
- padding: 5mm 6mm; border-radius: 4px;
- margin: 5mm 0 6mm;
- font-size: 9pt; line-height: 1.6;
- }
- .note-box strong { color: #2DD4BF; }
- .note-box .em-yellow { color: #FBBF24; }
+        /* Strategic shift box (green) */
+        .shift-box {
+            background: #E8F8F5;
+            border-left: 4px solid #2DD4BF;
+            padding: 5mm 6mm;
+            margin-bottom: 10mm;
+            font-size: 10pt;
+            color: #1a4a45;
+        }
 
- h3 {
- font-size: 11pt; font-weight: 700; color: #1a1a1a;
- margin: 6mm 0 3mm; letter-spacing: 0.3pt;
- }
- p { font-size: 10pt; color: #333; margin-bottom: 3mm; line-height: 1.6; }
- p strong { color: #1a1a1a; }
+        .shift-box strong {
+            color: #0D5B54;
+        }
 
- .divider {
- border-top: 1px solid #E5E5E5;
- margin: 12mm 0;
- }
+        .shift-box .accent {
+            background: #B8ECDF;
+            padding: 0 1mm;
+            font-weight: 700;
+            color: #0D5B54;
+        }
 
- /* Retail Network mini-grid (mockup) */
- .retail-cats-grid {
- display: grid; grid-template-columns: 1fr 1fr;
- gap: 2.5mm; margin: 4mm 0;
- }
- .retail-cat-item {
- background: #141414; border-left: 2px solid #2DD4BF;
- padding: 3mm 4mm; border-radius: 3px;
- }
- .retail-cat-item .rc-num {
- font-size: 7pt; letter-spacing: 2pt; color: #2DD4BF;
- text-transform: uppercase; font-weight: 700; margin-bottom: 1mm;
- }
- .retail-cat-item .rc-name {
- font-size: 9pt; color: #FFFFFF; font-weight: 700;
- }
+        /* Section header (black bar) */
+        .section-header {
+            background: #1a1a1a;
+            color: #FFFFFF;
+            padding: 4mm 6mm;
+            border-radius: 3px;
+            margin: 12mm 0 6mm;
+            font-size: 10pt;
+            font-weight: 700;
+            letter-spacing: 1pt;
+            text-transform: uppercase;
+        }
 
- /* Deep Dive block mockup */
- .deep-dive-mock {
- background: linear-gradient(135deg, #141414, #1a1a1a);
- border: 1px solid #333; border-radius: 6px;
- padding: 8mm 8mm; margin-top: 4mm;
- }
- .deep-dive-mock .eyebrow {
- font-size: 7.5pt; letter-spacing: 3pt; color: #2DD4BF;
- text-transform: uppercase; font-weight: 700; margin-bottom: 3mm;
- }
- .deep-dive-mock h4 {
- font-size: 16pt; font-weight: 800; color: #FFFFFF;
- margin-bottom: 3mm; line-height: 1.15;
- }
- .deep-dive-mock h4 .accent {
- color: #2DD4BF; font-family: "Montserrat", sans-serif;
- font-style: italic;
- }
- .deep-dive-mock p {
- font-size: 9pt; color: #B8B8B8; margin-bottom: 4mm;
- }
-</style>
+        .section-header:first-of-type {
+            margin-top: 8mm;
+        }
+
+        /* Version label */
+        .version-label {
+            font-size: 10pt;
+            font-weight: 700;
+            letter-spacing: 1pt;
+            color: #2DD4BF;
+            text-transform: uppercase;
+            margin-bottom: 3mm;
+        }
+
+        /* Mockup box (dark) */
+        .mockup {
+            background: #0A0A0A;
+            color: #FFFFFF;
+            border-radius: 6px;
+            padding: 12mm 8mm;
+            margin-bottom: 4mm;
+            position: relative;
+        }
+
+        .mockup .label {
+            position: absolute;
+            top: 3mm;
+            left: 4mm;
+            font-size: 7.5pt;
+            letter-spacing: 2pt;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .mockup .dashed {
+            border-top: 1px dashed #333;
+            margin: 6mm 0 4mm;
+        }
+
+        .mockup.tall {
+            padding: 15mm 8mm 10mm;
+        }
+
+        /* Mockup content typography, League Spartan Bold for titles */
+        .mock-headline {
+            font-family: "League Spartan", -apple-system, sans-serif;
+            font-size: 30pt;
+            font-weight: 700;
+            letter-spacing: -1pt;
+            color: #FFFFFF;
+            text-align: center;
+            line-height: 1.05;
+            margin: 4mm 0;
+        }
+
+        .mock-headline .accent {
+            color: #2DD4BF;
+            font-family: "Montserrat", sans-serif;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .mock-headline-serif {
+            font-family: "Montserrat", sans-serif;
+            font-style: italic;
+            font-weight: 700;
+            color: #2DD4BF;
+        }
+
+        .mock-sub {
+            font-size: 10.5pt;
+            color: #B8B8B8;
+            text-align: center;
+            max-width: 520px;
+            margin: 0 auto 6mm;
+            line-height: 1.55;
+            font-weight: 400;
+        }
+
+        .mock-sub strong {
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        .mock-sub .accent-italic {
+            color: #2DD4BF;
+            font-family: "Montserrat", sans-serif;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .mock-eyebrow {
+            font-size: 7pt;
+            letter-spacing: 3pt;
+            color: #2DD4BF;
+            text-transform: uppercase;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 3mm;
+        }
+
+        .mock-cta-row {
+            display: flex;
+            gap: 3mm;
+            justify-content: center;
+            margin: 6mm 0 3mm;
+            flex-wrap: wrap;
+        }
+
+        .mock-cta {
+            padding: 2.5mm 5mm;
+            border-radius: 999px;
+            font-size: 9pt;
+            font-weight: 500;
+            letter-spacing: 0.2pt;
+            white-space: nowrap;
+        }
+
+        .mock-cta.primary {
+            background: #2DD4BF;
+            color: #0A0A0A;
+            font-weight: 500;
+        }
+
+        .mock-cta.secondary {
+            background: transparent;
+            border: 1px solid #2DD4BF;
+            color: #2DD4BF;
+            font-weight: 500;
+        }
+
+        .mock-cta.ghost {
+            background: transparent;
+            color: #B8B8B8;
+            padding: 2.5mm 2mm;
+            font-weight: 400;
+        }
+
+        .mock-trust {
+            font-size: 7.5pt;
+            color: #666;
+            text-align: center;
+            margin-top: 2mm;
+        }
+
+        .mock-trust strong {
+            color: #2DD4BF;
+        }
+
+        /* Category chip row inside mockups */
+        .mock-categories {
+            text-align: center;
+            margin-top: 4mm;
+            font-size: 9.5pt;
+            color: #B8B8B8;
+            letter-spacing: 1pt;
+        }
+
+        .mock-categories strong {
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        /* Pricing cards mockup */
+        .pricing-mockup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3mm;
+            margin-top: 4mm;
+        }
+
+        .pricing-card {
+            background: #141414;
+            border: 1px solid #2A2A2A;
+            padding: 5mm 5mm;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .pricing-card.popular {
+            background: #1a1a1a;
+            border: 1.5px solid #2DD4BF;
+        }
+
+        .pricing-card .cat-tag {
+            font-size: 6.5pt;
+            letter-spacing: 2pt;
+            color: #2DD4BF;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 2mm;
+        }
+
+        .pricing-card h4 {
+            font-size: 10pt;
+            color: #FFFFFF;
+            margin-bottom: 1mm;
+        }
+
+        .pricing-card .price {
+            font-size: 16pt;
+            color: #FFFFFF;
+            font-weight: 800;
+            margin: 2mm 0 3mm;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 8pt;
+            color: #B4B4B4;
+            line-height: 1.5;
+        }
+
+        .pricing-card ul li {
+            margin-bottom: 1mm;
+        }
+
+        .pricing-card ul li::before {
+            content: "✓ ";
+            color: #2DD4BF;
+        }
+
+        .pricing-card .bonus {
+            border-top: 1px dashed #2DD4BF;
+            padding-top: 2mm;
+            margin-top: 3mm;
+            font-size: 7.5pt;
+            color: #2DD4BF;
+            font-weight: 700;
+        }
+
+        .pricing-card .bonus::before {
+            content: "+ ";
+        }
+
+        /* Copy breakdown blocks */
+        .copy-block {
+            background: #FFFFFF;
+            border-left: 3px solid #2DD4BF;
+            padding: 4mm 5mm;
+            margin: 3mm 0;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .copy-block .cb-label {
+            font-size: 8pt;
+            letter-spacing: 1.5pt;
+            color: #2DD4BF;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 2mm;
+        }
+
+        .copy-block .cb-text {
+            font-size: 10pt;
+            color: #333;
+            line-height: 1.55;
+            font-style: italic;
+        }
+
+        .copy-block .cb-text strong {
+            color: #1a1a1a;
+            font-style: normal;
+        }
+
+        /* Note box */
+        .note-box {
+            background: #1a1a1a;
+            color: #EDEDED;
+            padding: 5mm 6mm;
+            border-radius: 4px;
+            margin: 5mm 0 6mm;
+            font-size: 9pt;
+            line-height: 1.6;
+        }
+
+        .note-box strong {
+            color: #2DD4BF;
+        }
+
+        .note-box .em-yellow {
+            color: #FBBF24;
+        }
+
+        h3 {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 6mm 0 3mm;
+            letter-spacing: 0.3pt;
+        }
+
+        p {
+            font-size: 10pt;
+            color: #333;
+            margin-bottom: 3mm;
+            line-height: 1.6;
+        }
+
+        p strong {
+            color: #1a1a1a;
+        }
+
+        .divider {
+            border-top: 1px solid #E5E5E5;
+            margin: 12mm 0;
+        }
+
+        /* Retail Network mini-grid (mockup) */
+        .retail-cats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5mm;
+            margin: 4mm 0;
+        }
+
+        .retail-cat-item {
+            background: #141414;
+            border-left: 2px solid #2DD4BF;
+            padding: 3mm 4mm;
+            border-radius: 3px;
+        }
+
+        .retail-cat-item .rc-num {
+            font-size: 7pt;
+            letter-spacing: 2pt;
+            color: #2DD4BF;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 1mm;
+        }
+
+        .retail-cat-item .rc-name {
+            font-size: 9pt;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        /* Deep Dive block mockup */
+        .deep-dive-mock {
+            background: linear-gradient(135deg, #141414, #1a1a1a);
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 8mm 8mm;
+            margin-top: 4mm;
+        }
+
+        .deep-dive-mock .eyebrow {
+            font-size: 7.5pt;
+            letter-spacing: 3pt;
+            color: #2DD4BF;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 3mm;
+        }
+
+        .deep-dive-mock h4 {
+            font-size: 16pt;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 3mm;
+            line-height: 1.15;
+        }
+
+        .deep-dive-mock h4 .accent {
+            color: #2DD4BF;
+            font-family: "Montserrat", sans-serif;
+            font-style: italic;
+        }
+
+        .deep-dive-mock p {
+            font-size: 9pt;
+            color: #B8B8B8;
+            margin-bottom: 4mm;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container">
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- DOC HEADER -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="doc-title">
-<span class="brand">tyes.app</span> · Homepage v3, Aligned with Final Pricing, About Us &amp; How It Works.
-</div>
-<div class="doc-subtitle">
-Updated visual mockups + copy for every section that changed. Fonts kept consistent
-with the pricing, about, and how-it-works pages (Montserrat italic on accents, Gliker on <span class="brand">tyes</span>).
-</div>
-
-<div class="shift-box">
-<strong>What changed from v2 → v3:</strong> Hero rewritten to "From Brief to Shelf" with no eyebrow line.
-Pricing tiers set to <span class="accent">$0 / $25 / $45 / Custom</span>. Added <strong>Deep Dive Brand
-Strategy</strong> section (Deep Dive Brand Strategy upsell with Contact Us + Book a Call CTAs). Reinforced with the
-5 retail buyer categories from the How It Works page. Aligned messaging with the About Us story
-(retail network US + Europe, brands that move fast).
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 1 · HERO, FULL REWRITE -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 1 · Hero, Full Rewrite</div>
-
-<div class="version-label">Proposed new state · FINAL v3</div>
-
-<div class="mockup tall">
-<div class="label">Homepage Hero</div>
-
-<div class="mock-headline" style="font-size: 34pt;">
-From Brief to <span class="accent">Shelf.</span>
-</div>
-
-<div class="mock-sub" style="font-size: 11.5pt; max-width: 550px;">
-Campaign visuals <span class="accent-italic">+ the Strategy that lands your product in shops.</span>
-</div>
-
-<div class="mock-cta-row">
-<div class="mock-cta primary">Get Your Free Image →</div>
-<div class="mock-cta secondary">Get Your Free Strategy →</div>
-</div>
-
-<div class="mock-trust">
-<strong style="color:#2DD4BF;">No credit card required</strong> · For brands that want to move fast.
-</div>
-</div>
-
-<h3>Copy breakdown (FINAL v3)</h3>
-
-<div class="copy-block">
-<div class="cb-label">Headline (one line, two beats, WHITE + TEAL ITALIC accent on "Shelf")</div>
-<div class="cb-text">From Brief to <strong>Shelf.</strong></div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Sub-headline (below headline)</div>
-<div class="cb-text"><strong>Campaign visuals + the Strategy that lands your product in shops.</strong></div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">CTA 1 (Primary, teal pill) → smooth-scroll anchor to #pricing</div>
-<div class="cb-text">Get Your Free Image → <strong>links to #pricing</strong> (Free Image tier)</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">CTA 2 (Secondary, outlined teal pill, equal weight) → smooth-scroll anchor to #pricing</div>
-<div class="cb-text">Get Your Free Strategy → <strong>links to #pricing</strong> (Free strategy add-on / Campaign tiers)</div>
-</div>
-
-<div class="note-box">
-<strong>Dev note, all hero + brief-section CTAs anchor to the same Pricing section:</strong> "Get Your Free Image", "Get Your Free Strategy", and "See Pricing" all use <code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">href="#pricing"</code> with smooth-scroll behavior (<code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">scroll-behavior: smooth</code> on html or JS). The pricing section id should be <code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">id="pricing"</code>. Rationale: keep the funnel unified. Every CTA lands where the user can commit or start free. No dead-end paths.
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Trust line (small, below CTAs)</div>
-<div class="cb-text">No credit card required · For brands that want to move fast.</div>
-</div>
-
-<div class="note-box">
-<strong>REMOVED:</strong> The eyebrow line "AI VISUALS + BRAND STRATEGY BOTH FREE TO START "
-is now gone. The tagline "From Brief to Shelf" already carries the promise of the full journey
-(visuals → strategy → placement). No need to spell it out above the headline. Cleaner,
-faster, more confident.
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 2 · "$0/IMAGE", REFRAME -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 2 · "$0 / Image", Reframe</div>
-
-<div class="version-label">Proposed new state</div>
-
-<div class="mockup">
-<div class="label">Dual value prop</div>
-<div class="mock-headline" style="font-size: 24pt;">
-$0 / Image.<br>
-<span class="accent">Free Strategy</span> <span style="color:#FFFFFF;">with every Campaign.</span>
-</div>
-<div class="mock-sub">
-For brands that move fast: campaign visuals in hours, strategy in days.
-</div>
-</div>
-
-<h3>Copy breakdown</h3>
-
-<div class="copy-block">
-<div class="cb-label">Headline (big, white, two lines)</div>
-<div class="cb-text">$0 / Image.<br>Free Strategy with every Campaign.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Sub copy</div>
-<div class="cb-text">For brands that move fast: campaign visuals in hours, strategy in days.</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 3 · SHARE YOUR BRIEF -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 3 · Share Your Brief, Slight Tweak</div>
-
-<div class="version-label">Proposed new state</div>
-
-<div class="mockup">
-<div class="label">Multi-language brief upload</div>
-<div class="mock-headline" style="font-size: 20pt;">
-SHARE YOUR BRIEF<br>
-<span class="mock-headline-serif" style="color:#2DD4BF; font-size: 14pt;">In Any Language</span>
-</div>
-<div class="mock-sub" style="letter-spacing: 1pt; font-size: 8pt;">
-YOU SHARE IT · WE BUILD IT · WE STRATEGIZE IT.
-</div>
-<div class="mock-cta-row">
-<div class="mock-cta secondary">Claim your FREE image</div>
-<div class="mock-cta secondary">Get FREE strategy</div>
-<div class="mock-cta secondary">View Pricing</div>
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Sub copy</div>
-<div class="cb-text">YOU SHARE IT · WE BUILD IT · WE STRATEGIZE IT.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">3 CTAs (small outlined buttons) → all anchor to #pricing</div>
-<div class="cb-text">"Claim your FREE image" · "Get FREE strategy" · "View Pricing". All three <strong>link to #pricing</strong> section. Unified funnel, no dead ends.</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 4 · CATEGORIES WE SERVE -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 4 · Categories We Serve</div>
-
-<div class="version-label">Proposed new state · Focused to 4 categories</div>
-
-<div class="mockup">
-<div class="label">Focused category scope</div>
-<div class="mock-headline" style="font-size: 22pt;">
-CATEGORIES<br>
-<span class="mock-headline-serif" style="color:#2DD4BF; font-size: 14pt;">We Serve</span>
-</div>
-<div class="mock-sub">
-<strong>One platform. Every niche. Images + Strategy.</strong>
-</div>
-<div class="mock-categories">
-Beauty · Personal Care · Fragrance · Fashion
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Tagline (under headline)</div>
-<div class="cb-text">One platform. Every niche. Images + Strategy.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Categories list (simplified to 4, what you actively serve today)</div>
-<div class="cb-text">Beauty · Personal Care · Fragrance · Fashion</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 5 · AI IN ACTION -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 5 · AI in Action, Light Reframe</div>
-
-<p>Sub-headline tweak to signal "use cases" includes more than visuals.</p>
-
-<div class="copy-block">
-<div class="cb-label">Current sub-headline</div>
-<div class="cb-text">See what's possible.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Proposed new sub-headline</div>
-<div class="cb-text">See what's possible. Visuals + strategy, real brands, real outcomes.</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 5b · BRANDS WE'VE WORKED WITH · NEW -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 5b · Brands We've Worked With · NEW, animated logo row</div>
-
-<div class="version-label">Proposed new state · Social proof carousel</div>
-
-<p>Add a full-width strip <strong>below</strong> the AI in Action grid and <strong>above</strong> How It Works.
-Small teal eyebrow, one-line title, then an infinite-scroll marquee of client logos moving right-to-left.
-Pure CSS, no JS. Designed to sit visually between two dark sections without competing with them.</p>
-
-<div class="mockup">
-<div class="label">Full-width brand logo marquee</div>
-
-<div style="text-align: center;">
-<div style="font-size: 8pt; letter-spacing: 3pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 5mm;">Few of the brands we've worked with</div>
-</div>
-
-<div style="background: #FAFAF7; border-radius: 8px; padding: 8mm 4mm; margin: 3mm 0; overflow: hidden;">
-<div style="display: flex; gap: 12mm; align-items: center; justify-content: space-around; opacity: 0.6;">
-<div style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt;">Brand Logo 1</div>
-<div style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt; font-style: italic;">Brand Logo 2</div>
-<div style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt;">Brand Logo 3</div>
-<div style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt; font-style: italic;">Brand Logo 4</div>
-<div style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt;">Brand Logo 5</div>
-<div style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt; font-style: italic;">Brand Logo 6</div>
-</div>
-<div style="text-align: center; font-size: 7pt; color: #888; margin-top: 4mm; font-style: italic;">↔ auto-scrolls infinitely, right to left, 30s per cycle · pauses on hover · logos in grayscale, restore full color on hover</div>
-</div>
-
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Section eyebrow (small teal caps above the strip)</div>
-<div class="cb-text">Few of the brands we've worked with</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Logo assets Sheika needs to provide</div>
-<div class="cb-text">
-<strong>PNG or SVG</strong>, transparent background, <strong>uniform height ~ 60px</strong> (widths can vary). Prefer SVG for crisp scaling. If only PNG is available, export at 2× (120px tall) for retina.<br><br>
-File naming convention: <code>/public/logos/brand-name.svg</code> — e.g. <code>my-geisha.svg</code>, <code>synergy-therm.svg</code>, <code>vitaora.svg</code>. Sheika drops files in <code>/public/logos/</code> and the dev reads the folder or a manual list in <code>data/brands.js</code>.<br><br>
-<strong>Recommended: 8–12 logos.</strong> Fewer than 6 looks thin, more than 15 gets noisy.
-</div>
-</div>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt; line-height: 1.55;">
-<span style="color:#666;">// data/brands.js — Sheika edits this file to add/remove brands</span><br>
-<span style="color:#C084FC;">export const</span> <span style="color:#FBBF24;">brands</span> = [<br>
-&nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'myGeisha'</span>, logo: <span style="color:#A5F3FC;">'/logos/my-geisha.svg'</span> },<br>
-&nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'Synergy Therm'</span>, logo: <span style="color:#A5F3FC;">'/logos/synergy-therm.svg'</span> },<br>
-&nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'VitaOra'</span>, logo: <span style="color:#A5F3FC;">'/logos/vitaora.svg'</span> },<br>
-&nbsp;&nbsp;<span style="color:#666;">// add more here — no code change needed</span><br>
-];
-</div>
-
-<h3>Dev · HTML + CSS for the infinite marquee (pure CSS, no JS)</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8pt; line-height: 1.55;">
-<span style="color:#666;">/* React component */</span><br>
-<span style="color:#C084FC;">import</span> { <span style="color:#FBBF24;">brands</span> } <span style="color:#C084FC;">from</span> <span style="color:#A5F3FC;">'@/data/brands'</span>;<br><br>
-<span style="color:#C084FC;">export default function</span> <span style="color:#FBBF24;">BrandsMarquee</span>() {<br>
-&nbsp;&nbsp;<span style="color:#666;">// Duplicate the list so the animation wraps seamlessly</span><br>
-&nbsp;&nbsp;<span style="color:#C084FC;">const</span> loop = [...brands, ...brands];<br>
-&nbsp;&nbsp;<span style="color:#C084FC;">return</span> (<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">section</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"brands-marquee"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"eyebrow"</span>&gt;Few of the brands we've worked with&lt;/<span style="color:#F87171;">p</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"marquee-track"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{loop.map((b, i) =&gt; (<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">img</span> <span style="color:#FBBF24;">key</span>={i} <span style="color:#FBBF24;">src</span>={b.logo} <span style="color:#FBBF24;">alt</span>={b.name} /&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">section</span>&gt;<br>
-&nbsp;&nbsp;);<br>
-}<br><br>
-<span style="color:#666;">/* CSS */</span><br>
-.<span style="color:#FBBF24;">brands-marquee</span> {<br>
-&nbsp;&nbsp;background: #FAFAF7;<br>
-&nbsp;&nbsp;padding: 40px 0 48px;<br>
-&nbsp;&nbsp;overflow: hidden;<br>
-}<br>
-.<span style="color:#FBBF24;">brands-marquee</span> .<span style="color:#FBBF24;">eyebrow</span> {<br>
-&nbsp;&nbsp;text-align: center;<br>
-&nbsp;&nbsp;font-family: <span style="color:#A5F3FC;">"Montserrat"</span>, sans-serif;<br>
-&nbsp;&nbsp;font-weight: 600;<br>
-&nbsp;&nbsp;letter-spacing: 3pt;<br>
-&nbsp;&nbsp;text-transform: uppercase;<br>
-&nbsp;&nbsp;color: #2DD4BF;<br>
-&nbsp;&nbsp;font-size: 11pt;<br>
-&nbsp;&nbsp;margin-bottom: 24px;<br>
-}<br>
-.<span style="color:#FBBF24;">brands-marquee</span> .<span style="color:#FBBF24;">marquee-track</span> {<br>
-&nbsp;&nbsp;display: flex;<br>
-&nbsp;&nbsp;gap: 80px;<br>
-&nbsp;&nbsp;align-items: center;<br>
-&nbsp;&nbsp;width: max-content;<br>
-&nbsp;&nbsp;animation: scrollLeft 30s linear infinite;<br>
-}<br>
-.<span style="color:#FBBF24;">brands-marquee</span>:hover .<span style="color:#FBBF24;">marquee-track</span> {<br>
-&nbsp;&nbsp;animation-play-state: paused;<br>
-}<br>
-.<span style="color:#FBBF24;">brands-marquee</span> img {<br>
-&nbsp;&nbsp;height: 60px;<br>
-&nbsp;&nbsp;width: auto;<br>
-&nbsp;&nbsp;filter: grayscale(100%) opacity(0.55);<br>
-&nbsp;&nbsp;transition: filter 0.3s ease;<br>
-}<br>
-.<span style="color:#FBBF24;">brands-marquee</span> img:hover {<br>
-&nbsp;&nbsp;filter: grayscale(0%) opacity(1);<br>
-}<br>
-@<span style="color:#C084FC;">keyframes</span> <span style="color:#FBBF24;">scrollLeft</span> {<br>
-&nbsp;&nbsp;from { transform: translateX(0); }<br>
-&nbsp;&nbsp;to&nbsp;&nbsp; { transform: translateX(-50%); }<br>
-}<br><br>
-<span style="color:#666;">/* Prefers-reduced-motion: pause the animation for users who ask for less motion */</span><br>
-@<span style="color:#C084FC;">media</span> (prefers-reduced-motion: reduce) {<br>
-&nbsp;&nbsp;.<span style="color:#FBBF24;">brands-marquee</span> .<span style="color:#FBBF24;">marquee-track</span> { animation: none; justify-content: center; flex-wrap: wrap; }<br>
-}
-</div>
-
-<div class="note-box" style="border-left-color: #FBBF24;">
-<strong style="color:#FBBF24;">How it works:</strong> The trick is duplicating the logo list (<code>[...brands, ...brands]</code>) and animating <code>translateX(0)</code> → <code>translateX(-50%)</code>. That's exactly half the total width, so when the animation resets, the second copy is already in the same position the first copy started — visually seamless, no jump. No JavaScript needed. On mobile, adjust <code>gap</code> to <code>40px</code> and image height to <code>44px</code> so the strip stays balanced.
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 6 · HOW IT WORKS -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 6 · How It Works, Add 5th Step</div>
-
-<div class="version-label">Proposed new state</div>
-
-<div class="mockup">
-<div class="label">5 steps · strategy as bonus track</div>
-<div class="mock-headline" style="font-size: 20pt;">
-HOW IT <span class="mock-headline-serif" style="color:#2DD4BF; font-size: 14pt;">Works</span>
-</div>
-<div class="mock-sub" style="font-size: 8pt; letter-spacing: 0.5pt;">
-✓ From 3H Delivery · ✓ AI + Designer Touch · ✓ Brand Strategy · ✓ Retail Access
-</div>
-<div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 2mm; margin-top: 4mm;">
-<div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
-<div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">01</div>
-<div style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">SEND<br>BRIEF</div>
-</div>
-<div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
-<div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">02</div>
-<div style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">AI<br>GENERATE</div>
-</div>
-<div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
-<div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">03</div>
-<div style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">DESIGNER<br>POLISH</div>
-</div>
-<div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
-<div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">04</div>
-<div style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">DELIVERY</div>
-</div>
-<div style="background: transparent; border: 1.5px solid #2DD4BF; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
-<div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">+</div>
-<div style="font-size: 7pt; color: #2DD4BF; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">BRAND<br>STRATEGY</div>
-</div>
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Badges row (4 badges, reinforces "From Brief to Shelf" promise)</div>
-<div class="cb-text">✓ From 3H Delivery · ✓ AI + Designer Touch · ✓ Brand Strategy · ✓ Retail Access</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">5th step card (highlighted teal border to distinguish from the 4 standard steps)</div>
-<div class="cb-text">Title: "+ BRAND STRATEGY" · Sub-line: "Bundled with every paid order. No upsell, no catch."</div>
-</div>
-
-<h3>Flip card back copy (each card flips on hover / tap to reveal detail)</h3>
-
-<div class="copy-block">
-<div class="cb-label">Card 01, Back (SEND BRIEF)</div>
-<div class="cb-text"><strong>Send Your Brief.</strong> Upload your product, brand guidelines, and reference direction. Describe the scene, mood, and use case. In any language. Takes 5 minutes.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Card 02, Back (AI GENERATE)</div>
-<div class="cb-text"><strong>AI Generation.</strong> Our engine produces visual options aligned with your brand. Colors, logo, product form, all preserved. We deliver every image, designer-polished and ready.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Card 03, Back (DESIGNER POLISH)</div>
-<div class="cb-text"><strong>Designer Polish.</strong> Our graphic designers fix what AI misses: color accuracy, brand elements, text sharpness, edge cleanup. Every image passes through our design team before it reaches you.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Card 04, Back (DELIVERY)</div>
-<div class="cb-text"><strong>Fast Delivery.</strong> Campaign-ready photos in your requested size, delivered to your dashboard. From 3H for a single image, from 24H for full campaigns. Download in one click.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Card 05, Back (+ BRAND STRATEGY)</div>
-<div class="cb-text"><strong>Brand Strategy.</strong> LLM visibility audit, viral product angles for your niche, and a shortlist of retail buyers who fit your brand. Delivered to your dashboard.<br><br><strong>Deep Dive Brand Strategy.</strong> The full playbook: 90-day implementation roadmap, viral product concepts developed for your niche, warm intros to retail buyers we already work with, packaging &amp; positioning direction, and a 1-hour strategy call.</div>
-</div>
-
-<div class="note-box">
-<strong>Dev note, flip card animation:</strong> Use CSS 3D transforms. Front face shows step number + short label (e.g. "01 · SEND BRIEF"). Back face shows full detail copy above. Trigger on hover (desktop) and tap (mobile). Keep the flip smooth (500ms cubic-bezier(0.4, 0, 0.2, 1), the sweet spot for 3D flips). Preserve card background on both faces for visual continuity.
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 7 · THE RETAIL NETWORK, NEW -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 7 · The Retail Network, NEW SECTION</div>
-
-<div class="version-label">Proposed new state · Reinforces How It Works</div>
-
-<p>
-Add this section between How It Works and Pricing. It shows the concrete scope of the retail network
-and explicitly connects to the Brand Strategy, this network is what gets unlocked when you get the strategy.
-</p>
-
-<div class="mockup">
-<div class="label">The Retail Network · Part of Brand Strategy</div>
-
-<div style="text-align: center; margin-bottom: 4mm;">
-<span style="display: inline-block; background: rgba(45,212,191,0.15); border: 1px solid rgba(45,212,191,0.4); color: #2DD4BF; font-size: 7.5pt; letter-spacing: 2.5pt; padding: 1.5mm 4mm; border-radius: 999px; text-transform: uppercase; font-weight: 700;">Unlocked with the Deep Dive Brand Strategy</span>
-</div>
-
-<div class="mock-headline" style="font-size: 20pt;">
-The Retail <span class="accent">Network.</span>
-</div>
-<div class="mock-sub">
-A working network of buyer relationships across <strong>5 retail categories</strong>.
-This is what your <span class="accent-italic">Deep Dive Brand Strategy</span> gives you access to.
-Not a directory. Not cold outreach.
-</div>
-
-<div class="retail-cats-grid">
-<div class="retail-cat-item">
-<div class="rc-num">01 · Mass Market</div>
-<div class="rc-name">Mass Market Retail</div>
-</div>
-<div class="retail-cat-item">
-<div class="rc-num">02 · Prestige</div>
-<div class="rc-name">Premium Retail</div>
-</div>
-<div class="retail-cat-item">
-<div class="rc-num">03 · Volume</div>
-<div class="rc-name">Hyperstores</div>
-</div>
-<div class="retail-cat-item">
-<div class="rc-num">04 · Beauty Pharmacy</div>
-<div class="rc-name">Hyperpharmacies</div>
-</div>
-</div>
-
-<div style="margin-top: 2.5mm;">
-<div class="retail-cat-item">
-<div class="rc-num">05 · Digital-First</div>
-<div class="rc-name">Marketplaces</div>
-</div>
-</div>
-
-<div class="mock-sub" style="margin-top: 5mm; font-size: 9pt;">
-Coverage: 🇺🇸 <strong>United States</strong> · 🇪🇺 <strong>Europe</strong>
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Connection pill (above headline), makes the strategy link explicit</div>
-<div class="cb-text">UNLOCKED WITH THE DEEP DIVE BRAND STRATEGY</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Headline</div>
-<div class="cb-text">The Retail Network.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Sub copy (borrows from About Us, makes Strategy → Retail connection clear)</div>
-<div class="cb-text">A working network of buyer relationships across 5 retail categories.
-This is what your <strong>Deep Dive Brand Strategy</strong> gives you access to.
-Not a directory. Not cold outreach.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">5 buyer type cards</div>
-<div class="cb-text">Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Geographic coverage line</div>
-<div class="cb-text">🇺🇸 United States · 🇪🇺 Europe (with flag emojis for visual quick-scan)</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 8 · FIND THE PERFECT PACKAGE, FINAL PRICING -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 8 · Find the Perfect Package, FINAL Pricing</div>
-
-<div class="version-label">Proposed new state · FINAL prices confirmed</div>
-
-<div class="mockup">
-<div class="label">Final pricing tiers · $25 / $45 confirmed</div>
-<div class="mock-headline" style="font-size: 22pt;">
-Find the<br>
-<span class="mock-headline-serif" style="color:#2DD4BF; font-size: 16pt;">Perfect Package</span>
-</div>
-<div class="mock-sub">Pay per campaign. Scale when ready.</div>
-
-<div class="pricing-mockup-grid" style="grid-template-columns: repeat(5, 1fr);">
-<div class="pricing-card">
-<div class="cat-tag">Free</div>
-<h4>Free Image</h4>
-<div class="price">$0</div>
-<ul>
-<li>1 AI image</li>
-<li>From 3H delivery</li>
-</ul>
-<div class="bonus" style="border-top-color: #2DD4BF; color: #2DD4BF;">+ Add strategy $25</div>
-</div>
-
-<div class="pricing-card">
-<div class="cat-tag">Strategy-First</div>
-<h4>Brand Strategy</h4>
-<div class="price">$25</div>
-<ul>
-<li>LLM visibility audit</li>
-<li>Viral product angles</li>
-<li>Retail buyer shortlist</li>
-<li>3-day delivery</li>
-</ul>
-</div>
-
-<div class="pricing-card" style="border-color: #2DD4BF;">
-<div class="cat-tag" style="color: #2DD4BF;">Retail-Ready</div>
-<h4>Deep Dive Brand Strategy</h4>
-<div class="price" style="font-size: 14pt;">Priced per scope</div>
-<ul>
-<li>Full LLM audit + 90-day roadmap</li>
-<li>Viral product concepts for your niche</li>
-<li>Warm intros to retail buyers</li>
-<li>Packaging &amp; positioning direction</li>
-<li>1-hour strategy call</li>
-</ul>
-<div style="display: flex; gap: 1.5mm; flex-wrap: wrap; margin-top: 3mm;">
-<div class="mock-cta primary" style="font-size: 6.5pt; padding: 1.2mm 2.5mm;">Contact Us</div>
-<div class="mock-cta secondary" style="font-size: 6.5pt; padding: 1.2mm 2.5mm;">Book a Call</div>
-</div>
-<div style="margin-top: 3mm; font-size: 6.5pt; color: #B8B8B8; font-style: italic;">Subject to availability</div>
-</div>
-
-<div class="pricing-card popular">
-<div class="cat-tag">Popular</div>
-<h4>Campaign 5</h4>
-<div class="price">$25</div>
-<ul>
-<li>5 AI images</li>
-<li>1 revision / image</li>
-<li>From 24H delivery</li>
-</ul>
-<div class="bonus">FREE Brand Strategy Snapshot</div>
-</div>
-
-<div class="pricing-card">
-<div class="cat-tag">Go Big</div>
-<h4>Campaign 10</h4>
-<div class="price">$45</div>
-<ul>
-<li>10 AI images</li>
-<li>1 revision / image</li>
-<li>From 24H delivery</li>
-</ul>
-<div class="bonus">FREE Brand Strategy Snapshot</div>
-</div>
-</div>
-
-<div style="margin-top: 3mm; background: #1a1a1a; border: 1.5px solid #2DD4BF; padding: 5mm 6mm; border-radius: 5px;">
-<div class="cat-tag" style="font-size: 6.5pt; color: #2DD4BF; letter-spacing: 2pt; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm;">Enterprise</div>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; align-items: center;">
-<div>
-<h4 style="font-size: 11pt; color: #FFFFFF; margin-bottom: 1mm;">Custom</h4>
-<div style="font-size: 7.5pt; color: #B4B4B4; line-height: 1.5;">Custom images · Custom revisions<br>+ FREE Brand strategy + 30-min call</div>
-</div>
-<div style="display: flex; gap: 2mm; justify-content: flex-end;">
-<div class="mock-cta primary" style="font-size: 7.5pt; padding: 2mm 4mm;">Contact Us →</div>
-<div class="mock-cta secondary" style="font-size: 7.5pt; padding: 2mm 4mm;">Book a Call →</div>
-</div>
-</div>
-</div>
-</div>
-
-<h3>Copy breakdown, 5 tiers FINAL</h3>
-
-<div class="copy-block">
-<div class="cb-label">Tier 1, Free Image</div>
-<div class="cb-text"><strong>$0</strong> · 1 AI image · From 3H delivery.
-Optional: <strong>+ $25 to add Brand Strategy Snapshot</strong> (paid add-on).
-Lead-capture taste of the product.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Tier 2, Brand Strategy (STANDALONE)</div>
-<div class="cb-text"><strong>$25</strong> · LLM visibility audit · Viral product angles · Retail buyer shortlist · 3-day delivery.
-For brands that want the strategy without ordering images.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Tier 3, Campaign 5 (POPULAR)</div>
-<div class="cb-text"><strong>$25</strong> · 5 AI campaign images · 1 revision per image · From 24H delivery
-<strong>· + Brand Strategy Snapshot (INCLUDED FREE)</strong></div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Tier 4, Campaign 10</div>
-<div class="cb-text"><strong>$45</strong> · 10 AI campaign images · 1 revision per image · From 24H delivery
-<strong>· + Brand Strategy Snapshot (INCLUDED FREE)</strong></div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Tier 5, Custom (ENTERPRISE)</div>
-<div class="cb-text">Custom number of images · Custom revisions
-<strong>· + FREE Brand Strategy Snapshot + 30-min strategy call.</strong>
-Two CTA buttons: <strong>Contact Us</strong> (opens contact form) and <strong>Book a Call</strong> (opens Calendly widget).</div>
-</div>
-
-<div class="note-box">
-<strong>Dev note, Calendly integration for "Book a Call":</strong> Use the Calendly inline widget or popup script.
-Add this to the page head: <code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">&lt;script src="https://assets.calendly.com/assets/external/widget.js" async&gt;&lt;/script&gt;</code>
-Then wire the "Book a Call" button to trigger <code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">Calendly.initPopupWidget({url: 'https://calendly.com/tyes/discovery-call'})</code>.
-Alternatively, use the inline embed: <code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">&lt;div class="calendly-inline-widget" data-url="..."&gt;&lt;/div&gt;</code>.
-Sheika will provide the actual Calendly URLs. <strong>Two events</strong>: <code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">calendly.com/tyes/discovery-call</code> (30-min, Custom Enterprise Book a Call) and <code style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">calendly.com/tyes/deep-dive-call</code> (1-hour, Deep Dive Brand Strategy Book a Call). Do not use the same URL for both.
-</div>
-
-<div class="note-box">
-<strong>Business logic:</strong> Free Image ($0) has strategy as a paid add-on ($25). Standalone Brand Strategy tier ($25) is a separate card.
-Every Campaign tier (5, 10, Custom) bundles the Brand Strategy Snapshot for free. This creates a clean upgrade path:
-Free Image + $25 strategy = $25 total. Campaign 5 = $25 with Snapshot already included = obvious
-step up. Removes friction and rewards paying customers.
-</div>
-
-<div class="note-box" style="border-left-color: #FBBF24;">
-<strong style="color:#FBBF24;">Dev · Free Image rate limit (IMPORTANT):</strong> Each account can order the Free Image <strong>once, ever.</strong> Enforce on signup + at checkout by de-duping on <strong>email address, billing name + address, phone number, and payment method fingerprint</strong>. If any of these match an existing account that already claimed Free Image, block the second free order and prompt the user to choose a paid tier. Return a clear error message ("Free Image already claimed on this account, order a Campaign or Brand Strategy tier to continue"). This keeps the free tier honest without punishing legitimate first-time users. Log all blocked attempts for fraud review.
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 9 · DEEP DIVE BRAND STRATEGY, NEW -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 9 · Deep Dive Brand Strategy, NEW SECTION</div>
-
-<div class="version-label">Proposed new state · Deep Dive Brand Strategy upsell</div>
-
-<p>
-Add this section between Pricing and FAQ. It's the Deep Dive Brand Strategy — a deeper engagement beyond the free Snapshot,
-positioned as the natural upgrade for brands ready to move beyond a single campaign.
-</p>
-
-<div class="mockup">
-<div class="label">Deep Dive Brand Strategy · deeper engagement</div>
-
-<div class="deep-dive-mock">
-<div class="eyebrow">Beyond the free snapshot</div>
-<h4>Ready for more? The <span class="accent">full playbook</span> that puts you in front of the buyer who says yes.</h4>
-<p>
-Where the free Snapshot identifies your gaps, the Deep Dive Brand Strategy solves them. Full LLM audit with
-implementation roadmap. Viral product concepts developed for your niche. And when you're ready,
-<strong style="color:#FFFFFF;">we put your product in front of the retail buyers we already work with</strong>, the ones
-actually deciding what lands on the shelf next season.
-</p>
-
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2mm 4mm; margin-bottom: 5mm;">
-<div style="font-size: 7.5pt; color: #C8C8C8;">→ Full LLM visibility audit</div>
-<div style="font-size: 7.5pt; color: #C8C8C8;">→ 90-day implementation roadmap</div>
-<div style="font-size: 7.5pt; color: #C8C8C8;">→ Viral product concepts for your niche</div>
-<div style="font-size: 7.5pt; color: #C8C8C8;">→ Warm intros to buyers we know personally</div>
-<div style="font-size: 7.5pt; color: #C8C8C8;">→ Packaging &amp; positioning direction</div>
-<div style="font-size: 7.5pt; color: #C8C8C8; grid-column: span 2; text-align: center;">→ 1-hour strategy call with our team</div>
-</div>
-
-<div style="display: flex; gap: 3mm;">
-<div class="mock-cta primary">Contact Us →</div>
-<div class="mock-cta secondary">Book a Call →</div>
-</div>
-</div>
-
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Section headline</div>
-<div class="cb-text">Ready for more? The <strong>full playbook</strong> that puts you in front of the buyer who says yes.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Description (borrows the retail-buyer language from About Us)</div>
-<div class="cb-text">Where the free Snapshot identifies your gaps, the Deep Dive Brand Strategy solves them.
-Full LLM audit with implementation roadmap. Viral product concepts developed for your niche.
-And when you're ready, <strong>we put your product in front of the retail buyers we already work with</strong>, the ones actually deciding what lands on the shelf next season.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Key features (buyer network made explicit)</div>
-<div class="cb-text">Warm intros to buyers we know personally · Packaging &amp; positioning direction.
-This is where the Deep Dive makes its case: not just insight, but <strong>access</strong>.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">CTA row (2 CTAs)</div>
-<div class="cb-text">Primary teal pill: "Contact Us →" · Secondary outlined teal pill: "Book a Call →"</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 10 · FAQ, REORDERED -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 10 · FAQ, Reorder + Update</div>
-
-<h3>Recommended FAQ order (updated for v3)</h3>
-
-<p>
-1. What is <span class="brand">tyes</span> and how does it work? <em style="color:#666;">(rewrite to mention dual offer)</em><br>
-2. <strong>What's the Brand Strategy Snapshot?</strong><br>
-3. <strong>How do I get the Brand Strategy Snapshot?</strong><br>
-4. <strong>What's the difference between the Deep Dive Brand Strategy and the Brand Strategy Snapshot?</strong><br>
-5. How long does delivery take? <em style="color:#666;">(images = 3-24h, strategy = 3 days)</em><br>
-6. Can I request revisions on my images?<br>
-7. What file formats do I receive?<br>
-8. What categories do you support? <em style="color:#666;">(Beauty · Personal Care · Fragrance · Fashion)</em><br>
-9. How do I submit my brief?<br>
-10. Is there a free trial available? <em style="color:#666;">(1 Free Image per user)</em><br>
-</p>
-
-<div class="copy-block">
-<div class="cb-label">Updated FAQ #1, "What is tyes and how does it work?" (borrows About Us language)</div>
-<div class="cb-text">
-<span class="brand" style="color:#2DD4BF;">tyes</span> is a two-engine platform.
-<strong>AI campaign imagery and brand strategy backed by a retail buyer network across the US and Europe</strong>, built for founders and marketing teams who need to go from idea to shelf in weeks, not quarters.
-AI does the heavy lifting. Real experts do the fine work. Strategy is baked in from the first brief.
-And when you're ready, <strong>we put your product in front of the retail buyers we already work with</strong>, the ones actually deciding what lands on the shelf next season.
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Updated FAQ #2, "What's the Brand Strategy Snapshot?"</div>
-<div class="cb-text">
-A custom snapshot tailored to your brand. LLM visibility audit (where you show up in ChatGPT, Claude,
-Gemini, Perplexity). Viral product angles for your niche. Retailer shortlist across our 5 buyer
-categories (mass market, premium, hyperstores, hyperpharmacies, marketplaces) across the US and Europe.
-Delivered to your dashboard within 3 business days. No catch.
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Updated FAQ #3, "How do I get the Brand Strategy Snapshot?"</div>
-<div class="cb-text">
-Three ways: <strong>included FREE</strong> with every Campaign 5, Campaign 10, or Custom order. <strong>Add it to Free Image for $25</strong>. Or <strong>order the Brand Strategy tier standalone for $25</strong>. Same snapshot in all three paths.
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">NEW FAQ #4, "What's the difference between the Deep Dive Brand Strategy and the Brand Strategy Snapshot?"</div>
-<div class="cb-text">
-Two very different products.<br><br>
-<strong>Brand Strategy Snapshot ($25)</strong> is a 3-day audit that identifies your gaps: where you show up (or don't) in ChatGPT, Claude, Gemini, Perplexity; the viral product angles for your niche; and a shortlist of retail buyers who fit your brand. Same snapshot whether you get it free with a Campaign, as a $25 add-on on Free Image, or as the $25 standalone tier.<br><br>
-<strong>Deep Dive Brand Strategy</strong> is a bespoke engagement that solves the gaps. Full LLM audit with a 90-day implementation roadmap. Viral product concepts developed for your niche. Warm intros to retail buyers we already work with, personally. Packaging and positioning direction. 1-hour strategy call. Priced per scope, subject to availability. Contact Us or Book a Call to get started.<br><br>
-Short version: <strong>Snapshot = diagnosis. Deep Dive = cure + access.</strong>
-</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">FAQ — "Is there a free trial available?"</div>
-<div class="cb-text">
-Yes. Free Image is $0 — <strong>1 Free Image per user.</strong> After that, order a Campaign or grab the standalone Brand Strategy tier.
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- IMPLEMENTATION SUMMARY -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Implementation Summary, What to Change on the Site</div>
-
-<h3>Sections to update (in this order)</h3>
-
-<p>
-<strong>1. Hero</strong>, replace headline with "From Brief to <em style="color:#2DD4BF;">Shelf.</em>" and sub with
-"Campaign visuals + the Strategy that lands your product in shops." Remove the eyebrow line entirely.<br><br>
-
-<strong>2. $0 / Image</strong>, replace with "$0 / Image." + "Free Strategy with every Campaign." (reflects the actual model: strategy is free-bundled with paid Campaigns, $25 add-on for Free Image, $25 standalone Brand Strategy tier).<br><br>
-
-<strong>3. Share Your Brief</strong>, update sub-headline "WE STRATEGIZE IT" + add 3rd CTA.<br><br>
-
-<strong>4. Categories We Serve</strong>, simplify to 4 categories (Beauty · Personal Care · Fragrance · Fashion)
-+ new tagline "Images + Strategy".<br><br>
-
-<strong>5. AI in Action</strong>, update sub-headline "Visuals + strategy, real brands, real outcomes."<br><br>
-
-<strong>5b. <em style="color:#2DD4BF;">NEW · Brands We've Worked With row</em></strong>, insert immediately after AI in Action (before How It Works). Small teal eyebrow "Few of the brands we've worked with" + infinite-scroll logo marquee (pure CSS, 30s cycle, pauses on hover, grayscale → color on hover). Sheika drops logo files in <code>/public/logos/</code> and edits <code>data/brands.js</code> — no code change needed to add/remove brands.<br><br>
-
-<strong>6. How It Works</strong>, remove old "Commercial License" badge, add two new badges "Brand Strategy" + "Retail Access" (total: 4 badges). Add 5th step card "+ BRAND STRATEGY" with distinct teal border.<br><br>
-
-<strong>7. <em style="color:#2DD4BF;">NEW · Retail Network section</em></strong>, insert between How It Works and Pricing.
-5 buyer type cards + geographic coverage line.<br><br>
-
-<strong>8. Find the Perfect Package</strong>, FINAL prices: Free Image $0 / Campaign 5 $25 / Campaign 10 $45 / Custom.
-Add "$25 add strategy" on Free tier. Add "Brand Strategy" as separate standalone tier ($25). Include Brand Strategy Snapshot free on all Campaign tiers.<br><br>
-
-<strong>9. <em style="color:#2DD4BF;">NEW · Deep Dive Brand Strategy section</em></strong>, insert between Pricing and FAQ.
-Contact Us + Book a Call CTAs.<br><br>
-
-<strong>10. FAQ</strong>, reorder, update #1 and add strategy questions #2, #3, #11.
-</p>
-
-<div class="note-box">
-<strong>Font consistency:</strong> All new sections use the same font stack as the pricing, about,
-and how-it-works pages. Body + buttons: Montserrat Medium (500). Titles: League Spartan Bold (700).
-Accent (teal italic): Montserrat Italic (700). Brand mark "<span class="brand" style="color:#2DD4BF;">tyes</span>": Gliker (fallback Grandstander).
-</div>
-
-<div class="divider"></div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- DEVELOPER IMPLEMENTATION GUIDE                                          -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header" style="background: #2DD4BF; color: #0A0A0A; margin-top: 15mm;">
-Developer Implementation Guide · Copy-Paste Ready
-</div>
-
-<p>
-This section contains everything the dev needs to ship the homepage v3. All snippets are self-contained and use
-the same design tokens across pages. Framework-agnostic HTML + CSS + minimal JS. Convert to React / Vue / Webflow
-CMS bindings as needed.
-</p>
-
-<h3>A. Design Tokens (CSS Variables)</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #EDEDED; line-height: 1.5;">
-<span style="color:#666;">/* Global tokens, put at :root or global stylesheet */</span><br>
-<span style="color:#7DD3FC;">:root</span> {<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--bg-primary:</span> #0A0A0A;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--bg-card:</span> #141414;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--bg-card-hover:</span> #1a1a1a;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--border-subtle:</span> #2A2A2A;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--text-primary:</span> #FFFFFF;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--text-body:</span> #C8C8C8;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--text-muted:</span> #B4B4B4;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--accent-teal:</span> #2DD4BF;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--accent-teal-soft:</span> rgba(45,212,191,0.15);<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--font-body:</span> "Montserrat", -apple-system, sans-serif;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--font-title:</span> "League Spartan", -apple-system, sans-serif;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--font-accent:</span> "Montserrat", sans-serif;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">--font-brand:</span> "Gliker", "Grandstander", sans-serif;<br>
-}
-</div>
-
-<h3>B. Font Loading (Google Fonts)</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.5;">
-<span style="color:#666;">&lt;!-- Put in &lt;head&gt; before your CSS --&gt;</span><br>
-&lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">rel</span>=<span style="color:#A5F3FC;">"preconnect"</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"https://fonts.googleapis.com"</span>&gt;<br>
-&lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">rel</span>=<span style="color:#A5F3FC;">"preconnect"</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"https://fonts.gstatic.com"</span> <span style="color:#FBBF24;">crossorigin</span>&gt;<br>
-&lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&amp;display=swap"</span> <span style="color:#FBBF24;">rel</span>=<span style="color:#A5F3FC;">"stylesheet"</span>&gt;<br><br>
-<span style="color:#666;">&lt;!-- Gliker is licensed. Paste your Adobe Fonts kit or self-hosted @font-face here. --&gt;</span>
-</div>
-
-<h3>C. Smooth-Scroll Anchor Setup (for all CTAs → #pricing)</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #EDEDED; line-height: 1.5;">
-<span style="color:#666;">/* Native smooth scroll, works everywhere */</span><br>
-<span style="color:#7DD3FC;">html</span> {<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">scroll-behavior:</span> smooth;<br>
-&nbsp;&nbsp;<span style="color:#2DD4BF;">scroll-padding-top:</span> 80px; <span style="color:#666;">/* offset for sticky header */</span><br>
-}<br><br>
-<span style="color:#666;">&lt;!-- Then all these buttons work automatically: --&gt;</span><br>
-&lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"#pricing"</span> <span style="color:#FBBF24;">class</span>=<span style="color:#A5F3FC;">"cta-primary"</span>&gt;Get Your Free Image →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
-&lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"#pricing"</span> <span style="color:#FBBF24;">class</span>=<span style="color:#A5F3FC;">"cta-secondary"</span>&gt;Get Your Free Strategy →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
-&lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"#pricing"</span>&gt;View Pricing&lt;/<span style="color:#F87171;">a</span>&gt;<br><br>
-<span style="color:#666;">&lt;!-- On the Pricing section: --&gt;</span><br>
-&lt;<span style="color:#F87171;">section</span> <span style="color:#FBBF24;">id</span>=<span style="color:#A5F3FC;">"pricing"</span>&gt;...&lt;/<span style="color:#F87171;">section</span>&gt;
-</div>
-
-<h3>D. Hero Component (React example, adapt for Webflow)</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
-<span style="color:#666;">// components/Hero.jsx</span><br>
-<span style="color:#C084FC;">export default function</span> <span style="color:#FBBF24;">Hero</span>() {<br>
-&nbsp;&nbsp;<span style="color:#C084FC;">return</span> (<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">section</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"hero"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">h1</span>&gt;From Brief to &lt;<span style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"accent"</span>&gt;Shelf.&lt;/<span style="color:#F87171;">span</span>&gt;&lt;/<span style="color:#F87171;">h1</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"lead"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Campaign visuals &lt;<span style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"accent-italic"</span>&gt;+ the Strategy that lands your product in shops.&lt;/<span style="color:#F87171;">span</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">p</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta-row"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"#pricing"</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta cta-primary"</span>&gt;Get Your Free Image →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"#pricing"</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta cta-secondary"</span>&gt;Get Your Free Strategy →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"trust"</span>&gt;&lt;<span style="color:#F87171;">strong</span>&gt;No credit card required&lt;/<span style="color:#F87171;">strong</span>&gt; · For brands that want to move fast.&lt;/<span style="color:#F87171;">p</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">section</span>&gt;<br>
-&nbsp;&nbsp;);<br>
-}
-</div>
-
-<h3>E. Pricing Section with Anchor ID (id="pricing")</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
-<span style="color:#666;">// components/Pricing.jsx</span><br>
-<span style="color:#C084FC;">const</span> <span style="color:#FBBF24;">tiers</span> = [<br>
-&nbsp;&nbsp;{ tag: <span style="color:#A5F3FC;">'FREE'</span>, name: <span style="color:#A5F3FC;">'Free Image'</span>, price: <span style="color:#A5F3FC;">'$0'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;features: [<span style="color:#A5F3FC;">'1 AI image'</span>, <span style="color:#A5F3FC;">'From 3H delivery'</span>],<br>
-&nbsp;&nbsp;&nbsp;&nbsp;addOn: <span style="color:#A5F3FC;">'+ Add Brand Strategy $25'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;cta: <span style="color:#A5F3FC;">'Claim Free Image'</span> },<br>
-&nbsp;&nbsp;{ tag: <span style="color:#A5F3FC;">'POPULAR'</span>, name: <span style="color:#A5F3FC;">'Campaign 5'</span>, price: <span style="color:#A5F3FC;">'$25'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;features: [<span style="color:#A5F3FC;">'5 AI campaign images'</span>, <span style="color:#A5F3FC;">'1 revision / image'</span>, <span style="color:#A5F3FC;">'From 24H delivery'</span>],<br>
-&nbsp;&nbsp;&nbsp;&nbsp;bonus: <span style="color:#A5F3FC;">'+ FREE Brand Strategy Snapshot'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;popular: <span style="color:#C084FC;">true</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;cta: <span style="color:#A5F3FC;">'Get Campaign 5'</span> },<br>
-&nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'Campaign 10'</span>, price: <span style="color:#A5F3FC;">'$45'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;features: [<span style="color:#A5F3FC;">'10 AI campaign images'</span>, <span style="color:#A5F3FC;">'1 revision / image'</span>, <span style="color:#A5F3FC;">'From 24H delivery'</span>],<br>
-&nbsp;&nbsp;&nbsp;&nbsp;bonus: <span style="color:#A5F3FC;">'+ FREE Brand Strategy Snapshot'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;cta: <span style="color:#A5F3FC;">'Get Campaign 10'</span> },<br>
-];<br><br>
-<span style="color:#C084FC;">export default function</span> <span style="color:#FBBF24;">Pricing</span>() {<br>
-&nbsp;&nbsp;<span style="color:#C084FC;">return</span> (<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">section</span> <span style="color:#FBBF24;">id</span>=<span style="color:#A5F3FC;">"pricing"</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"pricing-section"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">h2</span>&gt;Find the &lt;<span style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"accent"</span>&gt;Perfect Package.&lt;/<span style="color:#F87171;">span</span>&gt;&lt;/<span style="color:#F87171;">h2</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span>&gt;Pay per campaign. Scale when ready.&lt;/<span style="color:#F87171;">p</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"tier-grid"</span>&gt;{tiers.map(<span style="color:#FBBF24;">TierCard</span>)}&lt;/<span style="color:#F87171;">div</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#FBBF24;">CustomEnterpriseCard</span> /&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#FBBF24;">DeepDiveSection</span> /&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">section</span>&gt;<br>
-&nbsp;&nbsp;);<br>
-}
-</div>
-
-<h3>F. Custom Enterprise Card with Contact Us + Book a Call</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
-&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"tier-custom"</span>&gt;<br>
-&nbsp;&nbsp;&lt;<span style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"tag"</span>&gt;ENTERPRISE&lt;/<span style="color:#F87171;">span</span>&gt;<br>
-&nbsp;&nbsp;&lt;<span style="color:#F87171;">h3</span>&gt;Custom&lt;/<span style="color:#F87171;">h3</span>&gt;<br>
-&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span>&gt;Custom images · Custom revisions&lt;<span style="color:#F87171;">br</span>/&gt;+ FREE Brand strategy + 30-min call&lt;/<span style="color:#F87171;">p</span>&gt;<br>
-&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta-row"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"/contact"</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta cta-primary"</span>&gt;Contact Us →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">button</span> <span style="color:#FBBF24;">onClick</span>={openCalendly}&gt;Book a Call →&lt;/<span style="color:#F87171;">button</span>&gt;<br>
-&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
-&lt;/<span style="color:#F87171;">div</span>&gt;
-</div>
-
-<h3>G. Calendly Integration (for "Book a Call")</h3>
-
-<p>Two options. Pick one based on your preferred UX.</p>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
-<span style="color:#666;">// OPTION 1: Popup widget (recommended, overlays the page)</span><br><br>
-<span style="color:#666;">&lt;!-- In your &lt;head&gt; --&gt;</span><br>
-&lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"https://assets.calendly.com/assets/external/widget.css"</span> <span style="color:#FBBF24;">rel</span>=<span style="color:#A5F3FC;">"stylesheet"</span>&gt;<br>
-&lt;<span style="color:#F87171;">script</span> <span style="color:#FBBF24;">src</span>=<span style="color:#A5F3FC;">"https://assets.calendly.com/assets/external/widget.js"</span> <span style="color:#FBBF24;">async</span>&gt;&lt;/<span style="color:#F87171;">script</span>&gt;<br><br>
-<span style="color:#666;">// In your Button component:</span><br>
-<span style="color:#C084FC;">const</span> <span style="color:#FBBF24;">openCalendly</span> = () =&gt; {<br>
-&nbsp;&nbsp;<span style="color:#FBBF24;">Calendly</span>.<span style="color:#7DD3FC;">initPopupWidget</span>({<br>
-&nbsp;&nbsp;&nbsp;&nbsp;url: <span style="color:#A5F3FC;">'https://calendly.com/tyes/discovery-call'</span> <span style="color:#666;">// replace with actual URL</span><br>
-&nbsp;&nbsp;});<br>
-&nbsp;&nbsp;<span style="color:#C084FC;">return false</span>;<br>
-};<br><br>
-&lt;<span style="color:#F87171;">button</span> <span style="color:#FBBF24;">onClick</span>={openCalendly}&gt;Book a Call →&lt;/<span style="color:#F87171;">button</span>&gt;<br><br>
-<span style="color:#666;">// ─────────────────────────────────────────────</span><br>
-<span style="color:#666;">// OPTION 2: Inline embed (widget lives on the page)</span><br><br>
-&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"calendly-inline-widget"</span><br>
-&nbsp;&nbsp;<span style="color:#FBBF24;">data-url</span>=<span style="color:#A5F3FC;">"https://calendly.com/tyes/discovery-call"</span><br>
-&nbsp;&nbsp;<span style="color:#FBBF24;">style</span>={{ minWidth: <span style="color:#A5F3FC;">'320px'</span>, height: <span style="color:#A5F3FC;">'700px'</span> }}<br>
-/&gt;
-</div>
-
-<h3>H. How It Works Flip Cards (CSS 3D Transform)</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
-<span style="color:#666;">/* CSS, put in your global stylesheet */</span><br>
-.<span style="color:#FBBF24;">flip-card</span> {<br>
-&nbsp;&nbsp;perspective: <span style="color:#A5F3FC;">1000px</span>;<br>
-&nbsp;&nbsp;height: <span style="color:#A5F3FC;">200px</span>;<br>
-&nbsp;&nbsp;cursor: pointer;<br>
-}<br>
-.<span style="color:#FBBF24;">flip-card-inner</span> {<br>
-&nbsp;&nbsp;position: relative;<br>
-&nbsp;&nbsp;width: <span style="color:#A5F3FC;">100%</span>;<br>
-&nbsp;&nbsp;height: <span style="color:#A5F3FC;">100%</span>;<br>
-&nbsp;&nbsp;transition: transform <span style="color:#A5F3FC;">0.5s</span> <span style="color:#7DD3FC;">cubic-bezier</span>(0.4, 0, 0.2, 1);<br>
-&nbsp;&nbsp;transform-style: preserve-3d;<br>
-}<br>
-.<span style="color:#FBBF24;">flip-card</span>:hover .<span style="color:#FBBF24;">flip-card-inner</span>,<br>
-.<span style="color:#FBBF24;">flip-card.is-flipped</span> .<span style="color:#FBBF24;">flip-card-inner</span> {<br>
-&nbsp;&nbsp;transform: <span style="color:#7DD3FC;">rotateY</span>(<span style="color:#A5F3FC;">180deg</span>);<br>
-}<br>
-.<span style="color:#FBBF24;">flip-card-front</span>, .<span style="color:#FBBF24;">flip-card-back</span> {<br>
-&nbsp;&nbsp;position: absolute; inset: <span style="color:#A5F3FC;">0</span>;<br>
-&nbsp;&nbsp;backface-visibility: hidden;<br>
-&nbsp;&nbsp;background: <span style="color:#7DD3FC;">var</span>(--bg-card);<br>
-&nbsp;&nbsp;border-radius: <span style="color:#A5F3FC;">8px</span>; padding: <span style="color:#A5F3FC;">1.5rem</span>;<br>
-&nbsp;&nbsp;display: flex; flex-direction: column; justify-content: center;<br>
-}<br>
-.<span style="color:#FBBF24;">flip-card-back</span> {<br>
-&nbsp;&nbsp;transform: <span style="color:#7DD3FC;">rotateY</span>(<span style="color:#A5F3FC;">180deg</span>);<br>
-}<br><br>
-<span style="color:#666;">&lt;!-- HTML per card --&gt;</span><br>
-&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"flip-card"</span> <span style="color:#FBBF24;">onClick</span>={<span style="color:#7DD3FC;">toggleFlip</span>}&gt;<br>
-&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"flip-card-inner"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"flip-card-front"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"step-num"</span>&gt;01&lt;/<span style="color:#F87171;">span</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">h4</span>&gt;SEND BRIEF&lt;/<span style="color:#F87171;">h4</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"flip-card-back"</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span>&gt;Upload your product, brand guidelines, and reference direction. In any language. Takes 5 minutes.&lt;/<span style="color:#F87171;">p</span>&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
-&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
-&lt;/<span style="color:#F87171;">div</span>&gt;
-</div>
-
-<h3>I. FAQ Data Structure (Reordered)</h3>
-
-<div class="note-box" style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
-<span style="color:#666;">// data/faqItems.js</span><br>
-<span style="color:#C084FC;">export const</span> <span style="color:#FBBF24;">faqItems</span> = [<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'What is tyes and how does it work?'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'tyes is a two-engine platform. AI campaign imagery and brand strategy backed by a retail buyer network across the US and Europe...'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">"What's the Brand Strategy Snapshot?"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'A custom snapshot tailored to your brand...'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'How do I get the Brand Strategy Snapshot?'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'Three ways to get the snapshot: FREE with any Campaign 5, Campaign 10, or Custom order · $25 add-on on Free Image · $25 standalone Brand Strategy tier.'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">"What's the difference between the Deep Dive Brand Strategy and the Brand Strategy Snapshot?"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'Snapshot ($25) = 3-day audit that identifies gaps: LLM visibility, viral product angles, retail buyer shortlist. Deep Dive = bespoke engagement that solves them: full audit + 90-day roadmap, warm intros to retail buyers we know personally, packaging & positioning direction, 1-hour call. Priced per scope, subject to availability.'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'How long does delivery take?'</span>, a: <span style="color:#A5F3FC;">'Free Image: from 3H. Campaign 5 &amp; 10: from 24H. Strategy: 3 business days.'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'Can I request revisions?'</span>, a: <span style="color:#A5F3FC;">'Campaign 5 and Campaign 10 include 1 revision per image.'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'What file formats do I receive?'</span>, a: <span style="color:#A5F3FC;">'...'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'What categories do you support?'</span>, a: <span style="color:#A5F3FC;">'Beauty · Personal Care · Fragrance · Fashion'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'How do I submit my brief?'</span>, a: <span style="color:#A5F3FC;">'...'</span> },<br>
-&nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'Is there a free trial available?'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'Yes. Free Image is $0. 1 Free Image per user. After that, order a Campaign or the standalone Brand Strategy tier.'</span> },<br>
-];
-</div>
-
-<h3>J. Implementation Checklist</h3>
-
-<p>
-<strong>Setup:</strong><br>
-☐ Add Google Fonts link to <code>&lt;head&gt;</code> (League Spartan + Montserrat)<br>
-☐ Add Gliker font kit or self-hosted @font-face for "tyes" brand mark<br>
-☐ Set CSS variables in <code>:root</code> for design tokens<br>
-☐ Add <code>scroll-behavior: smooth</code> to <code>html</code>, <code>scroll-padding-top: 80px</code> if sticky header<br>
-☐ Add Calendly widget script + CSS to <code>&lt;head&gt;</code><br><br>
-
-<strong>Section IDs (for anchor navigation):</strong><br>
-☐ <code>id="pricing"</code> on the Pricing section<br>
-☐ <code>id="brand-strategy"</code> on the Deep Dive Brand Strategy section<br>
-☐ <code>id="retail-network"</code> on the Retail Network section (optional)<br>
-☐ <code>id="faq"</code> on the FAQ section (optional)<br><br>
-
-<strong>Components to build / update:</strong><br>
-☐ <code>&lt;Hero /&gt;</code>, headline "From Brief to Shelf" + 2 CTAs anchored to #pricing<br>
-☐ <code>&lt;DualValueProp /&gt;</code>, "$0 / Image. $0 / Strategy." block<br>
-☐ <code>&lt;BriefUpload /&gt;</code>, add "WE STRATEGIZE IT" + 3 CTAs (all → #pricing)<br>
-☐ <code>&lt;Categories /&gt;</code>, 4 categories only: Beauty · Personal Care · Fragrance · Fashion<br>
-☐ <code>&lt;BrandsMarquee /&gt;</code> NEW, infinite-scroll logo row on light background · reads from <code>data/brands.js</code> · pure CSS animation, no JS library<br>
-☐ <code>&lt;HowItWorks /&gt;</code>, 5 flip cards with front/back, remove old "Commercial License" badge, add both new badges "Brand Strategy" + "Retail Access" (4 total)<br>
-☐ <code>&lt;RetailNetwork /&gt;</code> NEW, 5 buyer type cards + flags 🇺🇸🇪🇺 + "UNLOCKED WITH THE DEEP DIVE BRAND STRATEGY" pill<br>
-☐ <code>&lt;Pricing /&gt;</code>, 3 tier cards + 1 Custom Enterprise + FREE badges<br>
-☐ <code>&lt;DeepDiveStrategy /&gt;</code> NEW, full playbook section + Contact Us + Book a Call<br>
-☐ <code>&lt;FAQ /&gt;</code>, reorder + add 3 new brand strategy questions with "NEW" badge<br><br>
-
-<strong>Content tweaks:</strong><br>
-☐ FAQ #1 rewrite (borrows About Us copy)<br>
-☐ All bonus lines: "+ FREE Brand Strategy Snapshot" (emphasize FREE)<br>
-☐ Free Image tier: "+ Add Brand Strategy $25" (paid add-on) + separate Brand Strategy standalone tier ($25)<br>
-☐ Remove all commercial license mentions<br>
-☐ Remove country names from Europe (keep 🇺🇸🇪🇺 flags only)<br><br>
-
-<strong>QA:</strong><br>
-☐ All CTAs anchor to #pricing (smooth-scroll works)<br>
-☐ Book a Call opens Calendly popup with correct URL<br>
-☐ Flip cards work on hover (desktop) and tap (mobile)<br>
-☐ Mobile responsive across all sections<br>
-☐ Contrast passes WCAG AA on teal text over dark bg<br>
-☐ Fonts load correctly (no FOUT / FOIT)<br>
-☐ No em-dashes anywhere in copy (feels human, not AI-written)
-</p>
-
-<h3>K. Files Reference</h3>
-
-<p>
-Related pages already built (share the same design tokens):<br>
-· <strong>About Us:</strong> <code>tyes_about_us_short.html</code><br>
-· <strong>Pricing full page:</strong> <code>pricing.html</code><br>
-· <strong>How It Works full page:</strong> <code>how-it-works.html</code><br>
-· <strong>Contact:</strong> <code>contact.html</code><br>
-· <strong>Legal pages:</strong> <code>terms.html · privacy.html · cookie-policy.html · ai-disclaimer.html</code><br><br>
-All pages use the same font stack, same accent color, same brand marks. Homepage v3 slots into
-this system with zero style conflicts.
-</p>
-
-<div class="divider"></div>
-
-<p style="text-align:center; font-size: 9pt; color: #999; margin-top: 8mm;">
-<span class="brand">tyes.app</span> · Homepage v3 · Aligned with Pricing + About Us + How It Works · Dev-ready
-</p>
-
-</div>
+    <div class="container">
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- DOC HEADER -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="doc-title">
+            <span class="brand">tyes.app</span> · Homepage v3, Aligned with Final Pricing, About Us &amp; How It Works.
+        </div>
+        <div class="doc-subtitle">
+            Updated visual mockups + copy for every section that changed. Fonts kept consistent
+            with the pricing, about, and how-it-works pages (Montserrat italic on accents, Gliker on <span
+                class="brand">tyes</span>).
+        </div>
+
+        <div class="shift-box">
+            <strong>What changed from v2 → v3:</strong> Hero rewritten to "From Brief to Shelf" with no eyebrow line.
+            Pricing tiers set to <span class="accent">$0 / $25 / $45 / Custom</span>. Added <strong>Deep Dive Brand
+                Strategy</strong> section (Deep Dive Brand Strategy upsell with Contact Us + Book a Call CTAs).
+            Reinforced with the
+            5 retail buyer categories from the How It Works page. Aligned messaging with the About Us story
+            (retail network US + Europe, brands that move fast).
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 1 · HERO, FULL REWRITE -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 1 · Hero, Full Rewrite</div>
+
+        <div class="version-label">Proposed new state · FINAL v3</div>
+
+        <div class="mockup tall">
+            <div class="label">Homepage Hero</div>
+
+            <div class="mock-headline" style="font-size: 34pt;">
+                From Brief to <span class="accent">Shelf.</span>
+            </div>
+
+            <div class="mock-sub" style="font-size: 11.5pt; max-width: 550px;">
+                Campaign visuals <span class="accent-italic">+ the Strategy that lands your product in shops.</span>
+            </div>
+
+            <div class="mock-cta-row">
+                <div class="mock-cta primary">Get Your Free Image →</div>
+                <div class="mock-cta secondary">Get Your Free Strategy →</div>
+            </div>
+
+            <div class="mock-trust">
+                <strong style="color:#2DD4BF;">No credit card required</strong> · For brands that want to move fast.
+            </div>
+        </div>
+
+        <h3>Copy breakdown (FINAL v3)</h3>
+
+        <div class="copy-block">
+            <div class="cb-label">Headline (one line, two beats, WHITE + TEAL ITALIC accent on "Shelf")</div>
+            <div class="cb-text">From Brief to <strong>Shelf.</strong></div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Sub-headline (below headline)</div>
+            <div class="cb-text"><strong>Campaign visuals + the Strategy that lands your product in shops.</strong>
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">CTA 1 (Primary, teal pill) → smooth-scroll anchor to #pricing</div>
+            <div class="cb-text">Get Your Free Image → <strong>links to #pricing</strong> (Free Image tier)</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">CTA 2 (Secondary, outlined teal pill, equal weight) → smooth-scroll anchor to #pricing
+            </div>
+            <div class="cb-text">Get Your Free Strategy → <strong>links to #pricing</strong> (Free strategy add-on /
+                Campaign tiers)</div>
+        </div>
+
+        <div class="note-box">
+            <strong>Dev note, all hero + brief-section CTAs anchor to the same Pricing section:</strong> "Get Your Free
+            Image", "Get Your Free Strategy", and "See Pricing" all use <code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">href="#pricing"</code>
+            with smooth-scroll behavior (<code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">scroll-behavior: smooth</code>
+            on html or JS). The pricing section id should be <code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">id="pricing"</code>.
+            Rationale: keep the funnel unified. Every CTA lands where the user can commit or start free. No dead-end
+            paths.
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Trust line (small, below CTAs)</div>
+            <div class="cb-text">No credit card required · For brands that want to move fast.</div>
+        </div>
+
+        <div class="note-box">
+            <strong>REMOVED:</strong> The eyebrow line "AI VISUALS + BRAND STRATEGY BOTH FREE TO START "
+            is now gone. The tagline "From Brief to Shelf" already carries the promise of the full journey
+            (visuals → strategy → placement). No need to spell it out above the headline. Cleaner,
+            faster, more confident.
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 2 · "$0/IMAGE", REFRAME -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 2 · "$0 / Image", Reframe</div>
+
+        <div class="version-label">Proposed new state</div>
+
+        <div class="mockup">
+            <div class="label">Dual value prop</div>
+            <div class="mock-headline" style="font-size: 24pt;">
+                $0 / Image.<br>
+                <span class="accent">Free Strategy</span> <span style="color:#FFFFFF;">with every Campaign.</span>
+            </div>
+            <div class="mock-sub">
+                For brands that move fast: campaign visuals in hours, strategy in days.
+            </div>
+        </div>
+
+        <h3>Copy breakdown</h3>
+
+        <div class="copy-block">
+            <div class="cb-label">Headline (big, white, two lines)</div>
+            <div class="cb-text">$0 / Image.<br>Free Strategy with every Campaign.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Sub copy</div>
+            <div class="cb-text">For brands that move fast: campaign visuals in hours, strategy in days.</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 3 · SHARE YOUR BRIEF -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 3 · Share Your Brief, Slight Tweak</div>
+
+        <div class="version-label">Proposed new state</div>
+
+        <div class="mockup">
+            <div class="label">Multi-language brief upload</div>
+            <div class="mock-headline" style="font-size: 20pt;">
+                SHARE YOUR BRIEF<br>
+                <span class="mock-headline-serif" style="color:#2DD4BF; font-size: 14pt;">In Any Language</span>
+            </div>
+            <div class="mock-sub" style="letter-spacing: 1pt; font-size: 8pt;">
+                YOU SHARE IT · WE BUILD IT · WE STRATEGIZE IT.
+            </div>
+            <div class="mock-cta-row">
+                <div class="mock-cta secondary">Claim your FREE image</div>
+                <div class="mock-cta secondary">Get FREE strategy</div>
+                <div class="mock-cta secondary">View Pricing</div>
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Sub copy</div>
+            <div class="cb-text">YOU SHARE IT · WE BUILD IT · WE STRATEGIZE IT.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">3 CTAs (small outlined buttons) → all anchor to #pricing</div>
+            <div class="cb-text">"Claim your FREE image" · "Get FREE strategy" · "View Pricing". All three <strong>link
+                    to #pricing</strong> section. Unified funnel, no dead ends.</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 4 · CATEGORIES WE SERVE -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 4 · Categories We Serve</div>
+
+        <div class="version-label">Proposed new state · Focused to 4 categories</div>
+
+        <div class="mockup">
+            <div class="label">Focused category scope</div>
+            <div class="mock-headline" style="font-size: 22pt;">
+                CATEGORIES<br>
+                <span class="mock-headline-serif" style="color:#2DD4BF; font-size: 14pt;">We Serve</span>
+            </div>
+            <div class="mock-sub">
+                <strong>One platform. Every niche. Images + Strategy.</strong>
+            </div>
+            <div class="mock-categories">
+                Beauty · Personal Care · Fragrance · Fashion
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Tagline (under headline)</div>
+            <div class="cb-text">One platform. Every niche. Images + Strategy.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Categories list (simplified to 4, what you actively serve today)</div>
+            <div class="cb-text">Beauty · Personal Care · Fragrance · Fashion</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 5 · AI IN ACTION -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 5 · AI in Action, Light Reframe</div>
+
+        <p>Sub-headline tweak to signal "use cases" includes more than visuals.</p>
+
+        <div class="copy-block">
+            <div class="cb-label">Current sub-headline</div>
+            <div class="cb-text">See what's possible.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Proposed new sub-headline</div>
+            <div class="cb-text">See what's possible. Visuals + strategy, real brands, real outcomes.</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 5b · BRANDS WE'VE WORKED WITH · NEW -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 5b · Brands We've Worked With · NEW, animated logo row</div>
+
+        <div class="version-label">Proposed new state · Social proof carousel</div>
+
+        <p>Add a full-width strip <strong>below</strong> the AI in Action grid and <strong>above</strong> How It Works.
+            Small teal eyebrow, one-line title, then an infinite-scroll marquee of client logos moving right-to-left.
+            Pure CSS, no JS. Designed to sit visually between two dark sections without competing with them.</p>
+
+        <div class="mockup">
+            <div class="label">Full-width brand logo marquee</div>
+
+            <div style="text-align: center;">
+                <div
+                    style="font-size: 8pt; letter-spacing: 3pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 5mm;">
+                    Few of the brands we've worked with</div>
+            </div>
+
+            <div style="background: #FAFAF7; border-radius: 8px; padding: 8mm 4mm; margin: 3mm 0; overflow: hidden;">
+                <div
+                    style="display: flex; gap: 12mm; align-items: center; justify-content: space-around; opacity: 0.6;">
+                    <div
+                        style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt;">
+                        Brand Logo 1</div>
+                    <div
+                        style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt; font-style: italic;">
+                        Brand Logo 2</div>
+                    <div
+                        style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt;">
+                        Brand Logo 3</div>
+                    <div
+                        style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt; font-style: italic;">
+                        Brand Logo 4</div>
+                    <div
+                        style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt;">
+                        Brand Logo 5</div>
+                    <div
+                        style="font-family: 'League Spartan', serif; font-weight: 700; color: #1a1a1a; font-size: 12pt; font-style: italic;">
+                        Brand Logo 6</div>
+                </div>
+                <div style="text-align: center; font-size: 7pt; color: #888; margin-top: 4mm; font-style: italic;">↔
+                    auto-scrolls infinitely, right to left, 30s per cycle · pauses on hover · logos in grayscale,
+                    restore full color on hover</div>
+            </div>
+
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Section eyebrow (small teal caps above the strip)</div>
+            <div class="cb-text">Few of the brands we've worked with</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Logo assets Sheika needs to provide</div>
+            <div class="cb-text">
+                <strong>PNG or SVG</strong>, transparent background, <strong>uniform height ~ 60px</strong> (widths can
+                vary). Prefer SVG for crisp scaling. If only PNG is available, export at 2× (120px tall) for
+                retina.<br><br>
+                File naming convention: <code>/public/logos/brand-name.svg</code> — e.g. <code>my-geisha.svg</code>,
+                <code>synergy-therm.svg</code>, <code>vitaora.svg</code>. Sheika drops files in
+                <code>/public/logos/</code> and the dev reads the folder or a manual list in
+                <code>data/brands.js</code>.<br><br>
+                <strong>Recommended: 8–12 logos.</strong> Fewer than 6 looks thin, more than 15 gets noisy.
+            </div>
+        </div>
+
+        <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt; line-height: 1.55;">
+            <span style="color:#666;">// data/brands.js — Sheika edits this file to add/remove brands</span><br>
+            <span style="color:#C084FC;">export const</span> <span style="color:#FBBF24;">brands</span> = [<br>
+            &nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'myGeisha'</span>, logo: <span
+                style="color:#A5F3FC;">'/logos/my-geisha.svg'</span> },<br>
+            &nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'Synergy Therm'</span>, logo: <span
+                style="color:#A5F3FC;">'/logos/synergy-therm.svg'</span> },<br>
+            &nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'VitaOra'</span>, logo: <span
+                style="color:#A5F3FC;">'/logos/vitaora.svg'</span> },<br>
+            &nbsp;&nbsp;<span style="color:#666;">// add more here — no code change needed</span><br>
+            ];
+        </div>
+
+        <h3>Dev · HTML + CSS for the infinite marquee (pure CSS, no JS)</h3>
+
+        <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8pt; line-height: 1.55;">
+            <span style="color:#666;">/* React component */</span><br>
+            <span style="color:#C084FC;">import</span> { <span style="color:#FBBF24;">brands</span> } <span
+                style="color:#C084FC;">from</span> <span style="color:#A5F3FC;">'@/data/brands'</span>;<br><br>
+            <span style="color:#C084FC;">export default function</span> <span
+                style="color:#FBBF24;">BrandsMarquee</span>() {<br>
+            &nbsp;&nbsp;<span style="color:#666;">// Duplicate the list so the animation wraps seamlessly</span><br>
+            &nbsp;&nbsp;<span style="color:#C084FC;">const</span> loop = [...brands, ...brands];<br>
+            &nbsp;&nbsp;<span style="color:#C084FC;">return</span> (<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">section</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"brands-marquee"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"eyebrow"</span>&gt;Few of the
+            brands we've worked with&lt;/<span style="color:#F87171;">p</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"marquee-track"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{loop.map((b, i) =&gt; (<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">img</span>
+            <span style="color:#FBBF24;">key</span>={i} <span style="color:#FBBF24;">src</span>={b.logo} <span
+                style="color:#FBBF24;">alt</span>={b.name} /&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">section</span>&gt;<br>
+            &nbsp;&nbsp;);<br>
+            }<br><br>
+            <span style="color:#666;">/* CSS */</span><br>
+            .<span style="color:#FBBF24;">brands-marquee</span> {<br>
+            &nbsp;&nbsp;background: #FAFAF7;<br>
+            &nbsp;&nbsp;padding: 40px 0 48px;<br>
+            &nbsp;&nbsp;overflow: hidden;<br>
+            }<br>
+            .<span style="color:#FBBF24;">brands-marquee</span> .<span style="color:#FBBF24;">eyebrow</span> {<br>
+            &nbsp;&nbsp;text-align: center;<br>
+            &nbsp;&nbsp;font-family: <span style="color:#A5F3FC;">"Montserrat"</span>, sans-serif;<br>
+            &nbsp;&nbsp;font-weight: 600;<br>
+            &nbsp;&nbsp;letter-spacing: 3pt;<br>
+            &nbsp;&nbsp;text-transform: uppercase;<br>
+            &nbsp;&nbsp;color: #2DD4BF;<br>
+            &nbsp;&nbsp;font-size: 11pt;<br>
+            &nbsp;&nbsp;margin-bottom: 24px;<br>
+            }<br>
+            .<span style="color:#FBBF24;">brands-marquee</span> .<span style="color:#FBBF24;">marquee-track</span> {<br>
+            &nbsp;&nbsp;display: flex;<br>
+            &nbsp;&nbsp;gap: 80px;<br>
+            &nbsp;&nbsp;align-items: center;<br>
+            &nbsp;&nbsp;width: max-content;<br>
+            &nbsp;&nbsp;animation: scrollLeft 30s linear infinite;<br>
+            }<br>
+            .<span style="color:#FBBF24;">brands-marquee</span>:hover .<span style="color:#FBBF24;">marquee-track</span>
+            {<br>
+            &nbsp;&nbsp;animation-play-state: paused;<br>
+            }<br>
+            .<span style="color:#FBBF24;">brands-marquee</span> img {<br>
+            &nbsp;&nbsp;height: 60px;<br>
+            &nbsp;&nbsp;width: auto;<br>
+            &nbsp;&nbsp;filter: grayscale(100%) opacity(0.55);<br>
+            &nbsp;&nbsp;transition: filter 0.3s ease;<br>
+            }<br>
+            .<span style="color:#FBBF24;">brands-marquee</span> img:hover {<br>
+            &nbsp;&nbsp;filter: grayscale(0%) opacity(1);<br>
+            }<br>
+            @<span style="color:#C084FC;">keyframes</span> <span style="color:#FBBF24;">scrollLeft</span> {<br>
+            &nbsp;&nbsp;from { transform: translateX(0); }<br>
+            &nbsp;&nbsp;to&nbsp;&nbsp; { transform: translateX(-50%); }<br>
+            }<br><br>
+            <span style="color:#666;">/* Prefers-reduced-motion: pause the animation for users who ask for less motion
+                */</span><br>
+            @<span style="color:#C084FC;">media</span> (prefers-reduced-motion: reduce) {<br>
+            &nbsp;&nbsp;.<span style="color:#FBBF24;">brands-marquee</span> .<span
+                style="color:#FBBF24;">marquee-track</span> { animation: none; justify-content: center; flex-wrap: wrap;
+            }<br>
+            }
+        </div>
+
+        <div class="note-box" style="border-left-color: #FBBF24;">
+            <strong style="color:#FBBF24;">How it works:</strong> The trick is duplicating the logo list
+            (<code>[...brands, ...brands]</code>) and animating <code>translateX(0)</code> →
+            <code>translateX(-50%)</code>. That's exactly half the total width, so when the animation resets, the second
+            copy is already in the same position the first copy started — visually seamless, no jump. No JavaScript
+            needed. On mobile, adjust <code>gap</code> to <code>40px</code> and image height to <code>44px</code> so the
+            strip stays balanced.
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 6 · HOW IT WORKS -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 6 · How It Works, Add 5th Step</div>
+
+        <div class="version-label">Proposed new state</div>
+
+        <div class="mockup">
+            <div class="label">5 steps · strategy as bonus track</div>
+            <div class="mock-headline" style="font-size: 20pt;">
+                HOW IT <span class="mock-headline-serif" style="color:#2DD4BF; font-size: 14pt;">Works</span>
+            </div>
+            <div class="mock-sub" style="font-size: 8pt; letter-spacing: 0.5pt;">
+                ✓ From 3H Delivery · ✓ AI + Designer Touch · ✓ Brand Strategy · ✓ Retail Access
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 2mm; margin-top: 4mm;">
+                <div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">01</div>
+                    <div
+                        style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">
+                        SEND<br>BRIEF</div>
+                </div>
+                <div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">02</div>
+                    <div
+                        style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">
+                        AI<br>GENERATE</div>
+                </div>
+                <div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">03</div>
+                    <div
+                        style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">
+                        DESIGNER<br>POLISH</div>
+                </div>
+                <div style="background: #141414; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">04</div>
+                    <div
+                        style="font-size: 7pt; color: #B8B8B8; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">
+                        DELIVERY</div>
+                </div>
+                <div
+                    style="background: transparent; border: 1.5px solid #2DD4BF; padding: 3mm 2mm; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 9pt; color: #2DD4BF; font-weight: 800;">+</div>
+                    <div
+                        style="font-size: 7pt; color: #2DD4BF; margin-top: 2mm; font-weight: 700; letter-spacing: 0.5pt;">
+                        BRAND<br>STRATEGY</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Badges row (4 badges, reinforces "From Brief to Shelf" promise)</div>
+            <div class="cb-text">✓ From 3H Delivery · ✓ AI + Designer Touch · ✓ Brand Strategy · ✓ Retail Access</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">5th step card (highlighted teal border to distinguish from the 4 standard steps)</div>
+            <div class="cb-text">Title: "+ BRAND STRATEGY" · Sub-line: "Bundled with every paid order. No upsell, no
+                catch."</div>
+        </div>
+
+        <h3>Flip card back copy (each card flips on hover / tap to reveal detail)</h3>
+
+        <div class="copy-block">
+            <div class="cb-label">Card 01, Back (SEND BRIEF)</div>
+            <div class="cb-text"><strong>Send Your Brief.</strong> Upload your product, brand guidelines, and reference
+                direction. Describe the scene, mood, and use case. In any language. Takes 5 minutes.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Card 02, Back (AI GENERATE)</div>
+            <div class="cb-text"><strong>AI Generation.</strong> Our engine produces visual options aligned with your
+                brand. Colors, logo, product form, all preserved. We deliver every image, designer-polished and ready.
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Card 03, Back (DESIGNER POLISH)</div>
+            <div class="cb-text"><strong>Designer Polish.</strong> Our graphic designers fix what AI misses: color
+                accuracy, brand elements, text sharpness, edge cleanup. Every image passes through our design team
+                before it reaches you.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Card 04, Back (DELIVERY)</div>
+            <div class="cb-text"><strong>Fast Delivery.</strong> Campaign-ready photos in your requested size, delivered
+                to your dashboard. From 3H for a single image, from 24H for full campaigns. Download in one click.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Card 05, Back (+ BRAND STRATEGY)</div>
+            <div class="cb-text"><strong>Brand Strategy.</strong> LLM visibility audit, viral product angles for your
+                niche, and a shortlist of retail buyers who fit your brand. Delivered to your
+                dashboard.<br><br><strong>Deep Dive Brand Strategy.</strong> The full playbook: 90-day implementation
+                roadmap, viral product concepts developed for your niche, warm intros to retail buyers we already work
+                with, packaging &amp; positioning direction, and a 1-hour strategy call.</div>
+        </div>
+
+        <div class="note-box">
+            <strong>Dev note, flip card animation:</strong> Use CSS 3D transforms. Front face shows step number + short
+            label (e.g. "01 · SEND BRIEF"). Back face shows full detail copy above. Trigger on hover (desktop) and tap
+            (mobile). Keep the flip smooth (500ms cubic-bezier(0.4, 0, 0.2, 1), the sweet spot for 3D flips). Preserve
+            card background on both faces for visual continuity.
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 7 · THE RETAIL NETWORK, NEW -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 7 · The Retail Network, NEW SECTION</div>
+
+        <div class="version-label">Proposed new state · Reinforces How It Works</div>
+
+        <p>
+            Add this section between How It Works and Pricing. It shows the concrete scope of the retail network
+            and explicitly connects to the Brand Strategy, this network is what gets unlocked when you get the strategy.
+        </p>
+
+        <div class="mockup">
+            <div class="label">The Retail Network · Part of Brand Strategy</div>
+
+            <div style="text-align: center; margin-bottom: 4mm;">
+                <span
+                    style="display: inline-block; background: rgba(45,212,191,0.15); border: 1px solid rgba(45,212,191,0.4); color: #2DD4BF; font-size: 7.5pt; letter-spacing: 2.5pt; padding: 1.5mm 4mm; border-radius: 999px; text-transform: uppercase; font-weight: 700;">Unlocked
+                    with the Deep Dive Brand Strategy</span>
+            </div>
+
+            <div class="mock-headline" style="font-size: 20pt;">
+                The Retail <span class="accent">Network.</span>
+            </div>
+            <div class="mock-sub">
+                A working network of buyer relationships across <strong>5 retail categories</strong>.
+                This is what your <span class="accent-italic">Deep Dive Brand Strategy</span> gives you access to.
+                Not a directory. Not cold outreach.
+            </div>
+
+            <div class="retail-cats-grid">
+                <div class="retail-cat-item">
+                    <div class="rc-num">01 · Mass Market</div>
+                    <div class="rc-name">Mass Market Retail</div>
+                </div>
+                <div class="retail-cat-item">
+                    <div class="rc-num">02 · Prestige</div>
+                    <div class="rc-name">Premium Retail</div>
+                </div>
+                <div class="retail-cat-item">
+                    <div class="rc-num">03 · Volume</div>
+                    <div class="rc-name">Hyperstores</div>
+                </div>
+                <div class="retail-cat-item">
+                    <div class="rc-num">04 · Beauty Pharmacy</div>
+                    <div class="rc-name">Hyperpharmacies</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2.5mm;">
+                <div class="retail-cat-item">
+                    <div class="rc-num">05 · Digital-First</div>
+                    <div class="rc-name">Marketplaces</div>
+                </div>
+            </div>
+
+            <div class="mock-sub" style="margin-top: 5mm; font-size: 9pt;">
+                Coverage: 🇺🇸 <strong>United States</strong> · 🇪🇺 <strong>Europe</strong>
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Connection pill (above headline), makes the strategy link explicit</div>
+            <div class="cb-text">UNLOCKED WITH THE DEEP DIVE BRAND STRATEGY</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Headline</div>
+            <div class="cb-text">The Retail Network.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Sub copy (borrows from About Us, makes Strategy → Retail connection clear)</div>
+            <div class="cb-text">A working network of buyer relationships across 5 retail categories.
+                This is what your <strong>Deep Dive Brand Strategy</strong> gives you access to.
+                Not a directory. Not cold outreach.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">5 buyer type cards</div>
+            <div class="cb-text">Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Geographic coverage line</div>
+            <div class="cb-text">🇺🇸 United States · 🇪🇺 Europe (with flag emojis for visual quick-scan)</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 8 · FIND THE PERFECT PACKAGE, FINAL PRICING -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 8 · Find the Perfect Package, FINAL Pricing</div>
+
+        <div class="version-label">Proposed new state · FINAL prices confirmed</div>
+
+        <div class="mockup">
+            <div class="label">Final pricing tiers · $25 / $45 confirmed</div>
+            <div class="mock-headline" style="font-size: 22pt;">
+                Find the<br>
+                <span class="mock-headline-serif" style="color:#2DD4BF; font-size: 16pt;">Perfect Package</span>
+            </div>
+            <div class="mock-sub">Pay per campaign. Scale when ready.</div>
+
+            <div class="pricing-mockup-grid" style="grid-template-columns: repeat(5, 1fr);">
+                <div class="pricing-card">
+                    <div class="cat-tag">Free</div>
+                    <h4>Free Image</h4>
+                    <div class="price">$0</div>
+                    <ul>
+                        <li>1 AI image</li>
+                        <li>From 3H delivery</li>
+                    </ul>
+                    <div class="bonus" style="border-top-color: #2DD4BF; color: #2DD4BF;">+ Add strategy $25</div>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="cat-tag">Strategy-First</div>
+                    <h4>Brand Strategy</h4>
+                    <div class="price">$25</div>
+                    <ul>
+                        <li>LLM visibility audit</li>
+                        <li>Viral product angles</li>
+                        <li>Retail buyer shortlist</li>
+                        <li>3-day delivery</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card" style="border-color: #2DD4BF;">
+                    <div class="cat-tag" style="color: #2DD4BF;">Retail-Ready</div>
+                    <h4>Deep Dive Brand Strategy</h4>
+                    <div class="price" style="font-size: 14pt;">Priced per scope</div>
+                    <ul>
+                        <li>Full LLM audit + 90-day roadmap</li>
+                        <li>Viral product concepts for your niche</li>
+                        <li>Warm intros to retail buyers</li>
+                        <li>Packaging &amp; positioning direction</li>
+                        <li>1-hour strategy call</li>
+                    </ul>
+                    <div style="display: flex; gap: 1.5mm; flex-wrap: wrap; margin-top: 3mm;">
+                        <div class="mock-cta primary" style="font-size: 6.5pt; padding: 1.2mm 2.5mm;">Contact Us</div>
+                        <div class="mock-cta secondary" style="font-size: 6.5pt; padding: 1.2mm 2.5mm;">Book a Call
+                        </div>
+                    </div>
+                    <div style="margin-top: 3mm; font-size: 6.5pt; color: #B8B8B8; font-style: italic;">Subject to
+                        availability</div>
+                </div>
+
+                <div class="pricing-card popular">
+                    <div class="cat-tag">Popular</div>
+                    <h4>Campaign 5</h4>
+                    <div class="price">$25</div>
+                    <ul>
+                        <li>5 AI images</li>
+                        <li>1 revision / image</li>
+                        <li>From 24H delivery</li>
+                    </ul>
+                    <div class="bonus">FREE Brand Strategy Snapshot</div>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="cat-tag">Go Big</div>
+                    <h4>Campaign 10</h4>
+                    <div class="price">$45</div>
+                    <ul>
+                        <li>10 AI images</li>
+                        <li>1 revision / image</li>
+                        <li>From 24H delivery</li>
+                    </ul>
+                    <div class="bonus">FREE Brand Strategy Snapshot</div>
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 3mm; background: #1a1a1a; border: 1.5px solid #2DD4BF; padding: 5mm 6mm; border-radius: 5px;">
+                <div class="cat-tag"
+                    style="font-size: 6.5pt; color: #2DD4BF; letter-spacing: 2pt; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm;">
+                    Enterprise</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; align-items: center;">
+                    <div>
+                        <h4 style="font-size: 11pt; color: #FFFFFF; margin-bottom: 1mm;">Custom</h4>
+                        <div style="font-size: 7.5pt; color: #B4B4B4; line-height: 1.5;">Custom images · Custom
+                            revisions<br>+ FREE Brand strategy + 30-min call</div>
+                    </div>
+                    <div style="display: flex; gap: 2mm; justify-content: flex-end;">
+                        <div class="mock-cta primary" style="font-size: 7.5pt; padding: 2mm 4mm;">Contact Us →</div>
+                        <div class="mock-cta secondary" style="font-size: 7.5pt; padding: 2mm 4mm;">Book a Call →</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Copy breakdown, 5 tiers FINAL</h3>
+
+        <div class="copy-block">
+            <div class="cb-label">Tier 1, Free Image</div>
+            <div class="cb-text"><strong>$0</strong> · 1 AI image · From 3H delivery.
+                Optional: <strong>+ $25 to add Brand Strategy Snapshot</strong> (paid add-on).
+                Lead-capture taste of the product.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Tier 2, Brand Strategy (STANDALONE)</div>
+            <div class="cb-text"><strong>$25</strong> · LLM visibility audit · Viral product angles · Retail buyer
+                shortlist · 3-day delivery.
+                For brands that want the strategy without ordering images.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Tier 3, Campaign 5 (POPULAR)</div>
+            <div class="cb-text"><strong>$25</strong> · 5 AI campaign images · 1 revision per image · From 24H delivery
+                <strong>· + Brand Strategy Snapshot (INCLUDED FREE)</strong>
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Tier 4, Campaign 10</div>
+            <div class="cb-text"><strong>$45</strong> · 10 AI campaign images · 1 revision per image · From 24H delivery
+                <strong>· + Brand Strategy Snapshot (INCLUDED FREE)</strong>
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Tier 5, Custom (ENTERPRISE)</div>
+            <div class="cb-text">Custom number of images · Custom revisions
+                <strong>· + FREE Brand Strategy Snapshot + 30-min strategy call.</strong>
+                Two CTA buttons: <strong>Contact Us</strong> (opens contact form) and <strong>Book a Call</strong>
+                (opens Calendly widget).
+            </div>
+        </div>
+
+        <div class="note-box">
+            <strong>Dev note, Calendly integration for "Book a Call":</strong> Use the Calendly inline widget or popup
+            script.
+            Add this to the page head: <code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">&lt;script src="https://assets.calendly.com/assets/external/widget.js" async&gt;&lt;/script&gt;</code>
+            Then wire the "Book a Call" button to trigger <code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">Calendly.initPopupWidget({url: 'https://calendly.com/raluca-tyes/30min'})</code>.
+            Alternatively, use the inline embed: <code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">&lt;div class="calendly-inline-widget" data-url="..."&gt;&lt;/div&gt;</code>.
+            Sheika will provide the actual Calendly URLs. <strong>Two events</strong>: <code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">calendly.com/tyes/discovery-call</code>
+            (30-min, Custom Enterprise Book a Call) and <code
+                style="background:#000; padding: 1px 4px; border-radius: 3px; color:#2DD4BF;">calendly.com/tyes/deep-dive-call</code>
+            (1-hour, Deep Dive Brand Strategy Book a Call). Do not use the same URL for both.
+        </div>
+
+        <div class="note-box">
+            <strong>Business logic:</strong> Free Image ($0) has strategy as a paid add-on ($25). Standalone Brand
+            Strategy tier ($25) is a separate card.
+            Every Campaign tier (5, 10, Custom) bundles the Brand Strategy Snapshot for free. This creates a clean
+            upgrade path:
+            Free Image + $25 strategy = $25 total. Campaign 5 = $25 with Snapshot already included = obvious
+            step up. Removes friction and rewards paying customers.
+        </div>
+
+        <div class="note-box" style="border-left-color: #FBBF24;">
+            <strong style="color:#FBBF24;">Dev · Free Image rate limit (IMPORTANT):</strong> Each account can order the
+            Free Image <strong>once, ever.</strong> Enforce on signup + at checkout by de-duping on <strong>email
+                address, billing name + address, phone number, and payment method fingerprint</strong>. If any of these
+            match an existing account that already claimed Free Image, block the second free order and prompt the user
+            to choose a paid tier. Return a clear error message ("Free Image already claimed on this account, order a
+            Campaign or Brand Strategy tier to continue"). This keeps the free tier honest without punishing legitimate
+            first-time users. Log all blocked attempts for fraud review.
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 9 · DEEP DIVE BRAND STRATEGY, NEW -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 9 · Deep Dive Brand Strategy, NEW SECTION</div>
+
+        <div class="version-label">Proposed new state · Deep Dive Brand Strategy upsell</div>
+
+        <p>
+            Add this section between Pricing and FAQ. It's the Deep Dive Brand Strategy — a deeper engagement beyond the
+            free Snapshot,
+            positioned as the natural upgrade for brands ready to move beyond a single campaign.
+        </p>
+
+        <div class="mockup">
+            <div class="label">Deep Dive Brand Strategy · deeper engagement</div>
+
+            <div class="deep-dive-mock">
+                <div class="eyebrow">Beyond the free snapshot</div>
+                <h4>Ready for more? The <span class="accent">full playbook</span> that puts you in front of the buyer
+                    who says yes.</h4>
+                <p>
+                    Where the free Snapshot identifies your gaps, the Deep Dive Brand Strategy solves them. Full LLM
+                    audit with
+                    implementation roadmap. Viral product concepts developed for your niche. And when you're ready,
+                    <strong style="color:#FFFFFF;">we put your product in front of the retail buyers we already work
+                        with</strong>, the ones
+                    actually deciding what lands on the shelf next season.
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2mm 4mm; margin-bottom: 5mm;">
+                    <div style="font-size: 7.5pt; color: #C8C8C8;">→ Full LLM visibility audit</div>
+                    <div style="font-size: 7.5pt; color: #C8C8C8;">→ 90-day implementation roadmap</div>
+                    <div style="font-size: 7.5pt; color: #C8C8C8;">→ Viral product concepts for your niche</div>
+                    <div style="font-size: 7.5pt; color: #C8C8C8;">→ Warm intros to buyers we know personally</div>
+                    <div style="font-size: 7.5pt; color: #C8C8C8;">→ Packaging &amp; positioning direction</div>
+                    <div style="font-size: 7.5pt; color: #C8C8C8; grid-column: span 2; text-align: center;">→ 1-hour
+                        strategy call with our team</div>
+                </div>
+
+                <div style="display: flex; gap: 3mm;">
+                    <div class="mock-cta primary">Contact Us →</div>
+                    <div class="mock-cta secondary">Book a Call →</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Section headline</div>
+            <div class="cb-text">Ready for more? The <strong>full playbook</strong> that puts you in front of the buyer
+                who says yes.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Description (borrows the retail-buyer language from About Us)</div>
+            <div class="cb-text">Where the free Snapshot identifies your gaps, the Deep Dive Brand Strategy solves them.
+                Full LLM audit with implementation roadmap. Viral product concepts developed for your niche.
+                And when you're ready, <strong>we put your product in front of the retail buyers we already work
+                    with</strong>, the ones actually deciding what lands on the shelf next season.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Key features (buyer network made explicit)</div>
+            <div class="cb-text">Warm intros to buyers we know personally · Packaging &amp; positioning direction.
+                This is where the Deep Dive makes its case: not just insight, but <strong>access</strong>.</div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">CTA row (2 CTAs)</div>
+            <div class="cb-text">Primary teal pill: "Contact Us →" · Secondary outlined teal pill: "Book a Call →"</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 10 · FAQ, REORDERED -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Section 10 · FAQ, Reorder + Update</div>
+
+        <h3>Recommended FAQ order (updated for v3)</h3>
+
+        <p>
+            1. What is <span class="brand">tyes</span> and how does it work? <em style="color:#666;">(rewrite to mention
+                dual offer)</em><br>
+            2. <strong>What's the Brand Strategy Snapshot?</strong><br>
+            3. <strong>How do I get the Brand Strategy Snapshot?</strong><br>
+            4. <strong>What's the difference between the Deep Dive Brand Strategy and the Brand Strategy
+                Snapshot?</strong><br>
+            5. How long does delivery take? <em style="color:#666;">(images = 3-24h, strategy = 3 days)</em><br>
+            6. Can I request revisions on my images?<br>
+            7. What file formats do I receive?<br>
+            8. What categories do you support? <em style="color:#666;">(Beauty · Personal Care · Fragrance ·
+                Fashion)</em><br>
+            9. How do I submit my brief?<br>
+            10. Is there a free trial available? <em style="color:#666;">(1 Free Image per user)</em><br>
+        </p>
+
+        <div class="copy-block">
+            <div class="cb-label">Updated FAQ #1, "What is tyes and how does it work?" (borrows About Us language)</div>
+            <div class="cb-text">
+                <span class="brand" style="color:#2DD4BF;">tyes</span> is a two-engine platform.
+                <strong>AI campaign imagery and brand strategy backed by a retail buyer network across the US and
+                    Europe</strong>, built for founders and marketing teams who need to go from idea to shelf in weeks,
+                not quarters.
+                AI does the heavy lifting. Real experts do the fine work. Strategy is baked in from the first brief.
+                And when you're ready, <strong>we put your product in front of the retail buyers we already work
+                    with</strong>, the ones actually deciding what lands on the shelf next season.
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Updated FAQ #2, "What's the Brand Strategy Snapshot?"</div>
+            <div class="cb-text">
+                A custom snapshot tailored to your brand. LLM visibility audit (where you show up in ChatGPT, Claude,
+                Gemini, Perplexity). Viral product angles for your niche. Retailer shortlist across our 5 buyer
+                categories (mass market, premium, hyperstores, hyperpharmacies, marketplaces) across the US and Europe.
+                Delivered to your dashboard within 3 business days. No catch.
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">Updated FAQ #3, "How do I get the Brand Strategy Snapshot?"</div>
+            <div class="cb-text">
+                Three ways: <strong>included FREE</strong> with every Campaign 5, Campaign 10, or Custom order.
+                <strong>Add it to Free Image for $25</strong>. Or <strong>order the Brand Strategy tier standalone for
+                    $25</strong>. Same snapshot in all three paths.
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">NEW FAQ #4, "What's the difference between the Deep Dive Brand Strategy and the Brand
+                Strategy Snapshot?"</div>
+            <div class="cb-text">
+                Two very different products.<br><br>
+                <strong>Brand Strategy Snapshot ($25)</strong> is a 3-day audit that identifies your gaps: where you
+                show up (or don't) in ChatGPT, Claude, Gemini, Perplexity; the viral product angles for your niche; and
+                a shortlist of retail buyers who fit your brand. Same snapshot whether you get it free with a Campaign,
+                as a $25 add-on on Free Image, or as the $25 standalone tier.<br><br>
+                <strong>Deep Dive Brand Strategy</strong> is a bespoke engagement that solves the gaps. Full LLM audit
+                with a 90-day implementation roadmap. Viral product concepts developed for your niche. Warm intros to
+                retail buyers we already work with, personally. Packaging and positioning direction. 1-hour strategy
+                call. Priced per scope, subject to availability. Contact Us or Book a Call to get started.<br><br>
+                Short version: <strong>Snapshot = diagnosis. Deep Dive = cure + access.</strong>
+            </div>
+        </div>
+
+        <div class="copy-block">
+            <div class="cb-label">FAQ — "Is there a free trial available?"</div>
+            <div class="cb-text">
+                Yes. Free Image is $0 — <strong>1 Free Image per user.</strong> After that, order a Campaign or grab the
+                standalone Brand Strategy tier.
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- IMPLEMENTATION SUMMARY -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header">Implementation Summary, What to Change on the Site</div>
+
+        <h3>Sections to update (in this order)</h3>
+
+        <p>
+            <strong>1. Hero</strong>, replace headline with "From Brief to <em style="color:#2DD4BF;">Shelf.</em>" and
+            sub with
+            "Campaign visuals + the Strategy that lands your product in shops." Remove the eyebrow line
+            entirely.<br><br>
+
+            <strong>2. $0 / Image</strong>, replace with "$0 / Image." + "Free Strategy with every Campaign." (reflects
+            the actual model: strategy is free-bundled with paid Campaigns, $25 add-on for Free Image, $25 standalone
+            Brand Strategy tier).<br><br>
+
+            <strong>3. Share Your Brief</strong>, update sub-headline "WE STRATEGIZE IT" + add 3rd CTA.<br><br>
+
+            <strong>4. Categories We Serve</strong>, simplify to 4 categories (Beauty · Personal Care · Fragrance ·
+            Fashion)
+            + new tagline "Images + Strategy".<br><br>
+
+            <strong>5. AI in Action</strong>, update sub-headline "Visuals + strategy, real brands, real
+            outcomes."<br><br>
+
+            <strong>5b. <em style="color:#2DD4BF;">NEW · Brands We've Worked With row</em></strong>, insert immediately
+            after AI in Action (before How It Works). Small teal eyebrow "Few of the brands we've worked with" +
+            infinite-scroll logo marquee (pure CSS, 30s cycle, pauses on hover, grayscale → color on hover). Sheika
+            drops logo files in <code>/public/logos/</code> and edits <code>data/brands.js</code> — no code change
+            needed to add/remove brands.<br><br>
+
+            <strong>6. How It Works</strong>, remove old "Commercial License" badge, add two new badges "Brand Strategy"
+            + "Retail Access" (total: 4 badges). Add 5th step card "+ BRAND STRATEGY" with distinct teal border.<br><br>
+
+            <strong>7. <em style="color:#2DD4BF;">NEW · Retail Network section</em></strong>, insert between How It
+            Works and Pricing.
+            5 buyer type cards + geographic coverage line.<br><br>
+
+            <strong>8. Find the Perfect Package</strong>, FINAL prices: Free Image $0 / Campaign 5 $25 / Campaign 10 $45
+            / Custom.
+            Add "$25 add strategy" on Free tier. Add "Brand Strategy" as separate standalone tier ($25). Include Brand
+            Strategy Snapshot free on all Campaign tiers.<br><br>
+
+            <strong>9. <em style="color:#2DD4BF;">NEW · Deep Dive Brand Strategy section</em></strong>, insert between
+            Pricing and FAQ.
+            Contact Us + Book a Call CTAs.<br><br>
+
+            <strong>10. FAQ</strong>, reorder, update #1 and add strategy questions #2, #3, #11.
+        </p>
+
+        <div class="note-box">
+            <strong>Font consistency:</strong> All new sections use the same font stack as the pricing, about,
+            and how-it-works pages. Body + buttons: Montserrat Medium (500). Titles: League Spartan Bold (700).
+            Accent (teal italic): Montserrat Italic (700). Brand mark "<span class="brand"
+                style="color:#2DD4BF;">tyes</span>": Gliker (fallback Grandstander).
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+        <!-- DEVELOPER IMPLEMENTATION GUIDE                                          -->
+        <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+        <div class="section-header" style="background: #2DD4BF; color: #0A0A0A; margin-top: 15mm;">
+            Developer Implementation Guide · Copy-Paste Ready
+        </div>
+
+        <p>
+            This section contains everything the dev needs to ship the homepage v3. All snippets are self-contained and
+            use
+            the same design tokens across pages. Framework-agnostic HTML + CSS + minimal JS. Convert to React / Vue /
+            Webflow
+            CMS bindings as needed.
+        </p>
+
+        <h3>A. Design Tokens (CSS Variables)</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #EDEDED; line-height: 1.5;">
+            <span style="color:#666;">/* Global tokens, put at :root or global stylesheet */</span><br>
+            <span style="color:#7DD3FC;">:root</span> {<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--bg-primary:</span> #0A0A0A;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--bg-card:</span> #141414;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--bg-card-hover:</span> #1a1a1a;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--border-subtle:</span> #2A2A2A;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--text-primary:</span> #FFFFFF;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--text-body:</span> #C8C8C8;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--text-muted:</span> #B4B4B4;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--accent-teal:</span> #2DD4BF;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--accent-teal-soft:</span> rgba(45,212,191,0.15);<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--font-body:</span> "Montserrat", -apple-system, sans-serif;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--font-title:</span> "League Spartan", -apple-system,
+            sans-serif;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--font-accent:</span> "Montserrat", sans-serif;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">--font-brand:</span> "Gliker", "Grandstander", sans-serif;<br>
+            }
+        </div>
+
+        <h3>B. Font Loading (Google Fonts)</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.5;">
+            <span style="color:#666;">&lt;!-- Put in &lt;head&gt; before your CSS --&gt;</span><br>
+            &lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">rel</span>=<span
+                style="color:#A5F3FC;">"preconnect"</span> <span style="color:#FBBF24;">href</span>=<span
+                style="color:#A5F3FC;">"https://fonts.googleapis.com"</span>&gt;<br>
+            &lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">rel</span>=<span
+                style="color:#A5F3FC;">"preconnect"</span> <span style="color:#FBBF24;">href</span>=<span
+                style="color:#A5F3FC;">"https://fonts.gstatic.com"</span> <span
+                style="color:#FBBF24;">crossorigin</span>&gt;<br>
+            &lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">href</span>=<span
+                style="color:#A5F3FC;">"https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&amp;display=swap"</span>
+            <span style="color:#FBBF24;">rel</span>=<span style="color:#A5F3FC;">"stylesheet"</span>&gt;<br><br>
+            <span style="color:#666;">&lt;!-- Gliker is licensed. Paste your Adobe Fonts kit or self-hosted @font-face
+                here. --&gt;</span>
+        </div>
+
+        <h3>C. Smooth-Scroll Anchor Setup (for all CTAs → #pricing)</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #EDEDED; line-height: 1.5;">
+            <span style="color:#666;">/* Native smooth scroll, works everywhere */</span><br>
+            <span style="color:#7DD3FC;">html</span> {<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">scroll-behavior:</span> smooth;<br>
+            &nbsp;&nbsp;<span style="color:#2DD4BF;">scroll-padding-top:</span> 80px; <span style="color:#666;">/*
+                offset for sticky header */</span><br>
+            }<br><br>
+            <span style="color:#666;">&lt;!-- Then all these buttons work automatically: --&gt;</span><br>
+            &lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span
+                style="color:#A5F3FC;">"#pricing"</span> <span style="color:#FBBF24;">class</span>=<span
+                style="color:#A5F3FC;">"cta-primary"</span>&gt;Get Your Free Image →&lt;/<span
+                style="color:#F87171;">a</span>&gt;<br>
+            &lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span
+                style="color:#A5F3FC;">"#pricing"</span> <span style="color:#FBBF24;">class</span>=<span
+                style="color:#A5F3FC;">"cta-secondary"</span>&gt;Get Your Free Strategy →&lt;/<span
+                style="color:#F87171;">a</span>&gt;<br>
+            &lt;<span style="color:#F87171;">a</span> <span style="color:#FBBF24;">href</span>=<span
+                style="color:#A5F3FC;">"#pricing"</span>&gt;View Pricing&lt;/<span
+                style="color:#F87171;">a</span>&gt;<br><br>
+            <span style="color:#666;">&lt;!-- On the Pricing section: --&gt;</span><br>
+            &lt;<span style="color:#F87171;">section</span> <span style="color:#FBBF24;">id</span>=<span
+                style="color:#A5F3FC;">"pricing"</span>&gt;...&lt;/<span style="color:#F87171;">section</span>&gt;
+        </div>
+
+        <h3>D. Hero Component (React example, adapt for Webflow)</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
+            <span style="color:#666;">// components/Hero.jsx</span><br>
+            <span style="color:#C084FC;">export default function</span> <span style="color:#FBBF24;">Hero</span>() {<br>
+            &nbsp;&nbsp;<span style="color:#C084FC;">return</span> (<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">section</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"hero"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">h1</span>&gt;From Brief to &lt;<span
+                style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"accent"</span>&gt;Shelf.&lt;/<span
+                style="color:#F87171;">span</span>&gt;&lt;/<span style="color:#F87171;">h1</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"lead"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Campaign visuals &lt;<span
+                style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"accent-italic"</span>&gt;+ the Strategy that lands your product in
+            shops.&lt;/<span style="color:#F87171;">span</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">p</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta-row"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">a</span> <span
+                style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"#pricing"</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta cta-primary"</span>&gt;Get
+            Your Free Image →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">a</span> <span
+                style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"#pricing"</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta cta-secondary"</span>&gt;Get
+            Your Free Strategy →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"trust"</span>&gt;&lt;<span
+                style="color:#F87171;">strong</span>&gt;No credit card required&lt;/<span
+                style="color:#F87171;">strong</span>&gt; · For brands that want to move fast.&lt;/<span
+                style="color:#F87171;">p</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">section</span>&gt;<br>
+            &nbsp;&nbsp;);<br>
+            }
+        </div>
+
+        <h3>E. Pricing Section with Anchor ID (id="pricing")</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
+            <span style="color:#666;">// components/Pricing.jsx</span><br>
+            <span style="color:#C084FC;">const</span> <span style="color:#FBBF24;">tiers</span> = [<br>
+            &nbsp;&nbsp;{ tag: <span style="color:#A5F3FC;">'FREE'</span>, name: <span style="color:#A5F3FC;">'Free
+                Image'</span>, price: <span style="color:#A5F3FC;">'$0'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;features: [<span style="color:#A5F3FC;">'1 AI image'</span>, <span
+                style="color:#A5F3FC;">'From 3H delivery'</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;addOn: <span style="color:#A5F3FC;">'+ Add Brand Strategy $25'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;cta: <span style="color:#A5F3FC;">'Claim Free Image'</span> },<br>
+            &nbsp;&nbsp;{ tag: <span style="color:#A5F3FC;">'POPULAR'</span>, name: <span
+                style="color:#A5F3FC;">'Campaign 5'</span>, price: <span style="color:#A5F3FC;">'$25'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;features: [<span style="color:#A5F3FC;">'5 AI campaign images'</span>, <span
+                style="color:#A5F3FC;">'1 revision / image'</span>, <span style="color:#A5F3FC;">'From 24H
+                delivery'</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;bonus: <span style="color:#A5F3FC;">'+ FREE Brand Strategy Snapshot'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;popular: <span style="color:#C084FC;">true</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;cta: <span style="color:#A5F3FC;">'Get Campaign 5'</span> },<br>
+            &nbsp;&nbsp;{ name: <span style="color:#A5F3FC;">'Campaign 10'</span>, price: <span
+                style="color:#A5F3FC;">'$45'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;features: [<span style="color:#A5F3FC;">'10 AI campaign images'</span>, <span
+                style="color:#A5F3FC;">'1 revision / image'</span>, <span style="color:#A5F3FC;">'From 24H
+                delivery'</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;bonus: <span style="color:#A5F3FC;">'+ FREE Brand Strategy Snapshot'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;cta: <span style="color:#A5F3FC;">'Get Campaign 10'</span> },<br>
+            ];<br><br>
+            <span style="color:#C084FC;">export default function</span> <span style="color:#FBBF24;">Pricing</span>()
+            {<br>
+            &nbsp;&nbsp;<span style="color:#C084FC;">return</span> (<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">section</span> <span
+                style="color:#FBBF24;">id</span>=<span style="color:#A5F3FC;">"pricing"</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"pricing-section"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">h2</span>&gt;Find the &lt;<span
+                style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"accent"</span>&gt;Perfect Package.&lt;/<span
+                style="color:#F87171;">span</span>&gt;&lt;/<span style="color:#F87171;">h2</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span>&gt;Pay per campaign. Scale
+            when ready.&lt;/<span style="color:#F87171;">p</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span
+                style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"tier-grid"</span>&gt;{tiers.map(<span
+                style="color:#FBBF24;">TierCard</span>)}&lt;/<span style="color:#F87171;">div</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#FBBF24;">CustomEnterpriseCard</span> /&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#FBBF24;">DeepDiveSection</span> /&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">section</span>&gt;<br>
+            &nbsp;&nbsp;);<br>
+            }
+        </div>
+
+        <h3>F. Custom Enterprise Card with Contact Us + Book a Call</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
+            &lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"tier-custom"</span>&gt;<br>
+            &nbsp;&nbsp;&lt;<span style="color:#F87171;">span</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"tag"</span>&gt;ENTERPRISE&lt;/<span style="color:#F87171;">span</span>&gt;<br>
+            &nbsp;&nbsp;&lt;<span style="color:#F87171;">h3</span>&gt;Custom&lt;/<span
+                style="color:#F87171;">h3</span>&gt;<br>
+            &nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span>&gt;Custom images · Custom revisions&lt;<span
+                style="color:#F87171;">br</span>/&gt;+ FREE Brand strategy + 30-min call&lt;/<span
+                style="color:#F87171;">p</span>&gt;<br>
+            &nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"cta-row"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">a</span> <span
+                style="color:#FBBF24;">href</span>=<span style="color:#A5F3FC;">"/contact"</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"cta cta-primary"</span>&gt;Contact
+            Us →&lt;/<span style="color:#F87171;">a</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">button</span> <span
+                style="color:#FBBF24;">onClick</span>={openCalendly}&gt;Book a Call →&lt;/<span
+                style="color:#F87171;">button</span>&gt;<br>
+            &nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
+            &lt;/<span style="color:#F87171;">div</span>&gt;
+        </div>
+
+        <h3>G. Calendly Integration (for "Book a Call")</h3>
+
+        <p>Two options. Pick one based on your preferred UX.</p>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
+            <span style="color:#666;">// OPTION 1: Popup widget (recommended, overlays the page)</span><br><br>
+            <span style="color:#666;">&lt;!-- In your &lt;head&gt; --&gt;</span><br>
+            &lt;<span style="color:#F87171;">link</span> <span style="color:#FBBF24;">href</span>=<span
+                style="color:#A5F3FC;">"https://assets.calendly.com/assets/external/widget.css"</span> <span
+                style="color:#FBBF24;">rel</span>=<span style="color:#A5F3FC;">"stylesheet"</span>&gt;<br>
+            &lt;<span style="color:#F87171;">script</span> <span style="color:#FBBF24;">src</span>=<span
+                style="color:#A5F3FC;">"https://assets.calendly.com/assets/external/widget.js"</span> <span
+                style="color:#FBBF24;">async</span>&gt;&lt;/<span style="color:#F87171;">script</span>&gt;<br><br>
+            <span style="color:#666;">// In your Button component:</span><br>
+            <span style="color:#C084FC;">const</span> <span style="color:#FBBF24;">openCalendly</span> = () =&gt; {<br>
+            &nbsp;&nbsp;<span style="color:#FBBF24;">Calendly</span>.<span
+                style="color:#7DD3FC;">initPopupWidget</span>({<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;url: <span style="color:#A5F3FC;">'https://calendly.com/raluca-tyes/30min'</span>
+            <span style="color:#666;">// replace with actual URL</span><br>
+            &nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;<span style="color:#C084FC;">return false</span>;<br>
+            };<br><br>
+            &lt;<span style="color:#F87171;">button</span> <span
+                style="color:#FBBF24;">onClick</span>={openCalendly}&gt;Book a Call →&lt;/<span
+                style="color:#F87171;">button</span>&gt;<br><br>
+            <span style="color:#666;">// ─────────────────────────────────────────────</span><br>
+            <span style="color:#666;">// OPTION 2: Inline embed (widget lives on the page)</span><br><br>
+            &lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"calendly-inline-widget"</span><br>
+            &nbsp;&nbsp;<span style="color:#FBBF24;">data-url</span>=<span
+                style="color:#A5F3FC;">"https://calendly.com/raluca-tyes/30min"</span><br>
+            &nbsp;&nbsp;<span style="color:#FBBF24;">style</span>={{ minWidth: <span
+                style="color:#A5F3FC;">'320px'</span>, height: <span style="color:#A5F3FC;">'700px'</span> }}<br>
+            /&gt;
+        </div>
+
+        <h3>H. How It Works Flip Cards (CSS 3D Transform)</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
+            <span style="color:#666;">/* CSS, put in your global stylesheet */</span><br>
+            .<span style="color:#FBBF24;">flip-card</span> {<br>
+            &nbsp;&nbsp;perspective: <span style="color:#A5F3FC;">1000px</span>;<br>
+            &nbsp;&nbsp;height: <span style="color:#A5F3FC;">200px</span>;<br>
+            &nbsp;&nbsp;cursor: pointer;<br>
+            }<br>
+            .<span style="color:#FBBF24;">flip-card-inner</span> {<br>
+            &nbsp;&nbsp;position: relative;<br>
+            &nbsp;&nbsp;width: <span style="color:#A5F3FC;">100%</span>;<br>
+            &nbsp;&nbsp;height: <span style="color:#A5F3FC;">100%</span>;<br>
+            &nbsp;&nbsp;transition: transform <span style="color:#A5F3FC;">0.5s</span> <span
+                style="color:#7DD3FC;">cubic-bezier</span>(0.4, 0, 0.2, 1);<br>
+            &nbsp;&nbsp;transform-style: preserve-3d;<br>
+            }<br>
+            .<span style="color:#FBBF24;">flip-card</span>:hover .<span
+                style="color:#FBBF24;">flip-card-inner</span>,<br>
+            .<span style="color:#FBBF24;">flip-card.is-flipped</span> .<span
+                style="color:#FBBF24;">flip-card-inner</span> {<br>
+            &nbsp;&nbsp;transform: <span style="color:#7DD3FC;">rotateY</span>(<span
+                style="color:#A5F3FC;">180deg</span>);<br>
+            }<br>
+            .<span style="color:#FBBF24;">flip-card-front</span>, .<span style="color:#FBBF24;">flip-card-back</span>
+            {<br>
+            &nbsp;&nbsp;position: absolute; inset: <span style="color:#A5F3FC;">0</span>;<br>
+            &nbsp;&nbsp;backface-visibility: hidden;<br>
+            &nbsp;&nbsp;background: <span style="color:#7DD3FC;">var</span>(--bg-card);<br>
+            &nbsp;&nbsp;border-radius: <span style="color:#A5F3FC;">8px</span>; padding: <span
+                style="color:#A5F3FC;">1.5rem</span>;<br>
+            &nbsp;&nbsp;display: flex; flex-direction: column; justify-content: center;<br>
+            }<br>
+            .<span style="color:#FBBF24;">flip-card-back</span> {<br>
+            &nbsp;&nbsp;transform: <span style="color:#7DD3FC;">rotateY</span>(<span
+                style="color:#A5F3FC;">180deg</span>);<br>
+            }<br><br>
+            <span style="color:#666;">&lt;!-- HTML per card --&gt;</span><br>
+            &lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"flip-card"</span> <span style="color:#FBBF24;">onClick</span>={<span
+                style="color:#7DD3FC;">toggleFlip</span>}&gt;<br>
+            &nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span style="color:#FBBF24;">className</span>=<span
+                style="color:#A5F3FC;">"flip-card-inner"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"flip-card-front"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">span</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"step-num"</span>&gt;01&lt;/<span
+                style="color:#F87171;">span</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">h4</span>&gt;SEND BRIEF&lt;/<span
+                style="color:#F87171;">h4</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">div</span> <span
+                style="color:#FBBF24;">className</span>=<span style="color:#A5F3FC;">"flip-card-back"</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#F87171;">p</span>&gt;Upload your product, brand
+            guidelines, and reference direction. In any language. Takes 5 minutes.&lt;/<span
+                style="color:#F87171;">p</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
+            &nbsp;&nbsp;&lt;/<span style="color:#F87171;">div</span>&gt;<br>
+            &lt;/<span style="color:#F87171;">div</span>&gt;
+        </div>
+
+        <h3>I. FAQ Data Structure (Reordered)</h3>
+
+        <div class="note-box"
+            style="background: #0A0A0A; padding: 6mm 7mm; font-family: 'Courier New', monospace; font-size: 8pt; color: #EDEDED; line-height: 1.55;">
+            <span style="color:#666;">// data/faqItems.js</span><br>
+            <span style="color:#C084FC;">export const</span> <span style="color:#FBBF24;">faqItems</span> = [<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'What is tyes and how does it work?'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'tyes is a two-engine platform. AI campaign imagery
+                and brand strategy backed by a retail buyer network across the US and Europe...'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">"What's the Brand Strategy Snapshot?"</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'A custom snapshot tailored to your brand...'</span>
+            },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'How do I get the Brand Strategy Snapshot?'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'Three ways to get the snapshot: FREE with any
+                Campaign 5, Campaign 10, or Custom order · $25 add-on on Free Image · $25 standalone Brand Strategy
+                tier.'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">"What's the difference between the Deep Dive Brand Strategy
+                and the Brand Strategy Snapshot?"</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'Snapshot ($25) = 3-day audit that identifies gaps:
+                LLM visibility, viral product angles, retail buyer shortlist. Deep Dive = bespoke engagement that solves
+                them: full audit + 90-day roadmap, warm intros to retail buyers we know personally, packaging &
+                positioning direction, 1-hour call. Priced per scope, subject to availability.'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'How long does delivery take?'</span>, a: <span
+                style="color:#A5F3FC;">'Free Image: from 3H. Campaign 5 &amp; 10: from 24H. Strategy: 3 business
+                days.'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'Can I request revisions?'</span>, a: <span
+                style="color:#A5F3FC;">'Campaign 5 and Campaign 10 include 1 revision per image.'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'What file formats do I receive?'</span>, a: <span
+                style="color:#A5F3FC;">'...'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'What categories do you support?'</span>, a: <span
+                style="color:#A5F3FC;">'Beauty · Personal Care · Fragrance · Fashion'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'How do I submit my brief?'</span>, a: <span
+                style="color:#A5F3FC;">'...'</span> },<br>
+            &nbsp;&nbsp;{ q: <span style="color:#A5F3FC;">'Is there a free trial available?'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;a: <span style="color:#A5F3FC;">'Yes. Free Image is $0. 1 Free Image per user. After
+                that, order a Campaign or the standalone Brand Strategy tier.'</span> },<br>
+            ];
+        </div>
+
+        <h3>J. Implementation Checklist</h3>
+
+        <p>
+            <strong>Setup:</strong><br>
+            ☐ Add Google Fonts link to <code>&lt;head&gt;</code> (League Spartan + Montserrat)<br>
+            ☐ Add Gliker font kit or self-hosted @font-face for "tyes" brand mark<br>
+            ☐ Set CSS variables in <code>:root</code> for design tokens<br>
+            ☐ Add <code>scroll-behavior: smooth</code> to <code>html</code>, <code>scroll-padding-top: 80px</code> if
+            sticky header<br>
+            ☐ Add Calendly widget script + CSS to <code>&lt;head&gt;</code><br><br>
+
+            <strong>Section IDs (for anchor navigation):</strong><br>
+            ☐ <code>id="pricing"</code> on the Pricing section<br>
+            ☐ <code>id="brand-strategy"</code> on the Deep Dive Brand Strategy section<br>
+            ☐ <code>id="retail-network"</code> on the Retail Network section (optional)<br>
+            ☐ <code>id="faq"</code> on the FAQ section (optional)<br><br>
+
+            <strong>Components to build / update:</strong><br>
+            ☐ <code>&lt;Hero /&gt;</code>, headline "From Brief to Shelf" + 2 CTAs anchored to #pricing<br>
+            ☐ <code>&lt;DualValueProp /&gt;</code>, "$0 / Image. $0 / Strategy." block<br>
+            ☐ <code>&lt;BriefUpload /&gt;</code>, add "WE STRATEGIZE IT" + 3 CTAs (all → #pricing)<br>
+            ☐ <code>&lt;Categories /&gt;</code>, 4 categories only: Beauty · Personal Care · Fragrance · Fashion<br>
+            ☐ <code>&lt;BrandsMarquee /&gt;</code> NEW, infinite-scroll logo row on light background · reads from
+            <code>data/brands.js</code> · pure CSS animation, no JS library<br>
+            ☐ <code>&lt;HowItWorks /&gt;</code>, 5 flip cards with front/back, remove old "Commercial License" badge,
+            add both new badges "Brand Strategy" + "Retail Access" (4 total)<br>
+            ☐ <code>&lt;RetailNetwork /&gt;</code> NEW, 5 buyer type cards + flags 🇺🇸🇪🇺 + "UNLOCKED WITH THE DEEP
+            DIVE BRAND STRATEGY" pill<br>
+            ☐ <code>&lt;Pricing /&gt;</code>, 3 tier cards + 1 Custom Enterprise + FREE badges<br>
+            ☐ <code>&lt;DeepDiveStrategy /&gt;</code> NEW, full playbook section + Contact Us + Book a Call<br>
+            ☐ <code>&lt;FAQ /&gt;</code>, reorder + add 3 new brand strategy questions with "NEW" badge<br><br>
+
+            <strong>Content tweaks:</strong><br>
+            ☐ FAQ #1 rewrite (borrows About Us copy)<br>
+            ☐ All bonus lines: "+ FREE Brand Strategy Snapshot" (emphasize FREE)<br>
+            ☐ Free Image tier: "+ Add Brand Strategy $25" (paid add-on) + separate Brand Strategy standalone tier
+            ($25)<br>
+            ☐ Remove all commercial license mentions<br>
+            ☐ Remove country names from Europe (keep 🇺🇸🇪🇺 flags only)<br><br>
+
+            <strong>QA:</strong><br>
+            ☐ All CTAs anchor to #pricing (smooth-scroll works)<br>
+            ☐ Book a Call opens Calendly popup with correct URL<br>
+            ☐ Flip cards work on hover (desktop) and tap (mobile)<br>
+            ☐ Mobile responsive across all sections<br>
+            ☐ Contrast passes WCAG AA on teal text over dark bg<br>
+            ☐ Fonts load correctly (no FOUT / FOIT)<br>
+            ☐ No em-dashes anywhere in copy (feels human, not AI-written)
+        </p>
+
+        <h3>K. Files Reference</h3>
+
+        <p>
+            Related pages already built (share the same design tokens):<br>
+            · <strong>About Us:</strong> <code>tyes_about_us_short.html</code><br>
+            · <strong>Pricing full page:</strong> <code>pricing.html</code><br>
+            · <strong>How It Works full page:</strong> <code>how-it-works.html</code><br>
+            · <strong>Contact:</strong> <code>contact.html</code><br>
+            · <strong>Legal pages:</strong>
+            <code>terms.html · privacy.html · cookie-policy.html · ai-disclaimer.html</code><br><br>
+            All pages use the same font stack, same accent color, same brand marks. Homepage v3 slots into
+            this system with zero style conflicts.
+        </p>
+
+        <div class="divider"></div>
+
+        <p style="text-align:center; font-size: 9pt; color: #999; margin-top: 8mm;">
+            <span class="brand">tyes.app</span> · Homepage v3 · Aligned with Pricing + About Us + How It Works ·
+            Dev-ready
+        </p>
+
+    </div>
 </body>
+
 </html>

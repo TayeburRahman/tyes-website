@@ -1,775 +1,1557 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>tyes.app · Client Dashboard v2 · Aligned with Homepage v3</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
-<!-- Paste your licensed Gliker kit here if you have one. -->
-<style>
-  @page { size: A4; margin: 12mm 12mm; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    font-weight: 500;
-    color: #1a1a1a; line-height: 1.55;
-    background: #FAFAF7;
-    padding: 15mm 10mm;
-  }
-  h1, h2, h3, h4, .doc-title, .mock-headline {
-    font-family: "League Spartan", -apple-system, sans-serif;
-    font-weight: 700;
-  }
-  .mock-cta, button, .cta { font-family: "Montserrat", sans-serif; font-weight: 500; }
-  .container { max-width: 820px; margin: 0 auto; }
-  .brand { font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif; font-weight: 700; letter-spacing: -0.5pt; }
-  .accent-italic { font-family: "Montserrat", sans-serif; font-style: italic; font-weight: 700; color: #2DD4BF; }
+  <meta charset="UTF-8">
+  <title>tyes.app · Client Dashboard v2 · Aligned with Homepage v3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
+    rel="stylesheet">
+  <!-- Paste your licensed Gliker kit here if you have one. -->
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm 12mm;
+    }
 
-  /* Doc header */
-  .doc-title { font-size: 22pt; font-weight: 800; letter-spacing: -0.5pt; color: #1a1a1a; margin-bottom: 3mm; line-height: 1.15; }
-  .doc-title .brand { color: #2DD4BF; }
-  .doc-subtitle { font-size: 11pt; color: #666; margin-bottom: 8mm; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* Strategic shift box */
-  .shift-box { background: #E8F8F5; border-left: 4px solid #2DD4BF; padding: 5mm 6mm; margin-bottom: 10mm; font-size: 10pt; color: #1a4a45; }
-  .shift-box strong { color: #0D5B54; }
+    body {
+      font-family: "Montserrat", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 500;
+      color: #1a1a1a;
+      line-height: 1.55;
+      background: #FAFAF7;
+      padding: 15mm 10mm;
+    }
 
-  /* Section header */
-  .section-header { background: #1a1a1a; color: #FFFFFF; padding: 4mm 6mm; border-radius: 3px; margin: 12mm 0 6mm; font-size: 10pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; }
-  .section-header:first-of-type { margin-top: 8mm; }
+    h1,
+    h2,
+    h3,
+    h4,
+    .doc-title,
+    .mock-headline {
+      font-family: "League Spartan", -apple-system, sans-serif;
+      font-weight: 700;
+    }
 
-  /* Version label */
-  .version-label { font-size: 10pt; font-weight: 700; letter-spacing: 1pt; color: #2DD4BF; text-transform: uppercase; margin-bottom: 3mm; }
+    .mock-cta,
+    button,
+    .cta {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 500;
+    }
 
-  /* Mockup box (dark) */
-  .mockup { background: #0A0A0A; color: #FFFFFF; border-radius: 6px; padding: 10mm 8mm; margin-bottom: 4mm; position: relative; }
-  .mockup .label { position: absolute; top: 3mm; left: 4mm; font-size: 7.5pt; letter-spacing: 2pt; color: #666; text-transform: uppercase; font-weight: 700; }
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
 
-  /* Dashboard mock chrome */
-  .dash-layout { display: grid; grid-template-columns: 45mm 1fr; gap: 4mm; margin-top: 6mm; }
-  .dash-sidebar { background: #141414; border-radius: 4px; padding: 5mm 4mm; }
-  .dash-sidebar .brand-mark { font-family: "Gliker", sans-serif; color: #FFFFFF; font-size: 12pt; font-weight: 700; letter-spacing: -0.3pt; margin-bottom: 6mm; }
-  .dash-sidebar ul { list-style: none; padding: 0; margin: 0; }
-  .dash-sidebar li { font-size: 8pt; color: #B8B8B8; padding: 2mm 3mm; border-radius: 3px; margin-bottom: 1mm; letter-spacing: 0.2pt; }
-  .dash-sidebar li.active { background: rgba(45,212,191,0.15); color: #2DD4BF; font-weight: 700; }
-  /* .dash-sidebar li.new-item removed — same-time launch, no NEW badge */
-  /* .dash-sidebar li.new-item::after removed */
+    .brand {
+      font-family: "Gliker", "Grandstander", "Fraunces", "Segoe UI", sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.5pt;
+    }
 
-  .dash-content { background: #141414; border-radius: 4px; padding: 6mm 6mm; }
-  .dash-content h4 { font-size: 12pt; color: #FFFFFF; margin-bottom: 2mm; }
-  .dash-content .sub { font-size: 8pt; color: #888; margin-bottom: 4mm; }
+    .accent-italic {
+      font-family: "Montserrat", sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      color: #2DD4BF;
+    }
 
-  /* KPI grid */
-  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm; margin-bottom: 5mm; }
-  .kpi-grid.five { grid-template-columns: repeat(5, 1fr); }
-  .kpi-card { background: #0A0A0A; border-radius: 3px; padding: 3mm 3mm; }
-  /* .kpi-card.new-kpi removed — no NEW highlighting */
-  .kpi-card .icon { font-size: 9pt; color: #2DD4BF; }
-  .kpi-card .val { font-size: 13pt; color: #FFFFFF; font-weight: 800; margin: 1mm 0; font-family: "League Spartan", sans-serif; }
-  .kpi-card .lbl { font-size: 6.5pt; color: #B8B8B8; letter-spacing: 0.5pt; text-transform: uppercase; }
+    /* Doc header */
+    .doc-title {
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: -0.5pt;
+      color: #1a1a1a;
+      margin-bottom: 3mm;
+      line-height: 1.15;
+    }
 
-  /* Active order card */
-  .active-card { background: #0A0A0A; border-left: 2px solid #2DD4BF; padding: 4mm 5mm; border-radius: 3px; margin-bottom: 4mm; }
-  .active-card .cat { font-size: 6.5pt; letter-spacing: 2pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm; }
-  .active-card .txt { font-size: 8pt; color: #FFFFFF; }
-  .active-card .strat-note { font-size: 7.5pt; color: #2DD4BF; margin-top: 2mm; font-style: italic; font-family: "Montserrat", sans-serif; }
+    .doc-title .brand {
+      color: #2DD4BF;
+    }
 
-  /* Copy blocks */
-  .copy-block { background: #FFFFFF; border-left: 3px solid #2DD4BF; padding: 4mm 5mm; margin: 3mm 0; border-radius: 0 3px 3px 0; }
-  .copy-block .cb-label { font-size: 8pt; letter-spacing: 1.5pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm; }
-  .copy-block .cb-text { font-size: 10pt; color: #333; line-height: 1.55; font-style: italic; }
-  .copy-block .cb-text strong { color: #1a1a1a; font-style: normal; }
+    .doc-subtitle {
+      font-size: 11pt;
+      color: #666;
+      margin-bottom: 8mm;
+    }
 
-  /* Note box */
-  .note-box { background: #1a1a1a; color: #EDEDED; padding: 5mm 6mm; border-radius: 4px; margin: 5mm 0 6mm; font-size: 9pt; line-height: 1.6; }
-  .note-box strong { color: #2DD4BF; }
-  .note-box code { background: #000; padding: 1px 4px; border-radius: 3px; color: #2DD4BF; font-family: 'Courier New', monospace; }
+    /* Strategic shift box */
+    .shift-box {
+      background: #E8F8F5;
+      border-left: 4px solid #2DD4BF;
+      padding: 5mm 6mm;
+      margin-bottom: 10mm;
+      font-size: 10pt;
+      color: #1a4a45;
+    }
 
-  h3 { font-size: 11pt; color: #1a1a1a; margin: 6mm 0 3mm; letter-spacing: 0.3pt; font-family: "League Spartan", sans-serif; }
-  p { font-size: 10pt; color: #333; margin-bottom: 3mm; line-height: 1.6; }
-  p strong { color: #1a1a1a; }
-  ul, ol { margin: 3mm 0 5mm 5mm; font-size: 10pt; color: #333; }
-  li { margin-bottom: 1.5mm; line-height: 1.55; }
+    .shift-box strong {
+      color: #0D5B54;
+    }
 
-  /* Table */
-  table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-size: 9pt; }
-  th, td { text-align: left; padding: 2.5mm 3mm; border-bottom: 1px solid #E5E5E5; }
-  th { background: #F5F5F0; font-weight: 700; color: #1a1a1a; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.5pt; }
-  td strong { color: #1a1a1a; }
+    /* Section header */
+    .section-header {
+      background: #1a1a1a;
+      color: #FFFFFF;
+      padding: 4mm 6mm;
+      border-radius: 3px;
+      margin: 12mm 0 6mm;
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 1pt;
+      text-transform: uppercase;
+    }
 
-  /* New Order plan cards */
-  .plan-mock-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2mm; margin: 4mm 0; }
-  .plan-mock { background: #0A0A0A; border: 1px solid #333; border-radius: 3px; padding: 3mm 3mm; text-align: center; position: relative; }
-  .plan-mock.popular { border: 1.5px solid #2DD4BF; background: rgba(45,212,191,0.05); }
-  .plan-mock .p-cat { font-size: 6pt; letter-spacing: 1.5pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 1mm; }
-  .plan-mock .p-name { font-size: 9pt; color: #FFFFFF; font-weight: 700; font-family: "League Spartan", sans-serif; }
-  .plan-mock .p-price { font-size: 14pt; color: #FFFFFF; font-weight: 800; margin: 1mm 0; font-family: "League Spartan", sans-serif; }
-  .plan-mock .p-feat { font-size: 6pt; color: #B4B4B4; line-height: 1.4; margin-top: 1mm; }
-  .plan-mock .p-bonus { font-size: 6pt; color: #2DD4BF; font-weight: 700; margin-top: 1mm; }
-  .plan-mock .p-addon { font-size: 6pt; color: #2DD4BF; font-weight: 700; margin-top: 1mm; }
+    .section-header:first-of-type {
+      margin-top: 8mm;
+    }
 
-  /* Steps row */
-  .steps-row { display: flex; gap: 2mm; margin: 3mm 0 4mm; font-size: 8pt; align-items: center; }
-  .steps-row .step { padding: 2mm 4mm; border-radius: 3px; background: #0A0A0A; color: #888; border: 1px solid #333; }
-  .steps-row .step.active { background: rgba(45,212,191,0.15); border-color: #2DD4BF; color: #2DD4BF; font-weight: 700; }
-  .steps-row .step.done { color: #2DD4BF; }
-  /* .steps-row .step.new-step::after removed */
+    /* Version label */
+    .version-label {
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 1pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      margin-bottom: 3mm;
+    }
 
-  /* Strategy status card */
-  .strat-status { background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.4); border-radius: 5px; padding: 5mm 6mm; margin: 4mm 0; }
-  .strat-status .st-label { font-size: 7pt; letter-spacing: 2pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm; }
-  .strat-status .st-title { font-size: 11pt; color: #FFFFFF; font-weight: 700; margin-bottom: 2mm; font-family: "League Spartan", sans-serif; }
-  .strat-status .st-sub { font-size: 8pt; color: #B8B8B8; }
-  .strat-status .st-cta { display: inline-block; background: #2DD4BF; color: #0A0A0A; padding: 2mm 4mm; border-radius: 999px; font-size: 7.5pt; font-weight: 700; margin-top: 3mm; letter-spacing: 0.5pt; }
+    /* Mockup box (dark) */
+    .mockup {
+      background: #0A0A0A;
+      color: #FFFFFF;
+      border-radius: 6px;
+      padding: 10mm 8mm;
+      margin-bottom: 4mm;
+      position: relative;
+    }
 
-  /* Deep Dive banner (upgrade) */
-  .deep-dive-banner { background: linear-gradient(135deg, #141414, #1a1a1a); border: 1px solid #333; border-radius: 6px; padding: 6mm 8mm; margin: 4mm 0; }
-  .deep-dive-banner .dd-label { font-size: 7.5pt; letter-spacing: 3pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm; }
-  .deep-dive-banner .dd-title { font-size: 14pt; color: #FFFFFF; font-weight: 800; margin-bottom: 3mm; line-height: 1.15; font-family: "League Spartan", sans-serif; }
-  .deep-dive-banner .dd-title .accent { color: #2DD4BF; font-family: "Montserrat", sans-serif; font-style: italic; font-weight: 700; }
-  .deep-dive-banner .dd-desc { font-size: 8.5pt; color: #B8B8B8; line-height: 1.55; margin-bottom: 4mm; }
-  .deep-dive-banner .dd-cta-row { display: flex; gap: 3mm; flex-wrap: wrap; }
-  .deep-dive-banner .dd-cta { padding: 2mm 5mm; border-radius: 999px; font-size: 8pt; font-weight: 700; letter-spacing: 0.5pt; }
-  .deep-dive-banner .dd-cta.primary { background: #2DD4BF; color: #0A0A0A; }
-  .deep-dive-banner .dd-cta.secondary { background: transparent; border: 1.5px solid #2DD4BF; color: #2DD4BF; }
+    .mockup .label {
+      position: absolute;
+      top: 3mm;
+      left: 4mm;
+      font-size: 7.5pt;
+      letter-spacing: 2pt;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
 
-  /* Retail Network Access preview (NEW) */
-  .retail-preview { background: #0A0A0A; border-radius: 5px; padding: 5mm 6mm; margin: 4mm 0; }
-  .retail-preview .rp-pill { display: inline-block; background: rgba(45,212,191,0.15); border: 1px solid rgba(45,212,191,0.4); color: #2DD4BF; font-size: 6.5pt; letter-spacing: 2pt; padding: 1mm 3mm; border-radius: 999px; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm; }
-  .retail-preview .rp-title { font-size: 11pt; color: #FFFFFF; font-weight: 700; margin-bottom: 3mm; font-family: "League Spartan", sans-serif; }
-  .retail-preview .rp-title .accent { color: #2DD4BF; font-family: "Montserrat", sans-serif; font-style: italic; font-weight: 700; }
-  .retail-preview .rp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; margin: 3mm 0; }
-  .retail-preview .rp-item { background: #141414; border-left: 2px solid #2DD4BF; padding: 2mm 3mm; border-radius: 2px; font-size: 7.5pt; color: #FFFFFF; font-weight: 700; }
-  .retail-preview .rp-cats { text-align: center; margin-top: 3mm; font-size: 8pt; color: #888; }
+    /* Dashboard mock chrome */
+    .dash-layout {
+      display: grid;
+      grid-template-columns: 45mm 1fr;
+      gap: 4mm;
+      margin-top: 6mm;
+    }
 
-  /* Form field mockup */
-  .form-mock { background: #0A0A0A; border-radius: 5px; padding: 5mm 6mm; margin: 3mm 0; }
-  .form-mock .fm-lbl { font-size: 7pt; letter-spacing: 1pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 1mm; }
-  .form-mock .fm-input { background: #141414; border: 1px solid #333; border-radius: 2px; padding: 2mm 3mm; font-size: 8pt; color: #FFFFFF; margin-bottom: 3mm; }
-  .form-mock .fm-input.placeholder { color: #666; }
-  .form-mock .fm-req::after { content: " *"; color: #2DD4BF; }
+    .dash-sidebar {
+      background: #141414;
+      border-radius: 4px;
+      padding: 5mm 4mm;
+    }
 
-  /* Chip mockup */
-  .chip-row { display: flex; gap: 1.5mm; flex-wrap: wrap; margin: 2mm 0 3mm; }
-  .chip { background: #141414; border: 1px solid #333; color: #B8B8B8; font-size: 7pt; padding: 1.5mm 3mm; border-radius: 999px; font-family: "Montserrat", sans-serif; }
-  .chip.selected { background: rgba(45,212,191,0.15); border-color: #2DD4BF; color: #2DD4BF; font-weight: 700; }
+    .dash-sidebar .brand-mark {
+      font-family: "Gliker", sans-serif;
+      color: #FFFFFF;
+      font-size: 12pt;
+      font-weight: 700;
+      letter-spacing: -0.3pt;
+      margin-bottom: 6mm;
+    }
 
-  /* Toggle banner (teal · "+ Add Brand Strategy $25" add-on on Free Image) */
-  .toggle-banner { background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.5); border-radius: 4px; padding: 3mm 5mm; margin: 3mm 0; }
-  .toggle-banner .tb-label { font-size: 8pt; color: #2DD4BF; font-weight: 700; margin-bottom: 1mm; }
-  .toggle-banner .tb-desc { font-size: 7.5pt; color: #B8B8B8; }
+    .dash-sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-  .divider { border-top: 1px solid #E5E5E5; margin: 12mm 0; }
-</style>
+    .dash-sidebar li {
+      font-size: 8pt;
+      color: #B8B8B8;
+      padding: 2mm 3mm;
+      border-radius: 3px;
+      margin-bottom: 1mm;
+      letter-spacing: 0.2pt;
+    }
+
+    .dash-sidebar li.active {
+      background: rgba(45, 212, 191, 0.15);
+      color: #2DD4BF;
+      font-weight: 700;
+    }
+
+    /* .dash-sidebar li.new-item removed — same-time launch, no NEW badge */
+    /* .dash-sidebar li.new-item::after removed */
+
+    .dash-content {
+      background: #141414;
+      border-radius: 4px;
+      padding: 6mm 6mm;
+    }
+
+    .dash-content h4 {
+      font-size: 12pt;
+      color: #FFFFFF;
+      margin-bottom: 2mm;
+    }
+
+    .dash-content .sub {
+      font-size: 8pt;
+      color: #888;
+      margin-bottom: 4mm;
+    }
+
+    /* KPI grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2mm;
+      margin-bottom: 5mm;
+    }
+
+    .kpi-grid.five {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .kpi-card {
+      background: #0A0A0A;
+      border-radius: 3px;
+      padding: 3mm 3mm;
+    }
+
+    /* .kpi-card.new-kpi removed — no NEW highlighting */
+    .kpi-card .icon {
+      font-size: 9pt;
+      color: #2DD4BF;
+    }
+
+    .kpi-card .val {
+      font-size: 13pt;
+      color: #FFFFFF;
+      font-weight: 800;
+      margin: 1mm 0;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    .kpi-card .lbl {
+      font-size: 6.5pt;
+      color: #B8B8B8;
+      letter-spacing: 0.5pt;
+      text-transform: uppercase;
+    }
+
+    /* Active order card */
+    .active-card {
+      background: #0A0A0A;
+      border-left: 2px solid #2DD4BF;
+      padding: 4mm 5mm;
+      border-radius: 3px;
+      margin-bottom: 4mm;
+    }
+
+    .active-card .cat {
+      font-size: 6.5pt;
+      letter-spacing: 2pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 2mm;
+    }
+
+    .active-card .txt {
+      font-size: 8pt;
+      color: #FFFFFF;
+    }
+
+    .active-card .strat-note {
+      font-size: 7.5pt;
+      color: #2DD4BF;
+      margin-top: 2mm;
+      font-style: italic;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    /* Copy blocks */
+    .copy-block {
+      background: #FFFFFF;
+      border-left: 3px solid #2DD4BF;
+      padding: 4mm 5mm;
+      margin: 3mm 0;
+      border-radius: 0 3px 3px 0;
+    }
+
+    .copy-block .cb-label {
+      font-size: 8pt;
+      letter-spacing: 1.5pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 2mm;
+    }
+
+    .copy-block .cb-text {
+      font-size: 10pt;
+      color: #333;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    .copy-block .cb-text strong {
+      color: #1a1a1a;
+      font-style: normal;
+    }
+
+    /* Note box */
+    .note-box {
+      background: #1a1a1a;
+      color: #EDEDED;
+      padding: 5mm 6mm;
+      border-radius: 4px;
+      margin: 5mm 0 6mm;
+      font-size: 9pt;
+      line-height: 1.6;
+    }
+
+    .note-box strong {
+      color: #2DD4BF;
+    }
+
+    .note-box code {
+      background: #000;
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: #2DD4BF;
+      font-family: 'Courier New', monospace;
+    }
+
+    h3 {
+      font-size: 11pt;
+      color: #1a1a1a;
+      margin: 6mm 0 3mm;
+      letter-spacing: 0.3pt;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    p {
+      font-size: 10pt;
+      color: #333;
+      margin-bottom: 3mm;
+      line-height: 1.6;
+    }
+
+    p strong {
+      color: #1a1a1a;
+    }
+
+    ul,
+    ol {
+      margin: 3mm 0 5mm 5mm;
+      font-size: 10pt;
+      color: #333;
+    }
+
+    li {
+      margin-bottom: 1.5mm;
+      line-height: 1.55;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4mm 0;
+      font-size: 9pt;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 2.5mm 3mm;
+      border-bottom: 1px solid #E5E5E5;
+    }
+
+    th {
+      background: #F5F5F0;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5pt;
+    }
+
+    td strong {
+      color: #1a1a1a;
+    }
+
+    /* New Order plan cards */
+    .plan-mock-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2mm;
+      margin: 4mm 0;
+    }
+
+    .plan-mock {
+      background: #0A0A0A;
+      border: 1px solid #333;
+      border-radius: 3px;
+      padding: 3mm 3mm;
+      text-align: center;
+      position: relative;
+    }
+
+    .plan-mock.popular {
+      border: 1.5px solid #2DD4BF;
+      background: rgba(45, 212, 191, 0.05);
+    }
+
+    .plan-mock .p-cat {
+      font-size: 6pt;
+      letter-spacing: 1.5pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 1mm;
+    }
+
+    .plan-mock .p-name {
+      font-size: 9pt;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    .plan-mock .p-price {
+      font-size: 14pt;
+      color: #FFFFFF;
+      font-weight: 800;
+      margin: 1mm 0;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    .plan-mock .p-feat {
+      font-size: 6pt;
+      color: #B4B4B4;
+      line-height: 1.4;
+      margin-top: 1mm;
+    }
+
+    .plan-mock .p-bonus {
+      font-size: 6pt;
+      color: #2DD4BF;
+      font-weight: 700;
+      margin-top: 1mm;
+    }
+
+    .plan-mock .p-addon {
+      font-size: 6pt;
+      color: #2DD4BF;
+      font-weight: 700;
+      margin-top: 1mm;
+    }
+
+    /* Steps row */
+    .steps-row {
+      display: flex;
+      gap: 2mm;
+      margin: 3mm 0 4mm;
+      font-size: 8pt;
+      align-items: center;
+    }
+
+    .steps-row .step {
+      padding: 2mm 4mm;
+      border-radius: 3px;
+      background: #0A0A0A;
+      color: #888;
+      border: 1px solid #333;
+    }
+
+    .steps-row .step.active {
+      background: rgba(45, 212, 191, 0.15);
+      border-color: #2DD4BF;
+      color: #2DD4BF;
+      font-weight: 700;
+    }
+
+    .steps-row .step.done {
+      color: #2DD4BF;
+    }
+
+    /* .steps-row .step.new-step::after removed */
+
+    /* Strategy status card */
+    .strat-status {
+      background: rgba(45, 212, 191, 0.08);
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      border-radius: 5px;
+      padding: 5mm 6mm;
+      margin: 4mm 0;
+    }
+
+    .strat-status .st-label {
+      font-size: 7pt;
+      letter-spacing: 2pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 2mm;
+    }
+
+    .strat-status .st-title {
+      font-size: 11pt;
+      color: #FFFFFF;
+      font-weight: 700;
+      margin-bottom: 2mm;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    .strat-status .st-sub {
+      font-size: 8pt;
+      color: #B8B8B8;
+    }
+
+    .strat-status .st-cta {
+      display: inline-block;
+      background: #2DD4BF;
+      color: #0A0A0A;
+      padding: 2mm 4mm;
+      border-radius: 999px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      margin-top: 3mm;
+      letter-spacing: 0.5pt;
+    }
+
+    /* Deep Dive banner (upgrade) */
+    .deep-dive-banner {
+      background: linear-gradient(135deg, #141414, #1a1a1a);
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 6mm 8mm;
+      margin: 4mm 0;
+    }
+
+    .deep-dive-banner .dd-label {
+      font-size: 7.5pt;
+      letter-spacing: 3pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 3mm;
+    }
+
+    .deep-dive-banner .dd-title {
+      font-size: 14pt;
+      color: #FFFFFF;
+      font-weight: 800;
+      margin-bottom: 3mm;
+      line-height: 1.15;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    .deep-dive-banner .dd-title .accent {
+      color: #2DD4BF;
+      font-family: "Montserrat", sans-serif;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .deep-dive-banner .dd-desc {
+      font-size: 8.5pt;
+      color: #B8B8B8;
+      line-height: 1.55;
+      margin-bottom: 4mm;
+    }
+
+    .deep-dive-banner .dd-cta-row {
+      display: flex;
+      gap: 3mm;
+      flex-wrap: wrap;
+    }
+
+    .deep-dive-banner .dd-cta {
+      padding: 2mm 5mm;
+      border-radius: 999px;
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 0.5pt;
+    }
+
+    .deep-dive-banner .dd-cta.primary {
+      background: #2DD4BF;
+      color: #0A0A0A;
+    }
+
+    .deep-dive-banner .dd-cta.secondary {
+      background: transparent;
+      border: 1.5px solid #2DD4BF;
+      color: #2DD4BF;
+    }
+
+    /* Retail Network Access preview (NEW) */
+    .retail-preview {
+      background: #0A0A0A;
+      border-radius: 5px;
+      padding: 5mm 6mm;
+      margin: 4mm 0;
+    }
+
+    .retail-preview .rp-pill {
+      display: inline-block;
+      background: rgba(45, 212, 191, 0.15);
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      color: #2DD4BF;
+      font-size: 6.5pt;
+      letter-spacing: 2pt;
+      padding: 1mm 3mm;
+      border-radius: 999px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 3mm;
+    }
+
+    .retail-preview .rp-title {
+      font-size: 11pt;
+      color: #FFFFFF;
+      font-weight: 700;
+      margin-bottom: 3mm;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    .retail-preview .rp-title .accent {
+      color: #2DD4BF;
+      font-family: "Montserrat", sans-serif;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .retail-preview .rp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2mm;
+      margin: 3mm 0;
+    }
+
+    .retail-preview .rp-item {
+      background: #141414;
+      border-left: 2px solid #2DD4BF;
+      padding: 2mm 3mm;
+      border-radius: 2px;
+      font-size: 7.5pt;
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    .retail-preview .rp-cats {
+      text-align: center;
+      margin-top: 3mm;
+      font-size: 8pt;
+      color: #888;
+    }
+
+    /* Form field mockup */
+    .form-mock {
+      background: #0A0A0A;
+      border-radius: 5px;
+      padding: 5mm 6mm;
+      margin: 3mm 0;
+    }
+
+    .form-mock .fm-lbl {
+      font-size: 7pt;
+      letter-spacing: 1pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 1mm;
+    }
+
+    .form-mock .fm-input {
+      background: #141414;
+      border: 1px solid #333;
+      border-radius: 2px;
+      padding: 2mm 3mm;
+      font-size: 8pt;
+      color: #FFFFFF;
+      margin-bottom: 3mm;
+    }
+
+    .form-mock .fm-input.placeholder {
+      color: #666;
+    }
+
+    .form-mock .fm-req::after {
+      content: " *";
+      color: #2DD4BF;
+    }
+
+    /* Chip mockup */
+    .chip-row {
+      display: flex;
+      gap: 1.5mm;
+      flex-wrap: wrap;
+      margin: 2mm 0 3mm;
+    }
+
+    .chip {
+      background: #141414;
+      border: 1px solid #333;
+      color: #B8B8B8;
+      font-size: 7pt;
+      padding: 1.5mm 3mm;
+      border-radius: 999px;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    .chip.selected {
+      background: rgba(45, 212, 191, 0.15);
+      border-color: #2DD4BF;
+      color: #2DD4BF;
+      font-weight: 700;
+    }
+
+    /* Toggle banner (teal · "+ Add Brand Strategy $25" add-on on Free Image) */
+    .toggle-banner {
+      background: rgba(45, 212, 191, 0.08);
+      border: 1px solid rgba(45, 212, 191, 0.5);
+      border-radius: 4px;
+      padding: 3mm 5mm;
+      margin: 3mm 0;
+    }
+
+    .toggle-banner .tb-label {
+      font-size: 8pt;
+      color: #2DD4BF;
+      font-weight: 700;
+      margin-bottom: 1mm;
+    }
+
+    .toggle-banner .tb-desc {
+      font-size: 7.5pt;
+      color: #B8B8B8;
+    }
+
+    .divider {
+      border-top: 1px solid #E5E5E5;
+      margin: 12mm 0;
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- DOC HEADER                                                            -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="doc-title">
-<span class="brand">tyes.app</span> · Client Dashboard v2 · <span class="accent-italic">Aligned with Homepage v3.</span>
-</div>
-<div class="doc-subtitle">
-Complete rewrite for the user-facing dashboard. All pricing, categories, retail buyer types, and copy
-mirror the final homepage v3. Design tokens: League Spartan (titles), Montserrat Medium (body + buttons),
-Montserrat Italic (accents), Gliker (brand).
-</div>
-
-<div class="shift-box">
-<strong>What's changed vs. v1:</strong> Brand Strategy Snapshot standalone tier at <strong>$25</strong> plus <strong>$25 add-on</strong> on Free Image (was $10 add-on).
-Pricing plans set to 5 tiers: Free Image ($0), Brand Strategy ($25 standalone), Campaign 5 ($25), Campaign 10 ($45), Custom (Get in Touch).
-Removed "AI tied with a pulse" tagline. Categories tightened to Beauty · Personal Care · Fragrance · Fashion.
-Retail categories now use the 5 buyer types from homepage (Mass Market Retail · Premium Retail · Hyperstores ·
-Hyperpharmacies · Marketplaces). Added Deep Dive Brand Strategy upsell banner with Contact Us + Book a Call
-(Calendly). New Retail Network preview section in Brand Strategy hub. No em-dashes anywhere.
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 0 · STRATEGIC Q&A                                             -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 0 · Is Free-then-Charge a Good Idea?</div>
-
-<p><strong>Short answer:</strong> Yes, when the free version delivers real value but stops short of execution.
-That's exactly what tyes does. And it's how every successful freemium company in this category operates.</p>
-
-<h3>Why brands don't feel tricked</h3>
-<p><strong>Trust before the sale.</strong> A brand that has never heard of tyes won't pay for strategy on day one. They'll pay after they've seen one piece of work that proves the sharpness.</p>
-<p><strong>Diagnosis vs. cure.</strong> The free Snapshot identifies gaps (LLM invisibility, missing viral SKUs, weak distribution). Identifying gaps is valuable. Solving them is the Deep Dive Brand Strategy.</p>
-<p><strong>Loss aversion.</strong> Once brands see the gap, doing nothing feels like leaving money on the table. Upgrading to Deep Dive becomes the natural next step.</p>
-<p><strong>Same pattern that already works.</strong> Ahrefs (free SEO audits, paid SEO tools). HubSpot (free website grader, paid CRM). Klaviyo (free email reports, paid platform). Same playbook for tyes brand strategy.</p>
-
-<h3>Two ways to monetize (do both)</h3>
-
-<table>
-<tr><th>Path</th><th>What you charge for</th><th>Who buys</th></tr>
-<tr><td><strong>Add-on at checkout</strong></td><td>Brand Strategy Snapshot added to Free Image tier for <strong>$25</strong>. One-click upgrade. Also available as a standalone $25 tier.</td><td>Free Image users who realize they want the strategy too</td></tr>
-<tr><td><strong>Deep Dive upsell (post-delivery)</strong></td><td>After the free Snapshot is delivered, brand sees the gaps. The follow-up nudge offers the Deep Dive Brand Strategy (full LLM audit + implementation roadmap + viral product concepts + named retailers + packaging &amp; positioning direction + 1-hour call). Priced per scope, subject to availability.</td><td>Brands who want execution, not just insight</td></tr>
-</table>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 1 · OVERVIEW PAGE                                             -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 1 · Overview Page (Updated)</div>
-
-<div class="version-label">Proposed new state · Aligned with homepage v3</div>
-
-<div class="mockup">
-<div class="label">Overview with Brand Strategy integrated</div>
-
-<div class="dash-layout">
-<div class="dash-sidebar">
-<div class="brand-mark">tyes</div>
-<ul>
-<li class="active">Overview</li>
-<li>My Orders</li>
-<li>New Order</li>
-<li>Brand Strategy</li>
-<li>Invoices</li>
-<li>Account</li>
-</ul>
-</div>
-
-<div class="dash-content">
-<h4>Welcome back, Denisa.</h4>
-<div class="sub">Here's an overview of your account.</div>
-
-<div class="kpi-grid">
-<div class="kpi-card"><div class="icon">📦</div><div class="val">4</div><div class="lbl">Total Orders</div></div>
-<div class="kpi-card"><div class="icon">🖼</div><div class="val">3</div><div class="lbl">Images Delivered</div></div>
-<div class="kpi-card"><div class="icon">$</div><div class="val">$40</div><div class="lbl">Total Spent</div></div>
-<div class="kpi-card"><div class="icon">✦</div><div class="val">1</div><div class="lbl">Strategy Snapshots</div></div>
-</div>
-
-<div class="active-card">
-<div class="cat">Active Order</div>
-<div class="txt"><strong>ORD-5CF8 · Campaign 5 · 5 images · Pending</strong></div>
-<div class="strat-note">Free Brand Strategy Snapshot will be delivered with this order</div>
-</div>
-
-<div class="strat-status">
-<div class="st-label">✦ Brand Strategy</div>
-<div class="st-title">Your free strategy snapshot is being prepared.</div>
-<div class="st-sub">Estimated delivery: 3 business days. Included free with Campaign 5.</div>
-<div class="st-cta">View Strategy →</div>
-</div>
-
-</div>
-</div>
-</div>
-
-<h3>Key Overview changes</h3>
-
-<div class="copy-block">
-<div class="cb-label">Sidebar</div>
-<div class="cb-text">Add "Brand Strategy" menu item between "New Order" and "Invoices".</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Brand mark (top of sidebar)</div>
-<div class="cb-text"><strong>Just "tyes" in Gliker.</strong> The "AI tied with a pulse" tagline is removed. Consistent with homepage v3.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">4th KPI card (replaces "Your Tier")</div>
-<div class="cb-text"><strong>"Strategy Snapshots"</strong>: count of snapshots delivered lifetime.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Active Order card note (conditional)</div>
-<div class="cb-text">If the order is Campaign 5, Campaign 10, or Custom: show teal italic note "Free Brand Strategy Snapshot will be delivered with this order." If it's Free Image with the $25 add-on toggled: "Brand Strategy Snapshot ($25 add-on) will be delivered separately." If the order is the standalone Brand Strategy tier: "Your $25 Brand Strategy Snapshot will be delivered in 3 business days." If Free Image without the add-on: no strategy note.</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">New Brand Strategy card (below Active Order)</div>
-<div class="cb-text">Status hero showing snapshot state: <strong>Being prepared</strong> / <strong>Delivered</strong> / <strong>Available to request</strong>. If already delivered: shows "Ready for more? Book a Deep Dive call" upgrade prompt.</div>
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 2 · NEW ORDER FLOW · STEP 1 CHOOSE PLAN                       -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 2 · New Order Flow · Step 1 (5 Tiers)</div>
-
-<div class="mockup">
-<div class="label">Step 1 · 5 plans aligned with homepage v3</div>
-
-<div class="dash-content">
-<h4>New Order</h4>
-<div class="sub">Fill in your brief and we'll get started right away.</div>
-
-<div class="steps-row">
-<div class="step active">1 · Choose Plan</div>
-<div class="step">2 · Upload Brief</div>
-<div class="step">3 · Brand Info</div>
-<div class="step">4 · Review &amp; Submit</div>
-</div>
-
-<div class="plan-mock-grid">
-<div class="plan-mock">
-<div class="p-cat">Free</div>
-<div class="p-name">Free Image</div>
-<div class="p-price">$0</div>
-<div class="p-feat">1 image · No revisions · From 3H</div>
-<div class="p-addon">+ Add Strategy for $25</div>
-</div>
-
-<div class="plan-mock">
-<div class="p-cat">Strategy-First</div>
-<div class="p-name">Brand Strategy</div>
-<div class="p-price">$25</div>
-<div class="p-feat">LLM audit · Viral angles · Retail shortlist · 3-day delivery</div>
-</div>
-
-<div class="plan-mock popular">
-<div class="p-cat">Popular</div>
-<div class="p-name">Campaign 5</div>
-<div class="p-price">$25</div>
-<div class="p-feat">5 images · 1 rev/img · From 24H</div>
-<div class="p-bonus">✓ Strategy included</div>
-</div>
-
-<div class="plan-mock">
-<div class="p-cat">Go Big</div>
-<div class="p-name">Campaign 10</div>
-<div class="p-price">$45</div>
-<div class="p-feat">10 images · 1 rev/img · From 24H</div>
-<div class="p-bonus">✓ Strategy included</div>
-</div>
-
-<div class="plan-mock">
-<div class="p-cat">Enterprise</div>
-<div class="p-name">Custom</div>
-<div class="p-price" style="font-size:10pt;">Get in Touch</div>
-<div class="p-feat">Custom volume · Per-scope</div>
-<div class="p-bonus">✓ Strategy + 30-min call</div>
-</div>
-</div>
-
-</div>
-</div>
-
-<h3>Conditional logic for Step 3 (Brand Info)</h3>
-
-<table>
-<tr><th>Plan chosen at Step 1</th><th>Step 3 behavior</th></tr>
-<tr><td><strong>Free Image</strong></td><td>Step 3 is OPTIONAL. Shown only if user toggles "Add Brand Strategy for $25" at Step 1 (teal banner above the plan cards). If unchecked, skip Step 3 and go straight to Review &amp; Submit (3-step flow).</td></tr>
-<tr><td><strong>Brand Strategy (standalone $25)</strong></td><td>Step 3 is MANDATORY. Brand Info form is the whole point of this tier — required to submit. No image step.</td></tr>
-<tr><td><strong>Campaign 5</strong></td><td>Step 3 is MANDATORY. Brand Info form auto-appears. Required to submit.</td></tr>
-<tr><td><strong>Campaign 10</strong></td><td>Same as Campaign 5.</td></tr>
-<tr><td><strong>Custom</strong></td><td>Same as Campaign 5 + a Calendly inline booking widget appears at the very bottom for the <strong>30-min discovery call</strong>. (Deep Dive customers get a separate 1-hour strategy call, booked from the Brand Strategy hub.)</td></tr>
-</table>
-
-<div class="copy-block">
-<div class="cb-label">Free Image → "+ Add Brand Strategy $25" add-on toggle banner (teal)</div>
-<div class="cb-text"><strong>"Add a Brand Strategy Snapshot to this order for $25."</strong> Small sub-line: "LLM visibility audit, viral product angles, retailer shortlist. Delivered in 3 business days." Checkbox off by default.</div>
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 3 · UPLOAD BRIEF + BRAND INFO                                 -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 3 · Upload Brief + Brand Info Section</div>
-
-<p>The existing Upload Brief fields (Project Title · Brief/Mood · Style chips · Product Photos · References · Fonts) stay untouched. A new "Tell us about your brand" section appends below, conditionally shown per the logic above.</p>
-
-<div class="mockup">
-<div class="label">Brand Info section · appended below existing fields</div>
-
-<div class="form-mock">
-<div style="border-bottom: 1px dashed #333; padding-bottom: 3mm; margin-bottom: 3mm;">
-<div class="fm-lbl">Existing upload brief fields (unchanged)</div>
-<div style="font-size: 7.5pt; color: #666;">Project Title · Brief / Mood · Style chips · Product Photos · References · Fonts / Label</div>
-</div>
-
-<div class="fm-lbl" style="color:#2DD4BF;">✦ Tell us about your brand</div>
-<div style="font-size: 7.5pt; color: #888; margin-bottom: 3mm;">So we can deliver your strategy snapshot in 3 business days.</div>
-
-<div class="fm-lbl fm-req">Brand Name</div>
-<div class="fm-input">myGeisha</div>
-
-<div class="fm-lbl fm-req">Website URL</div>
-<div class="fm-input">mygeisha.com</div>
-
-<div class="fm-lbl fm-req">Category</div>
-<div class="chip-row">
-<span class="chip">Beauty</span>
-<span class="chip">Personal Care</span>
-<span class="chip selected">Fragrance</span>
-<span class="chip">Fashion</span>
-</div>
-
-<div class="fm-lbl fm-req">Current Retail Presence (multi-select)</div>
-<div class="chip-row">
-<span class="chip">Mass Market Retail</span>
-<span class="chip selected">Premium Retail</span>
-<span class="chip">Hyperstores</span>
-<span class="chip">Hyperpharmacies</span>
-<span class="chip">Marketplaces</span>
-<span class="chip">None yet</span>
-</div>
-
-<div class="fm-lbl fm-req">Number of SKUs</div>
-<div class="fm-input placeholder">50-200 ▼</div>
-
-<div class="fm-lbl fm-req">Annual Revenue</div>
-<div class="fm-input placeholder">Select range ▼</div>
-
-<div class="fm-lbl fm-req">Marketing Budget / month</div>
-<div class="fm-input placeholder">Select range ▼</div>
-
-<div class="fm-lbl fm-req">Countries You Sell In</div>
-<div class="fm-input">RO, FR, UK + 2 boutiques BG</div>
-
-<div class="fm-lbl">Existing Distributors</div>
-<div class="fm-input">Sephora (RO only) · None other</div>
-</div>
-</div>
-
-<h3>Essential fields (aligned)</h3>
-
-<table>
-<tr><th>Field</th><th>Input type</th><th>Purpose</th></tr>
-<tr><td><strong>Brand name</strong></td><td>Text</td><td>Identity + web search for existing mentions</td></tr>
-<tr><td><strong>Website URL</strong></td><td>URL</td><td>Audit for schema, content, structured data (LLM visibility audit)</td></tr>
-<tr><td><strong>Category</strong></td><td>Single-select chips</td><td><strong>Beauty · Personal Care · Fragrance · Fashion</strong>. Exactly 4, no Other. Determines which retailer database we tap.</td></tr>
-<tr><td><strong>Number of SKUs</strong></td><td>Dropdown</td><td>&lt;10 · 10-50 · 50-200 · 200+. SKU gap analysis relevance.</td></tr>
-<tr><td><strong>Annual revenue</strong></td><td>Dropdown</td><td>&lt;$50k · $50-250k · $250k-1M · $1-5M · $5M+. Calibrates retailer tier.</td></tr>
-<tr><td><strong>Marketing budget</strong></td><td>Dropdown</td><td>&lt;$1k/mo · $1-5k · $5-25k · $25k+. Influences LLM visibility recommendations.</td></tr>
-<tr><td><strong>Current retail presence</strong></td><td>Multi-select chips</td><td><strong>Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces · None yet</strong>. Exactly aligned with homepage v3 Retail Network.</td></tr>
-<tr><td><strong>Countries you sell in</strong></td><td>Open textarea</td><td>D2C + retail + marketplaces context.</td></tr>
-<tr><td><strong>Existing distributors</strong></td><td>Free text</td><td>List or "None". Avoids duplicate recommendations.</td></tr>
-</table>
-
-<h3>Bonus fields (optional, sharpen the snapshot)</h3>
-
-<p>Collapsible orange-bordered block below the essential fields. All fields skippable.</p>
-
-<table>
-<tr><th>Field</th><th>Input</th><th>Why it helps</th></tr>
-<tr><td>Brand age (years)</td><td>Number</td><td>Newer brands need different tactics</td></tr>
-<tr><td>Countries to expand to</td><td>Open textarea</td><td>Drives retail/distributor shortlist by target market</td></tr>
-<tr><td>Target customer</td><td>Large textarea</td><td>Sharpens the viral SKU recommendations</td></tr>
-<tr><td>Top competitors</td><td>Large textarea</td><td>LLM presence + retail footprint benchmark</td></tr>
-<tr><td>Social media (IG/TT/YT)</td><td>3 text inputs</td><td>Channel-specific growth tactics</td></tr>
-<tr><td>USP / brand story</td><td>Large textarea</td><td>Copy + positioning angles</td></tr>
-<tr><td>6-12 month goals</td><td>Multi-select</td><td>Grow D2C · Expand retail · New products · New countries · LLM presence · Raise funding · Other</td></tr>
-</table>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 4 · BRAND STRATEGY HUB                                        -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 4 · Brand Strategy Hub · 5 subsections</div>
-
-<div class="mockup">
-<div class="label">Brand Strategy tab · state: 1 snapshot delivered</div>
-
-<div class="dash-content">
-<h4>Brand Strategy</h4>
-<div class="sub">Your free brand growth audit, delivered &amp; on file. Ready to go deeper? See the Deep Dive below.</div>
-
-<div class="strat-status">
-<div class="st-label">✦ Section A · Status Hero</div>
-<div class="st-title">1 snapshot delivered · 0 in progress</div>
-<div class="st-sub">Last updated: April 18, 2026 · For myGeisha · Category: Fragrance</div>
-<div class="st-cta">Request a new snapshot →</div>
-</div>
-
-<div style="background:#0A0A0A; padding: 4mm 5mm; border-radius: 4px; margin: 3mm 0;">
-<div class="fm-lbl">✦ Section B · Request form (collapsible)</div>
-<div style="font-size: 8pt; color:#888;">Same brand info form as New Order Step 3. Standalone version for users who haven't ordered images.</div>
-</div>
-
-<div style="background:#0A0A0A; padding: 4mm 5mm; border-radius: 4px; margin: 3mm 0;">
-<div class="fm-lbl">✦ Section C · My Snapshots</div>
-<div style="font-size: 8pt; color:#FFFFFF; margin-top: 2mm;">myGeisha Snapshot · April 18, 2026 · 5 pages · <span style="color:#2DD4BF;">DELIVERED</span> · Download PDF</div>
-<div style="font-size: 8pt; color:#FFFFFF;">myGeisha Snapshot · February 3, 2026 · 4 pages · <span style="color:#2DD4BF;">DELIVERED</span> · Download PDF</div>
-</div>
-
-<!-- Section D: Deep Dive Upgrade Banner -->
-<div class="deep-dive-banner">
-<div class="dd-label">Section D · Deep Dive Upsell</div>
-<div class="dd-title">Ready for more? The <span class="accent">full playbook</span> that puts you in front of the buyer who says yes.</div>
-<div class="dd-desc">
-Full LLM audit with implementation roadmap. Viral product concepts developed for your niche. Warm intros to retail buyers we know personally. 1-hour strategy call.
-</div>
-<div class="dd-cta-row">
-<div class="dd-cta primary">Contact Us →</div>
-<div class="dd-cta secondary">Book a Call →</div>
-</div>
-</div>
-
-<!-- Section E: Retail Network Preview (NEW) -->
-<div class="retail-preview">
-<div class="rp-pill">Unlocked with your Strategy</div>
-<div class="rp-title">Your <span class="accent">Retail Network</span> access</div>
-<div style="font-size: 8pt; color: #B8B8B8; margin-bottom: 3mm;">Based on your Brand Info, we've mapped which retail categories fit your brand. Deep Dive introductions target these buyers.</div>
-<div class="rp-grid">
-<div class="rp-item">01 · Mass Market Retail</div>
-<div class="rp-item">02 · Premium Retail</div>
-<div class="rp-item">03 · Hyperstores</div>
-<div class="rp-item">04 · Hyperpharmacies</div>
-</div>
-<div class="rp-grid" style="margin-top: 2mm;">
-<div class="rp-item" style="grid-column: span 2;">05 · Marketplaces</div>
-</div>
-<div class="rp-cats">Coverage: 🇺🇸 United States · 🇪🇺 Europe</div>
-</div>
-
-</div>
-</div>
-
-<h3>The 5 sections in detail</h3>
-
-<div class="copy-block">
-<div class="cb-label">Section A · Status hero</div>
-<div class="cb-text">"You have <strong>X Snapshots delivered</strong> · Y in progress. Last updated: [date]." If no snapshot yet, empty state: "You don't have a Brand Strategy Snapshot yet. Start with a <strong>Campaign 5</strong> to get one included free, add the <strong>$25 Snapshot add-on</strong> to your Free Image, or order the standalone <strong>Brand Strategy tier for $25</strong>."</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Section B · Request a new snapshot (standalone form)</div>
-<div class="cb-text">Same Brand Info form as Step 3 of New Order. Standalone use case: user wants an updated snapshot without a new image order (e.g. brand has evolved). Default state: collapsed. Click to expand. Requesting standalone triggers the <strong>$25 Brand Strategy checkout</strong> before the request is submitted (unless user has an active Campaign order in which the snapshot is bundled free).</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Section C · My Snapshots (archive)</div>
-<div class="cb-text">Per row: brand name · date · page count · status badge · download PDF button. Empty state: "Your delivered snapshots will appear here."</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Section D · Deep Dive Brand Strategy upsell (NEW placement)</div>
-<div class="cb-text">Appears only AFTER first snapshot is delivered. Full-width banner in dark gradient. Copy borrowed from homepage v3 Deep Dive section. Two CTAs: <strong>Contact Us →</strong> (primary teal pill) and <strong>Book a Call →</strong> (outlined teal pill, opens Calendly popup).</div>
-</div>
-
-<div class="copy-block">
-<div class="cb-label">Section E · Retail Network Access (NEW)</div>
-<div class="cb-text">Preview of the 5 retail buyer categories from the homepage Retail Network. Includes teal pill <strong>"Unlocked with your Strategy"</strong>. Shows which categories the brand fits based on Brand Info. Sub-line: "Deep Dive introductions target these buyers." Geographic coverage line with flags 🇺🇸🇪🇺.</div>
-</div>
-
-<div class="mockup">
-<div class="label">Empty state · user has 0 snapshots yet</div>
-
-<div class="dash-content">
-<h4>Brand Strategy</h4>
-<div class="sub">Free brand growth audit covering LLM visibility, viral SKU gaps, and retail distribution.</div>
-
-<div style="background:#0A0A0A; padding: 8mm 6mm; border-radius: 6px; margin: 4mm 0; text-align: center;">
-<div style="font-size: 8pt; letter-spacing: 3pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 4mm;">Get Your First Snapshot</div>
-<div style="font-size: 12pt; color: #FFFFFF; font-weight: 700; margin-bottom: 3mm; font-family: 'League Spartan', sans-serif;">You don't have a strategy yet.</div>
-<div style="font-size: 8pt; color: #B8B8B8; max-width: 100mm; margin: 0 auto 5mm; line-height: 1.55;">Get a custom 3-5 page Snapshot in 3 business days. Free with any Campaign order · $25 add-on on Free Image · $25 standalone Brand Strategy tier.</div>
-<div style="display: flex; gap: 3mm; justify-content: center; flex-wrap: wrap;">
-<div style="background: #2DD4BF; color: #0A0A0A; padding: 2.5mm 6mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">Start a Campaign 5 →</div>
-<div style="background: transparent; border: 1.5px solid #2DD4BF; color: #2DD4BF; padding: 2.5mm 6mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">Add Strategy to Free Image ($25) →</div>
-</div>
-</div>
-
-</div>
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 5 · REACT IMPLEMENTATION                                      -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Section 5 · React Implementation</div>
-
-<h3>1. Sidebar update</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
-// data/sidebar.js<br>
-export const sidebarItems = [<br>
-&nbsp;&nbsp;{ label: 'Overview', icon: HomeIcon, path: '/dashboard' },<br>
-&nbsp;&nbsp;{ label: 'My Orders', icon: BoxIcon, path: '/dashboard/orders' },<br>
-&nbsp;&nbsp;{ label: 'New Order', icon: PlusIcon, path: '/dashboard/new-order' },<br>
-&nbsp;&nbsp;{ label: 'Brand Strategy', icon: ChartIcon, path: '/dashboard/brand-strategy' },<br>
-&nbsp;&nbsp;{ label: 'Invoices', icon: DocIcon, path: '/dashboard/invoices' },<br>
-&nbsp;&nbsp;{ label: 'Account', icon: UserIcon, path: '/dashboard/account' },<br>
-];<br><br>
-// Brand mark: just "tyes" in Gliker. Remove "AI tied with a pulse" tagline.<br>
-&lt;div className="brand-mark"&gt;tyes&lt;/div&gt;
-</div>
-
-<h3>2. Overview KPI cards</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
-// components/OverviewKpis.jsx<br>
-const kpis = [<br>
-&nbsp;&nbsp;{ icon: '📦', value: user.totalOrders, label: 'Total Orders' },<br>
-&nbsp;&nbsp;{ icon: '🖼', value: user.imagesDelivered, label: 'Images Delivered' },<br>
-&nbsp;&nbsp;{ icon: '$', value: `$${user.totalSpent}`, label: 'Total Spent' },<br>
-&nbsp;&nbsp;{ icon: '✦', value: user.strategySnapshots, label: 'Strategy Snapshots' },<br>
-];
-</div>
-
-<h3>3. New Order flow (state machine)</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
-// components/NewOrder.jsx<br>
-const plans = [<br>
-&nbsp;&nbsp;{ name: 'Free Image', price: 0, images: 1, revisions: 0, delivery: 'From 3H', strategyIncluded: false, strategyAddOn: 25 },<br>
-&nbsp;&nbsp;{ name: 'Brand Strategy', price: 25, images: 0, revisions: 0, delivery: '3 business days', strategyIncluded: true, strategyOnly: true },<br>
-&nbsp;&nbsp;{ name: 'Campaign 5', price: 25, images: 5, revisions: 1, delivery: 'From 24H', strategyIncluded: true, popular: true },<br>
-&nbsp;&nbsp;{ name: 'Campaign 10', price: 45, images: 10, revisions: 1, delivery: 'From 24H', strategyIncluded: true },<br>
-&nbsp;&nbsp;{ name: 'Custom', price: null, images: null, revisions: null, delivery: 'Per-scope', strategyIncluded: true, calendlyCall: true },<br>
-];<br><br>
-// Step conditional logic<br>
-<span style="color:#666;">// Step 2 (Upload Brief) is SKIPPED for the strategy-only tier — no images to brief</span><br>
-const showUploadBriefStep = !plan.strategyOnly;<br>
-<span style="color:#666;">// Step 3 (Brand Info) shows when strategy is bundled OR add-on toggled on Free Image</span><br>
-const showBrandInfoStep = plan.strategyIncluded || (plan.name === 'Free Image' &amp;&amp; addOnStrategy);<br>
-const showCalendly = plan.calendlyCall;
-</div>
-
-<h3>4. Brand Info form field structure</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
-// components/BrandInfoForm.jsx<br>
-const CATEGORIES = ['Beauty', 'Personal Care', 'Fragrance', 'Fashion'];<br>
-const RETAIL_CATEGORIES = [<br>
-&nbsp;&nbsp;'Mass Market Retail',<br>
-&nbsp;&nbsp;'Premium Retail',<br>
-&nbsp;&nbsp;'Hyperstores',<br>
-&nbsp;&nbsp;'Hyperpharmacies',<br>
-&nbsp;&nbsp;'Marketplaces',<br>
-&nbsp;&nbsp;'None yet',<br>
-];<br><br>
-const ESSENTIAL_FIELDS = [<br>
-&nbsp;&nbsp;{ name: 'brandName', label: 'Brand name', type: 'text', required: true },<br>
-&nbsp;&nbsp;{ name: 'website', label: 'Website URL', type: 'url', required: true },<br>
-&nbsp;&nbsp;{ name: 'category', label: 'Category', type: 'chip-single', options: CATEGORIES, required: true },<br>
-&nbsp;&nbsp;{ name: 'skuCount', label: 'Number of SKUs', type: 'dropdown', options: ['&lt;10', '10-50', '50-200', '200+'], required: true },<br>
-&nbsp;&nbsp;{ name: 'annualRevenue', label: 'Annual revenue', type: 'dropdown', options: ['&lt;$50k', '$50-250k', '$250k-1M', '$1-5M', '$5M+'], required: true },<br>
-&nbsp;&nbsp;{ name: 'marketingBudget', label: 'Marketing budget / month', type: 'dropdown', options: ['&lt;$1k', '$1-5k', '$5-25k', '$25k+'], required: true },<br>
-&nbsp;&nbsp;{ name: 'retailPresence', label: 'Current retail presence', type: 'chip-multi', options: RETAIL_CATEGORIES, required: true },<br>
-&nbsp;&nbsp;{ name: 'countriesSelling', label: 'Countries you sell in', type: 'textarea', required: true },<br>
-&nbsp;&nbsp;{ name: 'distributors', label: 'Existing distributors', type: 'text', required: false },<br>
-];
-</div>
-
-<h3>5. Deep Dive banner + Calendly integration</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
-// components/DeepDiveBanner.jsx<br>
-&lt;div className="deep-dive-banner"&gt;<br>
-&nbsp;&nbsp;&lt;h3&gt;Ready for more? The &lt;em&gt;full playbook&lt;/em&gt; ...&lt;/h3&gt;<br>
-&nbsp;&nbsp;&lt;a href="/contact?intent=deep-dive" className="cta-primary"&gt;Contact Us →&lt;/a&gt;<br>
-&nbsp;&nbsp;&lt;button onClick={openCalendly}&gt;Book a Call →&lt;/button&gt;<br>
-&lt;/div&gt;<br><br>
-// Calendly popup trigger<br>
-const openCalendly = () =&gt; {<br>
-&nbsp;&nbsp;Calendly.initPopupWidget({ url: 'https://calendly.com/tyes/deep-dive-call' });<br>
-&nbsp;&nbsp;return false;<br>
-};<br><br>
-// In &lt;head&gt;<br>
-&lt;link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet"&gt;<br>
-&lt;script src="https://assets.calendly.com/assets/external/widget.js" async&gt;&lt;/script&gt;
-</div>
-
-<h3>6. Retail Network preview component (NEW)</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
-// components/RetailNetworkPreview.jsx<br>
-const RETAIL_TYPES = [<br>
-&nbsp;&nbsp;{ n: '01', name: 'Mass Market Retail', tag: 'Mass Market' },<br>
-&nbsp;&nbsp;{ n: '02', name: 'Premium Retail', tag: 'Prestige' },<br>
-&nbsp;&nbsp;{ n: '03', name: 'Hyperstores', tag: 'Volume' },<br>
-&nbsp;&nbsp;{ n: '04', name: 'Hyperpharmacies', tag: 'Beauty Pharmacy' },<br>
-&nbsp;&nbsp;{ n: '05', name: 'Marketplaces', tag: 'Digital-First' },<br>
-];<br><br>
-export default function RetailNetworkPreview({ userCategoryMatches }) {<br>
-&nbsp;&nbsp;return (<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;section className="retail-preview"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span className="pill"&gt;Unlocked with your Strategy&lt;/span&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h3&gt;Your Retail Network access&lt;/h3&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div className="grid"&gt;{RETAIL_TYPES.map(RetailCard)}&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Coverage: 🇺🇸 US · 🇪🇺 Europe&lt;/p&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;/section&gt;<br>
-&nbsp;&nbsp;);<br>
-}
-</div>
-
-<h3>7. Design tokens (aligned with homepage v3)</h3>
-
-<div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
-:root {<br>
-&nbsp;&nbsp;--bg-primary: #0A0A0A;<br>
-&nbsp;&nbsp;--bg-card: #141414;<br>
-&nbsp;&nbsp;--bg-card-hover: #1a1a1a;<br>
-&nbsp;&nbsp;--accent-teal: #2DD4BF;<br>
-&nbsp;&nbsp;--accent-yellow: #FBBF24;   /* dev warnings + pending states only — NOT the "+ Add strategy $25" toggle (that's teal) */<br>
-&nbsp;&nbsp;--text-primary: #FFFFFF;<br>
-&nbsp;&nbsp;--text-body: #C8C8C8;<br>
-&nbsp;&nbsp;--font-body: "Montserrat", sans-serif;    /* medium 500 */<br>
-&nbsp;&nbsp;--font-title: "League Spartan", sans-serif; /* bold 700 */<br>
-&nbsp;&nbsp;--font-accent: "Montserrat", sans-serif;  /* italic 700 */<br>
-&nbsp;&nbsp;--font-brand: "Gliker", sans-serif;       /* for "tyes" wordmark */<br>
-}
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- IMPLEMENTATION CHECKLIST                                              -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">Implementation Checklist</div>
-
-<p>
-<strong>Sidebar &amp; branding:</strong><br>
-☐ Remove "AI tied with a pulse" tagline. Keep just "tyes" in Gliker.<br>
-☐ Add "Brand Strategy" menu item between "New Order" and "Invoices" (standard styling, no NEW badge — everything ships in the same launch).<br><br>
-
-<strong>Overview page:</strong><br>
-☐ Replace 4th KPI card "Your Tier" with "Strategy Snapshots"<br>
-☐ Active Order card: conditional strategy note based on plan tier + add-on state<br>
-☐ Add new "Brand Strategy" status card below Active Order<br><br>
-
-<strong>New Order flow:</strong><br>
-☐ Set plan cards to 5 (Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom). Remove Free Test, Single, Starter, Growth.<br>
-☐ Free Image tier: add "+ Add Brand Strategy $25" toggle banner (teal) above plan cards<br>
-☐ Brand Strategy tier: strategy-only path — <strong>skip Step 2 (Upload Brief)</strong>, go straight to Step 3 (Brand Info)<br>
-☐ Campaign 5/10/Custom: badge "Strategy included"<br>
-☐ Step 3 "Brand Info" is conditional on plan + add-on state (always shown for Brand Strategy standalone, Campaign 5/10, and Custom; shown for Free Image only when strategy add-on is toggled ON)<br>
-☐ Custom plan: append Calendly inline widget at bottom of Brand Info form<br><br>
-
-<strong>Brand Info form:</strong><br>
-☐ Category chips: Beauty · Personal Care · Fragrance · Fashion (exactly 4, no Other)<br>
-☐ Retail presence multi-select: Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces · None yet<br>
-☐ Persist form data to localStorage<br>
-☐ Bonus section collapsed by default, expand on click<br><br>
-
-<strong>Brand Strategy hub:</strong><br>
-☐ Section A: Status hero with snapshot count<br>
-☐ Section B: Collapsible request form (standalone)<br>
-☐ Section C: My Snapshots archive list<br>
-☐ Section D: NEW Deep Dive upsell banner (Contact Us + Book a Call w/ Calendly)<br>
-☐ Section E: NEW Retail Network access preview (5 buyer categories + flags)<br>
-☐ Empty state: dual CTA ("Start a Campaign 5" + "Add Strategy for $25")<br><br>
-
-<strong>Fonts &amp; design tokens:</strong><br>
-☐ Import League Spartan + Montserrat (with weight 800) from Google Fonts<br>
-☐ Add Gliker font kit for brand wordmark<br>
-☐ Apply CSS variables in :root for design tokens<br>
-☐ Ensure teal accents use Montserrat italic (not the body Montserrat)<br><br>
-
-<strong>QA:</strong><br>
-☐ No em-dashes anywhere in copy<br>
-☐ All references to Free Test / Single / Starter / Growth removed<br>
-☐ All strategy add-on references updated to $25 (both add-on on Free Image and standalone Brand Strategy tier are $25)<br>
-☐ "AI tied with a pulse" removed from all screens<br>
-☐ Contrast passes WCAG AA on teal text over dark bg<br>
-☐ Calendly popup opens correctly with tyes account URL
-</p>
-
-<div class="divider"></div>
-
-<p style="text-align:center; font-size: 9pt; color: #999; margin-top: 8mm;">
-<span class="brand">tyes.app</span> · Client Dashboard v2 · Aligned with Homepage v3 · Dev-ready
-</p>
-
-</div>
+  <div class="container">
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- DOC HEADER                                                            -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="doc-title">
+      <span class="brand">tyes.app</span> · Client Dashboard v2 · <span class="accent-italic">Aligned with Homepage
+        v3.</span>
+    </div>
+    <div class="doc-subtitle">
+      Complete rewrite for the user-facing dashboard. All pricing, categories, retail buyer types, and copy
+      mirror the final homepage v3. Design tokens: League Spartan (titles), Montserrat Medium (body + buttons),
+      Montserrat Italic (accents), Gliker (brand).
+    </div>
+
+    <div class="shift-box">
+      <strong>What's changed vs. v1:</strong> Brand Strategy Snapshot standalone tier at <strong>$25</strong> plus
+      <strong>$25 add-on</strong> on Free Image (was $10 add-on).
+      Pricing plans set to 5 tiers: Free Image ($0), Brand Strategy ($25 standalone), Campaign 5 ($25), Campaign 10
+      ($45), Custom (Get in Touch).
+      Removed "AI tied with a pulse" tagline. Categories tightened to Beauty · Personal Care · Fragrance · Fashion.
+      Retail categories now use the 5 buyer types from homepage (Mass Market Retail · Premium Retail · Hyperstores ·
+      Hyperpharmacies · Marketplaces). Added Deep Dive Brand Strategy upsell banner with Contact Us + Book a Call
+      (Calendly). New Retail Network preview section in Brand Strategy hub. No em-dashes anywhere.
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 0 · STRATEGIC Q&A                                             -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">Section 0 · Is Free-then-Charge a Good Idea?</div>
+
+    <p><strong>Short answer:</strong> Yes, when the free version delivers real value but stops short of execution.
+      That's exactly what tyes does. And it's how every successful freemium company in this category operates.</p>
+
+    <h3>Why brands don't feel tricked</h3>
+    <p><strong>Trust before the sale.</strong> A brand that has never heard of tyes won't pay for strategy on day one.
+      They'll pay after they've seen one piece of work that proves the sharpness.</p>
+    <p><strong>Diagnosis vs. cure.</strong> The free Snapshot identifies gaps (LLM invisibility, missing viral SKUs,
+      weak distribution). Identifying gaps is valuable. Solving them is the Deep Dive Brand Strategy.</p>
+    <p><strong>Loss aversion.</strong> Once brands see the gap, doing nothing feels like leaving money on the table.
+      Upgrading to Deep Dive becomes the natural next step.</p>
+    <p><strong>Same pattern that already works.</strong> Ahrefs (free SEO audits, paid SEO tools). HubSpot (free website
+      grader, paid CRM). Klaviyo (free email reports, paid platform). Same playbook for tyes brand strategy.</p>
+
+    <h3>Two ways to monetize (do both)</h3>
+
+    <table>
+      <tr>
+        <th>Path</th>
+        <th>What you charge for</th>
+        <th>Who buys</th>
+      </tr>
+      <tr>
+        <td><strong>Add-on at checkout</strong></td>
+        <td>Brand Strategy Snapshot added to Free Image tier for <strong>$25</strong>. One-click upgrade. Also available
+          as a standalone $25 tier.</td>
+        <td>Free Image users who realize they want the strategy too</td>
+      </tr>
+      <tr>
+        <td><strong>Deep Dive upsell (post-delivery)</strong></td>
+        <td>After the free Snapshot is delivered, brand sees the gaps. The follow-up nudge offers the Deep Dive Brand
+          Strategy (full LLM audit + implementation roadmap + viral product concepts + named retailers + packaging &amp;
+          positioning direction + 1-hour call). Priced per scope, subject to availability.</td>
+        <td>Brands who want execution, not just insight</td>
+      </tr>
+    </table>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 1 · OVERVIEW PAGE                                             -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">Section 1 · Overview Page (Updated)</div>
+
+    <div class="version-label">Proposed new state · Aligned with homepage v3</div>
+
+    <div class="mockup">
+      <div class="label">Overview with Brand Strategy integrated</div>
+
+      <div class="dash-layout">
+        <div class="dash-sidebar">
+          <div class="brand-mark">tyes</div>
+          <ul>
+            <li class="active">Overview</li>
+            <li>My Orders</li>
+            <li>New Order</li>
+            <li>Brand Strategy</li>
+            <li>Invoices</li>
+            <li>Account</li>
+          </ul>
+        </div>
+
+        <div class="dash-content">
+          <h4>Welcome back, Denisa.</h4>
+          <div class="sub">Here's an overview of your account.</div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="icon">📦</div>
+              <div class="val">4</div>
+              <div class="lbl">Total Orders</div>
+            </div>
+            <div class="kpi-card">
+              <div class="icon">🖼</div>
+              <div class="val">3</div>
+              <div class="lbl">Images Delivered</div>
+            </div>
+            <div class="kpi-card">
+              <div class="icon">$</div>
+              <div class="val">$40</div>
+              <div class="lbl">Total Spent</div>
+            </div>
+            <div class="kpi-card">
+              <div class="icon">✦</div>
+              <div class="val">1</div>
+              <div class="lbl">Strategy Snapshots</div>
+            </div>
+          </div>
+
+          <div class="active-card">
+            <div class="cat">Active Order</div>
+            <div class="txt"><strong>ORD-5CF8 · Campaign 5 · 5 images · Pending</strong></div>
+            <div class="strat-note">Free Brand Strategy Snapshot will be delivered with this order</div>
+          </div>
+
+          <div class="strat-status">
+            <div class="st-label">✦ Brand Strategy</div>
+            <div class="st-title">Your free strategy snapshot is being prepared.</div>
+            <div class="st-sub">Estimated delivery: 3 business days. Included free with Campaign 5.</div>
+            <div class="st-cta">View Strategy →</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <h3>Key Overview changes</h3>
+
+    <div class="copy-block">
+      <div class="cb-label">Sidebar</div>
+      <div class="cb-text">Add "Brand Strategy" menu item between "New Order" and "Invoices".</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">Brand mark (top of sidebar)</div>
+      <div class="cb-text"><strong>Just "tyes" in Gliker.</strong> The "AI tied with a pulse" tagline is removed.
+        Consistent with homepage v3.</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">4th KPI card (replaces "Your Tier")</div>
+      <div class="cb-text"><strong>"Strategy Snapshots"</strong>: count of snapshots delivered lifetime.</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">Active Order card note (conditional)</div>
+      <div class="cb-text">If the order is Campaign 5, Campaign 10, or Custom: show teal italic note "Free Brand
+        Strategy Snapshot will be delivered with this order." If it's Free Image with the $25 add-on toggled: "Brand
+        Strategy Snapshot ($25 add-on) will be delivered separately." If the order is the standalone Brand Strategy
+        tier: "Your $25 Brand Strategy Snapshot will be delivered in 3 business days." If Free Image without the add-on:
+        no strategy note.</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">New Brand Strategy card (below Active Order)</div>
+      <div class="cb-text">Status hero showing snapshot state: <strong>Being prepared</strong> /
+        <strong>Delivered</strong> / <strong>Available to request</strong>. If already delivered: shows "Ready for more?
+        Book a Deep Dive call" upgrade prompt.</div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 2 · NEW ORDER FLOW · STEP 1 CHOOSE PLAN                       -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">Section 2 · New Order Flow · Step 1 (5 Tiers)</div>
+
+    <div class="mockup">
+      <div class="label">Step 1 · 5 plans aligned with homepage v3</div>
+
+      <div class="dash-content">
+        <h4>New Order</h4>
+        <div class="sub">Fill in your brief and we'll get started right away.</div>
+
+        <div class="steps-row">
+          <div class="step active">1 · Choose Plan</div>
+          <div class="step">2 · Upload Brief</div>
+          <div class="step">3 · Brand Info</div>
+          <div class="step">4 · Review &amp; Submit</div>
+        </div>
+
+        <div class="plan-mock-grid">
+          <div class="plan-mock">
+            <div class="p-cat">Free</div>
+            <div class="p-name">Free Image</div>
+            <div class="p-price">$0</div>
+            <div class="p-feat">1 image · No revisions · From 3H</div>
+            <div class="p-addon">+ Add Strategy for $25</div>
+          </div>
+
+          <div class="plan-mock">
+            <div class="p-cat">Strategy-First</div>
+            <div class="p-name">Brand Strategy</div>
+            <div class="p-price">$25</div>
+            <div class="p-feat">LLM audit · Viral angles · Retail shortlist · 3-day delivery</div>
+          </div>
+
+          <div class="plan-mock popular">
+            <div class="p-cat">Popular</div>
+            <div class="p-name">Campaign 5</div>
+            <div class="p-price">$25</div>
+            <div class="p-feat">5 images · 1 rev/img · From 24H</div>
+            <div class="p-bonus">✓ Strategy included</div>
+          </div>
+
+          <div class="plan-mock">
+            <div class="p-cat">Go Big</div>
+            <div class="p-name">Campaign 10</div>
+            <div class="p-price">$45</div>
+            <div class="p-feat">10 images · 1 rev/img · From 24H</div>
+            <div class="p-bonus">✓ Strategy included</div>
+          </div>
+
+          <div class="plan-mock">
+            <div class="p-cat">Enterprise</div>
+            <div class="p-name">Custom</div>
+            <div class="p-price" style="font-size:10pt;">Get in Touch</div>
+            <div class="p-feat">Custom volume · Per-scope</div>
+            <div class="p-bonus">✓ Strategy + 30-min call</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <h3>Conditional logic for Step 3 (Brand Info)</h3>
+
+    <table>
+      <tr>
+        <th>Plan chosen at Step 1</th>
+        <th>Step 3 behavior</th>
+      </tr>
+      <tr>
+        <td><strong>Free Image</strong></td>
+        <td>Step 3 is OPTIONAL. Shown only if user toggles "Add Brand Strategy for $25" at Step 1 (teal banner above the
+          plan cards). If unchecked, skip Step 3 and go straight to Review &amp; Submit (3-step flow).</td>
+      </tr>
+      <tr>
+        <td><strong>Brand Strategy (standalone $25)</strong></td>
+        <td>Step 3 is MANDATORY. Brand Info form is the whole point of this tier — required to submit. No image step.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Campaign 5</strong></td>
+        <td>Step 3 is MANDATORY. Brand Info form auto-appears. Required to submit.</td>
+      </tr>
+      <tr>
+        <td><strong>Campaign 10</strong></td>
+        <td>Same as Campaign 5.</td>
+      </tr>
+      <tr>
+        <td><strong>Custom</strong></td>
+        <td>Same as Campaign 5 + a Calendly inline booking widget appears at the very bottom for the <strong>30-min
+            discovery call</strong>. (Deep Dive customers get a separate 1-hour strategy call, booked from the Brand
+          Strategy hub.)</td>
+      </tr>
+    </table>
+
+    <div class="copy-block">
+      <div class="cb-label">Free Image → "+ Add Brand Strategy $25" add-on toggle banner (teal)</div>
+      <div class="cb-text"><strong>"Add a Brand Strategy Snapshot to this order for $25."</strong> Small sub-line: "LLM
+        visibility audit, viral product angles, retailer shortlist. Delivered in 3 business days." Checkbox off by
+        default.</div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 3 · UPLOAD BRIEF + BRAND INFO                                 -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">Section 3 · Upload Brief + Brand Info Section</div>
+
+    <p>The existing Upload Brief fields (Project Title · Brief/Mood · Style chips · Product Photos · References · Fonts)
+      stay untouched. A new "Tell us about your brand" section appends below, conditionally shown per the logic above.
+    </p>
+
+    <div class="mockup">
+      <div class="label">Brand Info section · appended below existing fields</div>
+
+      <div class="form-mock">
+        <div style="border-bottom: 1px dashed #333; padding-bottom: 3mm; margin-bottom: 3mm;">
+          <div class="fm-lbl">Existing upload brief fields (unchanged)</div>
+          <div style="font-size: 7.5pt; color: #666;">Project Title · Brief / Mood · Style chips · Product Photos ·
+            References · Fonts / Label</div>
+        </div>
+
+        <div class="fm-lbl" style="color:#2DD4BF;">✦ Tell us about your brand</div>
+        <div style="font-size: 7.5pt; color: #888; margin-bottom: 3mm;">So we can deliver your strategy snapshot in 3
+          business days.</div>
+
+        <div class="fm-lbl fm-req">Brand Name</div>
+        <div class="fm-input">myGeisha</div>
+
+        <div class="fm-lbl fm-req">Website URL</div>
+        <div class="fm-input">mygeisha.com</div>
+
+        <div class="fm-lbl fm-req">Category</div>
+        <div class="chip-row">
+          <span class="chip">Beauty</span>
+          <span class="chip">Personal Care</span>
+          <span class="chip selected">Fragrance</span>
+          <span class="chip">Fashion</span>
+        </div>
+
+        <div class="fm-lbl fm-req">Current Retail Presence (multi-select)</div>
+        <div class="chip-row">
+          <span class="chip">Mass Market Retail</span>
+          <span class="chip selected">Premium Retail</span>
+          <span class="chip">Hyperstores</span>
+          <span class="chip">Hyperpharmacies</span>
+          <span class="chip">Marketplaces</span>
+          <span class="chip">None yet</span>
+        </div>
+
+        <div class="fm-lbl fm-req">Number of SKUs</div>
+        <div class="fm-input placeholder">50-200 ▼</div>
+
+        <div class="fm-lbl fm-req">Annual Revenue</div>
+        <div class="fm-input placeholder">Select range ▼</div>
+
+        <div class="fm-lbl fm-req">Marketing Budget / month</div>
+        <div class="fm-input placeholder">Select range ▼</div>
+
+        <div class="fm-lbl fm-req">Countries You Sell In</div>
+        <div class="fm-input">RO, FR, UK + 2 boutiques BG</div>
+
+        <div class="fm-lbl">Existing Distributors</div>
+        <div class="fm-input">Sephora (RO only) · None other</div>
+      </div>
+    </div>
+
+    <h3>Essential fields (aligned)</h3>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Input type</th>
+        <th>Purpose</th>
+      </tr>
+      <tr>
+        <td><strong>Brand name</strong></td>
+        <td>Text</td>
+        <td>Identity + web search for existing mentions</td>
+      </tr>
+      <tr>
+        <td><strong>Website URL</strong></td>
+        <td>URL</td>
+        <td>Audit for schema, content, structured data (LLM visibility audit)</td>
+      </tr>
+      <tr>
+        <td><strong>Category</strong></td>
+        <td>Single-select chips</td>
+        <td><strong>Beauty · Personal Care · Fragrance · Fashion</strong>. Exactly 4, no Other. Determines which
+          retailer database we tap.</td>
+      </tr>
+      <tr>
+        <td><strong>Number of SKUs</strong></td>
+        <td>Dropdown</td>
+        <td>&lt;10 · 10-50 · 50-200 · 200+. SKU gap analysis relevance.</td>
+      </tr>
+      <tr>
+        <td><strong>Annual revenue</strong></td>
+        <td>Dropdown</td>
+        <td>&lt;$50k · $50-250k · $250k-1M · $1-5M · $5M+. Calibrates retailer tier.</td>
+      </tr>
+      <tr>
+        <td><strong>Marketing budget</strong></td>
+        <td>Dropdown</td>
+        <td>&lt;$1k/mo · $1-5k · $5-25k · $25k+. Influences LLM visibility recommendations.</td>
+      </tr>
+      <tr>
+        <td><strong>Current retail presence</strong></td>
+        <td>Multi-select chips</td>
+        <td><strong>Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces · None
+            yet</strong>. Exactly aligned with homepage v3 Retail Network.</td>
+      </tr>
+      <tr>
+        <td><strong>Countries you sell in</strong></td>
+        <td>Open textarea</td>
+        <td>D2C + retail + marketplaces context.</td>
+      </tr>
+      <tr>
+        <td><strong>Existing distributors</strong></td>
+        <td>Free text</td>
+        <td>List or "None". Avoids duplicate recommendations.</td>
+      </tr>
+    </table>
+
+    <h3>Bonus fields (optional, sharpen the snapshot)</h3>
+
+    <p>Collapsible orange-bordered block below the essential fields. All fields skippable.</p>
+
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Input</th>
+        <th>Why it helps</th>
+      </tr>
+      <tr>
+        <td>Brand age (years)</td>
+        <td>Number</td>
+        <td>Newer brands need different tactics</td>
+      </tr>
+      <tr>
+        <td>Countries to expand to</td>
+        <td>Open textarea</td>
+        <td>Drives retail/distributor shortlist by target market</td>
+      </tr>
+      <tr>
+        <td>Target customer</td>
+        <td>Large textarea</td>
+        <td>Sharpens the viral SKU recommendations</td>
+      </tr>
+      <tr>
+        <td>Top competitors</td>
+        <td>Large textarea</td>
+        <td>LLM presence + retail footprint benchmark</td>
+      </tr>
+      <tr>
+        <td>Social media (IG/TT/YT)</td>
+        <td>3 text inputs</td>
+        <td>Channel-specific growth tactics</td>
+      </tr>
+      <tr>
+        <td>USP / brand story</td>
+        <td>Large textarea</td>
+        <td>Copy + positioning angles</td>
+      </tr>
+      <tr>
+        <td>6-12 month goals</td>
+        <td>Multi-select</td>
+        <td>Grow D2C · Expand retail · New products · New countries · LLM presence · Raise funding · Other</td>
+      </tr>
+    </table>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 4 · BRAND STRATEGY HUB                                        -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">Section 4 · Brand Strategy Hub · 5 subsections</div>
+
+    <div class="mockup">
+      <div class="label">Brand Strategy tab · state: 1 snapshot delivered</div>
+
+      <div class="dash-content">
+        <h4>Brand Strategy</h4>
+        <div class="sub">Your free brand growth audit, delivered &amp; on file. Ready to go deeper? See the Deep Dive
+          below.</div>
+
+        <div class="strat-status">
+          <div class="st-label">✦ Section A · Status Hero</div>
+          <div class="st-title">1 snapshot delivered · 0 in progress</div>
+          <div class="st-sub">Last updated: April 18, 2026 · For myGeisha · Category: Fragrance</div>
+          <div class="st-cta">Request a new snapshot →</div>
+        </div>
+
+        <div style="background:#0A0A0A; padding: 4mm 5mm; border-radius: 4px; margin: 3mm 0;">
+          <div class="fm-lbl">✦ Section B · Request form (collapsible)</div>
+          <div style="font-size: 8pt; color:#888;">Same brand info form as New Order Step 3. Standalone version for
+            users who haven't ordered images.</div>
+        </div>
+
+        <div style="background:#0A0A0A; padding: 4mm 5mm; border-radius: 4px; margin: 3mm 0;">
+          <div class="fm-lbl">✦ Section C · My Snapshots</div>
+          <div style="font-size: 8pt; color:#FFFFFF; margin-top: 2mm;">myGeisha Snapshot · April 18, 2026 · 5 pages ·
+            <span style="color:#2DD4BF;">DELIVERED</span> · Download PDF</div>
+          <div style="font-size: 8pt; color:#FFFFFF;">myGeisha Snapshot · February 3, 2026 · 4 pages · <span
+              style="color:#2DD4BF;">DELIVERED</span> · Download PDF</div>
+        </div>
+
+        <!-- Section D: Deep Dive Upgrade Banner -->
+        <div class="deep-dive-banner">
+          <div class="dd-label">Section D · Deep Dive Upsell</div>
+          <div class="dd-title">Ready for more? The <span class="accent">full playbook</span> that puts you in front of
+            the buyer who says yes.</div>
+          <div class="dd-desc">
+            Full LLM audit with implementation roadmap. Viral product concepts developed for your niche. Warm intros to
+            retail buyers we know personally. 1-hour strategy call.
+          </div>
+          <div class="dd-cta-row">
+            <div class="dd-cta primary">Contact Us →</div>
+            <div class="dd-cta secondary">Book a Call →</div>
+          </div>
+        </div>
+
+        <!-- Section E: Retail Network Preview (NEW) -->
+        <div class="retail-preview">
+          <div class="rp-pill">Unlocked with your Strategy</div>
+          <div class="rp-title">Your <span class="accent">Retail Network</span> access</div>
+          <div style="font-size: 8pt; color: #B8B8B8; margin-bottom: 3mm;">Based on your Brand Info, we've mapped which
+            retail categories fit your brand. Deep Dive introductions target these buyers.</div>
+          <div class="rp-grid">
+            <div class="rp-item">01 · Mass Market Retail</div>
+            <div class="rp-item">02 · Premium Retail</div>
+            <div class="rp-item">03 · Hyperstores</div>
+            <div class="rp-item">04 · Hyperpharmacies</div>
+          </div>
+          <div class="rp-grid" style="margin-top: 2mm;">
+            <div class="rp-item" style="grid-column: span 2;">05 · Marketplaces</div>
+          </div>
+          <div class="rp-cats">Coverage: 🇺🇸 United States · 🇪🇺 Europe</div>
+        </div>
+
+      </div>
+    </div>
+
+    <h3>The 5 sections in detail</h3>
+
+    <div class="copy-block">
+      <div class="cb-label">Section A · Status hero</div>
+      <div class="cb-text">"You have <strong>X Snapshots delivered</strong> · Y in progress. Last updated: [date]." If
+        no snapshot yet, empty state: "You don't have a Brand Strategy Snapshot yet. Start with a <strong>Campaign
+          5</strong> to get one included free, add the <strong>$25 Snapshot add-on</strong> to your Free Image, or order
+        the standalone <strong>Brand Strategy tier for $25</strong>."</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">Section B · Request a new snapshot (standalone form)</div>
+      <div class="cb-text">Same Brand Info form as Step 3 of New Order. Standalone use case: user wants an updated
+        snapshot without a new image order (e.g. brand has evolved). Default state: collapsed. Click to expand.
+        Requesting standalone triggers the <strong>$25 Brand Strategy checkout</strong> before the request is submitted
+        (unless user has an active Campaign order in which the snapshot is bundled free).</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">Section C · My Snapshots (archive)</div>
+      <div class="cb-text">Per row: brand name · date · page count · status badge · download PDF button. Empty state:
+        "Your delivered snapshots will appear here."</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">Section D · Deep Dive Brand Strategy upsell (NEW placement)</div>
+      <div class="cb-text">Appears only AFTER first snapshot is delivered. Full-width banner in dark gradient. Copy
+        borrowed from homepage v3 Deep Dive section. Two CTAs: <strong>Contact Us →</strong> (primary teal pill) and
+        <strong>Book a Call →</strong> (outlined teal pill, opens Calendly popup).</div>
+    </div>
+
+    <div class="copy-block">
+      <div class="cb-label">Section E · Retail Network Access (NEW)</div>
+      <div class="cb-text">Preview of the 5 retail buyer categories from the homepage Retail Network. Includes teal pill
+        <strong>"Unlocked with your Strategy"</strong>. Shows which categories the brand fits based on Brand Info.
+        Sub-line: "Deep Dive introductions target these buyers." Geographic coverage line with flags 🇺🇸🇪🇺.</div>
+    </div>
+
+    <div class="mockup">
+      <div class="label">Empty state · user has 0 snapshots yet</div>
+
+      <div class="dash-content">
+        <h4>Brand Strategy</h4>
+        <div class="sub">Free brand growth audit covering LLM visibility, viral SKU gaps, and retail distribution.</div>
+
+        <div style="background:#0A0A0A; padding: 8mm 6mm; border-radius: 6px; margin: 4mm 0; text-align: center;">
+          <div
+            style="font-size: 8pt; letter-spacing: 3pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 4mm;">
+            Get Your First Snapshot</div>
+          <div
+            style="font-size: 12pt; color: #FFFFFF; font-weight: 700; margin-bottom: 3mm; font-family: 'League Spartan', sans-serif;">
+            You don't have a strategy yet.</div>
+          <div style="font-size: 8pt; color: #B8B8B8; max-width: 100mm; margin: 0 auto 5mm; line-height: 1.55;">Get a
+            custom 3-5 page Snapshot in 3 business days. Free with any Campaign order · $25 add-on on Free Image · $25
+            standalone Brand Strategy tier.</div>
+          <div style="display: flex; gap: 3mm; justify-content: center; flex-wrap: wrap;">
+            <div
+              style="background: #2DD4BF; color: #0A0A0A; padding: 2.5mm 6mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">
+              Start a Campaign 5 →</div>
+            <div
+              style="background: transparent; border: 1.5px solid #2DD4BF; color: #2DD4BF; padding: 2.5mm 6mm; border-radius: 999px; font-size: 8pt; font-weight: 700;">
+              Add Strategy to Free Image ($25) →</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 5 · REACT IMPLEMENTATION                                      -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">Section 5 · React Implementation</div>
+
+    <h3>1. Sidebar update</h3>
+
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      // data/sidebar.js<br>
+      export const sidebarItems = [<br>
+      &nbsp;&nbsp;{ label: 'Overview', icon: HomeIcon, path: '/dashboard' },<br>
+      &nbsp;&nbsp;{ label: 'My Orders', icon: BoxIcon, path: '/dashboard/orders' },<br>
+      &nbsp;&nbsp;{ label: 'New Order', icon: PlusIcon, path: '/dashboard/new-order' },<br>
+      &nbsp;&nbsp;{ label: 'Brand Strategy', icon: ChartIcon, path: '/dashboard/brand-strategy' },<br>
+      &nbsp;&nbsp;{ label: 'Invoices', icon: DocIcon, path: '/dashboard/invoices' },<br>
+      &nbsp;&nbsp;{ label: 'Account', icon: UserIcon, path: '/dashboard/account' },<br>
+      ];<br><br>
+      // Brand mark: just "tyes" in Gliker. Remove "AI tied with a pulse" tagline.<br>
+      &lt;div className="brand-mark"&gt;tyes&lt;/div&gt;
+    </div>
+
+    <h3>2. Overview KPI cards</h3>
+
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      // components/OverviewKpis.jsx<br>
+      const kpis = [<br>
+      &nbsp;&nbsp;{ icon: '📦', value: user.totalOrders, label: 'Total Orders' },<br>
+      &nbsp;&nbsp;{ icon: '🖼', value: user.imagesDelivered, label: 'Images Delivered' },<br>
+      &nbsp;&nbsp;{ icon: '$', value: `$${user.totalSpent}`, label: 'Total Spent' },<br>
+      &nbsp;&nbsp;{ icon: '✦', value: user.strategySnapshots, label: 'Strategy Snapshots' },<br>
+      ];
+    </div>
+
+    <h3>3. New Order flow (state machine)</h3>
+
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      // components/NewOrder.jsx<br>
+      const plans = [<br>
+      &nbsp;&nbsp;{ name: 'Free Image', price: 0, images: 1, revisions: 0, delivery: 'From 3H', strategyIncluded: false,
+      strategyAddOn: 25 },<br>
+      &nbsp;&nbsp;{ name: 'Brand Strategy', price: 25, images: 0, revisions: 0, delivery: '3 business days',
+      strategyIncluded: true, strategyOnly: true },<br>
+      &nbsp;&nbsp;{ name: 'Campaign 5', price: 25, images: 5, revisions: 1, delivery: 'From 24H', strategyIncluded:
+      true, popular: true },<br>
+      &nbsp;&nbsp;{ name: 'Campaign 10', price: 45, images: 10, revisions: 1, delivery: 'From 24H', strategyIncluded:
+      true },<br>
+      &nbsp;&nbsp;{ name: 'Custom', price: null, images: null, revisions: null, delivery: 'Per-scope', strategyIncluded:
+      true, calendlyCall: true },<br>
+      ];<br><br>
+      // Step conditional logic<br>
+      <span style="color:#666;">// Step 2 (Upload Brief) is SKIPPED for the strategy-only tier — no images to
+        brief</span><br>
+      const showUploadBriefStep = !plan.strategyOnly;<br>
+      <span style="color:#666;">// Step 3 (Brand Info) shows when strategy is bundled OR add-on toggled on Free
+        Image</span><br>
+      const showBrandInfoStep = plan.strategyIncluded || (plan.name === 'Free Image' &amp;&amp; addOnStrategy);<br>
+      const showCalendly = plan.calendlyCall;
+    </div>
+
+    <h3>4. Brand Info form field structure</h3>
+
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      // components/BrandInfoForm.jsx<br>
+      const CATEGORIES = ['Beauty', 'Personal Care', 'Fragrance', 'Fashion'];<br>
+      const RETAIL_CATEGORIES = [<br>
+      &nbsp;&nbsp;'Mass Market Retail',<br>
+      &nbsp;&nbsp;'Premium Retail',<br>
+      &nbsp;&nbsp;'Hyperstores',<br>
+      &nbsp;&nbsp;'Hyperpharmacies',<br>
+      &nbsp;&nbsp;'Marketplaces',<br>
+      &nbsp;&nbsp;'None yet',<br>
+      ];<br><br>
+      const ESSENTIAL_FIELDS = [<br>
+      &nbsp;&nbsp;{ name: 'brandName', label: 'Brand name', type: 'text', required: true },<br>
+      &nbsp;&nbsp;{ name: 'website', label: 'Website URL', type: 'url', required: true },<br>
+      &nbsp;&nbsp;{ name: 'category', label: 'Category', type: 'chip-single', options: CATEGORIES, required: true },<br>
+      &nbsp;&nbsp;{ name: 'skuCount', label: 'Number of SKUs', type: 'dropdown', options: ['&lt;10', '10-50', '50-200',
+      '200+'], required: true },<br>
+      &nbsp;&nbsp;{ name: 'annualRevenue', label: 'Annual revenue', type: 'dropdown', options: ['&lt;$50k', '$50-250k',
+      '$250k-1M', '$1-5M', '$5M+'], required: true },<br>
+      &nbsp;&nbsp;{ name: 'marketingBudget', label: 'Marketing budget / month', type: 'dropdown', options: ['&lt;$1k',
+      '$1-5k', '$5-25k', '$25k+'], required: true },<br>
+      &nbsp;&nbsp;{ name: 'retailPresence', label: 'Current retail presence', type: 'chip-multi', options:
+      RETAIL_CATEGORIES, required: true },<br>
+      &nbsp;&nbsp;{ name: 'countriesSelling', label: 'Countries you sell in', type: 'textarea', required: true },<br>
+      &nbsp;&nbsp;{ name: 'distributors', label: 'Existing distributors', type: 'text', required: false },<br>
+      ];
+    </div>
+
+    <h3>5. Deep Dive banner + Calendly integration</h3>
+
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      // components/DeepDiveBanner.jsx<br>
+      &lt;div className="deep-dive-banner"&gt;<br>
+      &nbsp;&nbsp;&lt;h3&gt;Ready for more? The &lt;em&gt;full playbook&lt;/em&gt; ...&lt;/h3&gt;<br>
+      &nbsp;&nbsp;&lt;a href="/contact?intent=deep-dive" className="cta-primary"&gt;Contact Us →&lt;/a&gt;<br>
+      &nbsp;&nbsp;&lt;button onClick={openCalendly}&gt;Book a Call →&lt;/button&gt;<br>
+      &lt;/div&gt;<br><br>
+      // Calendly popup trigger<br>
+      const openCalendly = () =&gt; {<br>
+      &nbsp;&nbsp;Calendly.initPopupWidget({ url: 'https://calendly.com/raluca-tyes/30min' });<br>
+      &nbsp;&nbsp;return false;<br>
+      };<br><br>
+      // In &lt;head&gt;<br>
+      &lt;link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet"&gt;<br>
+      &lt;script src="https://assets.calendly.com/assets/external/widget.js" async&gt;&lt;/script&gt;
+    </div>
+
+    <h3>6. Retail Network preview component (NEW)</h3>
+
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      // components/RetailNetworkPreview.jsx<br>
+      const RETAIL_TYPES = [<br>
+      &nbsp;&nbsp;{ n: '01', name: 'Mass Market Retail', tag: 'Mass Market' },<br>
+      &nbsp;&nbsp;{ n: '02', name: 'Premium Retail', tag: 'Prestige' },<br>
+      &nbsp;&nbsp;{ n: '03', name: 'Hyperstores', tag: 'Volume' },<br>
+      &nbsp;&nbsp;{ n: '04', name: 'Hyperpharmacies', tag: 'Beauty Pharmacy' },<br>
+      &nbsp;&nbsp;{ n: '05', name: 'Marketplaces', tag: 'Digital-First' },<br>
+      ];<br><br>
+      export default function RetailNetworkPreview({ userCategoryMatches }) {<br>
+      &nbsp;&nbsp;return (<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&lt;section className="retail-preview"&gt;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span className="pill"&gt;Unlocked with your Strategy&lt;/span&gt;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h3&gt;Your Retail Network access&lt;/h3&gt;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div className="grid"&gt;{RETAIL_TYPES.map(RetailCard)}&lt;/div&gt;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Coverage: 🇺🇸 US · 🇪🇺 Europe&lt;/p&gt;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&lt;/section&gt;<br>
+      &nbsp;&nbsp;);<br>
+      }
+    </div>
+
+    <h3>7. Design tokens (aligned with homepage v3)</h3>
+
+    <div class="note-box" style="font-family: 'Courier New', monospace; font-size: 8.5pt;">
+      :root {<br>
+      &nbsp;&nbsp;--bg-primary: #0A0A0A;<br>
+      &nbsp;&nbsp;--bg-card: #141414;<br>
+      &nbsp;&nbsp;--bg-card-hover: #1a1a1a;<br>
+      &nbsp;&nbsp;--accent-teal: #2DD4BF;<br>
+      &nbsp;&nbsp;--accent-yellow: #FBBF24; /* dev warnings + pending states only — NOT the "+ Add strategy $25" toggle
+      (that's teal) */<br>
+      &nbsp;&nbsp;--text-primary: #FFFFFF;<br>
+      &nbsp;&nbsp;--text-body: #C8C8C8;<br>
+      &nbsp;&nbsp;--font-body: "Montserrat", sans-serif; /* medium 500 */<br>
+      &nbsp;&nbsp;--font-title: "League Spartan", sans-serif; /* bold 700 */<br>
+      &nbsp;&nbsp;--font-accent: "Montserrat", sans-serif; /* italic 700 */<br>
+      &nbsp;&nbsp;--font-brand: "Gliker", sans-serif; /* for "tyes" wordmark */<br>
+      }
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- IMPLEMENTATION CHECKLIST                                              -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">Implementation Checklist</div>
+
+    <p>
+      <strong>Sidebar &amp; branding:</strong><br>
+      ☐ Remove "AI tied with a pulse" tagline. Keep just "tyes" in Gliker.<br>
+      ☐ Add "Brand Strategy" menu item between "New Order" and "Invoices" (standard styling, no NEW badge — everything
+      ships in the same launch).<br><br>
+
+      <strong>Overview page:</strong><br>
+      ☐ Replace 4th KPI card "Your Tier" with "Strategy Snapshots"<br>
+      ☐ Active Order card: conditional strategy note based on plan tier + add-on state<br>
+      ☐ Add new "Brand Strategy" status card below Active Order<br><br>
+
+      <strong>New Order flow:</strong><br>
+      ☐ Set plan cards to 5 (Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom). Remove Free Test, Single,
+      Starter, Growth.<br>
+      ☐ Free Image tier: add "+ Add Brand Strategy $25" toggle banner (teal) above plan cards<br>
+      ☐ Brand Strategy tier: strategy-only path — <strong>skip Step 2 (Upload Brief)</strong>, go straight to Step 3
+      (Brand Info)<br>
+      ☐ Campaign 5/10/Custom: badge "Strategy included"<br>
+      ☐ Step 3 "Brand Info" is conditional on plan + add-on state (always shown for Brand Strategy standalone, Campaign
+      5/10, and Custom; shown for Free Image only when strategy add-on is toggled ON)<br>
+      ☐ Custom plan: append Calendly inline widget at bottom of Brand Info form<br><br>
+
+      <strong>Brand Info form:</strong><br>
+      ☐ Category chips: Beauty · Personal Care · Fragrance · Fashion (exactly 4, no Other)<br>
+      ☐ Retail presence multi-select: Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces
+      · None yet<br>
+      ☐ Persist form data to localStorage<br>
+      ☐ Bonus section collapsed by default, expand on click<br><br>
+
+      <strong>Brand Strategy hub:</strong><br>
+      ☐ Section A: Status hero with snapshot count<br>
+      ☐ Section B: Collapsible request form (standalone)<br>
+      ☐ Section C: My Snapshots archive list<br>
+      ☐ Section D: NEW Deep Dive upsell banner (Contact Us + Book a Call w/ Calendly)<br>
+      ☐ Section E: NEW Retail Network access preview (5 buyer categories + flags)<br>
+      ☐ Empty state: dual CTA ("Start a Campaign 5" + "Add Strategy for $25")<br><br>
+
+      <strong>Fonts &amp; design tokens:</strong><br>
+      ☐ Import League Spartan + Montserrat (with weight 800) from Google Fonts<br>
+      ☐ Add Gliker font kit for brand wordmark<br>
+      ☐ Apply CSS variables in :root for design tokens<br>
+      ☐ Ensure teal accents use Montserrat italic (not the body Montserrat)<br><br>
+
+      <strong>QA:</strong><br>
+      ☐ No em-dashes anywhere in copy<br>
+      ☐ All references to Free Test / Single / Starter / Growth removed<br>
+      ☐ All strategy add-on references updated to $25 (both add-on on Free Image and standalone Brand Strategy tier are
+      $25)<br>
+      ☐ "AI tied with a pulse" removed from all screens<br>
+      ☐ Contrast passes WCAG AA on teal text over dark bg<br>
+      ☐ Calendly popup opens correctly with tyes account URL
+    </p>
+
+    <div class="divider"></div>
+
+    <p style="text-align:center; font-size: 9pt; color: #999; margin-top: 8mm;">
+      <span class="brand">tyes.app</span> · Client Dashboard v2 · Aligned with Homepage v3 · Dev-ready
+    </p>
+
+  </div>
 </body>
+
 </html>

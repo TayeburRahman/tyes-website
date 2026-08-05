@@ -1,741 +1,1295 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>tyes.app · Dev Scheme · Complete Design System + Handoff</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
-<style>
-  @page { size: A4; margin: 12mm 12mm; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: "Montserrat", -apple-system, sans-serif;
-    font-weight: 500;
-    color: #1a1a1a; line-height: 1.55;
-    background: #FAFAF7;
-    padding: 15mm 10mm;
-  }
-  h1, h2, h3, h4, h5, h6 { font-family: "League Spartan", sans-serif; font-weight: 700; }
-  .container { max-width: 820px; margin: 0 auto; }
-  .brand { font-family: "Gliker", "Grandstander", sans-serif; font-weight: 700; letter-spacing: -0.5pt; }
-  .accent-italic { font-family: "Montserrat", sans-serif; font-style: italic; font-weight: 700; color: #2DD4BF; }
+  <meta charset="UTF-8">
+  <title>tyes.app · Dev Scheme · Complete Design System + Handoff</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
+    rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm 12mm;
+    }
 
-  .doc-title { font-size: 24pt; font-weight: 800; letter-spacing: -0.5pt; color: #1a1a1a; margin-bottom: 3mm; line-height: 1.15; }
-  .doc-title .brand { color: #2DD4BF; }
-  .doc-subtitle { font-size: 11pt; color: #666; margin-bottom: 8mm; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  .shift-box { background: #E8F8F5; border-left: 4px solid #2DD4BF; padding: 5mm 6mm; margin-bottom: 10mm; font-size: 10pt; color: #1a4a45; }
-  .shift-box strong { color: #0D5B54; }
+    body {
+      font-family: "Montserrat", -apple-system, sans-serif;
+      font-weight: 500;
+      color: #1a1a1a;
+      line-height: 1.55;
+      background: #FAFAF7;
+      padding: 15mm 10mm;
+    }
 
-  .section-header { background: #1a1a1a; color: #FFFFFF; padding: 4mm 6mm; border-radius: 3px; margin: 12mm 0 6mm; font-size: 10pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; }
-  .section-header:first-of-type { margin-top: 8mm; }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "League Spartan", sans-serif;
+      font-weight: 700;
+    }
 
-  h3 { font-size: 12pt; color: #1a1a1a; margin: 6mm 0 3mm; }
-  p { font-size: 10pt; color: #333; margin-bottom: 3mm; line-height: 1.65; }
-  p strong { color: #1a1a1a; }
-  ul, ol { margin: 3mm 0 5mm 5mm; font-size: 10pt; color: #333; }
-  li { margin-bottom: 1.5mm; line-height: 1.55; }
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
 
-  table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-size: 9.5pt; }
-  th, td { text-align: left; padding: 2.5mm 3mm; border-bottom: 1px solid #E5E5E5; vertical-align: top; }
-  th { background: #F5F5F0; font-weight: 700; color: #1a1a1a; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.5pt; }
-  td code { background: #F5F5F0; padding: 1px 4px; border-radius: 2px; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #1a4a45; }
+    .brand {
+      font-family: "Gliker", "Grandstander", sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.5pt;
+    }
 
-  /* Code block */
-  .code { background: #0A0A0A; color: #EDEDED; padding: 5mm 7mm; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 8.5pt; line-height: 1.6; margin: 4mm 0; overflow-x: auto; }
-  .code .kw { color: #C084FC; }
-  .code .str { color: #A5F3FC; }
-  .code .cm { color: #666; }
-  .code .var { color: #FBBF24; }
-  .code .fn { color: #FBBF24; }
-  .code .tag { color: #F87171; }
-  .code .attr { color: #FBBF24; }
-  .code .prop { color: #2DD4BF; }
+    .accent-italic {
+      font-family: "Montserrat", sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      color: #2DD4BF;
+    }
 
-  /* Font specimen boxes */
-  .type-specimen { background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 6px; padding: 6mm 8mm; margin: 3mm 0; }
-  .type-specimen .ts-label { font-size: 7pt; letter-spacing: 2pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm; }
-  .type-specimen .ts-sample { color: #1a1a1a; }
-  .type-specimen .ts-meta { font-size: 8pt; color: #888; margin-top: 3mm; font-family: 'Courier New', monospace; }
+    .doc-title {
+      font-size: 24pt;
+      font-weight: 800;
+      letter-spacing: -0.5pt;
+      color: #1a1a1a;
+      margin-bottom: 3mm;
+      line-height: 1.15;
+    }
 
-  /* Color swatches */
-  .color-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; margin: 4mm 0; }
-  .color-swatch { background: #FFFFFF; border-radius: 4px; overflow: hidden; border: 1px solid #E5E5E5; }
-  .color-swatch .sw { height: 20mm; }
-  .color-swatch .meta { padding: 3mm 4mm; }
-  .color-swatch .name { font-size: 9pt; font-weight: 700; color: #1a1a1a; font-family: "League Spartan", sans-serif; }
-  .color-swatch .hex { font-size: 8pt; color: #666; font-family: 'Courier New', monospace; margin-top: 1mm; }
-  .color-swatch .use { font-size: 7pt; color: #888; margin-top: 2mm; }
+    .doc-title .brand {
+      color: #2DD4BF;
+    }
 
-  /* Component preview */
-  .comp-preview { background: #0A0A0A; border-radius: 6px; padding: 6mm 8mm; margin: 3mm 0; color: #FFFFFF; }
-  .comp-preview .cp-label { font-size: 7pt; letter-spacing: 2pt; color: #666; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm; }
+    .doc-subtitle {
+      font-size: 11pt;
+      color: #666;
+      margin-bottom: 8mm;
+    }
 
-  /* Info panels */
-  .info { background: #FFFFFF; border-left: 3px solid #2DD4BF; padding: 4mm 5mm; margin: 3mm 0; border-radius: 0 3px 3px 0; }
-  .info .lbl { font-size: 8pt; letter-spacing: 1.5pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 2mm; }
-  .info .txt { font-size: 10pt; color: #333; }
+    .shift-box {
+      background: #E8F8F5;
+      border-left: 4px solid #2DD4BF;
+      padding: 5mm 6mm;
+      margin-bottom: 10mm;
+      font-size: 10pt;
+      color: #1a4a45;
+    }
 
-  /* File list */
-  .file-tree { background: #0A0A0A; color: #EDEDED; padding: 5mm 7mm; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 9pt; line-height: 1.7; margin: 4mm 0; }
-  .file-tree .folder { color: #2DD4BF; font-weight: 700; }
-  .file-tree .html { color: #FBBF24; }
-  .file-tree .pdf { color: #F87171; }
-  .file-tree .py { color: #A5F3FC; }
+    .shift-box strong {
+      color: #0D5B54;
+    }
 
-  .divider { border-top: 1px solid #E5E5E5; margin: 12mm 0; }
-</style>
+    .section-header {
+      background: #1a1a1a;
+      color: #FFFFFF;
+      padding: 4mm 6mm;
+      border-radius: 3px;
+      margin: 12mm 0 6mm;
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 1pt;
+      text-transform: uppercase;
+    }
+
+    .section-header:first-of-type {
+      margin-top: 8mm;
+    }
+
+    h3 {
+      font-size: 12pt;
+      color: #1a1a1a;
+      margin: 6mm 0 3mm;
+    }
+
+    p {
+      font-size: 10pt;
+      color: #333;
+      margin-bottom: 3mm;
+      line-height: 1.65;
+    }
+
+    p strong {
+      color: #1a1a1a;
+    }
+
+    ul,
+    ol {
+      margin: 3mm 0 5mm 5mm;
+      font-size: 10pt;
+      color: #333;
+    }
+
+    li {
+      margin-bottom: 1.5mm;
+      line-height: 1.55;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4mm 0;
+      font-size: 9.5pt;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 2.5mm 3mm;
+      border-bottom: 1px solid #E5E5E5;
+      vertical-align: top;
+    }
+
+    th {
+      background: #F5F5F0;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5pt;
+    }
+
+    td code {
+      background: #F5F5F0;
+      padding: 1px 4px;
+      border-radius: 2px;
+      font-family: 'Courier New', monospace;
+      font-size: 8.5pt;
+      color: #1a4a45;
+    }
+
+    /* Code block */
+    .code {
+      background: #0A0A0A;
+      color: #EDEDED;
+      padding: 5mm 7mm;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 8.5pt;
+      line-height: 1.6;
+      margin: 4mm 0;
+      overflow-x: auto;
+    }
+
+    .code .kw {
+      color: #C084FC;
+    }
+
+    .code .str {
+      color: #A5F3FC;
+    }
+
+    .code .cm {
+      color: #666;
+    }
+
+    .code .var {
+      color: #FBBF24;
+    }
+
+    .code .fn {
+      color: #FBBF24;
+    }
+
+    .code .tag {
+      color: #F87171;
+    }
+
+    .code .attr {
+      color: #FBBF24;
+    }
+
+    .code .prop {
+      color: #2DD4BF;
+    }
+
+    /* Font specimen boxes */
+    .type-specimen {
+      background: #FFFFFF;
+      border: 1px solid #E5E5E5;
+      border-radius: 6px;
+      padding: 6mm 8mm;
+      margin: 3mm 0;
+    }
+
+    .type-specimen .ts-label {
+      font-size: 7pt;
+      letter-spacing: 2pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 3mm;
+    }
+
+    .type-specimen .ts-sample {
+      color: #1a1a1a;
+    }
+
+    .type-specimen .ts-meta {
+      font-size: 8pt;
+      color: #888;
+      margin-top: 3mm;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Color swatches */
+    .color-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4mm;
+      margin: 4mm 0;
+    }
+
+    .color-swatch {
+      background: #FFFFFF;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid #E5E5E5;
+    }
+
+    .color-swatch .sw {
+      height: 20mm;
+    }
+
+    .color-swatch .meta {
+      padding: 3mm 4mm;
+    }
+
+    .color-swatch .name {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: "League Spartan", sans-serif;
+    }
+
+    .color-swatch .hex {
+      font-size: 8pt;
+      color: #666;
+      font-family: 'Courier New', monospace;
+      margin-top: 1mm;
+    }
+
+    .color-swatch .use {
+      font-size: 7pt;
+      color: #888;
+      margin-top: 2mm;
+    }
+
+    /* Component preview */
+    .comp-preview {
+      background: #0A0A0A;
+      border-radius: 6px;
+      padding: 6mm 8mm;
+      margin: 3mm 0;
+      color: #FFFFFF;
+    }
+
+    .comp-preview .cp-label {
+      font-size: 7pt;
+      letter-spacing: 2pt;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 3mm;
+    }
+
+    /* Info panels */
+    .info {
+      background: #FFFFFF;
+      border-left: 3px solid #2DD4BF;
+      padding: 4mm 5mm;
+      margin: 3mm 0;
+      border-radius: 0 3px 3px 0;
+    }
+
+    .info .lbl {
+      font-size: 8pt;
+      letter-spacing: 1.5pt;
+      color: #2DD4BF;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 2mm;
+    }
+
+    .info .txt {
+      font-size: 10pt;
+      color: #333;
+    }
+
+    /* File list */
+    .file-tree {
+      background: #0A0A0A;
+      color: #EDEDED;
+      padding: 5mm 7mm;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 9pt;
+      line-height: 1.7;
+      margin: 4mm 0;
+    }
+
+    .file-tree .folder {
+      color: #2DD4BF;
+      font-weight: 700;
+    }
+
+    .file-tree .html {
+      color: #FBBF24;
+    }
+
+    .file-tree .pdf {
+      color: #F87171;
+    }
+
+    .file-tree .py {
+      color: #A5F3FC;
+    }
+
+    .divider {
+      border-top: 1px solid #E5E5E5;
+      margin: 12mm 0;
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- DOC HEADER                                                            -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="doc-title">
-<span class="brand">tyes.app</span> · Dev Scheme · <span class="accent-italic">Complete Design System</span>
-</div>
-<div class="doc-subtitle">
-Single source of truth for the entire tyes product: homepage, all footer pages (About, Pricing, How It Works,
-Examples, Contact, Terms, Privacy, Cookie Policy, AI Disclaimer), Client Dashboard, and Admin Dashboard.
-Everything aligned to one font system, one color palette, one component library.
-</div>
-
-<div class="shift-box">
-<strong>What this doc contains:</strong> (1) Complete design tokens (colors, typography, spacing, radii),
-(2) Component library with copy-paste HTML/CSS for every reusable pattern, (3) Page inventory with what to
-build/update, (4) Routing map, (5) API endpoints list, (6) State management structure, (7) Full implementation
-checklist. Nothing hidden. If a component appears on any page, its spec is in this doc.
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 1 · TYPOGRAPHY SYSTEM                                                 -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">1 · Typography System</div>
-
-<p>Three fonts. One rule per role. No exceptions.</p>
-
-<table>
-<tr><th>Role</th><th>Font</th><th>Weight</th><th>Usage</th></tr>
-<tr><td><strong>Title</strong></td><td>League Spartan</td><td>700 (700-800)</td><td>All headings h1-h6, hero, price numbers, section labels, big statement type</td></tr>
-<tr><td><strong>Body</strong></td><td>Montserrat</td><td>500 (Medium)</td><td>Paragraph text, list items, form labels, table cells</td></tr>
-<tr><td><strong>Button</strong></td><td>Montserrat</td><td>500 (Medium)</td><td>All CTAs, primary/secondary buttons, chips</td></tr>
-<tr><td><strong>Accent</strong></td><td>Montserrat Italic</td><td>700 (Bold Italic)</td><td>Teal-colored emphasis inside headings ("Shelf", "Perfect Package", "Deep Dive")</td></tr>
-<tr><td><strong>Brand mark</strong></td><td>Gliker</td><td>700</td><td>The word "tyes" wherever it appears as brand name (sidebar, footer, headline references)</td></tr>
-</table>
-
-<h3>Type specimens</h3>
-
-<div class="type-specimen">
-<div class="ts-label">Title · League Spartan Bold</div>
-<div class="ts-sample" style="font-family: 'League Spartan', sans-serif; font-weight: 700; font-size: 34pt; letter-spacing: -1pt; line-height: 1.05;">
-From Brief to <span class="accent-italic" style="font-size: 34pt;">Shelf.</span>
-</div>
-<div class="ts-meta">font-family: "League Spartan"; font-weight: 700; font-size: 34pt;</div>
-</div>
-
-<div class="type-specimen">
-<div class="ts-label">Body · Montserrat Medium</div>
-<div class="ts-sample" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 12pt; line-height: 1.55;">
-Two engines, one platform. AI campaign imagery and brand strategy backed by a retail buyer network across the US and Europe. Built for founders who need to go from idea to shelf in weeks, not quarters.
-</div>
-<div class="ts-meta">font-family: "Montserrat"; font-weight: 500; font-size: 12pt;</div>
-</div>
-
-<div class="type-specimen">
-<div class="ts-label">Button · Montserrat Medium (lighter)</div>
-<div class="ts-sample">
-<span style="display: inline-block; background: #0A0A0A; color: #FFFFFF; font-family: 'Montserrat'; font-weight: 500; padding: 3mm 6mm; border-radius: 999px; font-size: 10pt;">Get Your Free Image →</span>
-<span style="display: inline-block; background: transparent; border: 1.5px solid #0A0A0A; color: #0A0A0A; font-family: 'Montserrat'; font-weight: 500; padding: 3mm 6mm; border-radius: 999px; font-size: 10pt; margin-left: 3mm;">Get Your Free Strategy →</span>
-</div>
-<div class="ts-meta">font-family: "Montserrat"; font-weight: 500; padding: 3mm 6mm; border-radius: 999px;</div>
-</div>
-
-<div class="type-specimen">
-<div class="ts-label">Brand mark · Gliker (fallback: Grandstander)</div>
-<div class="ts-sample" style="font-family: 'Gliker', 'Grandstander', sans-serif; font-weight: 700; font-size: 32pt; letter-spacing: -0.5pt; color: #2DD4BF;">tyes</div>
-<div class="ts-meta">font-family: "Gliker", "Grandstander", sans-serif; font-weight: 700; letter-spacing: -0.5pt;</div>
-</div>
-
-<h3>Google Fonts import (copy-paste for &lt;head&gt;)</h3>
-
-<div class="code">
-&lt;<span class="tag">link</span> <span class="attr">rel</span>=<span class="str">"preconnect"</span> <span class="attr">href</span>=<span class="str">"https://fonts.googleapis.com"</span>&gt;<br>
-&lt;<span class="tag">link</span> <span class="attr">rel</span>=<span class="str">"preconnect"</span> <span class="attr">href</span>=<span class="str">"https://fonts.gstatic.com"</span> <span class="attr">crossorigin</span>&gt;<br>
-&lt;<span class="tag">link</span> <span class="attr">href</span>=<span class="str">"https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&amp;display=swap"</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span>&gt;<br><br>
-<span class="cm">&lt;!-- Gliker is licensed (Adobe Fonts or self-hosted). Paste kit or @font-face here. --&gt;</span>
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 2 · COLOR SYSTEM                                                      -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">2 · Color System</div>
-
-<h3>Backgrounds</h3>
-<div class="color-grid">
-<div class="color-swatch">
-<div class="sw" style="background:#0A0A0A;"></div>
-<div class="meta"><div class="name">Primary bg</div><div class="hex">#0A0A0A</div><div class="use">Homepage · Dashboards · Cards backdrop</div></div>
-</div>
-<div class="color-swatch">
-<div class="sw" style="background:#141414;"></div>
-<div class="meta"><div class="name">Card bg</div><div class="hex">#141414</div><div class="use">Feature cards · Sidebar panel · Info boxes</div></div>
-</div>
-<div class="color-swatch">
-<div class="sw" style="background:#1a1a1a;"></div>
-<div class="meta"><div class="name">Elevated bg</div><div class="hex">#1a1a1a</div><div class="use">Popular pricing card · Hover states</div></div>
-</div>
-</div>
-
-<h3>Text</h3>
-<div class="color-grid">
-<div class="color-swatch">
-<div class="sw" style="background:#FFFFFF;"></div>
-<div class="meta"><div class="name">Primary</div><div class="hex">#FFFFFF</div><div class="use">Headings · strong text</div></div>
-</div>
-<div class="color-swatch">
-<div class="sw" style="background:#C8C8C8;"></div>
-<div class="meta"><div class="name">Body</div><div class="hex">#C8C8C8</div><div class="use">Paragraph copy</div></div>
-</div>
-<div class="color-swatch">
-<div class="sw" style="background:#B4B4B4;"></div>
-<div class="meta"><div class="name">Muted</div><div class="hex">#B4B4B4</div><div class="use">Card sub-copy · Metadata</div></div>
-</div>
-</div>
-
-<h3>Accents</h3>
-<div class="color-grid">
-<div class="color-swatch">
-<div class="sw" style="background:#2DD4BF;"></div>
-<div class="meta"><div class="name">Teal (primary accent)</div><div class="hex">#2DD4BF</div><div class="use">All emphasis · CTAs · Links · Icons</div></div>
-</div>
-<div class="color-swatch">
-<div class="sw" style="background:#FBBF24;"></div>
-<div class="meta"><div class="name">Yellow (dev warnings only)</div><div class="hex">#FBBF24</div><div class="use">Pending status · Dev alerts · Rate-limit notices. <strong>NOT used on customer-facing add-on toggle</strong> — that's teal.</div></div>
-</div>
-<div class="color-swatch">
-<div class="sw" style="background:#EF4444;"></div>
-<div class="meta"><div class="name">Red (error/lost)</div><div class="hex">#EF4444</div><div class="use">Lost status · Error states only</div></div>
-</div>
-</div>
-
-<h3>CSS Variables (copy-paste)</h3>
-
-<div class="code">
-<span class="cm">/* :root · put in global stylesheet */</span><br>
-<span class="fn">:root</span> {<br>
-&nbsp;&nbsp;<span class="cm">/* Backgrounds */</span><br>
-&nbsp;&nbsp;<span class="prop">--bg-primary</span>: #0A0A0A;<br>
-&nbsp;&nbsp;<span class="prop">--bg-card</span>: #141414;<br>
-&nbsp;&nbsp;<span class="prop">--bg-elevated</span>: #1a1a1a;<br>
-&nbsp;&nbsp;<span class="prop">--border-subtle</span>: #2A2A2A;<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;<span class="cm">/* Text */</span><br>
-&nbsp;&nbsp;<span class="prop">--text-primary</span>: #FFFFFF;<br>
-&nbsp;&nbsp;<span class="prop">--text-body</span>: #C8C8C8;<br>
-&nbsp;&nbsp;<span class="prop">--text-muted</span>: #B4B4B4;<br>
-&nbsp;&nbsp;<span class="prop">--text-dim</span>: #888888;<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;<span class="cm">/* Accents */</span><br>
-&nbsp;&nbsp;<span class="prop">--accent-teal</span>: #2DD4BF;<br>
-&nbsp;&nbsp;<span class="prop">--accent-teal-soft</span>: rgba(45,212,191,0.15);<br>
-&nbsp;&nbsp;<span class="prop">--accent-teal-border</span>: rgba(45,212,191,0.4);<br>
-&nbsp;&nbsp;<span class="prop">--accent-yellow</span>: #FBBF24;<br>
-&nbsp;&nbsp;<span class="prop">--accent-red</span>: #EF4444;<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;<span class="cm">/* Fonts */</span><br>
-&nbsp;&nbsp;<span class="prop">--font-body</span>: <span class="str">"Montserrat"</span>, -apple-system, sans-serif;<br>
-&nbsp;&nbsp;<span class="prop">--font-title</span>: <span class="str">"League Spartan"</span>, sans-serif;<br>
-&nbsp;&nbsp;<span class="prop">--font-accent</span>: <span class="str">"Montserrat"</span>, sans-serif; <span class="cm">/* italic bold */</span><br>
-&nbsp;&nbsp;<span class="prop">--font-brand</span>: <span class="str">"Gliker"</span>, <span class="str">"Grandstander"</span>, sans-serif;<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;<span class="cm">/* Weights */</span><br>
-&nbsp;&nbsp;<span class="prop">--weight-body</span>: 500;<br>
-&nbsp;&nbsp;<span class="prop">--weight-strong</span>: 700;<br>
-&nbsp;&nbsp;<span class="prop">--weight-heavy</span>: 800;<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;<span class="cm">/* Radii */</span><br>
-&nbsp;&nbsp;<span class="prop">--radius-sm</span>: 3px;<br>
-&nbsp;&nbsp;<span class="prop">--radius-md</span>: 6px;<br>
-&nbsp;&nbsp;<span class="prop">--radius-lg</span>: 12px;<br>
-&nbsp;&nbsp;<span class="prop">--radius-pill</span>: 999px;<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;<span class="cm">/* Spacing (tailwind-like) */</span><br>
-&nbsp;&nbsp;<span class="prop">--sp-1</span>: 4px;<br>
-&nbsp;&nbsp;<span class="prop">--sp-2</span>: 8px;<br>
-&nbsp;&nbsp;<span class="prop">--sp-3</span>: 12px;<br>
-&nbsp;&nbsp;<span class="prop">--sp-4</span>: 16px;<br>
-&nbsp;&nbsp;<span class="prop">--sp-6</span>: 24px;<br>
-&nbsp;&nbsp;<span class="prop">--sp-8</span>: 32px;<br>
-}
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 3 · COMPONENT LIBRARY                                                 -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">3 · Component Library</div>
-
-<h3>Button · Primary (teal pill)</h3>
-
-<div class="comp-preview">
-<div class="cp-label">Primary CTA</div>
-<a style="display: inline-block; background: #2DD4BF; color: #0A0A0A; font-family: 'Montserrat', sans-serif; font-weight: 500; padding: 3mm 8mm; border-radius: 999px; font-size: 10pt; letter-spacing: 0.3pt; text-decoration: none;">Get Your Free Image →</a>
-</div>
-
-<div class="code">
-&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#pricing"</span> <span class="attr">class</span>=<span class="str">"cta cta-primary"</span>&gt;Get Your Free Image →&lt;/<span class="tag">a</span>&gt;<br><br>
-<span class="cm">/* CSS */</span><br>
-<span class="fn">.cta</span> {<br>
-&nbsp;&nbsp;<span class="prop">display</span>: inline-block;<br>
-&nbsp;&nbsp;<span class="prop">padding</span>: 12px 32px;<br>
-&nbsp;&nbsp;<span class="prop">border-radius</span>: <span class="var">var(--radius-pill)</span>;<br>
-&nbsp;&nbsp;<span class="prop">font-family</span>: <span class="var">var(--font-body)</span>;<br>
-&nbsp;&nbsp;<span class="prop">font-weight</span>: 500;<br>
-&nbsp;&nbsp;<span class="prop">font-size</span>: 14px;<br>
-&nbsp;&nbsp;<span class="prop">letter-spacing</span>: 0.3px;<br>
-&nbsp;&nbsp;<span class="prop">text-decoration</span>: none;<br>
-&nbsp;&nbsp;<span class="prop">transition</span>: transform 200ms;<br>
-}<br>
-<span class="fn">.cta-primary</span> { <span class="prop">background</span>: <span class="var">var(--accent-teal)</span>; <span class="prop">color</span>: <span class="var">var(--bg-primary)</span>; }<br>
-<span class="fn">.cta-secondary</span> { <span class="prop">background</span>: transparent; <span class="prop">border</span>: 1px solid <span class="var">var(--accent-teal)</span>; <span class="prop">color</span>: <span class="var">var(--accent-teal)</span>; }
-</div>
-
-<h3>Accent inside heading (teal italic)</h3>
-
-<div class="comp-preview">
-<div class="cp-label">H1 with accent span</div>
-<h1 style="font-family: 'League Spartan'; font-weight: 700; font-size: 24pt; color: #FFFFFF; line-height: 1.1;">
-From Brief to <span style="font-family: 'Montserrat'; font-style: italic; font-weight: 700; color: #2DD4BF;">Shelf.</span>
-</h1>
-</div>
-
-<div class="code">
-&lt;<span class="tag">h1</span>&gt;From Brief to &lt;<span class="tag">span</span> <span class="attr">class</span>=<span class="str">"accent"</span>&gt;Shelf.&lt;/<span class="tag">span</span>&gt;&lt;/<span class="tag">h1</span>&gt;<br><br>
-<span class="fn">.accent</span> {<br>
-&nbsp;&nbsp;<span class="prop">font-family</span>: <span class="var">var(--font-accent)</span>;<br>
-&nbsp;&nbsp;<span class="prop">font-style</span>: italic;<br>
-&nbsp;&nbsp;<span class="prop">font-weight</span>: 700;<br>
-&nbsp;&nbsp;<span class="prop">color</span>: <span class="var">var(--accent-teal)</span>;<br>
-}
-</div>
-
-<h3>Pricing card (Popular tier — teal border)</h3>
-
-<div class="comp-preview">
-<div class="cp-label">Pricing card · Popular variant</div>
-<div style="max-width: 60mm; background: #1a1a1a; border: 2px solid #2DD4BF; border-radius: 10px; padding: 6mm; position: relative;">
-<span style="position: absolute; top: -3mm; right: 5mm; background: #2DD4BF; color: #0A0A0A; padding: 1mm 3mm; border-radius: 3px; font-size: 7pt; text-transform: uppercase; letter-spacing: 2pt; font-weight: 800; font-family: 'Montserrat';">Popular</span>
-<div style="font-size: 7pt; letter-spacing: 3pt; text-transform: uppercase; color: #2DD4BF; font-weight: 700; margin-bottom: 2mm;">Campaign 5</div>
-<h3 style="color: #FFFFFF; font-size: 14pt; margin-bottom: 3mm;">Campaign 5</h3>
-<div style="font-size: 28pt; color: #FFFFFF; font-weight: 800; font-family: 'League Spartan'; margin-bottom: 4mm;">$25</div>
-<ul style="list-style: none; padding: 0; font-size: 8.5pt; color: #C8C8C8;">
-<li style="margin-bottom: 2mm;">✓ 5 AI campaign images</li>
-<li style="margin-bottom: 2mm;">✓ 1 revision / image</li>
-<li style="margin-bottom: 2mm;">✓ From 24H delivery</li>
-</ul>
-<div style="border-top: 1px dashed #2DD4BF; padding-top: 3mm; margin-top: 4mm; font-size: 8pt; color: #2DD4BF; font-weight: 700;">+ FREE Brand Strategy Snapshot</div>
-</div>
-</div>
-
-<h3>Toggle banner (teal · Brand Strategy $25 add-on on Free Image)</h3>
-
-<div class="comp-preview">
-<div class="cp-label">Teal toggle · Free Image tier only</div>
-<div style="background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.5); border-radius: 4px; padding: 4mm 6mm;">
-<div style="font-size: 10pt; color: #2DD4BF; font-weight: 700; font-family: 'Montserrat';">☐ Add a Brand Strategy snapshot to this order for $25.</div>
-<div style="font-size: 8pt; color: #B8B8B8; margin-top: 1mm; font-family: 'Montserrat';">LLM visibility audit, viral product angles, retailer shortlist. Delivered in 3 business days.</div>
-</div>
-</div>
-
-<h3>Deep Dive banner (dark gradient with 2 CTAs)</h3>
-
-<div class="comp-preview">
-<div class="cp-label">Deep Dive Brand Strategy · upsell block</div>
-<div style="background: linear-gradient(135deg, #141414, #1a1a1a); border: 1px solid #333; border-radius: 6px; padding: 6mm 8mm;">
-<div style="font-size: 7.5pt; letter-spacing: 3pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm;">Beyond the free snapshot</div>
-<h3 style="font-size: 16pt; color: #FFFFFF; margin-bottom: 3mm; font-family: 'League Spartan';">Ready for more? The <span class="accent-italic">full playbook</span>.</h3>
-<div style="display: flex; gap: 3mm;">
-<div style="background: #2DD4BF; color: #0A0A0A; padding: 2mm 5mm; border-radius: 999px; font-size: 9pt; font-weight: 500; font-family: 'Montserrat';">Contact Us →</div>
-<div style="background: transparent; border: 1px solid #2DD4BF; color: #2DD4BF; padding: 2mm 5mm; border-radius: 999px; font-size: 9pt; font-weight: 500; font-family: 'Montserrat';">Book a Call →</div>
-</div>
-</div>
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 4 · PAGES INVENTORY                                                   -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">4 · Pages Inventory</div>
-
-<h3>All pages · fully aligned</h3>
-
-<div class="file-tree">
-<span class="folder">tyes_pages/</span> <span class="cm">// design spec deliverables</span><br>
-&nbsp;&nbsp;<span class="html">tyes_homepage_v3.html</span> <span class="cm">// homepage (FINAL, 5 fix versions)</span><br>
-&nbsp;&nbsp;<span class="html">about-us.html</span> <span class="cm">// About Us</span><br>
-&nbsp;&nbsp;<span class="html">pricing.html</span> <span class="cm">// Pricing (5 tiers + Deep Dive)</span><br>
-&nbsp;&nbsp;<span class="html">how-it-works.html</span> <span class="cm">// How It Works (5 retail buyer categories)</span><br>
-&nbsp;&nbsp;<span class="html">examples.html</span> <span class="cm">// Examples showcase</span><br>
-&nbsp;&nbsp;<span class="html">contact.html</span> <span class="cm">// Contact page</span><br>
-&nbsp;&nbsp;<span class="html">terms.html</span> <span class="cm">// Terms of Service (WY law)</span><br>
-&nbsp;&nbsp;<span class="html">privacy.html</span> <span class="cm">// Privacy Policy (GDPR + CCPA)</span><br>
-&nbsp;&nbsp;<span class="html">cookie-policy.html</span> <span class="cm">// Cookie Policy</span><br>
-&nbsp;&nbsp;<span class="html">ai-disclaimer.html</span> <span class="cm">// AI Disclaimer</span><br>
-&nbsp;&nbsp;<span class="html">tyes_client_dashboard_v2.html</span> <span class="cm">// Client Dashboard spec</span><br>
-&nbsp;&nbsp;<span class="html">tyes_admin_dashboard_v2.html</span> <span class="cm">// Admin Dashboard spec</span><br>
-&nbsp;&nbsp;<span class="html">tyes_dev_scheme.html</span> <span class="cm">// THIS DOC · complete design system</span>
-</div>
-
-<h3>Page → route mapping</h3>
-
-<table>
-<tr><th>File</th><th>URL</th><th>Purpose</th></tr>
-<tr><td>tyes_homepage_v3.html</td><td>/</td><td>Marketing homepage</td></tr>
-<tr><td>about-us.html</td><td>/about</td><td>About Us story</td></tr>
-<tr><td>pricing.html</td><td>/pricing OR homepage #pricing</td><td>5 tiers + Deep Dive</td></tr>
-<tr><td>how-it-works.html</td><td>/how-it-works</td><td>2 engines + retail network</td></tr>
-<tr><td>examples.html</td><td>/examples</td><td>Case studies</td></tr>
-<tr><td>contact.html</td><td>/contact</td><td>Contact form</td></tr>
-<tr><td>terms.html</td><td>/terms</td><td>Terms of Service</td></tr>
-<tr><td>privacy.html</td><td>/privacy</td><td>Privacy Policy</td></tr>
-<tr><td>cookie-policy.html</td><td>/cookies</td><td>Cookie Policy</td></tr>
-<tr><td>ai-disclaimer.html</td><td>/ai-disclaimer</td><td>AI Disclaimer</td></tr>
-<tr><td>—</td><td>/dashboard/*</td><td>Client Dashboard (see spec)</td></tr>
-<tr><td>—</td><td>/admin/*</td><td>Admin Dashboard (see spec)</td></tr>
-</table>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 5 · GLOBAL BEHAVIORS                                                  -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">5 · Global Behaviors</div>
-
-<h3>Smooth scroll (all CTAs → #pricing)</h3>
-
-<div class="code">
-<span class="cm">/* CSS on html element */</span><br>
-<span class="fn">html</span> {<br>
-&nbsp;&nbsp;<span class="prop">scroll-behavior</span>: smooth;<br>
-&nbsp;&nbsp;<span class="prop">scroll-padding-top</span>: 80px; <span class="cm">/* offset for sticky header */</span><br>
-}<br><br>
-<span class="cm">// Every "Get Your Free Image", "Get Your Free Strategy", "See Pricing" button uses:</span><br>
-&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#pricing"</span>&gt;...&lt;/<span class="tag">a</span>&gt;
-</div>
-
-<h3>Calendly popup (Book a Call · TWO separate events)</h3>
-
-<p>tyes has <strong>two distinct Calendly events</strong> tied to two different offers. Do not confuse them.</p>
-
-<table>
-<tr><th>Event slug</th><th>Duration</th><th>Where it's used</th><th>Purpose</th></tr>
-<tr><td><code>discovery-call</code></td><td>30 minutes</td><td>Custom Enterprise tier "Book a Call" button (Pricing + Custom card + New Order Step 3 Custom)</td><td>Scope a custom order. Establish requirements. Sign-up conversation.</td></tr>
-<tr><td><code>deep-dive-call</code></td><td>1 hour</td><td>Deep Dive Brand Strategy section "Book a Call" (Homepage · Pricing · Client Dashboard Brand Strategy hub Section D)</td><td>Post-snapshot strategy alignment. Only Deep Dive customers.</td></tr>
-</table>
-
-<div class="code">
-<span class="cm">// In &lt;head&gt;</span><br>
-&lt;<span class="tag">link</span> <span class="attr">href</span>=<span class="str">"https://assets.calendly.com/assets/external/widget.css"</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span>&gt;<br>
-&lt;<span class="tag">script</span> <span class="attr">src</span>=<span class="str">"https://assets.calendly.com/assets/external/widget.js"</span> <span class="attr">async</span>&gt;&lt;/<span class="tag">script</span>&gt;<br><br>
-<span class="cm">// Two separate helpers, one per event</span><br>
-<span class="kw">const</span> <span class="fn">openDiscoveryCall</span> = () =&gt; {<br>
-&nbsp;&nbsp;<span class="fn">Calendly</span>.<span class="fn">initPopupWidget</span>({<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">url</span>: <span class="str">'https://calendly.com/tyes/discovery-call'</span> <span class="cm">// 30-min · Custom Enterprise</span><br>
-&nbsp;&nbsp;});<br>
-};<br><br>
-<span class="kw">const</span> <span class="fn">openDeepDiveCall</span> = () =&gt; {<br>
-&nbsp;&nbsp;<span class="fn">Calendly</span>.<span class="fn">initPopupWidget</span>({<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">url</span>: <span class="str">'https://calendly.com/tyes/deep-dive-call'</span> <span class="cm">// 1-hour · Deep Dive Brand Strategy</span><br>
-&nbsp;&nbsp;});<br>
-};<br><br>
-<span class="cm">// Usage:</span><br>
-&lt;<span class="tag">button</span> <span class="attr">onClick</span>=<span class="str">{openDiscoveryCall}</span>&gt;Book a Call →&lt;/<span class="tag">button</span>&gt; <span class="cm">// Custom Enterprise card</span><br>
-&lt;<span class="tag">button</span> <span class="attr">onClick</span>=<span class="str">{openDeepDiveCall}</span>&gt;Book a Call →&lt;/<span class="tag">button</span>&gt; <span class="cm">// Deep Dive section</span>
-</div>
-
-<h3>Flip cards (How It Works · 500ms cubic-bezier)</h3>
-
-<div class="code">
-<span class="fn">.flip-card</span> { <span class="prop">perspective</span>: 1000px; <span class="prop">height</span>: 200px; <span class="prop">cursor</span>: pointer; }<br>
-<span class="fn">.flip-card-inner</span> {<br>
-&nbsp;&nbsp;<span class="prop">position</span>: relative; <span class="prop">width</span>: 100%; <span class="prop">height</span>: 100%;<br>
-&nbsp;&nbsp;<span class="prop">transition</span>: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);<br>
-&nbsp;&nbsp;<span class="prop">transform-style</span>: preserve-3d;<br>
-}<br>
-<span class="fn">.flip-card</span>:hover <span class="fn">.flip-card-inner</span>,<br>
-<span class="fn">.flip-card.is-flipped</span> <span class="fn">.flip-card-inner</span> { <span class="prop">transform</span>: rotateY(180deg); }<br>
-<span class="fn">.flip-card-front</span>, <span class="fn">.flip-card-back</span> {<br>
-&nbsp;&nbsp;<span class="prop">position</span>: absolute; <span class="prop">inset</span>: 0;<br>
-&nbsp;&nbsp;<span class="prop">backface-visibility</span>: hidden;<br>
-&nbsp;&nbsp;<span class="prop">background</span>: <span class="var">var(--bg-card)</span>;<br>
-&nbsp;&nbsp;<span class="prop">border-radius</span>: 8px; <span class="prop">padding</span>: 1.5rem;<br>
-}<br>
-<span class="fn">.flip-card-back</span> { <span class="prop">transform</span>: rotateY(180deg); }
-</div>
-
-<h3>CTA flow · scroll first, signup at plan selection</h3>
-
-<p>Hero and section CTAs never fight scroll behavior with a modal. The flow is layered:</p>
-
-<table>
-<tr><th>User clicks</th><th>What happens</th></tr>
-<tr><td><strong>Hero CTA</strong> ("Get Your Free Image", "Get Your Free Strategy", "See Pricing")</td><td>Smooth scroll to <code>#pricing</code> section. No modal. User lands on the pricing cards.</td></tr>
-<tr><td><strong>Plan CTA on a pricing card</strong> ("Claim Free Image", "Get Campaign 5", "Get Campaign 10")</td><td>If signed in: go straight to New Order flow with plan preselected. If not signed in: open signup modal, then continue to New Order after successful signup.</td></tr>
-<tr><td><strong>Custom "Contact Us"</strong></td><td>Route to <code>/contact?intent=custom</code>. Signup optional (contact form can be filled by anyone).</td></tr>
-<tr><td><strong>Custom "Book a Call" / Deep Dive "Book a Call"</strong></td><td>Open Calendly popup (no signup gate). Calendly captures email itself.</td></tr>
-</table>
-
-<p><strong>Rationale:</strong> The hero CTA is an interest signal, not a purchase intent. Forcing signup there breaks trust and inflates bounce rate. Signup naturally belongs at the moment a plan is chosen, which is when the value exchange begins (create account = we can deliver your order).</p>
-
-<div class="code">
-<span class="cm">// Hero CTA</span><br>
-&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#pricing"</span> <span class="attr">class</span>=<span class="str">"cta cta-primary"</span>&gt;Get Your Free Image →&lt;/<span class="tag">a</span>&gt;<br><br>
-<span class="cm">// Plan CTA (with signup gate)</span><br>
-<span class="kw">const</span> <span class="fn">handlePlanClick</span> = (plan) =&gt; {<br>
-&nbsp;&nbsp;<span class="kw">if</span> (!<span class="var">user</span>) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">openSignupModal</span>({ <span class="prop">onSuccess</span>: () =&gt; <span class="fn">startNewOrder</span>(plan) });<br>
-&nbsp;&nbsp;} <span class="kw">else</span> {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">startNewOrder</span>(plan);<br>
-&nbsp;&nbsp;}<br>
-};<br><br>
-&lt;<span class="tag">button</span> <span class="attr">onClick</span>=<span class="str">{() =&gt; handlePlanClick('campaign-5')}</span>&gt;Get Campaign 5 →&lt;/<span class="tag">button</span>&gt;
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 6 · API ENDPOINTS                                                     -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">6 · API Endpoints</div>
-
-<h3>Auth</h3>
-
-<div class="code">
-POST /api/auth/signup           <span class="cm">// email, password, name → creates account</span><br>
-POST /api/auth/signin           <span class="cm">// email, password → JWT</span><br>
-POST /api/auth/social           <span class="cm">// provider, token → JWT</span><br>
-POST /api/auth/signout          <span class="cm">// revokes JWT</span><br>
-GET  /api/auth/me               <span class="cm">// current user profile</span>
-</div>
-
-<h3>Orders + Plans</h3>
-
-<div class="code">
-GET  /api/plans                 <span class="cm">// public 5 tiers (Free · Brand Strategy · Campaign 5 · Campaign 10 · Custom)</span><br>
-GET  /api/orders                <span class="cm">// user orders</span><br>
-POST /api/orders                <span class="cm">// create new order (plan, brief, strategy toggle)</span><br>
-GET  /api/orders/:id            <span class="cm">// order detail</span><br>
-PATCH /api/orders/:id           <span class="cm">// update (status changes, cancel)</span>
-</div>
-
-<div style="background: #1a1500; border-left: 3px solid #FBBF24; padding: 5mm 6mm; margin: 4mm 0; border-radius: 3px;">
-<div style="color: #FBBF24; font-weight: 700; font-size: 10pt; margin-bottom: 2mm; letter-spacing: 0.5pt;">⚠ FREE IMAGE — 1 PER ACCOUNT, EVER</div>
-<div style="color: #C8C8C8; font-size: 9pt; line-height: 1.55;">
-Enforce on <code style="color:#2DD4BF;">POST /api/orders</code> when <code style="color:#2DD4BF;">plan === 'free_image'</code>. Reject the order if the user (or their fingerprint) has ever created a completed Free Image order. Check across <strong>email address, billing name + address, phone number, and payment method fingerprint</strong> — any match blocks the second free order. Also enforce upstream at signup, so a duplicate account can't be created just to claim another Free Image.<br><br>
-<strong style="color:#FBBF24;">Response on block:</strong> <code style="color:#F87171;">409 Conflict</code> · <code style="color:#A5F3FC;">{"error": "free_image_already_claimed", "message": "Free Image already claimed on this account. Order a Campaign or Brand Strategy tier to continue."}</code><br><br>
-<strong style="color:#FBBF24;">Log all blocked attempts</strong> to <code style="color:#2DD4BF;">fraud_review</code> table for admin review. Attempted fingerprints (email, phone, payment) get added to a shadow blocklist so the same actor can't retry with different combinations.
-</div>
-</div>
-
-<h3>Brand Strategy</h3>
-
-<div class="code">
-GET  /api/brand-strategy/snapshots     <span class="cm">// user's delivered snapshots</span><br>
-POST /api/brand-strategy/request       <span class="cm">// standalone request (form data)</span><br>
-GET  /api/brand-strategy/status        <span class="cm">// current in-progress state</span><br>
-POST /api/brand-strategy/deep-dive     <span class="cm">// inquiry submission</span>
-</div>
-
-<h3>Admin</h3>
-
-<div class="code">
-GET  /api/admin/dashboard              <span class="cm">// 5 KPIs (Revenue · Orders · Clients · Images · Strategy Requests)</span><br>
-GET  /api/admin/strategy-requests      <span class="cm">// list with status filter</span><br>
-GET  /api/admin/strategy-requests/:id  <span class="cm">// detail</span><br>
-PATCH /api/admin/strategy-requests/:id <span class="cm">// update status, notes (assignee is auto-set to Raluca on creation)</span><br>
-POST /api/admin/strategy-requests/:id/upload  <span class="cm">// upload PDF</span><br>
-POST /api/admin/strategy-requests/:id/send    <span class="cm">// send to client</span><br>
-POST /api/admin/strategy-requests/:id/flag-deep-dive <span class="cm">// mark as "Converted to Deep Dive" + fire client nudge email with Book a Call CTA</span><br>
-GET  /api/admin/analytics/strategy     <span class="cm">// strategy KPIs</span><br>
-<span class="cm">// Buyer intros: no endpoints — handled off-platform by email after the Deep Dive kickoff call</span><br>
-GET  /api/admin/plans                  <span class="cm">// all 5 plans (admin view)</span><br>
-PATCH /api/admin/plans/:id             <span class="cm">// update plan fields + strategy toggles</span>
-</div>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 7 · DATA MODEL                                                        -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">7 · Data Model</div>
-
-<h3>Core tables</h3>
-
-<div class="code">
-<span class="kw">users</span> (id, email, password_hash, name, company, created_at)<br>
-<span class="kw">plans</span> (id, name, price, image_count, revisions, delivery, strategy_included,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;call_included, allow_addon, active)<br>
-<span class="kw">orders</span> (id, user_id, plan_id, status, strategy_addon, price_paid,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;brief_json, created_at, delivered_at)<br>
-<span class="kw">strategy_requests</span> (id, user_id, order_id, source, brand_info_json,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status, assignee_id <span class="cm">// auto-set to Raluca on INSERT</span>, snapshot_url, created_at, delivered_at)<br>
-<span class="kw">deep_dive_inquiries</span> (id, user_id, source_form_data, status, contacted_at)<br>
-<span class="cm">// No buyer_intros table — all buyer introductions and follow-through happen off-platform via email after the Deep Dive kickoff call</span>
-</div>
-
-<h3>Enums</h3>
-
-<table>
-<tr><th>Enum</th><th>Values</th></tr>
-<tr><td>plan_name</td><td>Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom</td></tr>
-<tr><td>category</td><td>Beauty · Personal Care · Fragrance · Fashion</td></tr>
-<tr><td>buyer_category</td><td>Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces</td></tr>
-<tr><td>geography</td><td>US · Europe</td></tr>
-<tr><td>strategy_request_status</td><td>New · In Progress · Ready to Send · Sent · Converted to Deep Dive · Lost</td></tr>
-<tr><td>strategy_source</td><td>bundled_with_order · freeimage_addon_25 · standalone_25</td></tr>
-</table>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 8 · IMPLEMENTATION PHASES                                             -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">8 · Implementation Phases</div>
-
-<h3>Phase 1 · Foundations (Week 1)</h3>
-<ul>
-<li>Set up design tokens (CSS variables, fonts import, Gliker kit)</li>
-<li>Build shared components: Button (primary/secondary), Card, Accent span, Chip, Toggle</li>
-<li>Implement smooth scroll + Calendly popup helper</li>
-<li>Set up auth (signup/signin/social)</li>
-</ul>
-
-<h3>Phase 2 · Marketing pages (Week 2)</h3>
-<ul>
-<li>Homepage v3 (10 sections + <strong>Section 5b BrandsMarquee</strong> — new infinite-scroll logo strip, reads from <code>data/brands.js</code>, pure CSS animation, no JS library)</li>
-<li>About Us · How It Works · Examples · Contact</li>
-<li>Legal footer pages (Terms, Privacy, Cookie, AI Disclaimer)</li>
-<li>SEO meta, Open Graph, favicons</li>
-</ul>
-
-<h3>Phase 3 · Client Dashboard (Week 3-4)</h3>
-<ul>
-<li>Sidebar with Brand Strategy item</li>
-<li>Overview page (KPIs + Active Order card + Brand Strategy status)</li>
-<li>New Order flow (5 tiers, conditional Brand Info step, Calendly for Custom)</li>
-<li>Brand Info form (essential + collapsible bonus)</li>
-<li>Brand Strategy hub (5 sub-sections including Retail Network preview)</li>
-<li>My Orders, Invoices, Account pages</li>
-</ul>
-
-<h3>Phase 4 · Admin Dashboard (Week 5-6)</h3>
-<ul>
-<li>Sidebar with Strategy Requests</li>
-<li>Dashboard with 5 KPIs (Revenue, Orders, Clients, Images, Strategy Requests)</li>
-<li>Strategy Requests list + detail (with all admin actions)</li>
-<li>Deep Dive buyer intros: NO in-app module — handled off-platform via email after the kickoff call</li>
-<li>Pricing management page (5 plans + Brand Strategy $25 add-on config)</li>
-<li>Analytics page (4 strategy KPIs: Strategy Requests · Avg Delivery · Free→Paid · Strategy Revenue)</li>
-</ul>
-
-<h3>Phase 5 · Polish + Launch (Week 7)</h3>
-<ul>
-<li>Mobile responsive across all pages</li>
-<li>Accessibility audit (WCAG AA contrast, keyboard nav, screen readers)</li>
-<li>Performance (image optimization, code splitting)</li>
-<li>Analytics events (funnel tracking on all CTAs)</li>
-<li>Email templates for strategy delivery + Deep Dive follow-ups</li>
-</ul>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 9 · MASTER CHECKLIST                                                  -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">9 · Master QA Checklist</div>
-
-<p>
-<strong>Design consistency:</strong><br>
-☐ League Spartan for all titles (h1-h6) across every page<br>
-☐ Montserrat Medium 500 for body + all button text<br>
-☐ Montserrat Italic 700 for teal accents inside titles<br>
-☐ Gliker for "tyes" brand mark everywhere it appears<br>
-☐ No "AI tied with a pulse" tagline anywhere<br>
-☐ Teal accent color exactly #2DD4BF (no variations)<br>
-☐ Yellow #FBBF24 only for pending states, dev alerts, and internal warnings — <strong>NOT</strong> on the customer-facing "+ Add strategy $25" toggle (that toggle is teal #2DD4BF)<br><br>
-
-<strong>Copy consistency:</strong><br>
-☐ Standalone Brand Strategy tier at <strong>$25</strong> everywhere (not $10)<br>
-☐ Pricing tiers: only Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom (no Free Test, Single, Starter, Growth)<br>
-☐ Campaign 5 = $25, Campaign 10 = $45<br>
-☐ Categories: exactly Beauty · Personal Care · Fragrance · Fashion (singular Fragrance, no Other)<br>
-☐ Retail categories: exactly Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces<br>
-☐ Geography uses flags 🇺🇸🇪🇺 only, no country names<br>
-☐ Deep Dive has 2 CTAs: Contact Us + Book a Call<br>
-☐ No em-dashes anywhere (replaced with periods/commas/colons)<br>
-☐ No mentions of Commercial License in marketing pages<br><br>
-
-<strong>Behavior:</strong><br>
-☐ All hero + brief CTAs anchor to <code>#pricing</code><br>
-☐ Smooth scroll behavior enabled on <code>html</code><br>
-☐ Calendly popup opens with correct tyes URL on Book a Call<br>
-☐ Flip cards animate at 500ms cubic-bezier(0.4, 0, 0.2, 1)<br>
-☐ Hero + section CTAs smooth-scroll to #pricing (no modal)<br>
-☐ Signup modal fires only when user clicks a plan CTA on a pricing card (not before)<br>
-☐ After successful signup, resume flow to New Order with plan preselected<br>
-☐ <strong style="color:#FBBF24;">Free Image rate limit — 1 per account, ever.</strong> De-dupe on email + billing name/address + phone + payment method fingerprint at signup and at checkout. Block second free order with error: "Free Image already claimed on this account, order a Campaign or Brand Strategy tier to continue." Log blocked attempts for fraud review.<br><br>
-
-<strong>Legal:</strong><br>
-☐ Terms of Service · WY governing law, tyes LLC entity<br>
-☐ Privacy Policy · GDPR + CCPA sections<br>
-☐ Cookie Policy · 4 categories, banner integration<br>
-☐ AI Disclaimer · copyright caveat, human-in-loop framing<br>
-☐ All legal pages link to hello@tyes.com for contact<br>
-☐ Footer includes company address: 30 N Gould Street, Sheridan, WY 82801<br><br>
-
-<strong>Accessibility:</strong><br>
-☐ WCAG AA contrast passes on teal (#2DD4BF) over dark bg (#0A0A0A)<br>
-☐ Focus states visible on all interactive elements<br>
-☐ Alt text on all images<br>
-☐ ARIA labels on icon-only buttons<br>
-☐ Keyboard navigation works end-to-end<br><br>
-
-<strong>Performance:</strong><br>
-☐ Google Fonts loaded with <code>&amp;display=swap</code><br>
-☐ Preconnect to fonts.googleapis.com and fonts.gstatic.com<br>
-☐ Gliker self-hosted or from Adobe Fonts kit (not blocking)<br>
-☐ Images compressed and lazy-loaded<br>
-☐ Route-level code splitting for dashboards
-</p>
-
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-<!-- 10 · REFERENCED FILES                                                 -->
-<!-- ═════════════════════════════════════════════════════════════════════ -->
-
-<div class="section-header">10 · Referenced Files</div>
-
-<p>Each of these files is a self-contained HTML spec with visual mockups, copy blocks, and dev notes.
-When implementing a page, open its spec file and follow the mockup + copy breakdown structure.</p>
-
-<div class="info">
-<div class="lbl">Full spec deliverables</div>
-<div class="txt">
-<strong>Homepage:</strong> <code>tyes_homepage_v3.html</code> (10 sections + full dev implementation guide)<br>
-<strong>Marketing pages:</strong> <code>about-us.html</code> · <code>pricing.html</code> · <code>how-it-works.html</code> · <code>examples.html</code> · <code>contact.html</code><br>
-<strong>Legal:</strong> <code>terms.html</code> · <code>privacy.html</code> · <code>cookie-policy.html</code> · <code>ai-disclaimer.html</code><br>
-<strong>Client Dashboard:</strong> <code>tyes_client_dashboard_v2.html</code> (5 sections + React implementation)<br>
-<strong>Admin Dashboard:</strong> <code>tyes_admin_dashboard_v2.html</code> (7 sections + endpoints + checklist)<br>
-<strong>Design System (this doc):</strong> <code>tyes_dev_scheme.html</code>
-</div>
-</div>
-
-<div class="divider"></div>
-
-<p style="text-align:center; font-size: 10pt; color: #666; margin-top: 8mm;">
-<span class="brand" style="color:#2DD4BF;">tyes.app</span> · Dev Scheme · Complete Design System<br>
-<span style="font-size: 8pt;">Single source of truth · Aligned with Homepage v3 · Client + Admin Dashboards v2</span>
-</p>
-
-</div>
+  <div class="container">
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- DOC HEADER                                                            -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="doc-title">
+      <span class="brand">tyes.app</span> · Dev Scheme · <span class="accent-italic">Complete Design System</span>
+    </div>
+    <div class="doc-subtitle">
+      Single source of truth for the entire tyes product: homepage, all footer pages (About, Pricing, How It Works,
+      Examples, Contact, Terms, Privacy, Cookie Policy, AI Disclaimer), Client Dashboard, and Admin Dashboard.
+      Everything aligned to one font system, one color palette, one component library.
+    </div>
+
+    <div class="shift-box">
+      <strong>What this doc contains:</strong> (1) Complete design tokens (colors, typography, spacing, radii),
+      (2) Component library with copy-paste HTML/CSS for every reusable pattern, (3) Page inventory with what to
+      build/update, (4) Routing map, (5) API endpoints list, (6) State management structure, (7) Full implementation
+      checklist. Nothing hidden. If a component appears on any page, its spec is in this doc.
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 1 · TYPOGRAPHY SYSTEM                                                 -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">1 · Typography System</div>
+
+    <p>Three fonts. One rule per role. No exceptions.</p>
+
+    <table>
+      <tr>
+        <th>Role</th>
+        <th>Font</th>
+        <th>Weight</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><strong>Title</strong></td>
+        <td>League Spartan</td>
+        <td>700 (700-800)</td>
+        <td>All headings h1-h6, hero, price numbers, section labels, big statement type</td>
+      </tr>
+      <tr>
+        <td><strong>Body</strong></td>
+        <td>Montserrat</td>
+        <td>500 (Medium)</td>
+        <td>Paragraph text, list items, form labels, table cells</td>
+      </tr>
+      <tr>
+        <td><strong>Button</strong></td>
+        <td>Montserrat</td>
+        <td>500 (Medium)</td>
+        <td>All CTAs, primary/secondary buttons, chips</td>
+      </tr>
+      <tr>
+        <td><strong>Accent</strong></td>
+        <td>Montserrat Italic</td>
+        <td>700 (Bold Italic)</td>
+        <td>Teal-colored emphasis inside headings ("Shelf", "Perfect Package", "Deep Dive")</td>
+      </tr>
+      <tr>
+        <td><strong>Brand mark</strong></td>
+        <td>Gliker</td>
+        <td>700</td>
+        <td>The word "tyes" wherever it appears as brand name (sidebar, footer, headline references)</td>
+      </tr>
+    </table>
+
+    <h3>Type specimens</h3>
+
+    <div class="type-specimen">
+      <div class="ts-label">Title · League Spartan Bold</div>
+      <div class="ts-sample"
+        style="font-family: 'League Spartan', sans-serif; font-weight: 700; font-size: 34pt; letter-spacing: -1pt; line-height: 1.05;">
+        From Brief to <span class="accent-italic" style="font-size: 34pt;">Shelf.</span>
+      </div>
+      <div class="ts-meta">font-family: "League Spartan"; font-weight: 700; font-size: 34pt;</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="ts-label">Body · Montserrat Medium</div>
+      <div class="ts-sample"
+        style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 12pt; line-height: 1.55;">
+        Two engines, one platform. AI campaign imagery and brand strategy backed by a retail buyer network across the US
+        and Europe. Built for founders who need to go from idea to shelf in weeks, not quarters.
+      </div>
+      <div class="ts-meta">font-family: "Montserrat"; font-weight: 500; font-size: 12pt;</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="ts-label">Button · Montserrat Medium (lighter)</div>
+      <div class="ts-sample">
+        <span
+          style="display: inline-block; background: #0A0A0A; color: #FFFFFF; font-family: 'Montserrat'; font-weight: 500; padding: 3mm 6mm; border-radius: 999px; font-size: 10pt;">Get
+          Your Free Image →</span>
+        <span
+          style="display: inline-block; background: transparent; border: 1.5px solid #0A0A0A; color: #0A0A0A; font-family: 'Montserrat'; font-weight: 500; padding: 3mm 6mm; border-radius: 999px; font-size: 10pt; margin-left: 3mm;">Get
+          Your Free Strategy →</span>
+      </div>
+      <div class="ts-meta">font-family: "Montserrat"; font-weight: 500; padding: 3mm 6mm; border-radius: 999px;</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="ts-label">Brand mark · Gliker (fallback: Grandstander)</div>
+      <div class="ts-sample"
+        style="font-family: 'Gliker', 'Grandstander', sans-serif; font-weight: 700; font-size: 32pt; letter-spacing: -0.5pt; color: #2DD4BF;">
+        tyes</div>
+      <div class="ts-meta">font-family: "Gliker", "Grandstander", sans-serif; font-weight: 700; letter-spacing: -0.5pt;
+      </div>
+    </div>
+
+    <h3>Google Fonts import (copy-paste for &lt;head&gt;)</h3>
+
+    <div class="code">
+      &lt;<span class="tag">link</span> <span class="attr">rel</span>=<span class="str">"preconnect"</span> <span
+        class="attr">href</span>=<span class="str">"https://fonts.googleapis.com"</span>&gt;<br>
+      &lt;<span class="tag">link</span> <span class="attr">rel</span>=<span class="str">"preconnect"</span> <span
+        class="attr">href</span>=<span class="str">"https://fonts.gstatic.com"</span> <span
+        class="attr">crossorigin</span>&gt;<br>
+      &lt;<span class="tag">link</span> <span class="attr">href</span>=<span
+        class="str">"https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&amp;display=swap"</span>
+      <span class="attr">rel</span>=<span class="str">"stylesheet"</span>&gt;<br><br>
+      <span class="cm">&lt;!-- Gliker is licensed (Adobe Fonts or self-hosted). Paste kit or @font-face here.
+        --&gt;</span>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 2 · COLOR SYSTEM                                                      -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">2 · Color System</div>
+
+    <h3>Backgrounds</h3>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="sw" style="background:#0A0A0A;"></div>
+        <div class="meta">
+          <div class="name">Primary bg</div>
+          <div class="hex">#0A0A0A</div>
+          <div class="use">Homepage · Dashboards · Cards backdrop</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="sw" style="background:#141414;"></div>
+        <div class="meta">
+          <div class="name">Card bg</div>
+          <div class="hex">#141414</div>
+          <div class="use">Feature cards · Sidebar panel · Info boxes</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="sw" style="background:#1a1a1a;"></div>
+        <div class="meta">
+          <div class="name">Elevated bg</div>
+          <div class="hex">#1a1a1a</div>
+          <div class="use">Popular pricing card · Hover states</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Text</h3>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="sw" style="background:#FFFFFF;"></div>
+        <div class="meta">
+          <div class="name">Primary</div>
+          <div class="hex">#FFFFFF</div>
+          <div class="use">Headings · strong text</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="sw" style="background:#C8C8C8;"></div>
+        <div class="meta">
+          <div class="name">Body</div>
+          <div class="hex">#C8C8C8</div>
+          <div class="use">Paragraph copy</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="sw" style="background:#B4B4B4;"></div>
+        <div class="meta">
+          <div class="name">Muted</div>
+          <div class="hex">#B4B4B4</div>
+          <div class="use">Card sub-copy · Metadata</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Accents</h3>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="sw" style="background:#2DD4BF;"></div>
+        <div class="meta">
+          <div class="name">Teal (primary accent)</div>
+          <div class="hex">#2DD4BF</div>
+          <div class="use">All emphasis · CTAs · Links · Icons</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="sw" style="background:#FBBF24;"></div>
+        <div class="meta">
+          <div class="name">Yellow (dev warnings only)</div>
+          <div class="hex">#FBBF24</div>
+          <div class="use">Pending status · Dev alerts · Rate-limit notices. <strong>NOT used on customer-facing add-on
+              toggle</strong> — that's teal.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="sw" style="background:#EF4444;"></div>
+        <div class="meta">
+          <div class="name">Red (error/lost)</div>
+          <div class="hex">#EF4444</div>
+          <div class="use">Lost status · Error states only</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>CSS Variables (copy-paste)</h3>
+
+    <div class="code">
+      <span class="cm">/* :root · put in global stylesheet */</span><br>
+      <span class="fn">:root</span> {<br>
+      &nbsp;&nbsp;<span class="cm">/* Backgrounds */</span><br>
+      &nbsp;&nbsp;<span class="prop">--bg-primary</span>: #0A0A0A;<br>
+      &nbsp;&nbsp;<span class="prop">--bg-card</span>: #141414;<br>
+      &nbsp;&nbsp;<span class="prop">--bg-elevated</span>: #1a1a1a;<br>
+      &nbsp;&nbsp;<span class="prop">--border-subtle</span>: #2A2A2A;<br>
+      &nbsp;&nbsp;<br>
+      &nbsp;&nbsp;<span class="cm">/* Text */</span><br>
+      &nbsp;&nbsp;<span class="prop">--text-primary</span>: #FFFFFF;<br>
+      &nbsp;&nbsp;<span class="prop">--text-body</span>: #C8C8C8;<br>
+      &nbsp;&nbsp;<span class="prop">--text-muted</span>: #B4B4B4;<br>
+      &nbsp;&nbsp;<span class="prop">--text-dim</span>: #888888;<br>
+      &nbsp;&nbsp;<br>
+      &nbsp;&nbsp;<span class="cm">/* Accents */</span><br>
+      &nbsp;&nbsp;<span class="prop">--accent-teal</span>: #2DD4BF;<br>
+      &nbsp;&nbsp;<span class="prop">--accent-teal-soft</span>: rgba(45,212,191,0.15);<br>
+      &nbsp;&nbsp;<span class="prop">--accent-teal-border</span>: rgba(45,212,191,0.4);<br>
+      &nbsp;&nbsp;<span class="prop">--accent-yellow</span>: #FBBF24;<br>
+      &nbsp;&nbsp;<span class="prop">--accent-red</span>: #EF4444;<br>
+      &nbsp;&nbsp;<br>
+      &nbsp;&nbsp;<span class="cm">/* Fonts */</span><br>
+      &nbsp;&nbsp;<span class="prop">--font-body</span>: <span class="str">"Montserrat"</span>, -apple-system,
+      sans-serif;<br>
+      &nbsp;&nbsp;<span class="prop">--font-title</span>: <span class="str">"League Spartan"</span>, sans-serif;<br>
+      &nbsp;&nbsp;<span class="prop">--font-accent</span>: <span class="str">"Montserrat"</span>, sans-serif; <span
+        class="cm">/* italic bold */</span><br>
+      &nbsp;&nbsp;<span class="prop">--font-brand</span>: <span class="str">"Gliker"</span>, <span
+        class="str">"Grandstander"</span>, sans-serif;<br>
+      &nbsp;&nbsp;<br>
+      &nbsp;&nbsp;<span class="cm">/* Weights */</span><br>
+      &nbsp;&nbsp;<span class="prop">--weight-body</span>: 500;<br>
+      &nbsp;&nbsp;<span class="prop">--weight-strong</span>: 700;<br>
+      &nbsp;&nbsp;<span class="prop">--weight-heavy</span>: 800;<br>
+      &nbsp;&nbsp;<br>
+      &nbsp;&nbsp;<span class="cm">/* Radii */</span><br>
+      &nbsp;&nbsp;<span class="prop">--radius-sm</span>: 3px;<br>
+      &nbsp;&nbsp;<span class="prop">--radius-md</span>: 6px;<br>
+      &nbsp;&nbsp;<span class="prop">--radius-lg</span>: 12px;<br>
+      &nbsp;&nbsp;<span class="prop">--radius-pill</span>: 999px;<br>
+      &nbsp;&nbsp;<br>
+      &nbsp;&nbsp;<span class="cm">/* Spacing (tailwind-like) */</span><br>
+      &nbsp;&nbsp;<span class="prop">--sp-1</span>: 4px;<br>
+      &nbsp;&nbsp;<span class="prop">--sp-2</span>: 8px;<br>
+      &nbsp;&nbsp;<span class="prop">--sp-3</span>: 12px;<br>
+      &nbsp;&nbsp;<span class="prop">--sp-4</span>: 16px;<br>
+      &nbsp;&nbsp;<span class="prop">--sp-6</span>: 24px;<br>
+      &nbsp;&nbsp;<span class="prop">--sp-8</span>: 32px;<br>
+      }
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 3 · COMPONENT LIBRARY                                                 -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">3 · Component Library</div>
+
+    <h3>Button · Primary (teal pill)</h3>
+
+    <div class="comp-preview">
+      <div class="cp-label">Primary CTA</div>
+      <a
+        style="display: inline-block; background: #2DD4BF; color: #0A0A0A; font-family: 'Montserrat', sans-serif; font-weight: 500; padding: 3mm 8mm; border-radius: 999px; font-size: 10pt; letter-spacing: 0.3pt; text-decoration: none;">Get
+        Your Free Image →</a>
+    </div>
+
+    <div class="code">
+      &lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#pricing"</span> <span
+        class="attr">class</span>=<span class="str">"cta cta-primary"</span>&gt;Get Your Free Image →&lt;/<span
+        class="tag">a</span>&gt;<br><br>
+      <span class="cm">/* CSS */</span><br>
+      <span class="fn">.cta</span> {<br>
+      &nbsp;&nbsp;<span class="prop">display</span>: inline-block;<br>
+      &nbsp;&nbsp;<span class="prop">padding</span>: 12px 32px;<br>
+      &nbsp;&nbsp;<span class="prop">border-radius</span>: <span class="var">var(--radius-pill)</span>;<br>
+      &nbsp;&nbsp;<span class="prop">font-family</span>: <span class="var">var(--font-body)</span>;<br>
+      &nbsp;&nbsp;<span class="prop">font-weight</span>: 500;<br>
+      &nbsp;&nbsp;<span class="prop">font-size</span>: 14px;<br>
+      &nbsp;&nbsp;<span class="prop">letter-spacing</span>: 0.3px;<br>
+      &nbsp;&nbsp;<span class="prop">text-decoration</span>: none;<br>
+      &nbsp;&nbsp;<span class="prop">transition</span>: transform 200ms;<br>
+      }<br>
+      <span class="fn">.cta-primary</span> { <span class="prop">background</span>: <span
+        class="var">var(--accent-teal)</span>; <span class="prop">color</span>: <span
+        class="var">var(--bg-primary)</span>; }<br>
+      <span class="fn">.cta-secondary</span> { <span class="prop">background</span>: transparent; <span
+        class="prop">border</span>: 1px solid <span class="var">var(--accent-teal)</span>; <span
+        class="prop">color</span>: <span class="var">var(--accent-teal)</span>; }
+    </div>
+
+    <h3>Accent inside heading (teal italic)</h3>
+
+    <div class="comp-preview">
+      <div class="cp-label">H1 with accent span</div>
+      <h1 style="font-family: 'League Spartan'; font-weight: 700; font-size: 24pt; color: #FFFFFF; line-height: 1.1;">
+        From Brief to <span
+          style="font-family: 'Montserrat'; font-style: italic; font-weight: 700; color: #2DD4BF;">Shelf.</span>
+      </h1>
+    </div>
+
+    <div class="code">
+      &lt;<span class="tag">h1</span>&gt;From Brief to &lt;<span class="tag">span</span> <span
+        class="attr">class</span>=<span class="str">"accent"</span>&gt;Shelf.&lt;/<span
+        class="tag">span</span>&gt;&lt;/<span class="tag">h1</span>&gt;<br><br>
+      <span class="fn">.accent</span> {<br>
+      &nbsp;&nbsp;<span class="prop">font-family</span>: <span class="var">var(--font-accent)</span>;<br>
+      &nbsp;&nbsp;<span class="prop">font-style</span>: italic;<br>
+      &nbsp;&nbsp;<span class="prop">font-weight</span>: 700;<br>
+      &nbsp;&nbsp;<span class="prop">color</span>: <span class="var">var(--accent-teal)</span>;<br>
+      }
+    </div>
+
+    <h3>Pricing card (Popular tier — teal border)</h3>
+
+    <div class="comp-preview">
+      <div class="cp-label">Pricing card · Popular variant</div>
+      <div
+        style="max-width: 60mm; background: #1a1a1a; border: 2px solid #2DD4BF; border-radius: 10px; padding: 6mm; position: relative;">
+        <span
+          style="position: absolute; top: -3mm; right: 5mm; background: #2DD4BF; color: #0A0A0A; padding: 1mm 3mm; border-radius: 3px; font-size: 7pt; text-transform: uppercase; letter-spacing: 2pt; font-weight: 800; font-family: 'Montserrat';">Popular</span>
+        <div
+          style="font-size: 7pt; letter-spacing: 3pt; text-transform: uppercase; color: #2DD4BF; font-weight: 700; margin-bottom: 2mm;">
+          Campaign 5</div>
+        <h3 style="color: #FFFFFF; font-size: 14pt; margin-bottom: 3mm;">Campaign 5</h3>
+        <div
+          style="font-size: 28pt; color: #FFFFFF; font-weight: 800; font-family: 'League Spartan'; margin-bottom: 4mm;">
+          $25</div>
+        <ul style="list-style: none; padding: 0; font-size: 8.5pt; color: #C8C8C8;">
+          <li style="margin-bottom: 2mm;">✓ 5 AI campaign images</li>
+          <li style="margin-bottom: 2mm;">✓ 1 revision / image</li>
+          <li style="margin-bottom: 2mm;">✓ From 24H delivery</li>
+        </ul>
+        <div
+          style="border-top: 1px dashed #2DD4BF; padding-top: 3mm; margin-top: 4mm; font-size: 8pt; color: #2DD4BF; font-weight: 700;">
+          + FREE Brand Strategy Snapshot</div>
+      </div>
+    </div>
+
+    <h3>Toggle banner (teal · Brand Strategy $25 add-on on Free Image)</h3>
+
+    <div class="comp-preview">
+      <div class="cp-label">Teal toggle · Free Image tier only</div>
+      <div
+        style="background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.5); border-radius: 4px; padding: 4mm 6mm;">
+        <div style="font-size: 10pt; color: #2DD4BF; font-weight: 700; font-family: 'Montserrat';">☐ Add a Brand
+          Strategy snapshot to this order for $25.</div>
+        <div style="font-size: 8pt; color: #B8B8B8; margin-top: 1mm; font-family: 'Montserrat';">LLM visibility audit,
+          viral product angles, retailer shortlist. Delivered in 3 business days.</div>
+      </div>
+    </div>
+
+    <h3>Deep Dive banner (dark gradient with 2 CTAs)</h3>
+
+    <div class="comp-preview">
+      <div class="cp-label">Deep Dive Brand Strategy · upsell block</div>
+      <div
+        style="background: linear-gradient(135deg, #141414, #1a1a1a); border: 1px solid #333; border-radius: 6px; padding: 6mm 8mm;">
+        <div
+          style="font-size: 7.5pt; letter-spacing: 3pt; color: #2DD4BF; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm;">
+          Beyond the free snapshot</div>
+        <h3 style="font-size: 16pt; color: #FFFFFF; margin-bottom: 3mm; font-family: 'League Spartan';">Ready for more?
+          The <span class="accent-italic">full playbook</span>.</h3>
+        <div style="display: flex; gap: 3mm;">
+          <div
+            style="background: #2DD4BF; color: #0A0A0A; padding: 2mm 5mm; border-radius: 999px; font-size: 9pt; font-weight: 500; font-family: 'Montserrat';">
+            Contact Us →</div>
+          <div
+            style="background: transparent; border: 1px solid #2DD4BF; color: #2DD4BF; padding: 2mm 5mm; border-radius: 999px; font-size: 9pt; font-weight: 500; font-family: 'Montserrat';">
+            Book a Call →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 4 · PAGES INVENTORY                                                   -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">4 · Pages Inventory</div>
+
+    <h3>All pages · fully aligned</h3>
+
+    <div class="file-tree">
+      <span class="folder">tyes_pages/</span> <span class="cm">// design spec deliverables</span><br>
+      &nbsp;&nbsp;<span class="html">tyes_homepage_v3.html</span> <span class="cm">// homepage (FINAL, 5 fix
+        versions)</span><br>
+      &nbsp;&nbsp;<span class="html">about-us.html</span> <span class="cm">// About Us</span><br>
+      &nbsp;&nbsp;<span class="html">pricing.html</span> <span class="cm">// Pricing (5 tiers + Deep Dive)</span><br>
+      &nbsp;&nbsp;<span class="html">how-it-works.html</span> <span class="cm">// How It Works (5 retail buyer
+        categories)</span><br>
+      &nbsp;&nbsp;<span class="html">examples.html</span> <span class="cm">// Examples showcase</span><br>
+      &nbsp;&nbsp;<span class="html">contact.html</span> <span class="cm">// Contact page</span><br>
+      &nbsp;&nbsp;<span class="html">terms.html</span> <span class="cm">// Terms of Service (WY law)</span><br>
+      &nbsp;&nbsp;<span class="html">privacy.html</span> <span class="cm">// Privacy Policy (GDPR + CCPA)</span><br>
+      &nbsp;&nbsp;<span class="html">cookie-policy.html</span> <span class="cm">// Cookie Policy</span><br>
+      &nbsp;&nbsp;<span class="html">ai-disclaimer.html</span> <span class="cm">// AI Disclaimer</span><br>
+      &nbsp;&nbsp;<span class="html">tyes_client_dashboard_v2.html</span> <span class="cm">// Client Dashboard
+        spec</span><br>
+      &nbsp;&nbsp;<span class="html">tyes_admin_dashboard_v2.html</span> <span class="cm">// Admin Dashboard
+        spec</span><br>
+      &nbsp;&nbsp;<span class="html">tyes_dev_scheme.html</span> <span class="cm">// THIS DOC · complete design
+        system</span>
+    </div>
+
+    <h3>Page → route mapping</h3>
+
+    <table>
+      <tr>
+        <th>File</th>
+        <th>URL</th>
+        <th>Purpose</th>
+      </tr>
+      <tr>
+        <td>tyes_homepage_v3.html</td>
+        <td>/</td>
+        <td>Marketing homepage</td>
+      </tr>
+      <tr>
+        <td>about-us.html</td>
+        <td>/about</td>
+        <td>About Us story</td>
+      </tr>
+      <tr>
+        <td>pricing.html</td>
+        <td>/pricing OR homepage #pricing</td>
+        <td>5 tiers + Deep Dive</td>
+      </tr>
+      <tr>
+        <td>how-it-works.html</td>
+        <td>/how-it-works</td>
+        <td>2 engines + retail network</td>
+      </tr>
+      <tr>
+        <td>examples.html</td>
+        <td>/examples</td>
+        <td>Case studies</td>
+      </tr>
+      <tr>
+        <td>contact.html</td>
+        <td>/contact</td>
+        <td>Contact form</td>
+      </tr>
+      <tr>
+        <td>terms.html</td>
+        <td>/terms</td>
+        <td>Terms of Service</td>
+      </tr>
+      <tr>
+        <td>privacy.html</td>
+        <td>/privacy</td>
+        <td>Privacy Policy</td>
+      </tr>
+      <tr>
+        <td>cookie-policy.html</td>
+        <td>/cookies</td>
+        <td>Cookie Policy</td>
+      </tr>
+      <tr>
+        <td>ai-disclaimer.html</td>
+        <td>/ai-disclaimer</td>
+        <td>AI Disclaimer</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>/dashboard/*</td>
+        <td>Client Dashboard (see spec)</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>/admin/*</td>
+        <td>Admin Dashboard (see spec)</td>
+      </tr>
+    </table>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 5 · GLOBAL BEHAVIORS                                                  -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">5 · Global Behaviors</div>
+
+    <h3>Smooth scroll (all CTAs → #pricing)</h3>
+
+    <div class="code">
+      <span class="cm">/* CSS on html element */</span><br>
+      <span class="fn">html</span> {<br>
+      &nbsp;&nbsp;<span class="prop">scroll-behavior</span>: smooth;<br>
+      &nbsp;&nbsp;<span class="prop">scroll-padding-top</span>: 80px; <span class="cm">/* offset for sticky header
+        */</span><br>
+      }<br><br>
+      <span class="cm">// Every "Get Your Free Image", "Get Your Free Strategy", "See Pricing" button uses:</span><br>
+      &lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#pricing"</span>&gt;...&lt;/<span
+        class="tag">a</span>&gt;
+    </div>
+
+    <h3>Calendly popup (Book a Call · TWO separate events)</h3>
+
+    <p>tyes has <strong>two distinct Calendly events</strong> tied to two different offers. Do not confuse them.</p>
+
+    <table>
+      <tr>
+        <th>Event slug</th>
+        <th>Duration</th>
+        <th>Where it's used</th>
+        <th>Purpose</th>
+      </tr>
+      <tr>
+        <td><code>discovery-call</code></td>
+        <td>30 minutes</td>
+        <td>Custom Enterprise tier "Book a Call" button (Pricing + Custom card + New Order Step 3 Custom)</td>
+        <td>Scope a custom order. Establish requirements. Sign-up conversation.</td>
+      </tr>
+      <tr>
+        <td><code>deep-dive-call</code></td>
+        <td>1 hour</td>
+        <td>Deep Dive Brand Strategy section "Book a Call" (Homepage · Pricing · Client Dashboard Brand Strategy hub
+          Section D)</td>
+        <td>Post-snapshot strategy alignment. Only Deep Dive customers.</td>
+      </tr>
+    </table>
+
+    <div class="code">
+      <span class="cm">// In &lt;head&gt;</span><br>
+      &lt;<span class="tag">link</span> <span class="attr">href</span>=<span
+        class="str">"https://assets.calendly.com/assets/external/widget.css"</span> <span class="attr">rel</span>=<span
+        class="str">"stylesheet"</span>&gt;<br>
+      &lt;<span class="tag">script</span> <span class="attr">src</span>=<span
+        class="str">"https://assets.calendly.com/assets/external/widget.js"</span> <span
+        class="attr">async</span>&gt;&lt;/<span class="tag">script</span>&gt;<br><br>
+      <span class="cm">// Two separate helpers, one per event</span><br>
+      <span class="kw">const</span> <span class="fn">openDiscoveryCall</span> = () =&gt; {<br>
+      &nbsp;&nbsp;<span class="fn">Calendly</span>.<span class="fn">initPopupWidget</span>({<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">url</span>: <span
+        class="str">'https://calendly.com/raluca-tyes/30min'</span> <span class="cm">// 30-min · Custom
+        Enterprise</span><br>
+      &nbsp;&nbsp;});<br>
+      };<br><br>
+      <span class="kw">const</span> <span class="fn">openDeepDiveCall</span> = () =&gt; {<br>
+      &nbsp;&nbsp;<span class="fn">Calendly</span>.<span class="fn">initPopupWidget</span>({<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">url</span>: <span
+        class="str">'https://calendly.com/raluca-tyes/30min'</span> <span class="cm">// 1-hour · Deep Dive Brand
+        Strategy</span><br>
+      &nbsp;&nbsp;});<br>
+      };<br><br>
+      <span class="cm">// Usage:</span><br>
+      &lt;<span class="tag">button</span> <span class="attr">onClick</span>=<span
+        class="str">{openDiscoveryCall}</span>&gt;Book a Call →&lt;/<span class="tag">button</span>&gt; <span
+        class="cm">// Custom Enterprise card</span><br>
+      &lt;<span class="tag">button</span> <span class="attr">onClick</span>=<span
+        class="str">{openDeepDiveCall}</span>&gt;Book a Call →&lt;/<span class="tag">button</span>&gt; <span
+        class="cm">// Deep Dive section</span>
+    </div>
+
+    <h3>Flip cards (How It Works · 500ms cubic-bezier)</h3>
+
+    <div class="code">
+      <span class="fn">.flip-card</span> { <span class="prop">perspective</span>: 1000px; <span
+        class="prop">height</span>: 200px; <span class="prop">cursor</span>: pointer; }<br>
+      <span class="fn">.flip-card-inner</span> {<br>
+      &nbsp;&nbsp;<span class="prop">position</span>: relative; <span class="prop">width</span>: 100%; <span
+        class="prop">height</span>: 100%;<br>
+      &nbsp;&nbsp;<span class="prop">transition</span>: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);<br>
+      &nbsp;&nbsp;<span class="prop">transform-style</span>: preserve-3d;<br>
+      }<br>
+      <span class="fn">.flip-card</span>:hover <span class="fn">.flip-card-inner</span>,<br>
+      <span class="fn">.flip-card.is-flipped</span> <span class="fn">.flip-card-inner</span> { <span
+        class="prop">transform</span>: rotateY(180deg); }<br>
+      <span class="fn">.flip-card-front</span>, <span class="fn">.flip-card-back</span> {<br>
+      &nbsp;&nbsp;<span class="prop">position</span>: absolute; <span class="prop">inset</span>: 0;<br>
+      &nbsp;&nbsp;<span class="prop">backface-visibility</span>: hidden;<br>
+      &nbsp;&nbsp;<span class="prop">background</span>: <span class="var">var(--bg-card)</span>;<br>
+      &nbsp;&nbsp;<span class="prop">border-radius</span>: 8px; <span class="prop">padding</span>: 1.5rem;<br>
+      }<br>
+      <span class="fn">.flip-card-back</span> { <span class="prop">transform</span>: rotateY(180deg); }
+    </div>
+
+    <h3>CTA flow · scroll first, signup at plan selection</h3>
+
+    <p>Hero and section CTAs never fight scroll behavior with a modal. The flow is layered:</p>
+
+    <table>
+      <tr>
+        <th>User clicks</th>
+        <th>What happens</th>
+      </tr>
+      <tr>
+        <td><strong>Hero CTA</strong> ("Get Your Free Image", "Get Your Free Strategy", "See Pricing")</td>
+        <td>Smooth scroll to <code>#pricing</code> section. No modal. User lands on the pricing cards.</td>
+      </tr>
+      <tr>
+        <td><strong>Plan CTA on a pricing card</strong> ("Claim Free Image", "Get Campaign 5", "Get Campaign 10")</td>
+        <td>If signed in: go straight to New Order flow with plan preselected. If not signed in: open signup modal, then
+          continue to New Order after successful signup.</td>
+      </tr>
+      <tr>
+        <td><strong>Custom "Contact Us"</strong></td>
+        <td>Route to <code>/contact?intent=custom</code>. Signup optional (contact form can be filled by anyone).</td>
+      </tr>
+      <tr>
+        <td><strong>Custom "Book a Call" / Deep Dive "Book a Call"</strong></td>
+        <td>Open Calendly popup (no signup gate). Calendly captures email itself.</td>
+      </tr>
+    </table>
+
+    <p><strong>Rationale:</strong> The hero CTA is an interest signal, not a purchase intent. Forcing signup there
+      breaks trust and inflates bounce rate. Signup naturally belongs at the moment a plan is chosen, which is when the
+      value exchange begins (create account = we can deliver your order).</p>
+
+    <div class="code">
+      <span class="cm">// Hero CTA</span><br>
+      &lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#pricing"</span> <span
+        class="attr">class</span>=<span class="str">"cta cta-primary"</span>&gt;Get Your Free Image →&lt;/<span
+        class="tag">a</span>&gt;<br><br>
+      <span class="cm">// Plan CTA (with signup gate)</span><br>
+      <span class="kw">const</span> <span class="fn">handlePlanClick</span> = (plan) =&gt; {<br>
+      &nbsp;&nbsp;<span class="kw">if</span> (!<span class="var">user</span>) {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">openSignupModal</span>({ <span class="prop">onSuccess</span>: () =&gt;
+      <span class="fn">startNewOrder</span>(plan) });<br>
+      &nbsp;&nbsp;} <span class="kw">else</span> {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">startNewOrder</span>(plan);<br>
+      &nbsp;&nbsp;}<br>
+      };<br><br>
+      &lt;<span class="tag">button</span> <span class="attr">onClick</span>=<span class="str">{() =&gt;
+        handlePlanClick('campaign-5')}</span>&gt;Get Campaign 5 →&lt;/<span class="tag">button</span>&gt;
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 6 · API ENDPOINTS                                                     -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">6 · API Endpoints</div>
+
+    <h3>Auth</h3>
+
+    <div class="code">
+      POST /api/auth/signup <span class="cm">// email, password, name → creates account</span><br>
+      POST /api/auth/signin <span class="cm">// email, password → JWT</span><br>
+      POST /api/auth/social <span class="cm">// provider, token → JWT</span><br>
+      POST /api/auth/signout <span class="cm">// revokes JWT</span><br>
+      GET /api/auth/me <span class="cm">// current user profile</span>
+    </div>
+
+    <h3>Orders + Plans</h3>
+
+    <div class="code">
+      GET /api/plans <span class="cm">// public 5 tiers (Free · Brand Strategy · Campaign 5 · Campaign 10 ·
+        Custom)</span><br>
+      GET /api/orders <span class="cm">// user orders</span><br>
+      POST /api/orders <span class="cm">// create new order (plan, brief, strategy toggle)</span><br>
+      GET /api/orders/:id <span class="cm">// order detail</span><br>
+      PATCH /api/orders/:id <span class="cm">// update (status changes, cancel)</span>
+    </div>
+
+    <div
+      style="background: #1a1500; border-left: 3px solid #FBBF24; padding: 5mm 6mm; margin: 4mm 0; border-radius: 3px;">
+      <div style="color: #FBBF24; font-weight: 700; font-size: 10pt; margin-bottom: 2mm; letter-spacing: 0.5pt;">⚠ FREE
+        IMAGE — 1 PER ACCOUNT, EVER</div>
+      <div style="color: #C8C8C8; font-size: 9pt; line-height: 1.55;">
+        Enforce on <code style="color:#2DD4BF;">POST /api/orders</code> when <code
+          style="color:#2DD4BF;">plan === 'free_image'</code>. Reject the order if the user (or their fingerprint) has
+        ever created a completed Free Image order. Check across <strong>email address, billing name + address, phone
+          number, and payment method fingerprint</strong> — any match blocks the second free order. Also enforce
+        upstream at signup, so a duplicate account can't be created just to claim another Free Image.<br><br>
+        <strong style="color:#FBBF24;">Response on block:</strong> <code style="color:#F87171;">409 Conflict</code> ·
+        <code
+          style="color:#A5F3FC;">{"error": "free_image_already_claimed", "message": "Free Image already claimed on this account. Order a Campaign or Brand Strategy tier to continue."}</code><br><br>
+        <strong style="color:#FBBF24;">Log all blocked attempts</strong> to <code
+          style="color:#2DD4BF;">fraud_review</code> table for admin review. Attempted fingerprints (email, phone,
+        payment) get added to a shadow blocklist so the same actor can't retry with different combinations.
+      </div>
+    </div>
+
+    <h3>Brand Strategy</h3>
+
+    <div class="code">
+      GET /api/brand-strategy/snapshots <span class="cm">// user's delivered snapshots</span><br>
+      POST /api/brand-strategy/request <span class="cm">// standalone request (form data)</span><br>
+      GET /api/brand-strategy/status <span class="cm">// current in-progress state</span><br>
+      POST /api/brand-strategy/deep-dive <span class="cm">// inquiry submission</span>
+    </div>
+
+    <h3>Admin</h3>
+
+    <div class="code">
+      GET /api/admin/dashboard <span class="cm">// 5 KPIs (Revenue · Orders · Clients · Images · Strategy
+        Requests)</span><br>
+      GET /api/admin/strategy-requests <span class="cm">// list with status filter</span><br>
+      GET /api/admin/strategy-requests/:id <span class="cm">// detail</span><br>
+      PATCH /api/admin/strategy-requests/:id <span class="cm">// update status, notes (assignee is auto-set to Raluca on
+        creation)</span><br>
+      POST /api/admin/strategy-requests/:id/upload <span class="cm">// upload PDF</span><br>
+      POST /api/admin/strategy-requests/:id/send <span class="cm">// send to client</span><br>
+      POST /api/admin/strategy-requests/:id/flag-deep-dive <span class="cm">// mark as "Converted to Deep Dive" + fire
+        client nudge email with Book a Call CTA</span><br>
+      GET /api/admin/analytics/strategy <span class="cm">// strategy KPIs</span><br>
+      <span class="cm">// Buyer intros: no endpoints — handled off-platform by email after the Deep Dive kickoff
+        call</span><br>
+      GET /api/admin/plans <span class="cm">// all 5 plans (admin view)</span><br>
+      PATCH /api/admin/plans/:id <span class="cm">// update plan fields + strategy toggles</span>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 7 · DATA MODEL                                                        -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">7 · Data Model</div>
+
+    <h3>Core tables</h3>
+
+    <div class="code">
+      <span class="kw">users</span> (id, email, password_hash, name, company, created_at)<br>
+      <span class="kw">plans</span> (id, name, price, image_count, revisions, delivery, strategy_included,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;call_included, allow_addon, active)<br>
+      <span class="kw">orders</span> (id, user_id, plan_id, status, strategy_addon, price_paid,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;brief_json, created_at, delivered_at)<br>
+      <span class="kw">strategy_requests</span> (id, user_id, order_id, source, brand_info_json,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status, assignee_id <span class="cm">// auto-set to Raluca on
+        INSERT</span>, snapshot_url, created_at, delivered_at)<br>
+      <span class="kw">deep_dive_inquiries</span> (id, user_id, source_form_data, status, contacted_at)<br>
+      <span class="cm">// No buyer_intros table — all buyer introductions and follow-through happen off-platform via
+        email after the Deep Dive kickoff call</span>
+    </div>
+
+    <h3>Enums</h3>
+
+    <table>
+      <tr>
+        <th>Enum</th>
+        <th>Values</th>
+      </tr>
+      <tr>
+        <td>plan_name</td>
+        <td>Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom</td>
+      </tr>
+      <tr>
+        <td>category</td>
+        <td>Beauty · Personal Care · Fragrance · Fashion</td>
+      </tr>
+      <tr>
+        <td>buyer_category</td>
+        <td>Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies · Marketplaces</td>
+      </tr>
+      <tr>
+        <td>geography</td>
+        <td>US · Europe</td>
+      </tr>
+      <tr>
+        <td>strategy_request_status</td>
+        <td>New · In Progress · Ready to Send · Sent · Converted to Deep Dive · Lost</td>
+      </tr>
+      <tr>
+        <td>strategy_source</td>
+        <td>bundled_with_order · freeimage_addon_25 · standalone_25</td>
+      </tr>
+    </table>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 8 · IMPLEMENTATION PHASES                                             -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">8 · Implementation Phases</div>
+
+    <h3>Phase 1 · Foundations (Week 1)</h3>
+    <ul>
+      <li>Set up design tokens (CSS variables, fonts import, Gliker kit)</li>
+      <li>Build shared components: Button (primary/secondary), Card, Accent span, Chip, Toggle</li>
+      <li>Implement smooth scroll + Calendly popup helper</li>
+      <li>Set up auth (signup/signin/social)</li>
+    </ul>
+
+    <h3>Phase 2 · Marketing pages (Week 2)</h3>
+    <ul>
+      <li>Homepage v3 (10 sections + <strong>Section 5b BrandsMarquee</strong> — new infinite-scroll logo strip, reads
+        from <code>data/brands.js</code>, pure CSS animation, no JS library)</li>
+      <li>About Us · How It Works · Examples · Contact</li>
+      <li>Legal footer pages (Terms, Privacy, Cookie, AI Disclaimer)</li>
+      <li>SEO meta, Open Graph, favicons</li>
+    </ul>
+
+    <h3>Phase 3 · Client Dashboard (Week 3-4)</h3>
+    <ul>
+      <li>Sidebar with Brand Strategy item</li>
+      <li>Overview page (KPIs + Active Order card + Brand Strategy status)</li>
+      <li>New Order flow (5 tiers, conditional Brand Info step, Calendly for Custom)</li>
+      <li>Brand Info form (essential + collapsible bonus)</li>
+      <li>Brand Strategy hub (5 sub-sections including Retail Network preview)</li>
+      <li>My Orders, Invoices, Account pages</li>
+    </ul>
+
+    <h3>Phase 4 · Admin Dashboard (Week 5-6)</h3>
+    <ul>
+      <li>Sidebar with Strategy Requests</li>
+      <li>Dashboard with 5 KPIs (Revenue, Orders, Clients, Images, Strategy Requests)</li>
+      <li>Strategy Requests list + detail (with all admin actions)</li>
+      <li>Deep Dive buyer intros: NO in-app module — handled off-platform via email after the kickoff call</li>
+      <li>Pricing management page (5 plans + Brand Strategy $25 add-on config)</li>
+      <li>Analytics page (4 strategy KPIs: Strategy Requests · Avg Delivery · Free→Paid · Strategy Revenue)</li>
+    </ul>
+
+    <h3>Phase 5 · Polish + Launch (Week 7)</h3>
+    <ul>
+      <li>Mobile responsive across all pages</li>
+      <li>Accessibility audit (WCAG AA contrast, keyboard nav, screen readers)</li>
+      <li>Performance (image optimization, code splitting)</li>
+      <li>Analytics events (funnel tracking on all CTAs)</li>
+      <li>Email templates for strategy delivery + Deep Dive follow-ups</li>
+    </ul>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 9 · MASTER CHECKLIST                                                  -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">9 · Master QA Checklist</div>
+
+    <p>
+      <strong>Design consistency:</strong><br>
+      ☐ League Spartan for all titles (h1-h6) across every page<br>
+      ☐ Montserrat Medium 500 for body + all button text<br>
+      ☐ Montserrat Italic 700 for teal accents inside titles<br>
+      ☐ Gliker for "tyes" brand mark everywhere it appears<br>
+      ☐ No "AI tied with a pulse" tagline anywhere<br>
+      ☐ Teal accent color exactly #2DD4BF (no variations)<br>
+      ☐ Yellow #FBBF24 only for pending states, dev alerts, and internal warnings — <strong>NOT</strong> on the
+      customer-facing "+ Add strategy $25" toggle (that toggle is teal #2DD4BF)<br><br>
+
+      <strong>Copy consistency:</strong><br>
+      ☐ Standalone Brand Strategy tier at <strong>$25</strong> everywhere (not $10)<br>
+      ☐ Pricing tiers: only Free Image · Brand Strategy · Campaign 5 · Campaign 10 · Custom (no Free Test, Single,
+      Starter, Growth)<br>
+      ☐ Campaign 5 = $25, Campaign 10 = $45<br>
+      ☐ Categories: exactly Beauty · Personal Care · Fragrance · Fashion (singular Fragrance, no Other)<br>
+      ☐ Retail categories: exactly Mass Market Retail · Premium Retail · Hyperstores · Hyperpharmacies ·
+      Marketplaces<br>
+      ☐ Geography uses flags 🇺🇸🇪🇺 only, no country names<br>
+      ☐ Deep Dive has 2 CTAs: Contact Us + Book a Call<br>
+      ☐ No em-dashes anywhere (replaced with periods/commas/colons)<br>
+      ☐ No mentions of Commercial License in marketing pages<br><br>
+
+      <strong>Behavior:</strong><br>
+      ☐ All hero + brief CTAs anchor to <code>#pricing</code><br>
+      ☐ Smooth scroll behavior enabled on <code>html</code><br>
+      ☐ Calendly popup opens with correct tyes URL on Book a Call<br>
+      ☐ Flip cards animate at 500ms cubic-bezier(0.4, 0, 0.2, 1)<br>
+      ☐ Hero + section CTAs smooth-scroll to #pricing (no modal)<br>
+      ☐ Signup modal fires only when user clicks a plan CTA on a pricing card (not before)<br>
+      ☐ After successful signup, resume flow to New Order with plan preselected<br>
+      ☐ <strong style="color:#FBBF24;">Free Image rate limit — 1 per account, ever.</strong> De-dupe on email + billing
+      name/address + phone + payment method fingerprint at signup and at checkout. Block second free order with error:
+      "Free Image already claimed on this account, order a Campaign or Brand Strategy tier to continue." Log blocked
+      attempts for fraud review.<br><br>
+
+      <strong>Legal:</strong><br>
+      ☐ Terms of Service · WY governing law, tyes LLC entity<br>
+      ☐ Privacy Policy · GDPR + CCPA sections<br>
+      ☐ Cookie Policy · 4 categories, banner integration<br>
+      ☐ AI Disclaimer · copyright caveat, human-in-loop framing<br>
+      ☐ All legal pages link to hello@tyes.com for contact<br>
+      ☐ Footer includes company address: 30 N Gould Street, Sheridan, WY 82801<br><br>
+
+      <strong>Accessibility:</strong><br>
+      ☐ WCAG AA contrast passes on teal (#2DD4BF) over dark bg (#0A0A0A)<br>
+      ☐ Focus states visible on all interactive elements<br>
+      ☐ Alt text on all images<br>
+      ☐ ARIA labels on icon-only buttons<br>
+      ☐ Keyboard navigation works end-to-end<br><br>
+
+      <strong>Performance:</strong><br>
+      ☐ Google Fonts loaded with <code>&amp;display=swap</code><br>
+      ☐ Preconnect to fonts.googleapis.com and fonts.gstatic.com<br>
+      ☐ Gliker self-hosted or from Adobe Fonts kit (not blocking)<br>
+      ☐ Images compressed and lazy-loaded<br>
+      ☐ Route-level code splitting for dashboards
+    </p>
+
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+    <!-- 10 · REFERENCED FILES                                                 -->
+    <!-- ═════════════════════════════════════════════════════════════════════ -->
+
+    <div class="section-header">10 · Referenced Files</div>
+
+    <p>Each of these files is a self-contained HTML spec with visual mockups, copy blocks, and dev notes.
+      When implementing a page, open its spec file and follow the mockup + copy breakdown structure.</p>
+
+    <div class="info">
+      <div class="lbl">Full spec deliverables</div>
+      <div class="txt">
+        <strong>Homepage:</strong> <code>tyes_homepage_v3.html</code> (10 sections + full dev implementation guide)<br>
+        <strong>Marketing pages:</strong> <code>about-us.html</code> · <code>pricing.html</code> ·
+        <code>how-it-works.html</code> · <code>examples.html</code> · <code>contact.html</code><br>
+        <strong>Legal:</strong> <code>terms.html</code> · <code>privacy.html</code> · <code>cookie-policy.html</code> ·
+        <code>ai-disclaimer.html</code><br>
+        <strong>Client Dashboard:</strong> <code>tyes_client_dashboard_v2.html</code> (5 sections + React
+        implementation)<br>
+        <strong>Admin Dashboard:</strong> <code>tyes_admin_dashboard_v2.html</code> (7 sections + endpoints +
+        checklist)<br>
+        <strong>Design System (this doc):</strong> <code>tyes_dev_scheme.html</code>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="text-align:center; font-size: 10pt; color: #666; margin-top: 8mm;">
+      <span class="brand" style="color:#2DD4BF;">tyes.app</span> · Dev Scheme · Complete Design System<br>
+      <span style="font-size: 8pt;">Single source of truth · Aligned with Homepage v3 · Client + Admin Dashboards
+        v2</span>
+    </p>
+
+  </div>
 </body>
+
 </html>

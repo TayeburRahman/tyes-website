@@ -46,7 +46,7 @@ exact_custom_html = """<div class="custom">
     </div>
     <div style="display:flex; gap:12px; flex-wrap:wrap;">
       <a class="cta-pill" href="services.html">Contact Us →</a>
-      <a class="cta-ghost" href="https://calendly.com/tyes/discovery-call">Book a Call →</a>
+      <a class="cta-ghost" href="https://calendly.com/raluca-tyes/30min">Book a Call →</a>
     </div>
   </div>
 </section>"""

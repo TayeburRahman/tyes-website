@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const resend = new Resend(resendApiKey);
 
     const { data, error } = await resend.emails.send({
-      from: 'Tyes Newsletter Form <hello@tyes.app>',
+      from: 'Tyes Newsletter Form <office@tyes.app>',
       to: 'office@tyes.app',
       replyTo: email,
       subject: `New Newsletter Subscriber: ${email}`,

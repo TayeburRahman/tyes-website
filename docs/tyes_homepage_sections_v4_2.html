@@ -1,212 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tyes | Homepage Sections v4 — Hero $0, How It Works, Categories, Pricing (grouped)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
-<style>
-  /* ============ SITE FONT SYSTEM — apply everywhere ============ */
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0A0A0A; color: #EDEDED; font-family: "Montserrat", Arial, sans-serif; font-weight: 500; line-height: 1.6; }
-  h1, h2, h3 { font-family: "League Spartan", Arial, sans-serif; font-weight: 800; color: #FFFFFF; }
-  .accent { font-family: "Montserrat", Arial, sans-serif; font-style: italic; font-weight: 700; color: #2DD4BF; }
-  .brand { font-family: "Gliker", "Grandstander", "Fraunces", sans-serif; font-weight: 700; }
-  .eyebrow { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: #2DD4BF; font-weight: 700; text-align: center; margin-bottom: 18px; font-family: "Montserrat", sans-serif; }
-  section { padding: 90px 24px; max-width: 1200px; margin: 0 auto; }
-  .center { text-align: center; }
-  .cta-pill { display: inline-block; background: #2DD4BF; color: #0A0A0A; font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px; padding: 14px 34px; border-radius: 999px; text-decoration: none; }
-  .cta-ghost { display: inline-block; background: transparent; border: 2px solid #2DD4BF; color: #2DD4BF; font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px; padding: 12px 32px; border-radius: 999px; text-decoration: none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tyes | Homepage Sections v4 — Hero $0, How It Works, Categories, Pricing (grouped)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ============ SITE FONT SYSTEM — apply everywhere ============ */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ============ 1. HERO (main page) — replaces "$0/IMAGE. $0/STRATEGY." ============ */
-  /* NO logo squiggle, NO eyebrow marquee above. Straight into the headline. */
-  .hero-main h1 { font-size: clamp(44px, 7vw, 84px); line-height: 1.06; letter-spacing: -2px; }
-  .hero-main .sub { font-size: 18px; color: #B8B8B8; margin-top: 22px; max-width: 640px; margin-left: auto; margin-right: auto; }
-  .hero-main .trust { font-size: 13px; color: #888; margin-top: 16px; }
-  .hero-main .trust b { color: #2DD4BF; }
-  .hero-ctas { display: flex; gap: 16px; justify-content: center; margin-top: 34px; flex-wrap: wrap; }
+    body {
+      background: #0A0A0A;
+      color: #EDEDED;
+      font-family: "Montserrat", Arial, sans-serif;
+      font-weight: 500;
+      line-height: 1.6;
+    }
 
-  /* ============ 2. HOW IT WORKS — 5 flip cards, ONE row ============ */
-  .hiw h2 { font-size: clamp(32px, 4vw, 48px); text-align: center; margin-bottom: 10px; }
-  .hiw .badges { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; margin: 18px 0 44px; font-size: 14px; color: #C8C8C8; }
-  .hiw .badges span b { color: #2DD4BF; }
-  .hiw-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-  @media (max-width: 1000px) { .hiw-grid { grid-template-columns: repeat(2, 1fr); } .hiw-grid .flip:last-child { grid-column: 1 / -1; } }
-  @media (max-width: 560px)  { .hiw-grid { grid-template-columns: 1fr; } .flip, .flip-inner { min-height: 240px; } }
+    h1,
+    h2,
+    h3 {
+      font-family: "League Spartan", Arial, sans-serif;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
 
-  .flip { perspective: 1200px; min-height: 320px; cursor: pointer; }
-  .flip-inner { position: relative; width: 100%; height: 100%; min-height: 320px; transition: transform .5s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
-  .flip:hover .flip-inner, .flip.tapped .flip-inner { transform: rotateY(180deg); }
-  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 14px; background: #141414; padding: 26px 22px; display: flex; flex-direction: column; }
-  .face.front { justify-content: space-between; }
-  .face.front .num { font-family: "League Spartan", sans-serif; font-weight: 800; font-size: 15px; color: #2DD4BF; letter-spacing: 2px; }
-  .face.front .t { font-family: "League Spartan", sans-serif; font-weight: 800; font-size: 21px; color: #fff; line-height: 1.2; margin-top: 14px; }
-  .face.front .hint { align-self: flex-end; width: 34px; height: 34px; border-radius: 50%; background: #222; color: #2DD4BF; display: flex; align-items: center; justify-content: center; font-size: 15px; }
-  .face.back { transform: rotateY(180deg); background: #191919; justify-content: flex-start; overflow-y: auto; }  /* overflow-y:auto => TEXT NEVER GETS CUT */
-  .face.back .bt { font-family: "League Spartan", sans-serif; font-weight: 800; font-size: 16px; color: #2DD4BF; margin-bottom: 10px; }
-  .face.back p { font-size: 12.5px; line-height: 1.6; color: #C8C8C8; }
-  .flip.strategy .face { border: 2px solid #2DD4BF; background: rgba(45, 212, 191, 0.05); }
-  .flip.strategy .face.back { background: #10201d; }
+    .accent {
+      font-family: "Montserrat", Arial, sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      color: #2DD4BF;
+    }
 
-  /* ============ 3. CATEGORIES — new sub-line ============ */
-  .cats h2 { font-size: clamp(32px, 4vw, 48px); }
-  .cats .subline { font-size: 17px; color: #EDEDED; font-weight: 600; margin-top: 16px; }
-  .cats .list { font-size: 15px; color: #999; margin-top: 8px; letter-spacing: 0.5px; }
+    .brand {
+      font-family: "Gliker", "Grandstander", "Fraunces", sans-serif;
+      font-weight: 700;
+    }
 
-  /* ============ 4. PRICING — grouped, NO carousel ============ */
-  .pricing h2 { font-size: clamp(32px, 4vw, 48px); text-align: center; }
-  .pricing .pay { text-align: center; color: #B8B8B8; margin: 8px 0 40px; }
-  .group-label { font-family: "League Spartan", sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: #2DD4BF; margin: 34px 0 14px; display: flex; align-items: center; gap: 14px; }
-  .group-label::after { content: ""; flex: 1; height: 1px; background: #2A2A2A; }
-  .tier-row { display: grid; gap: 16px; }
-  .tier-row.img { grid-template-columns: repeat(3, 1fr); }
-  .tier-row.strat { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: 900px) { .tier-row.img, .tier-row.strat { grid-template-columns: 1fr; } }
-  .tier { background: #141414; border: 1px solid #2A2A2A; border-radius: 12px; padding: 28px 24px; position: relative; display: flex; flex-direction: column; }
-  .tier.popular { border: 2px solid #2DD4BF; background: #1a1a1a; }
-  .tier .badge { position: absolute; top: -12px; right: 18px; background: #2DD4BF; color: #0A0A0A; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
-  .tier .tag { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #2DD4BF; font-weight: 700; margin-bottom: 8px; }
-  .tier h3 { font-size: 22px; }
-  .tier .price { font-family: "League Spartan", sans-serif; font-weight: 800; font-size: 40px; color: #fff; margin: 10px 0 14px; letter-spacing: -1px; }
-  .tier .price small { font-size: 15px; color: #888; font-weight: 500; }
-  .tier ul { list-style: none; flex: 1; }
-  .tier ul li { font-size: 13.5px; color: #C8C8C8; padding-left: 20px; position: relative; margin-bottom: 8px; }
-  .tier ul li::before { content: "✓"; color: #2DD4BF; font-weight: 700; position: absolute; left: 0; }
-  .tier .foot { border-top: 1px dashed #2DD4BF; margin-top: 14px; padding-top: 12px; font-size: 12.5px; color: #2DD4BF; font-weight: 700; }
-  .tier .cta-pill, .tier .cta-ghost { text-align: center; margin-top: 16px; font-size: 13px; padding: 12px 20px; }
-  .custom { border: 2px solid #2DD4BF; border-radius: 12px; background: #1a1a1a; margin-top: 34px; padding: 30px 34px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
-  @media (max-width: 800px) { .custom { grid-template-columns: 1fr; } }
-  .custom .desc { font-size: 14px; color: #C8C8C8; margin-top: 8px; }
-</style>
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #2DD4BF;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 18px;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    section {
+      padding: 90px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .cta-pill {
+      display: inline-block;
+      background: #2DD4BF;
+      color: #0A0A0A;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 34px;
+      border-radius: 999px;
+      text-decoration: none;
+    }
+
+    .cta-ghost {
+      display: inline-block;
+      background: transparent;
+      border: 2px solid #2DD4BF;
+      color: #2DD4BF;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 12px 32px;
+      border-radius: 999px;
+      text-decoration: none;
+    }
+
+    /* ============ 1. HERO (main page) — replaces "$0/IMAGE. $0/STRATEGY." ============ */
+    /* NO logo squiggle, NO eyebrow marquee above. Straight into the headline. */
+    .hero-main h1 {
+      font-size: clamp(44px, 7vw, 84px);
+      line-height: 1.06;
+      letter-spacing: -2px;
+    }
+
+    .hero-main .sub {
+      font-size: 18px;
+      color: #B8B8B8;
+      margin-top: 22px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-main .trust {
+      font-size: 13px;
+      color: #888;
+      margin-top: 16px;
+    }
+
+    .hero-main .trust b {
+      color: #2DD4BF;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 34px;
+      flex-wrap: wrap;
+    }
+
+    /* ============ 2. HOW IT WORKS — 5 flip cards, ONE row ============ */
+    .hiw h2 {
+      font-size: clamp(32px, 4vw, 48px);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .hiw .badges {
+      display: flex;
+      gap: 22px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 18px 0 44px;
+      font-size: 14px;
+      color: #C8C8C8;
+    }
+
+    .hiw .badges span b {
+      color: #2DD4BF;
+    }
+
+    .hiw-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1000px) {
+      .hiw-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hiw-grid .flip:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hiw-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flip,
+      .flip-inner {
+        min-height: 240px;
+      }
+    }
+
+    .flip {
+      perspective: 1200px;
+      min-height: 320px;
+      cursor: pointer;
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      transition: transform .5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip:hover .flip-inner,
+    .flip.tapped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 14px;
+      background: #141414;
+      padding: 26px 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .face.front {
+      justify-content: space-between;
+    }
+
+    .face.front .num {
+      font-family: "League Spartan", sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: #2DD4BF;
+      letter-spacing: 2px;
+    }
+
+    .face.front .t {
+      font-family: "League Spartan", sans-serif;
+      font-weight: 800;
+      font-size: 21px;
+      color: #fff;
+      line-height: 1.2;
+      margin-top: 14px;
+    }
+
+    .face.front .hint {
+      align-self: flex-end;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #222;
+      color: #2DD4BF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    .face.back {
+      transform: rotateY(180deg);
+      background: #191919;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+
+    /* overflow-y:auto => TEXT NEVER GETS CUT */
+    .face.back .bt {
+      font-family: "League Spartan", sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #2DD4BF;
+      margin-bottom: 10px;
+    }
+
+    .face.back p {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #C8C8C8;
+    }
+
+    .flip.strategy .face {
+      border: 2px solid #2DD4BF;
+      background: rgba(45, 212, 191, 0.05);
+    }
+
+    .flip.strategy .face.back {
+      background: #10201d;
+    }
+
+    /* ============ 3. CATEGORIES — new sub-line ============ */
+    .cats h2 {
+      font-size: clamp(32px, 4vw, 48px);
+    }
+
+    .cats .subline {
+      font-size: 17px;
+      color: #EDEDED;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+
+    .cats .list {
+      font-size: 15px;
+      color: #999;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ============ 4. PRICING — grouped, NO carousel ============ */
+    .pricing h2 {
+      font-size: clamp(32px, 4vw, 48px);
+      text-align: center;
+    }
+
+    .pricing .pay {
+      text-align: center;
+      color: #B8B8B8;
+      margin: 8px 0 40px;
+    }
+
+    .group-label {
+      font-family: "League Spartan", sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #2DD4BF;
+      margin: 34px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .group-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #2A2A2A;
+    }
+
+    .tier-row {
+      display: grid;
+      gap: 16px;
+    }
+
+    .tier-row.img {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .tier-row.strat {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 900px) {
+
+      .tier-row.img,
+      .tier-row.strat {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tier {
+      background: #141414;
+      border: 1px solid #2A2A2A;
+      border-radius: 12px;
+      padding: 28px 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tier.popular {
+      border: 2px solid #2DD4BF;
+      background: #1a1a1a;
+    }
+
+    .tier .badge {
+      position: absolute;
+      top: -12px;
+      right: 18px;
+      background: #2DD4BF;
+      color: #0A0A0A;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .tier .tag {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #2DD4BF;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .tier h3 {
+      font-size: 22px;
+    }
+
+    .tier .price {
+      font-family: "League Spartan", sans-serif;
+      font-weight: 800;
+      font-size: 40px;
+      color: #fff;
+      margin: 10px 0 14px;
+      letter-spacing: -1px;
+    }
+
+    .tier .price small {
+      font-size: 15px;
+      color: #888;
+      font-weight: 500;
+    }
+
+    .tier ul {
+      list-style: none;
+      flex: 1;
+    }
+
+    .tier ul li {
+      font-size: 13.5px;
+      color: #C8C8C8;
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .tier ul li::before {
+      content: "✓";
+      color: #2DD4BF;
+      font-weight: 700;
+      position: absolute;
+      left: 0;
+    }
+
+    .tier .foot {
+      border-top: 1px dashed #2DD4BF;
+      margin-top: 14px;
+      padding-top: 12px;
+      font-size: 12.5px;
+      color: #2DD4BF;
+      font-weight: 700;
+    }
+
+    .tier .cta-pill,
+    .tier .cta-ghost {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      padding: 12px 20px;
+    }
+
+    .custom {
+      border: 2px solid #2DD4BF;
+      border-radius: 12px;
+      background: #1a1a1a;
+      margin-top: 34px;
+      padding: 30px 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+
+    @media (max-width: 800px) {
+      .custom {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .custom .desc {
+      font-size: 14px;
+      color: #C8C8C8;
+      margin-top: 8px;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ================================================================
+  <!-- ================================================================
   SECTION 1 · HERO (main page) — REPLACES "$0 / IMAGE. $0 / STRATEGY."
   • no tyes squiggle logo above, no "— BOTH FREE TO START —" eyebrow
 ================================================================ -->
-<section class="hero-main center">
-  <h1>Free Image. <span class="accent">Free Strategy.</span></h1>
-  <p class="sub">For brands that move fast: campaign visuals in hours, strategy in days.</p>
-  <div class="hero-ctas">
-    <a class="cta-pill"  href="/signup">Get Your Free Image →</a>
-    <a class="cta-ghost" href="/signup">Get Your Free Strategy →</a>
-  </div>
-  <p class="trust"><b>No credit card required</b> · For brands that want to move fast.</p>
-</section>
+  <section class="hero-main center">
+    <h1>Free Image. <span class="accent">Free Strategy.</span></h1>
+    <p class="sub">For brands that move fast: campaign visuals in hours, strategy in days.</p>
+    <div class="hero-ctas">
+      <a class="cta-pill" href="/signup">Get Your Free Image →</a>
+      <a class="cta-ghost" href="/signup">Get Your Free Strategy →</a>
+    </div>
+    <p class="trust"><b>No credit card required</b> · For brands that want to move fast.</p>
+  </section>
 
-<!-- ================================================================
+  <!-- ================================================================
   SECTION 2 · HOW IT WORKS — 5 flip cards in ONE row
   • back face has overflow-y:auto so text is NEVER cut
   • 5th card (strategy) has teal border + working flip like the others
   • JS at the bottom makes tap work on mobile
 ================================================================ -->
-<section class="hiw">
-  <h2 class="center">HOW IT <span class="accent">Works.</span></h2>
-  <div class="badges">
-    <span><b>✓</b> From 3H Delivery</span><span><b>✓</b> AI + Designer Touch</span><span><b>✓</b> Brand Strategy</span><span><b>✓</b> Retail Access</span>
-  </div>
-  <div class="hiw-grid">
-    <div class="flip"><div class="flip-inner">
-      <div class="face front"><div><div class="num">01</div><div class="t">BRIEF IT.</div></div><div class="hint">⟳</div></div>
-      <div class="face back"><div class="bt">Brief It.</div><p>Share your product and your vision, in any language. From one short brief, we build your entire campaign direction.</p></div>
-    </div></div>
-    <div class="flip"><div class="flip-inner">
-      <div class="face front"><div><div class="num">02</div><div class="t">AI CREATES.</div></div><div class="hint">⟳</div></div>
-      <div class="face back"><div class="bt">AI Creates.</div><p>Studio-grade campaign visuals without the photoshoot — no studio, no crew, no weeks of waiting.</p></div>
-    </div></div>
-    <div class="flip"><div class="flip-inner">
-      <div class="face front"><div><div class="num">03</div><div class="t">SPECIALISTS PERFECT.</div></div><div class="hint">⟳</div></div>
-      <div class="face back"><div class="bt">Specialists Perfect.</div><p>Our design specialists refine every image — brand accuracy, text sharpness, perfect details — so your brand always looks premium, never AI-generic.</p></div>
-    </div></div>
-    <div class="flip"><div class="flip-inner">
-      <div class="face front"><div><div class="num">04</div><div class="t">YOU LAUNCH.</div></div><div class="hint">⟳</div></div>
-      <div class="face back"><div class="bt">You Launch.</div><p>Launch in hours, not weeks. Campaign-ready visuals for every platform and promo, delivered to your dashboard — from 3H per image, 24H per campaign.</p></div>
-    </div></div>
-    <div class="flip strategy"><div class="flip-inner">
-      <div class="face front"><div><div class="num">＋</div><div class="t">YOUR STRATEGY. FREE.</div></div><div class="hint">⟳</div></div>
-      <div class="face back"><div class="bt">Your Strategy. Free.</div><p>Every order includes your growth plan: where your brand shows up in AI search, the viral products your niche is missing, and the retail buyers who fit you. In 3 days.</p></div>
-    </div></div>
-  </div>
-</section>
+  <section class="hiw">
+    <h2 class="center">HOW IT <span class="accent">Works.</span></h2>
+    <div class="badges">
+      <span><b>✓</b> From 3H Delivery</span><span><b>✓</b> AI + Designer Touch</span><span><b>✓</b> Brand
+        Strategy</span><span><b>✓</b> Retail Access</span>
+    </div>
+    <div class="hiw-grid">
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="face front">
+            <div>
+              <div class="num">01</div>
+              <div class="t">BRIEF IT.</div>
+            </div>
+            <div class="hint">⟳</div>
+          </div>
+          <div class="face back">
+            <div class="bt">Brief It.</div>
+            <p>Share your product and your vision, in any language. From one short brief, we build your entire campaign
+              direction.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="face front">
+            <div>
+              <div class="num">02</div>
+              <div class="t">AI CREATES.</div>
+            </div>
+            <div class="hint">⟳</div>
+          </div>
+          <div class="face back">
+            <div class="bt">AI Creates.</div>
+            <p>Studio-grade campaign visuals without the photoshoot — no studio, no crew, no weeks of waiting.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="face front">
+            <div>
+              <div class="num">03</div>
+              <div class="t">SPECIALISTS PERFECT.</div>
+            </div>
+            <div class="hint">⟳</div>
+          </div>
+          <div class="face back">
+            <div class="bt">Specialists Perfect.</div>
+            <p>Our design specialists refine every image — brand accuracy, text sharpness, perfect details — so your
+              brand always looks premium, never AI-generic.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="face front">
+            <div>
+              <div class="num">04</div>
+              <div class="t">YOU LAUNCH.</div>
+            </div>
+            <div class="hint">⟳</div>
+          </div>
+          <div class="face back">
+            <div class="bt">You Launch.</div>
+            <p>Launch in hours, not weeks. Campaign-ready visuals for every platform and promo, delivered to your
+              dashboard — from 3H per image, 24H per campaign.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flip strategy">
+        <div class="flip-inner">
+          <div class="face front">
+            <div>
+              <div class="num">＋</div>
+              <div class="t">YOUR STRATEGY. FREE.</div>
+            </div>
+            <div class="hint">⟳</div>
+          </div>
+          <div class="face back">
+            <div class="bt">Your Strategy. Free.</div>
+            <p>Every order includes your growth plan: where your brand shows up in AI search, the viral products your
+              niche is missing, and the retail buyers who fit you. In 3 days.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- ================================================================
+  <!-- ================================================================
   SECTION 3 · CATEGORIES — new meaningful sub-line
 ================================================================ -->
-<section class="cats center">
-  <h2>CATEGORIES <span class="accent">We Serve.</span></h2>
-  <p class="subline">Scroll-stopping campaign visuals. Strategy that puts you on shelves.</p>
-  <p class="list">Beauty · Personal Care · Fragrance · Fashion</p>
-</section>
+  <section class="cats center">
+    <h2>CATEGORIES <span class="accent">We Serve.</span></h2>
+    <p class="subline">Scroll-stopping campaign visuals. Strategy that puts you on shelves.</p>
+    <p class="list">Beauty · Personal Care · Fragrance · Fashion</p>
+  </section>
 
-<!-- ================================================================
+  <!-- ================================================================
   SECTION 4 · PRICING — GROUPED (images together, strategy together),
   NO carousel, all tiers visible, Custom full-width row at the end
 ================================================================ -->
-<section class="pricing" id="pricing">
-  <h2>Find the <span class="accent">Perfect Package.</span></h2>
-  <p class="pay">Pay per campaign. Scale when ready.</p>
+  <section class="pricing" id="pricing">
+    <h2>Find the <span class="accent">Perfect Package.</span></h2>
+    <p class="pay">Pay per campaign. Scale when ready.</p>
 
-  <div class="group-label">Campaign Images</div>
-  <div class="tier-row img">
-    <div class="tier">
-      <div class="tag">Free</div><h3>Free Image</h3><div class="price">$0</div>
-      <ul><li>1 AI image</li><li>From 3H delivery</li><li>AI-generated + designer-polished</li></ul>
-      <div class="foot">+ Add Brand Strategy · $25</div>
-      <a class="cta-pill" href="/signup?intent=image">Claim Free Image →</a>
-    </div>
-    <div class="tier popular">
-      <span class="badge">Popular</span>
-      <div class="tag">Popular</div><h3>Campaign 5</h3><div class="price">$25</div>
-      <ul><li>5 AI campaign images</li><li>1 revision / image</li><li>From 24H delivery</li><li>AI-generated + designer-polished</li></ul>
-      <div class="foot">+ FREE Brand Strategy Snapshot</div>
-      <a class="cta-pill" href="/signup?intent=order&plan=campaign-5">Get Campaign 5 →</a>
-    </div>
-    <div class="tier">
-      <div class="tag">Go Big</div><h3>Campaign 10</h3><div class="price">$45</div>
-      <ul><li>10 AI campaign images</li><li>1 revision / image</li><li>From 24H delivery</li><li>AI-generated + designer-polished</li></ul>
-      <div class="foot">+ FREE Brand Strategy Snapshot</div>
-      <a class="cta-pill" href="/signup?intent=order&plan=campaign-10">Get Campaign 10 →</a>
-    </div>
-  </div>
-
-  <div class="group-label">Brand Strategy</div>
-  <div class="tier-row strat">
-    <div class="tier">
-      <div class="tag">Strategy-First</div><h3>Brand Strategy</h3><div class="price">$25</div>
-      <ul><li>LLM visibility audit</li><li>Viral product angles for your niche</li><li>Retail buyer shortlist (US + EU)</li><li>3-day delivery</li><li>Delivered to your dashboard</li></ul>
-      <a class="cta-pill" href="/signup?intent=strategy">Get Brand Strategy →</a>
-    </div>
-    <div class="tier">
-      <div class="tag">Retail-Ready</div><h3>Deep Dive Brand Strategy</h3><div class="price"><small>Priced per scope</small></div>
-      <ul><li>Full LLM audit + 90-day roadmap</li><li>Viral product concepts for your niche</li><li>Warm intros to retail buyers we know</li><li>Packaging &amp; positioning direction</li><li>1-hour strategy call</li></ul>
-      <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
-        <a class="cta-pill" href="/contact?intent=deep-dive" style="flex:1;">Contact Us →</a>
-        <a class="cta-ghost" href="https://calendly.com/tyes/deep-dive-call" style="flex:1; text-align:center;">Book a Call →</a>
+    <div class="group-label">Campaign Images</div>
+    <div class="tier-row img">
+      <div class="tier">
+        <div class="tag">Free</div>
+        <h3>Free Image</h3>
+        <div class="price">$0</div>
+        <ul>
+          <li>1 AI image</li>
+          <li>From 3H delivery</li>
+          <li>AI-generated + designer-polished</li>
+        </ul>
+        <div class="foot">+ Add Brand Strategy · $25</div>
+        <a class="cta-pill" href="/signup?intent=image">Claim Free Image →</a>
+      </div>
+      <div class="tier popular">
+        <span class="badge">Popular</span>
+        <div class="tag">Popular</div>
+        <h3>Campaign 5</h3>
+        <div class="price">$25</div>
+        <ul>
+          <li>5 AI campaign images</li>
+          <li>1 revision / image</li>
+          <li>From 24H delivery</li>
+          <li>AI-generated + designer-polished</li>
+        </ul>
+        <div class="foot">+ FREE Brand Strategy Snapshot</div>
+        <a class="cta-pill" href="/signup?intent=order&plan=campaign-5">Get Campaign 5 →</a>
+      </div>
+      <div class="tier">
+        <div class="tag">Go Big</div>
+        <h3>Campaign 10</h3>
+        <div class="price">$45</div>
+        <ul>
+          <li>10 AI campaign images</li>
+          <li>1 revision / image</li>
+          <li>From 24H delivery</li>
+          <li>AI-generated + designer-polished</li>
+        </ul>
+        <div class="foot">+ FREE Brand Strategy Snapshot</div>
+        <a class="cta-pill" href="/signup?intent=order&plan=campaign-10">Get Campaign 10 →</a>
       </div>
     </div>
-  </div>
 
-  <div class="custom">
-    <div>
-      <div class="tag" style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#2DD4BF; font-weight:700;">Enterprise</div>
-      <h3 style="font-size:26px;">Custom. <span class="accent">Not just visuals.</span></h3>
-      <p class="desc">Custom number of images · Custom revisions · Dedicated manager · + FREE Brand Strategy Snapshot · + 30-min strategy call</p>
+    <div class="group-label">Brand Strategy</div>
+    <div class="tier-row strat">
+      <div class="tier">
+        <div class="tag">Strategy-First</div>
+        <h3>Brand Strategy</h3>
+        <div class="price">$25</div>
+        <ul>
+          <li>LLM visibility audit</li>
+          <li>Viral product angles for your niche</li>
+          <li>Retail buyer shortlist (US + EU)</li>
+          <li>3-day delivery</li>
+          <li>Delivered to your dashboard</li>
+        </ul>
+        <a class="cta-pill" href="/signup?intent=strategy">Get Brand Strategy →</a>
+      </div>
+      <div class="tier">
+        <div class="tag">Retail-Ready</div>
+        <h3>Deep Dive Brand Strategy</h3>
+        <div class="price"><small>Priced per scope</small></div>
+        <ul>
+          <li>Full LLM audit + 90-day roadmap</li>
+          <li>Viral product concepts for your niche</li>
+          <li>Warm intros to retail buyers we know</li>
+          <li>Packaging &amp; positioning direction</li>
+          <li>1-hour strategy call</li>
+        </ul>
+        <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+          <a class="cta-pill" href="/contact?intent=deep-dive" style="flex:1;">Contact Us →</a>
+          <a class="cta-ghost" href="https://calendly.com/raluca-tyes/30min" style="flex:1; text-align:center;">Book a
+            Call →</a>
+        </div>
+      </div>
     </div>
-    <div style="display:flex; gap:12px; flex-wrap:wrap;">
-      <a class="cta-pill" href="/contact?intent=custom">Contact Us →</a>
-      <a class="cta-ghost" href="https://calendly.com/tyes/discovery-call">Book a Call →</a>
-    </div>
-  </div>
-</section>
 
-<script>
-  // Mobile: tap toggles the flip (hover handles desktop)
-  document.querySelectorAll('.flip').forEach(function (card) {
-    card.addEventListener('click', function () { card.classList.toggle('tapped'); });
-  });
-</script>
+    <div class="custom">
+      <div>
+        <div class="tag"
+          style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#2DD4BF; font-weight:700;">
+          Enterprise</div>
+        <h3 style="font-size:26px;">Custom. <span class="accent">Not just visuals.</span></h3>
+        <p class="desc">Custom number of images · Custom revisions · Dedicated manager · + FREE Brand Strategy Snapshot
+          · + 30-min strategy call</p>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a class="cta-pill" href="/contact?intent=custom">Contact Us →</a>
+        <a class="cta-ghost" href="https://calendly.com/raluca-tyes/30min">Book a Call →</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Mobile: tap toggles the flip (hover handles desktop)
+    document.querySelectorAll('.flip').forEach(function (card) {
+      card.addEventListener('click', function () { card.classList.toggle('tapped'); });
+    });
+  </script>
 </body>
+
 </html>
