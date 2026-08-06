@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, FileText, Upload, Send, Flag, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 
-const getPaymentStatus = (o) => {
-  if (!o) return 'free';
-  const rawPs = o.payment_status || o.attachments?.payment_status;
+const getPaymentStatus = (item) => {
+  if (!item) return 'free';
+  const o = item.orders || item;
+  const rawPs = o.payment_status || item.payment_status || o.attachments?.payment_status;
   if (rawPs === 'paid' || rawPs === 'completed' || rawPs === 'succeeded') return 'paid';
   if (rawPs === 'unpaid') return 'unpaid';
   if (rawPs === 'free') return 'free';
-  const isCustom = o.plan?.includes('Custom') || o.is_custom || o.plan?.includes('Deep Dive');
+  const isCustom = o.plan?.includes('Custom') || item.plan?.includes('Custom') || o.is_custom || item.is_custom;
   if (isCustom) return 'unpaid';
-  const rev = Number(o.revenue || 0);
+  const rev = Number(o.revenue || item.revenue || item.amount || 0);
   if (rev > 0) return 'paid';
+  const src = item.source || o.source;
+  if (src === 'standalone_25' || src === 'Standalone Request' || src === 'Order Add-on' || (typeof src === 'string' && src.includes('addon_25'))) return 'paid';
   return 'free';
 };
 
@@ -265,10 +268,10 @@ export default function AdminStrategyHub({ supabase, addToast }) {
     return acc;
   }, 0);
 
-  const displayTotalRequests = analytics?.totalRequests || totalCount;
+  const displayTotalRequests = totalCount || analytics?.totalRequests || 0;
   const displayAvgDelivery = analytics?.avgDeliveryDays !== undefined ? analytics.avgDeliveryDays : 0;
-  const displayConversion = analytics?.freeToPaidConversion !== undefined && analytics.freeToPaidConversion > 0 ? analytics.freeToPaidConversion : computedConversion;
-  const displayRevenue = analytics?.strategyRevenue !== undefined && analytics.strategyRevenue > 0 ? analytics.strategyRevenue : computedRevenue;
+  const displayConversion = computedConversion;
+  const displayRevenue = computedRevenue;
 
   return (
     <div style={{ padding: '0 12px', maxWidth: 1400, margin: '0 auto', fontFamily: '"Montserrat", sans-serif' }}>
