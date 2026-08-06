@@ -256,20 +256,20 @@ export default function AdminStrategyHub({ supabase, addToast }) {
   }, [activeTab, search]);
 
   return (
-    <div style={{ padding: '0 24px', fontFamily: '"Montserrat", sans-serif' }}>
+    <div style={{ padding: '0 12px', maxWidth: 1400, margin: '0 auto', fontFamily: '"Montserrat", sans-serif' }}>
       {errorMsg && (
         <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: 10, padding: '12px 16px', color: '#f87171', fontSize: 13, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
           <span>⚠️</span> <span>{errorMsg === 'Unauthorized' ? 'Unauthorized: Please log in to your admin account to view strategy requests.' : errorMsg}</span>
         </div>
       )}
 
-      {/* Analytics Kpis */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
+      {/* Analytics KPIs - Responsive Auto-fit Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 12, marginBottom: 24 }}>
         {['Strategy Requests', 'Avg Delivery', 'Free → Paid', 'Strategy Revenue'].map((title, i) => (
           <div key={i} style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.05)', padding: 16, borderRadius: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <div style={{ color: '#2DD4BF' }}>{i === 0 ? '✦' : i === 1 ? '⏱' : i === 2 ? '%' : '$'}</div>
-              <div style={{ fontSize: 24, fontWeight: 700, color: '#fff' }}>
+              <div style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>
                 {i === 0 ? analytics?.totalRequests || 0 :
                  i === 1 ? `${analytics?.avgDeliveryDays || 0}d` :
                  i === 2 ? `${analytics?.freeToPaidConversion || 0}%` :
@@ -282,66 +282,69 @@ export default function AdminStrategyHub({ supabase, addToast }) {
         ))}
       </div>
 
-      <div style={{ marginBottom: 24, background: '#141414', borderRadius: 8, padding: 24, border: '1px solid rgba(255,255,255,0.05)' }}>
-        <h2 style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>Strategy Requests</h2>
-        <p style={{ fontSize: 12, color: '#888', marginBottom: 24 }}>Manage incoming Brand Strategy Snapshots and Deep Dive bookings.</p>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 16 }}>
-          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-            {TABS.map(tab => {
-              const count = requests.filter(r => tab.id === 'all' || r.status === tab.id).length;
-              const isActive = activeTab === tab.id;
-              return (
-                <button 
-                  key={tab.id}
-                  type="button"
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveTab(tab.id); }} 
-                  style={{ 
-                    padding: '6px 12px', 
-                    background: isActive ? '#fff' : 'transparent', 
-                    color: isActive ? '#000' : '#9ca3af', 
-                    borderRadius: 4, 
-                    border: 'none', 
-                    fontWeight: 600, 
-                    fontSize: 12,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  {tab.label} ({count})
-                </button>
-              )
-            })}
-          </div>
-          <div>
+      <div style={{ marginBottom: 24, background: '#141414', borderRadius: 12, padding: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+            <h2 style={{ fontSize: 18, color: '#fff', fontWeight: 700, margin: 0, fontFamily: '"League Spartan", sans-serif' }}>Strategy Requests</h2>
             <input 
               type="text" 
               placeholder="Search brand or email..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ padding: '8px 16px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#fff', outline: 'none', fontSize: 12 }}
+              style={{ width: '100%', maxWidth: 320, padding: '8px 14px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: '#fff', outline: 'none', fontSize: 12 }}
             />
           </div>
+          <p style={{ fontSize: 12, color: '#888', margin: 0 }}>Manage incoming Brand Strategy Snapshots and Deep Dive bookings.</p>
         </div>
 
-        {/* Table */}
-        {loading ? <p style={{ color: '#888', fontSize: 13 }}>Loading requests...</p> : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
-            <thead>
-              <tr style={{ color: '#9ca3af', borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left' }}>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Brand</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Client</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Order ID</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Source</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Category</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Positioning</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Tier</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Status</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Assigned</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Payment</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600 }}>Date</th>
-              </tr>
-            </thead>
+        {/* Tab Filters - Touch Friendly Horizontal Scroll */}
+        <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 8, marginBottom: 16, scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {TABS.map(tab => {
+            const count = requests.filter(r => tab.id === 'all' || r.status === tab.id).length;
+            const isActive = activeTab === tab.id;
+            return (
+              <button 
+                key={tab.id}
+                type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveTab(tab.id); }} 
+                style={{ 
+                  padding: '6px 14px', 
+                  background: isActive ? '#2DD4BF' : 'rgba(255,255,255,0.04)', 
+                  color: isActive ? '#0A0A0A' : '#9ca3af', 
+                  borderRadius: 20, 
+                  border: 'none', 
+                  fontWeight: 600, 
+                  fontSize: 12,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {tab.label} ({count})
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Table Container with Mobile Overflow Scrolling */}
+        {loading ? <p style={{ color: '#888', fontSize: 13, padding: 16 }}>Loading requests...</p> : (
+          <div style={{ width: '100%', overflowX: 'auto', borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)', WebkitOverflowScrolling: 'touch' }}>
+            <table style={{ minWidth: 980, width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+              <thead>
+                <tr style={{ color: '#9ca3af', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left' }}>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Brand</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Client</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Order ID</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Source</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Category</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Positioning</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Tier</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Status</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Assigned</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Payment</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600 }}>Date</th>
+                </tr>
+              </thead>
             <tbody>
               {paginatedRequests.map(req => {
                 const brandInfo = req.brand_info || req.brand_data || {};
@@ -506,7 +509,8 @@ export default function AdminStrategyHub({ supabase, addToast }) {
               )}
             </tbody>
           </table>
-        )}
+        </div>
+      )}
 
         {/* Pagination Controls */}
         {!loading && totalPages > 1 && (

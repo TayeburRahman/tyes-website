@@ -67,6 +67,15 @@ const initPlans = [
   { id: 5, name: "Custom / Enterprise", images: 0, price: 0, active: true },
 ];
 // HELPERS
+const normalizeStatus = (raw) => {
+  const s = String(raw || '').toLowerCase().replace(/[\s-]+/g, '_');
+  if (['pending', 'new', 'paid', 'awaiting', 'queued'].includes(s)) return 'pending';
+  if (['in_progress', 'processing', 'working'].includes(s)) return 'in_progress';
+  if (['revision', 'revisions'].includes(s)) return 'revision';
+  if (['completed', 'complete', 'done', 'delivered', 'sent', 'approved'].includes(s)) return 'delivered';
+  return 'pending';
+};
+
 const statusConfig = {
   pending: { label: "Pending", bg: "rgba(107,114,128,0.15)", color: "#9ca3af", icon: Clock },
   in_progress: { label: "In Progress", bg: "rgba(59,130,246,0.15)", color: "#60a5fa", icon: Clock },
@@ -100,7 +109,8 @@ const getPaymentStatus = (o) => {
 
 // SHARED COMPONENTS
 const StatusBadge = ({ status }) => {
-  const c = statusConfig[status] || statusConfig.pending;
+  const norm = normalizeStatus(status);
+  const c = statusConfig[norm] || statusConfig[status] || statusConfig.pending;
   const I = c.icon || Clock;
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 20, background: c.bg, color: c.color, fontSize: 11, fontWeight: 600 }}>
@@ -393,7 +403,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
 
   const filtered = orders
     .filter(o => {
-      if (filter !== "all" && o.status !== filter) return false;
+      if (filter !== "all" && normalizeStatus(o.status) !== filter) return false;
       const searchLow = search.toLowerCase();
       const customerMatch = o.customer && o.customer.toLowerCase().includes(searchLow);
       const idMatch = o.id && o.id.toString().toLowerCase().includes(searchLow);
@@ -407,12 +417,10 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
 
   const counts = {
     all: orders.length,
-    pending: orders.filter(o => o.status === "pending").length,
-    in_progress: orders.filter(o => o.status === "in_progress").length,
-    revision: orders.filter(o => o.status === "revision").length,
-    completed: orders.filter(o => o.status === "completed").length,
-    delivered: orders.filter(o => o.status === "delivered").length,
-    approved: orders.filter(o => o.status === "approved").length
+    pending: orders.filter(o => normalizeStatus(o.status) === "pending").length,
+    in_progress: orders.filter(o => normalizeStatus(o.status) === "in_progress").length,
+    revision: orders.filter(o => normalizeStatus(o.status) === "revision").length,
+    delivered: orders.filter(o => normalizeStatus(o.status) === "delivered").length
   };
 
   const updateStatus = async (id, newStatus) => {
@@ -813,7 +821,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
 
 
       <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-        {["all", "pending", "in_progress", "revision", "completed", "delivered"].map(s => (
+        {["all", "pending", "in_progress", "revision", "delivered"].map(s => (
           <button
             key={s}
             onClick={() => setFilter(s)}
@@ -834,8 +842,8 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
         ))}
       </div>
       <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={searchInput} onChange={e => { setSearchInput(e.target.value); }} placeholder="Search orders or clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }} /></div>
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "visible" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto" }}>
+        <table style={{ minWidth: 720, width: "100%", borderCollapse: "collapse" }}>
           <thead><tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{["Order", "Client", "Plan", "Imgs", "Status", "Progress", "Revenue", "Payment", "Date", ""].map((h, i) => <th key={i} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>)}</tr></thead>
           <tbody>{paginatedOrders.map((o, idx) => (
             <tr key={o.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.02)"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
@@ -1037,8 +1045,8 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
         <StatCard icon={DollarSign} label="Total Revenue" value={fmt(counts.revenue)} />
       </div>
       <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }} /></div>
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto" }}>
+        <table style={{ minWidth: 720, width: "100%", borderCollapse: "collapse" }}>
           <thead><tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{["Client", "Email", "Tier", "Orders", "Spent", "Joined", "Status", ""].map((h, i) => <th key={i} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>)}</tr></thead>
           <tbody>{paginatedClients.map((u, idx) => (
             <tr key={u.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.02)"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
@@ -1046,7 +1054,7 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
               <td style={{ padding: "12px 16px", fontSize: 12, color: "#6b7280" }}>{u.email}</td>
               <td style={{ padding: "12px 16px" }}><span style={{ padding: "3px 10px", borderRadius: 20, background: `${tierColors[u.tier]}22`, color: tierColors[u.tier], fontSize: 11, fontWeight: 600, textTransform: "capitalize" }}>{u.tier}</span></td>
               <td style={{ padding: "12px 16px", fontSize: 12, color: "#9ca3af" }}>{u.orders}</td>
-              <td style={{ padding: "12px 16px", fontSize: 12, color: "#34d399", fontWeight: 600 }}>{u.spent > 0 ? `$${u.spent.toLocaleString()}` : ""}</td>
+              <td style={{ padding: "12px 16px", fontSize: 12, color: "#34d399", fontWeight: 600 }}>{u.spent > 0 ? `$${u.spent.toLocaleString()}` : "$0"}</td>
               <td style={{ padding: "12px 16px", fontSize: 11, color: "#6b7280" }}>{u.joined}</td>
               <td style={{ padding: "12px 16px" }}><span onClick={() => toggleStatus(u.id)} style={{ cursor: "pointer" }}><span style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block", background: u.status === "active" ? "#34d399" : "#4b5563", marginRight: 6 }} /><span style={{ fontSize: 11, color: u.status === "active" ? "#34d399" : "#6b7280" }}>{u.status}</span></span></td>
               <td style={{ padding: "12px 16px", position: "relative" }}>
@@ -1339,7 +1347,7 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
             <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 16 }}>{p.images === 0 ? (p.price > 0 ? "Strategy access" : "Custom pricing") : `${p.images} image${p.images > 1 ? "s" : ""}`}</div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span onClick={() => togglePlan(p.id)} style={{ fontSize: 11, color: p.active ? "#34d399" : "#f87171", cursor: "pointer" }}><span style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block", background: p.active ? "#34d399" : "#f87171", marginRight: 6 }} />{p.active ? "Active" : "Inactive"}</span>
-              {p.images > 0 && p.price > 0 && <span style={{ fontSize: 11, color: "#4b5563" }}>${(p.price / p.images).toFixed(0)}/image</span>}
+              {p.images > 0 && p.price > 0 && <span style={{ fontSize: 11, color: "#4b5563" }}>${(p.price / p.images) % 1 === 0 ? (p.price / p.images).toFixed(0) : (p.price / p.images).toFixed(2)}/image</span>}
             </div>
           </div>
         ))}
@@ -1502,35 +1510,52 @@ const AnalyticsPage = ({ users, orders }) => {
 
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 24px" }}>Analytics</h1>
-      <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+      <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 20px", fontFamily: "'League Spartan', sans-serif" }}>Analytics</h1>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 20 }}>
         <StatCard icon={Clock} label="Avg Delivery Time" value={`${displayAvgHrs} hrs`} change={avgDeliveryHrs > 24 ? "+12%" : "-5%"} positive={avgDeliveryHrs < 24} sub="Target: 24 hrs" />
         <StatCard icon={RefreshCw} label="Avg Revisions/Img" value={displayAvgRevs} change={avgRevisionsPerImg > 0.5 ? "+0.1" : "-0.1"} positive={avgRevisionsPerImg < 0.5} sub="Target: <0.5" />
       </div>
-      <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
-        <div style={{ flex: 1, minWidth: 400, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 18px" }}>Orders vs Revenue</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={dynAnalyticsData.length ? dynAnalyticsData : [{ month: "N/A", orders: 0, revenue: 0 }]}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis dataKey="month" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis yAxisId="left" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis yAxisId="right" orientation="right" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`} />
-              <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
-              <Legend wrapperStyle={{ fontSize: 11, color: "#6b7280" }} />
-              <Line yAxisId="left" type="monotone" dataKey="orders" stroke="#60a5fa" strokeWidth={2} dot={{ r: 3 }} />
-              <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#2ab7a9" strokeWidth={2} dot={{ r: 3 }} />
-            </LineChart>
-          </ResponsiveContainer>
+
+      <div style={{ display: "flex", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
+        <div style={{ flex: "1 1 300px", minWidth: 280, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px", boxSizing: "border-box" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Orders vs Revenue</h3>
+          <div style={{ width: "100%", height: 260 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={dynAnalyticsData.length ? dynAnalyticsData : [{ month: "N/A", orders: 0, revenue: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                <XAxis dataKey="month" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis yAxisId="left" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`} />
+                <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
+                <Legend wrapperStyle={{ fontSize: 11, color: "#6b7280" }} />
+                <Line yAxisId="left" type="monotone" dataKey="orders" stroke="#60a5fa" strokeWidth={2} dot={{ r: 3 }} />
+                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#2ab7a9" strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div style={{ flex: 1, minWidth: 300, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 18px" }}>Top Clients by Revenue</h3>
-          {[...users].sort((a, b) => (b.spent || 0) - (a.spent || 0)).slice(0, 6).map((u, i) => <div key={u.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: i < 5 ? "1px solid rgba(255,255,255,0.03)" : "none" }}><span style={{ fontSize: 11, color: "#4b5563", minWidth: 18 }}>#{i + 1}</span><div style={{ width: 28, height: 28, borderRadius: 7, background: `linear-gradient(135deg,${tierColors[u.tier || 'standard']},${tierColors[u.tier || 'standard']}88)`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 11 }}>{(u.name || "?").charAt(0)}</div><div style={{ flex: 1 }}><div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 500 }}>{u.name}</div><div style={{ fontSize: 10, color: "#4b5563" }}>{u.orders} orders</div></div><span style={{ fontSize: 13, color: "#34d399", fontWeight: 700 }}>${(u.spent || 0).toLocaleString()}</span></div>)}
+
+        <div style={{ flex: "1 1 280px", minWidth: 280, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px", boxSizing: "border-box" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Top Clients by Revenue</h3>
+          {[...users].filter(u => (u.spent || 0) > 0).sort((a, b) => (b.spent || 0) - (a.spent || 0)).slice(0, 6).map((u, i) => (
+            <div key={u.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: i < 5 ? "1px solid rgba(255,255,255,0.03)" : "none" }}>
+              <span style={{ fontSize: 11, color: "#4b5563", minWidth: 18 }}>#{i + 1}</span>
+              <div style={{ width: 28, height: 28, borderRadius: 7, background: `linear-gradient(135deg,${tierColors[u.tier || 'standard']},${tierColors[u.tier || 'standard']}88)`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 11 }}>
+                {(u.name || "?").charAt(0)}
+              </div>
+              <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
+                <div style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{u.name}</div>
+                <div style={{ fontSize: 10, color: "#4b5563" }}>{u.orders} orders</div>
+              </div>
+              <span style={{ fontSize: 13, color: "#34d399", fontWeight: 700 }}>${(u.spent || 0).toLocaleString()}</span>
+            </div>
+          ))}
         </div>
       </div>
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 18px" }}>Performance Metrics (Realtime)</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
+
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px", boxSizing: "border-box" }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Performance Metrics (Realtime)</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 16 }}>
           {[
             { label: "Images This Month", value: imagesThisMonth.toString(), bar: Math.min(100, (imagesThisMonth / 1000) * 100) },
             { label: "On-Time Delivery", value: `${onTimeDelivery.toFixed(1)}%`, bar: onTimeDelivery },
@@ -1538,7 +1563,17 @@ const AnalyticsPage = ({ users, orders }) => {
             { label: "Client Retention", value: `${clientRetention.toFixed(1)}%`, bar: clientRetention },
             { label: "Avg Order Value", value: `$${avgOrderValue.toFixed(2)}`, bar: Math.min(100, (avgOrderValue / 150) * 100) },
             { label: "Capacity Used", value: `${capacityUsed.toFixed(0)}%`, bar: capacityUsed }
-          ].map((m, i) => <div key={i}><div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}><span style={{ fontSize: 12, color: "#9ca3af" }}>{m.label}</span><span style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{m.value}</span></div><div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}><div style={{ width: `${m.bar}%`, height: "100%", borderRadius: 3, background: m.bar > 90 ? "#34d399" : m.bar > 70 ? "linear-gradient(90deg,#4ecdc4,#2ab7a9)" : "#60a5fa" }} /></div></div>)}
+          ].map((m, i) => (
+            <div key={i}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                <span style={{ fontSize: 11, color: "#9ca3af" }}>{m.label}</span>
+                <span style={{ fontSize: 11, color: "#fff", fontWeight: 600 }}>{m.value}</span>
+              </div>
+              <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                <div style={{ width: `${m.bar}%`, height: "100%", borderRadius: 3, background: m.bar > 90 ? "#34d399" : m.bar > 70 ? "linear-gradient(90deg,#4ecdc4,#2ab7a9)" : "#60a5fa" }} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -2154,7 +2189,7 @@ export default function TyesAdmin() {
             </div>
           </div>
         </div>
-        <div style={{ flex: 1, overflow: "auto", padding: 28 }} onClick={() => { setNotifOpen(false); setProfileOpen(false); }}>
+        <div style={{ flex: 1, overflow: "auto", padding: "16px 12px" }} onClick={() => { setNotifOpen(false); setProfileOpen(false); }}>
           {renderPage()}
         </div>
       </div>

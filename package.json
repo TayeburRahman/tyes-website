@@ -13,6 +13,7 @@
     "@stripe/stripe-js": "^9.7.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.110.0",
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.3.3",
     "@types/recharts": "^1.8.29",
     "dotenv": "^17.4.2",
     "file-saver": "^2.0.5",

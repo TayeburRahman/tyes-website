@@ -126,23 +126,18 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
   const countriesExpand = activeBrandData.countriesExpand || activeBrandData.countriesToExpand || activeBrandData.countries_expand || '';
 
   let mappedChannels = [];
-  const isBeauty = ['Beauty', 'Personal Care', 'Fragrance'].includes(brandCategory);
+  const isBeauty = ['Beauty', 'Personal Care', 'Fragrance', 'Skincare', 'Haircare'].includes(brandCategory);
+  const posLower = (brandPositioning || '').toLowerCase();
+  const isPremiumOrHighEnd = posLower.includes('premium') || posLower.includes('high-end') || posLower.includes('masstige') || isBeauty;
 
-  if (brandPositioning === 'Mass market') {
+  if (isPremiumOrHighEnd || isBeauty) {
+    // Beauty / Premium positioning: Only Premium Retail, Hyperpharmacies, Marketplaces are eligible opportunities
+    mappedChannels = ['Premium Retail', 'Hyperpharmacies', 'Marketplaces'];
+  } else if (brandPositioning === 'Mass market') {
     mappedChannels = ['Mass Market Retail', 'Hyperstores', 'Marketplaces'];
-    if (isBeauty) mappedChannels.push('Hyperpharmacies');
-  } else if (brandPositioning === 'Masstige') {
-    mappedChannels = ['Mass Market Retail', 'Premium Retail', 'Hyperstores', 'Marketplaces'];
-    if (isBeauty) mappedChannels.push('Hyperpharmacies');
-  } else if (brandPositioning === 'Premium') {
-    mappedChannels = ['Premium Retail', 'Marketplaces'];
-    if (isBeauty) mappedChannels.push('Hyperpharmacies'); // dermocosmetics
-  } else if (brandPositioning === 'High-end') {
-    mappedChannels = ['Premium Retail', 'Marketplaces'];
   } else {
     // Default fallback
     mappedChannels = ['Mass Market Retail', 'Premium Retail', 'Hyperstores', 'Marketplaces'];
-    if (isBeauty) mappedChannels.push('Hyperpharmacies');
   }
 
   const ISO_COUNTRY_MAP = {
@@ -256,7 +251,12 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
             <div style={{ fontSize: 11, color: '#B8B8B8', marginBottom: 20 }}>Based on your Brand Info, we've mapped which retail categories fit your brand. Deep Dive introductions target these buyers.</div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 8, marginBottom: 8 }}>
-              {RETAIL_TYPES.map((rt, idx) => {
+              {RETAIL_TYPES.filter(rt => {
+                if (isPremiumOrHighEnd || isBeauty) {
+                  return ['Premium Retail', 'Hyperpharmacies', 'Marketplaces'].includes(rt.label) || userRetailPresence.some(p => typeof p === 'string' && p.toLowerCase().includes(rt.label.toLowerCase()));
+                }
+                return true;
+              }).map((rt, idx) => {
                 const isPresent = userRetailPresence.some(p => {
                   if (typeof p !== 'string') return false;
                   const cleanP = p.replace(/[✓✗★]/g, '').toLowerCase().trim();
@@ -304,10 +304,10 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
                 const badgeInfo = getStatusBadge(req.status);
                 const reqBrandName = req.brand_data?.brandName || req.brand_info?.brandName || 'Brand Strategy';
                 return (
-                  <div key={req.id} style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', borderRadius: 6, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div key={req.id} style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', borderRadius: 6, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
                     <div>
                       <h4 style={{ color: '#fff', fontWeight: 600, fontSize: 14, margin: '0 0 6px', fontFamily: '"League Spartan", sans-serif' }}>{reqBrandName}</h4>
-                      <div style={{ color: '#9ca3af', fontSize: 11, margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ color: '#9ca3af', fontSize: 11, margin: 0, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                         <span>{new Date(req.created_at).toLocaleDateString()} &middot; 3-5 pages</span>
                         <span style={{ background: badgeInfo.bg, color: badgeInfo.color, padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5pt' }}>
                           {badgeInfo.label}
@@ -327,20 +327,20 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
 
           {/* Section D: Deep Dive Upsell */}
           {delivered > 0 && (
-            <div style={{ background: 'linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(10, 10, 10, 1))', border: '1px solid rgba(45, 212, 191, 0.3)', borderRadius: 6, padding: '32px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
+            <div style={{ background: 'linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(10, 10, 10, 1))', border: '1px solid rgba(45, 212, 191, 0.3)', borderRadius: 12, padding: '24px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
               <div style={{ maxWidth: 500 }}>
-                <h2 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 12, fontFamily: '"League Spartan", sans-serif', lineHeight: 1.2 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 12, fontFamily: '"League Spartan", sans-serif', lineHeight: 1.3 }}>
                   Ready for more? The <span style={{ color: '#2DD4BF' }}>full playbook</span> that puts you in front of the buyer who says yes.
                 </h2>
-                <p style={{ color: '#9ca3af', fontSize: 13, lineHeight: 1.5, margin: 0 }}>
+                <p style={{ color: '#9ca3af', fontSize: 12, lineHeight: 1.5, margin: 0 }}>
                   Full LLM audit with implementation roadmap. Viral product concepts developed for your niche. Warm intros to retail buyers we know personally. 1-hour strategy call.
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: 12 }}>
-                <a href="/contact.html" style={{ padding: '12px 24px', background: '#2DD4BF', color: '#0A0A0A', fontWeight: 700, fontSize: 12, borderRadius: 999, textDecoration: 'none', border: '1.5px solid #2DD4BF', display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <a href="/contact.html" style={{ padding: '10px 20px', background: '#2DD4BF', color: '#0A0A0A', fontWeight: 700, fontSize: 12, borderRadius: 999, textDecoration: 'none', border: '1.5px solid #2DD4BF', display: 'flex', alignItems: 'center' }}>
                   Contact Us &rarr;
                 </a>
-                <a href="#" onClick={openCalendly} style={{ padding: '12px 24px', background: 'transparent', border: '1.5px solid #2DD4BF', color: '#2DD4BF', fontWeight: 700, fontSize: 12, borderRadius: 999, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                <a href="#" onClick={openCalendly} style={{ padding: '10px 20px', background: 'transparent', border: '1.5px solid #2DD4BF', color: '#2DD4BF', fontWeight: 700, fontSize: 12, borderRadius: 999, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                   Book a Call &rarr;
                 </a>
               </div>

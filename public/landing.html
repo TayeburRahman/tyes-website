@@ -4,7 +4,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tyes — AI Tied With A Pulse</title>
+  <title>tyes — Campaign visuals in hours. Brand strategy in days.</title>
+  <meta name="description" content="AI campaign imagery refined by design specialists, plus a free brand growth strategy. For brands that move fast. First image free.">
+  <link rel="canonical" href="https://www.tyes.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="tyes">
+  <meta property="og:url" content="https://www.tyes.app/">
+  <meta property="og:title" content="tyes — Campaign visuals in hours. Brand strategy in days.">
+  <meta property="og:description" content="AI campaign imagery refined by design specialists, plus a free brand growth strategy. First image free.">
+  <meta property="og:image" content="https://www.tyes.app/images/og-tyes.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="tyes — Campaign visuals in hours. Brand strategy in days.">
+  <meta name="twitter:description" content="AI campaign imagery refined by design specialists, plus a free brand growth strategy. First image free.">
+  <meta name="twitter:image" content="https://www.tyes.app/images/og-tyes.jpg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,20 +106,32 @@
   </script>
 
   <script>
-    // Intercept clicks on the React-rendered buttons
+    // Intercept clicks on the React-rendered buttons and nav links on the splash page
     document.addEventListener('click', function (e) {
       const target = e.target.closest('a') || e.target.closest('button');
       if (!target) return;
 
-      const text = target.textContent || "";
-      if (text.includes('Get Your Free Image')) {
+      const text = (target.textContent || "").trim();
+      if (text.includes('Use Cases')) {
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = 'signin.html';
-      } else if (text.includes('Get Your Free Strategy') || text.includes('Get Started') || text.includes('Get My Free Strategy')) {
+        window.location.href = '/main.html#use-cases';
+      } else if (text.includes('Pricing')) {
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = 'signin.html';
+        window.location.href = '/pricing.html';
+      } else if (text.includes('About')) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/about.html';
+      } else if (text.includes('How It Works')) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/how-it-works.html';
+      } else if (text.includes('Get Your Free Image') || text.includes('Get Your Free Strategy') || text.includes('Get Started') || text.includes('Get My Free Strategy')) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/main.html';
       }
     }, true); // Use capture phase to intercept before React handles it
   </script>

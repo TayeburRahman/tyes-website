@@ -543,7 +543,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 8px" }}>New Order</h1>
         <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 32px" }}>Fill in your brief and we'll get started right away.</p>
 
-        <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap", overflowX: "auto", scrollbarWidth: "none" }}>
           {(() => {
             const selectedPlan = plans.find(p => p.id === plan);
             const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
@@ -705,7 +705,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                       ))}
                     </div>
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 20 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 16, marginBottom: 20 }}>
                     {/* Product Photos */}
                     <div>
                       <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Product Photos <span style={{ color: "#ef4444" }}>*</span></label>
@@ -990,7 +990,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
           const currentStepName = steps[step - 1] || steps[0];
 
           return (
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 32 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, flexWrap: "wrap", gap: 12 }}>
               {step > 1 ? (
                 <button onClick={() => setStep(step - 1)} style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#d1d5db", fontSize: 13, cursor: "pointer", transition: "all 0.2s" }}>Back</button>
               ) : <div />}
@@ -1636,7 +1636,7 @@ export default function TyesClient() {
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0, fontFamily: '"League Spartan", sans-serif' }}>Welcome back, {companyName.split(" ")[0]}.</h1>
           <p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>Here's an overview of your account.</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 24 }}>
           <StatCard icon={Package} label="Total Orders" value={orders.length} onClick={() => setPage("orders")} />
           {(() => {
             const totalDeliveredImages = orders.reduce((sum, o) => {
@@ -1661,7 +1661,7 @@ export default function TyesClient() {
 
         {activeOrder && (
           <div style={{ background: "#0A0A0A", borderLeft: "2px solid #2DD4BF", borderRadius: 4, padding: "16px 20px", marginBottom: 16, cursor: "pointer" }} onClick={() => { setPage("orders"); }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                   <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px" }}>Active Order</div>
@@ -1681,7 +1681,7 @@ export default function TyesClient() {
           </div>
         )}
 
-        <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 5, padding: "20px 24px", marginBottom: 24 }}>
+        <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 8, padding: "16px 20px", marginBottom: 24 }}>
           <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", marginBottom: 8 }}>✦ Brand Strategy</div>
           {latestStrategy ? (
             <>
@@ -1704,25 +1704,27 @@ export default function TyesClient() {
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ flex: 2, minWidth: 380, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
+          <div style={{ flex: "1 1 300px", minWidth: 280, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 16, boxSizing: "border-box" }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 18px" }}>Spending Overview</h3>
-            <ResponsiveContainer width="100%" height={200}>
-              <AreaChart data={spendingData}>
-                <defs>
-                  <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#4ecdc4" stopOpacity={0.25} />
-                    <stop offset="100%" stopColor="#4ecdc4" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                <XAxis dataKey="month" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
-                <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
-                <Area type="monotone" dataKey="spent" stroke="#4ecdc4" fill="url(#sg)" strokeWidth={2.5} dot={{ fill: "#4ecdc4", r: 4, strokeWidth: 0 }} />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div style={{ width: "100%", height: 200 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={spendingData}>
+                  <defs>
+                    <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#4ecdc4" stopOpacity={0.25} />
+                      <stop offset="100%" stopColor="#4ecdc4" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                  <XAxis dataKey="month" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
+                  <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
+                  <Area type="monotone" dataKey="spent" stroke="#4ecdc4" fill="url(#sg)" strokeWidth={2.5} dot={{ fill: "#4ecdc4", r: 4, strokeWidth: 0 }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <div style={{ flex: 1, minWidth: 260, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
+          <div style={{ flex: "1 1 260px", minWidth: 260, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 16, boxSizing: "border-box" }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Quick Actions</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
@@ -1855,14 +1857,14 @@ export default function TyesClient() {
 
     return (
       <div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>My Orders</h1>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0, fontFamily: '"League Spartan", sans-serif' }}>My Orders</h1>
           <button onClick={() => handlePageChange("new-order")} style={{ padding: "8px 18px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Plus size={13} /> New Order</button>
         </div>
         <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
           {[{ key: "all", label: "All" }, { key: "in_progress", label: "In Progress" }, { key: "revision", label: "Revision" }, { key: "delivered", label: "Delivered" }].map(f => (
             <button key={f.key} onClick={() => { setFilter(f.key); setCurrentPage(1); }} style={{ padding: "6px 14px", borderRadius: 20, border: "1px solid", borderColor: filter === f.key ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)", background: filter === f.key ? "rgba(78,205,196,0.15)" : "transparent", color: filter === f.key ? "#4ecdc4" : "#6b7280", fontSize: 12, fontWeight: 500, cursor: "pointer" }}>
-              {f.label} {f.key !== "all" && `(${orders.filter(o => o.status === f.key).length})`}
+              {f.label} {f.key !== "all" && `(${orders.filter(o => filter === "all" ? true : f.key === "in_progress" ? ['pending', 'in_progress', 'in progress', 'paid', 'new'].includes(String(o.status || '').toLowerCase()) : String(o.status || '').toLowerCase() === f.key).length})`}
             </button>
           ))}
         </div>
@@ -1871,16 +1873,16 @@ export default function TyesClient() {
             const paid = isOrderPaid(o);
             return (
               <div key={o.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden", transition: "all 0.2s" }}>
-                <div style={{ display: "flex", alignItems: "center", padding: "16px 20px", cursor: "pointer", gap: 16 }} onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", padding: "16px 20px", cursor: "pointer", gap: 12, flexWrap: "wrap" }} onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
+                  <div style={{ flex: "1 1 200px", minWidth: 180 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                       <span style={{ fontSize: 11, color: "#7dd8d0", fontWeight: 600 }}>{o.id}</span>
                       <StatusBadge status={o.status} />
                     </div>
                     <h3 style={{ fontSize: 15, fontWeight: 600, color: "#fff", margin: 0 }}>{o.title}</h3>
                     <span style={{ fontSize: 12, color: "#6b7280" }}>{o.plan} · {o.images} images · {o.date}</span>
                   </div>
-                  <div style={{ textAlign: "right", marginRight: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                  <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, marginLeft: "auto" }}>
                     {paid ? (
                       <div style={{ fontSize: 13, fontWeight: 700, color: "#34d399" }}>Paid: ${o.revenue}</div>
                     ) : o.revenue > 0 ? (
@@ -1902,13 +1904,13 @@ export default function TyesClient() {
                     )}
                     {o.images_count > 0 && (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions > 0) && <div style={{ fontSize: 10, color: "#4b5563" }}>Rev {o.revisions}/{pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions}</div>}
                   </div>
-                  <div style={{ width: 60 }}>
+                  <div style={{ width: 60, flexShrink: 0 }}>
                     <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
                       <div style={{ width: `${o.progress}%`, height: "100%", borderRadius: 3, background: o.progress === 100 ? "#34d399" : "linear-gradient(90deg,#4ecdc4,#2ab7a9)" }} />
                     </div>
                     <div style={{ fontSize: 10, color: "#6b7280", textAlign: "center", marginTop: 2 }}>{o.progress}%</div>
                   </div>
-                  <ChevronDown size={16} color="#4b5563" style={{ transform: expanded === o.id ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                  <ChevronDown size={16} color="#4b5563" style={{ transform: expanded === o.id ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }} />
                 </div>
                 {expanded === o.id && (
                   <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", padding: "16px 20px" }}>
@@ -1927,7 +1929,7 @@ export default function TyesClient() {
                         </button>
                       </div>
                     ) : o.items && o.items.length > 0 ? (
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 8 }}>
                         {o.items.map((item, i) => (
                           <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)", transition: "all 0.2s" }}>
                             <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -2172,8 +2174,8 @@ export default function TyesClient() {
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Invoices</h1>
           <button onClick={exportToCSV} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Export CSV</button>
         </div>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto" }}>
+          <table style={{ minWidth: 720, width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 {["Invoice", "Order", "Amount", "Status", "Date", "Due", ""].map((h, i) => (
@@ -2429,7 +2431,7 @@ export default function TyesClient() {
       <div style={{ width: "100%", display: "flex", justifyContent: "center", paddingBottom: 40 }}>
         <div style={{ width: "100%", maxWidth: 1200 }}>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 24px" }}>Account Settings</h1>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Company Info</h3>
@@ -2877,7 +2879,7 @@ export default function TyesClient() {
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, overflow: "auto", padding: 28 }} onClick={() => { setShowNotifDrop(false); setShowProfileDrop(false); }}>
+        <div style={{ flex: 1, overflow: "auto", padding: "16px 12px" }} onClick={() => { setShowNotifDrop(false); setShowProfileDrop(false); }}>
           {renderPage()}
         </div>
       </div>
