@@ -255,6 +255,21 @@ export default function AdminStrategyHub({ supabase, addToast }) {
     setCurrentPage(1);
   }, [activeTab, search]);
 
+  const totalCount = requests.length;
+  const paidCount = requests.filter(r => getPaymentStatus(r) === 'paid').length;
+  const computedConversion = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
+  const computedRevenue = requests.reduce((acc, r) => {
+    if (getPaymentStatus(r) === 'paid') {
+      return acc + (Number(r.revenue || r.amount) || 25);
+    }
+    return acc;
+  }, 0);
+
+  const displayTotalRequests = analytics?.totalRequests || totalCount;
+  const displayAvgDelivery = analytics?.avgDeliveryDays !== undefined ? analytics.avgDeliveryDays : 0;
+  const displayConversion = analytics?.freeToPaidConversion !== undefined && analytics.freeToPaidConversion > 0 ? analytics.freeToPaidConversion : computedConversion;
+  const displayRevenue = analytics?.strategyRevenue !== undefined && analytics.strategyRevenue > 0 ? analytics.strategyRevenue : computedRevenue;
+
   return (
     <div style={{ padding: '0 12px', maxWidth: 1400, margin: '0 auto', fontFamily: '"Montserrat", sans-serif' }}>
       {errorMsg && (
@@ -270,10 +285,10 @@ export default function AdminStrategyHub({ supabase, addToast }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <div style={{ color: '#2DD4BF' }}>{i === 0 ? '✦' : i === 1 ? '⏱' : i === 2 ? '%' : '$'}</div>
               <div style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>
-                {i === 0 ? analytics?.totalRequests || 0 :
-                 i === 1 ? `${analytics?.avgDeliveryDays || 0}d` :
-                 i === 2 ? `${analytics?.freeToPaidConversion || 0}%` :
-                 `$${analytics?.strategyRevenue || 0}`}
+                {i === 0 ? displayTotalRequests :
+                 i === 1 ? `${displayAvgDelivery}d` :
+                 i === 2 ? `${displayConversion}%` :
+                 `$${displayRevenue}`}
               </div>
             </div>
             <div style={{ fontSize: 12, color: '#9ca3af' }}>{title}</div>
