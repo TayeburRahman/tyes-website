@@ -2178,7 +2178,7 @@ export default function TyesClient() {
           <table style={{ minWidth: 720, width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                {["Invoice", "Order", "Amount", "Status", "Date", "Due", ""].map((h, i) => (
+                {["Invoice", "Order", "Amount", "Status", "Date", "Due", "Action"].map((h, i) => (
                   <th key={i} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
                 ))}
               </tr>
@@ -2210,31 +2210,111 @@ export default function TyesClient() {
                         <CreditCard size={11} /> Pay Now (${inv.amount})
                       </button>
                     )}
-                    {inv.url && (
-                      <a
-                        href={inv.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 5,
-                          padding: "5px 12px",
-                          borderRadius: 7,
-                          border: "1px solid rgba(78,205,196,0.35)",
-                          background: "rgba(78,205,196,0.08)",
-                          color: "#4ecdc4",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          textDecoration: "none",
-                          cursor: "pointer",
-                          transition: "all 0.2s",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <Download size={11} /> View Invoice
-                      </a>
-                    )}
+                    <a
+                      href={inv.url || "#"}
+                      target={inv.url ? "_blank" : "_self"}
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        if (!inv.url) {
+                          e.preventDefault();
+                          const win = window.open("", "_blank");
+                          win.document.write(`
+                            <!DOCTYPE html>
+                            <html>
+                              <head>
+                                <title>Invoice ${inv.displayId} - tyes.app</title>
+                                <style>
+                                  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; background: #fff; color: #0f172a; margin: 0; }
+                                  .container { max-width: 680px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 36px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+                                  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #2dd4bf; padding-bottom: 20px; margin-bottom: 28px; }
+                                  .brand { font-size: 32px; font-weight: 800; color: #0f766e; letter-spacing: -1px; }
+                                  .inv-title { font-size: 22px; font-weight: 800; color: #0f172a; text-align: right; }
+                                  .inv-no { font-size: 13px; color: #0d9488; font-weight: 700; margin-top: 4px; }
+                                  .meta-grid { display: flex; justify-content: space-between; margin-bottom: 32px; font-size: 13px; color: #334155; line-height: 1.6; }
+                                  table { width: 100%; border-collapse: collapse; margin-top: 24px; margin-bottom: 24px; }
+                                  th, td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+                                  th { background: #f8fafc; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+                                  td { font-size: 13px; color: #1e293b; }
+                                  .total-box { font-size: 18px; font-weight: 800; text-align: right; color: #0f766e; padding-top: 16px; border-top: 2px solid #0f766e; }
+                                  .footer { margin-top: 40px; font-size: 12px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+                                  .btn-print { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #0d9488; color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; text-decoration: none; }
+                                  @media print { .btn-print { display: none; } .container { border: none; box-shadow: none; padding: 0; } }
+                                </style>
+                              </head>
+                              <body>
+                                <div class="container">
+                                  <div class="header">
+                                    <div>
+                                      <div class="brand">tyes</div>
+                                      <div style="font-size:12px;color:#64748b;margin-top:2px;">tyes.app · Campaign Visuals & Strategy</div>
+                                    </div>
+                                    <div class="inv-title">
+                                      INVOICE
+                                      <div class="inv-no">${inv.displayId}</div>
+                                    </div>
+                                  </div>
+                                  <div class="meta-grid">
+                                    <div>
+                                      <strong>Billed To:</strong><br/>
+                                      Valued Client<br/>
+                                      ${inv.stripeId ? `Stripe Ref: ${inv.stripeId}` : 'Payment via tyes Platform'}
+                                    </div>
+                                    <div style="text-align:right;">
+                                      <strong>Invoice Date:</strong> ${inv.date || new Date().toISOString().split('T')[0]}<br/>
+                                      <strong>Due Date:</strong> ${inv.due || 'Paid'}<br/>
+                                      <strong>Status:</strong> <span style="color:#059669;font-weight:700;">${(inv.status || 'PAID').toUpperCase()}</span>
+                                    </div>
+                                  </div>
+                                  <table>
+                                    <thead>
+                                      <tr>
+                                        <th>Item Description</th>
+                                        <th>Service Type</th>
+                                        <th style="text-align:right;">Amount</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>${inv.order}</td>
+                                        <td>Campaign Order / Strategy</td>
+                                        <td style="text-align:right;font-weight:700;">$${inv.amount}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  <div class="total-box">Total Paid: $${inv.amount}</div>
+                                  <div style="text-align:center;">
+                                    <button class="btn-print" onclick="window.print()">🖨️ Print / Save PDF Invoice</button>
+                                  </div>
+                                  <div class="footer">
+                                    Thank you for your business! · tyes.app<br/>
+                                    Reverse Charge Notice: Art. 196 Directive 2006/112/EC
+                                  </div>
+                                </div>
+                              </body>
+                            </html>
+                          `);
+                          win.document.close();
+                        }
+                      }}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 5,
+                        padding: "5px 12px",
+                        borderRadius: 7,
+                        border: "1px solid rgba(78,205,196,0.35)",
+                        background: "rgba(78,205,196,0.08)",
+                        color: "#4ecdc4",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Download size={11} /> Download PDF
+                    </a>
                   </td>
                 </tr>
               )) : (
