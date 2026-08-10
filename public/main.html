@@ -521,11 +521,19 @@
       position: relative;
       display: flex;
       flex-direction: column;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .tier:hover {
+      transform: translateY(-6px);
+      border-color: #2DD4BF;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(45, 212, 191, 0.15);
     }
 
     .tier.popular {
       border: 2px solid #2DD4BF;
       background: #1a1a1a;
+      box-shadow: 0 0 15px rgba(45, 212, 191, 0.2);
     }
 
     .tier .badge {
@@ -541,6 +549,7 @@
       text-transform: uppercase;
       padding: 4px 10px;
       border-radius: 4px;
+      box-shadow: 0 0 10px rgba(45, 212, 191, 0.4);
     }
 
     .tier .tag {
@@ -948,7 +957,7 @@
                       </a>
                     </div>
                     <div class="nav-link-overflow">
-                      <a href="how-it-works.html" class="nav-link w-inline-block">
+                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf80096d" href="how-it-works.html" class="nav-link w-inline-block">
                         <div class="nav-link-text">How It Works</div>
                         <div class="nav-link-text is-hover">How It Works</div>
                       </a>
@@ -1075,7 +1084,7 @@
               style="text-align:center;font-family:'Montserrat',sans-serif;font-weight:500;font-size:1rem;color:rgba(255,255,255,0.7);margin-bottom:1.5rem;">
               Two free entry points. Pick the one that fits today — or use both.</div> -->
             <div class="hero-ctas" style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
-              <a class="cta-pill" href="signin.html">Get Your Free Image →</a>
+              <a class="cta-pill" href="signin.html" data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800965">Get Your Free Image →</a>
               <a class="cta-ghost" href="signin.html">Get Your Free Strategy →</a>
             </div>
             <div
@@ -1223,7 +1232,7 @@
             Strategy</span><span><b>✓</b> Retail Access</span>
         </div>
         <div class="hiw-grid">
-          <div class="flip">
+          <div data-w-id="fa071934-7236-bee4-1ec7-39e7fb7500e3" class="flip card-container">
             <div class="flip-inner">
               <div class="face front">
                 <div>
@@ -1239,7 +1248,7 @@
               </div>
             </div>
           </div>
-          <div class="flip">
+          <div data-w-id="ce1269cd-7020-07e8-1a7a-1659f521e5cb" class="flip card-container">
             <div class="flip-inner">
               <div class="face front">
                 <div>
@@ -1254,7 +1263,7 @@
               </div>
             </div>
           </div>
-          <div class="flip">
+          <div data-w-id="d5378edf-a1b3-a97d-febe-e3a2ed7ac79f" class="flip card-container">
             <div class="flip-inner">
               <div class="face front">
                 <div>
@@ -1270,7 +1279,7 @@
               </div>
             </div>
           </div>
-          <div class="flip">
+          <div data-w-id="72251f0e-43d7-525f-2033-0fb12aa60ade" class="flip card-container">
             <div class="flip-inner">
               <div class="face front">
                 <div>
@@ -1286,7 +1295,7 @@
               </div>
             </div>
           </div>
-          <div class="flip strategy">
+          <div data-w-id="7d214766-c977-d738-83f1-6ed5cfed15ab" class="flip strategy card-container">
             <div class="flip-inner">
               <div class="face front">
                 <div>
@@ -1320,7 +1329,7 @@
               </span>
             </div>
 
-            <div class="heading-wrapper" style="text-align: center; margin-bottom: 3.5rem;">
+            <div class="heading-wrapper" style="text-align: center; margin-bottom: 3.5rem;" data-w-id="a5a50423-105b-9d88-e05d-66c6ff304d70">
               <h2
                 style="font-family:'League Spartan',sans-serif;font-size:clamp(2.5rem,5vw,3.75rem);font-weight:800;color:#fff;margin:0 0 1rem;">
                 The Retail <span
@@ -1401,8 +1410,10 @@
       </section>
 
       <section class="pricing" id="pricing">
-        <h2>Find the <span class="accent">Perfect Package.</span></h2>
-        <p class="pay">Pay per campaign. Scale when ready.</p>
+        <div class="heading-wrapper" data-w-id="8158736c-6bea-ed71-0c2e-1d39b684e3e6">
+          <h2>Find the <span class="accent">Perfect Package.</span></h2>
+          <p class="pay">Pay per campaign. Scale when ready.</p>
+        </div>
 
         <div class="group-label">Campaign Images</div>
         <div class="tier-row img">
@@ -2000,7 +2011,7 @@
             <div class="w-layout-grid footer-top-grid">
               <div id="w-node-f4ef5579-b80a-6535-3e05-ab791ca6ba9c-1ca6ba96" class="footer-grid-block">
                 <a href="index.html" aria-current="page" class="footer-logo-link w-inline-block w--current"
-                  style="display:flex;align-items:center;gap:0.5rem;"><img loading="lazy" src="images/tyes-logo-new.svg"
+                  style="display:flex;align-items:center;gap:0.5rem;" data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800955"><img loading="lazy" src="images/tyes-logo-new.svg"
                     alt="tyes Logo" class="footer-icon"><span
                     style="font-family:'Gliker',serif;font-size:2rem;color:var(--white);text-transform:lowercase;">tyes</span></a>
                 <div class="spacer-medium"></div>
@@ -2061,7 +2072,7 @@
                   <div class="link-text"
                     style="font-weight:700;margin-bottom:1rem;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">
                     Company</div>
-                  <a href="about.html" style="text-decoration:none;">
+                  <a href="about.html" style="text-decoration:none;" data-w-id="cd2531db-ef9f-2da8-59e8-8040bf80095d">
                     <div class="link-text"
                       style="font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:0.75rem;cursor:pointer;">About Us
                     </div>
