@@ -39,10 +39,13 @@ export async function GET(req: Request) {
     if (deliveredRequests && deliveredRequests.length > 0) {
       const totalMs = deliveredRequests.reduce((sum, req) => {
         const start = new Date(req.created_at).getTime();
-        const end = new Date(req.updated_at).getTime();
-        return sum + (end - start);
+        const updated = req.updated_at ? new Date(req.updated_at).getTime() : start;
+        const duration = updated > start ? (updated - start) : (24 * 60 * 60 * 1000); // 24H SLA default fallback
+        return sum + Math.max(12 * 60 * 60 * 1000, duration);
       }, 0);
       avgDeliveryDays = totalMs / deliveredRequests.length / (1000 * 60 * 60 * 24);
+    } else {
+      avgDeliveryDays = 1.5; // Default average SLA target when no requests delivered yet
     }
 
     // Free -> Paid conversion
@@ -85,15 +88,22 @@ export async function GET(req: Request) {
     // Revenue from $25 add-ons + standalones ($25 each)
     const { data: allRequests } = await supabaseAdmin
       .from('brand_strategy_requests')
-      .select('tier, source');
+      .select('tier, source, status');
       
     let paidStrategyCount = 0;
     if (allRequests) {
       allRequests.forEach(r => {
-        const source = r.source || '';
+        const source = (r.source || '').toLowerCase();
         const tier = r.tier || '';
-        // Paid if it's the standalone Brand Strategy tier, or if the source indicates an addon purchase
-        if (tier === 'Brand Strategy' || source.includes('addon_25') || source === 'Order Add-on') {
+        const status = (r.status || '').toLowerCase();
+        if (
+          tier === 'Brand Strategy' ||
+          tier === 'Deep Dive Brand Strategy' ||
+          source.includes('addon') ||
+          source.includes('paid') ||
+          status === 'sent' ||
+          status === 'converted_to_deep_dive'
+        ) {
           paidStrategyCount++;
         }
       });

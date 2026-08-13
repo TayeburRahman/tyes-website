@@ -239,17 +239,58 @@ export default function AdminStrategyHub({ supabase, addToast }) {
     { id: 'lost', label: 'Lost' }
   ];
 
-  let filteredRequests = requests;
-  if (activeTab !== 'all') {
-    filteredRequests = filteredRequests.filter(r => r.status === activeTab);
-  }
-  if (search) {
+  const getBrandName = (req) => {
+    if (!req) return 'Unknown';
+    const bData = req.brand_info || req.brand_data || req.form_data || {};
+    const candidates = [
+      bData.brandName,
+      bData.brand_name,
+      bData.name,
+      bData.company_name,
+      req.brand_name,
+      req.brandName,
+      req.brand,
+      req.orders?.brand_name,
+      req.orders?.company_name
+    ];
+
+    for (const c of candidates) {
+      if (typeof c === 'string') {
+        const trimmed = c.trim();
+        if (
+          trimmed &&
+          trimmed !== '01' && trimmed !== '02' && trimmed !== '03' && trimmed !== '04' && trimmed !== '05' &&
+          !trimmed.startsWith('http://') && !trimmed.startsWith('https://') && !trimmed.startsWith('www.')
+        ) {
+          return trimmed;
+        }
+      }
+    }
+
+    for (const c of candidates) {
+      if (typeof c === 'string' && c.trim()) {
+        const trimmed = c.trim();
+        if (trimmed !== '01' && trimmed !== '02' && trimmed !== '03' && trimmed !== '04' && trimmed !== '05') {
+          return trimmed.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+        }
+      }
+    }
+
+    if (req.profiles?.full_name) return req.profiles.full_name;
+    if (req.orders?.customer_name) return req.orders.customer_name;
+    return 'Brand Strategy';
+  };
+
+  const filteredRequests = requests.filter(r => {
+    if (activeTab !== 'all' && r.status !== activeTab) return false;
+    if (!search) return true;
     const s = search.toLowerCase();
-    filteredRequests = filteredRequests.filter(r => 
-      (r.brand_info?.brandName || r.brand_data?.brandName || '').toLowerCase().includes(s) ||
-      (r.profiles?.email || r.users?.email || '').toLowerCase().includes(s)
+    const bName = getBrandName(r).toLowerCase();
+    return (
+      bName.includes(s) ||
+      (r.profiles?.email || r.orders?.customer_email || '').toLowerCase().includes(s)
     );
-  }
+  });
   
   const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
   const paginatedRequests = filteredRequests.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -263,7 +304,8 @@ export default function AdminStrategyHub({ supabase, addToast }) {
   const computedConversion = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
   const computedRevenue = requests.reduce((acc, r) => {
     if (getPaymentStatus(r) === 'paid') {
-      return acc + (Number(r.revenue || r.amount) || 25);
+      // Strategy standalone or add-on fee is strictly $25 per strategy request
+      return acc + 25;
     }
     return acc;
   }, 0);
@@ -381,7 +423,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                       <td style={{ padding: '12px 8px', color: '#2DD4BF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', fontSize: 14 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                          {brandInfo.brandName || 'Unknown'}
+                          {getBrandName(req)}
                         </div>
                       </td>
                       <td style={{ padding: '12px 8px', color: '#fff' }}>
@@ -440,13 +482,13 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                         <td colSpan="11" style={{ padding: '0 24px 24px 24px' }}>
                           <div style={{ background: '#0A0A0A', padding: '20px 24px', borderRadius: 4 }}>
                             <div style={{ fontSize: 10, color: sFormat.color, letterSpacing: '2pt', textTransform: 'uppercase', fontWeight: 700, marginBottom: 8 }}>Status · {sFormat.label}</div>
-                            <div style={{ fontSize: 20, color: '#FFFFFF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', marginBottom: 8 }}>{brandInfo.brandName || 'Unknown'} · Strategy Request</div>
+                            <div style={{ fontSize: 20, color: '#FFFFFF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', marginBottom: 8 }}>{getBrandName(req)} · Strategy Request</div>
                             <div style={{ fontSize: 11, color: '#888', marginBottom: 20 }}>Submitted {new Date(req.created_at).toLocaleDateString()} · From Order {req.order_id || 'N/A'} ({req.tier}) · {req.profiles?.full_name || req.orders?.customer_name || 'Unknown'} ({req.profiles?.email || req.orders?.customer_email || 'No email'})</div>
 
                             <div style={{ borderTop: '1px solid #2A2A2A', paddingTop: 16, marginBottom: 16 }}>
                               <div style={{ fontSize: 10, letterSpacing: '2pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Essential Brand Info</div>
                               <div style={{ fontSize: 12, color: '#C8C8C8', lineHeight: 1.75 }}>
-                                <strong style={{color:'#FFFFFF'}}>Brand:</strong> {brandInfo.brandName}<br/>
+                                <strong style={{color:'#FFFFFF'}}>Brand:</strong> {getBrandName(req)}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Website:</strong> {brandInfo.website}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Category:</strong> {brandInfo.category}<br/>
                                 <strong style={{color:'#FFFFFF'}}>Positioning:</strong> {brandInfo.positioning || 'N/A'}<br/>
