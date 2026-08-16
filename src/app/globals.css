@@ -16,7 +16,12 @@
 body {
   background: #0a0a0a;
   color: #fff;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--font-montserrat), 'Montserrat', -apple-system, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-league-spartan), 'League Spartan', sans-serif;
+  font-weight: 800;
 }
 
 ::-webkit-scrollbar { width: 6px; }

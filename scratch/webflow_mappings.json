@@ -1,0 +1,367 @@
+{
+  "a5a50423-105b-9d88-e05d-66c6ff304d70": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "fa071934-7236-bee4-1ec7-39e7fb7500e3": {
+    "actionId": "a-8",
+    "title": "Card Flip - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "ce1269cd-7020-07e8-1a7a-1659f521e5cb": {
+    "actionId": "a-8",
+    "title": "Card Flip - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "72251f0e-43d7-525f-2033-0fb12aa60ade": {
+    "actionId": "a-8",
+    "title": "Card Flip - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "d5378edf-a1b3-a97d-febe-e3a2ed7ac79f": {
+    "actionId": "a-8",
+    "title": "Card Flip - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "7d214766-c977-d738-83f1-6ed5cfed15ab": {
+    "actionId": "a-11",
+    "title": "Main Button - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "8184a595-7c71-fc12-bdc0-c8b38bd35dc9": {
+    "actionId": "a-11",
+    "title": "Main Button - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "266a7cda-ed64-5a70-9d4c-bcdeb1a58af5": {
+    "actionId": "a-12",
+    "title": "Rotate Image Left",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "d5298730-866b-262f-66e7-86039a021229": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "e3bea890-4ae7-85f7-4096-f92e8584a25f": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "e3bea890-4ae7-85f7-4096-f92e8584a25b": {
+    "actionId": "a-13",
+    "title": "Rotate Image Right",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "96cfe2aa-79eb-6609-3bbd-91bbb584c32a": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "856ad6d5-0509-5bb5-5b14-5b3d39c4fa02": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "6fbfb071-a4ae-e617-b3d6-c796542622a1": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "ac72b610-6439-73b4-b81b-ff85bf50f1c3": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "70cfdaab-2e9e-4752-e3ac-a2d3a4cf11d1": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "3bf2bcbb-db5f-4c35-7d76-94b84138d248": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "26556305-11e1-55be-fca9-3e2b85ac189f": {
+    "actionId": "a-27",
+    "title": "Contact Button Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "26556305-11e1-55be-fca9-3e2b85ac18a9": {
+    "actionId": "a-27",
+    "title": "Contact Button Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "411be5b3-4ba0-2ca1-ae99-1185629ab90c": {
+    "actionId": "a-17",
+    "title": "Link Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "333e773e-6001-4f79-181f-1e380246e869": {
+    "actionId": "a-17",
+    "title": "Link Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "f8c76534-3c2e-02a9-70fe-5b50880219c8": {
+    "actionId": "a-17",
+    "title": "Link Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "514a5e3d-efc6-9eac-a48a-468392f0edcd": {
+    "actionId": "a-17",
+    "title": "Link Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "f9620f18-d99c-b616-22c8-2073a5c8c930": {
+    "actionId": "a-17",
+    "title": "Link Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "caa8987f-d6b2-c75d-00be-eb7a74ebb4cb": {
+    "actionId": "a-11",
+    "title": "Main Button - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "4d4d333c-090e-7e03-106d-33dd5e371c7d": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "8529cfdb-e044-ed3a-e5ed-6b85ad50fa17": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "ad936939-a7cb-59e9-144f-511f18004f91": {
+    "actionId": "a-12",
+    "title": "Rotate Image Left",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "4026c4f8-a2ec-c39c-42ab-e41e64010e54": {
+    "actionId": "a-33",
+    "title": "First Roll Number",
+    "eventType": "SCROLL_INTO_VIEW"
+  },
+  "4026c4f8-a2ec-c39c-42ab-e41e64010e84": {
+    "actionId": "a-34",
+    "title": "Second Roll Number",
+    "eventType": "SCROLL_INTO_VIEW"
+  },
+  "4026c4f8-a2ec-c39c-42ab-e41e64010eb4": {
+    "actionId": "a-35",
+    "title": "Third Roll Numbers",
+    "eventType": "SCROLL_INTO_VIEW"
+  },
+  "cfb26308-464e-3232-e53a-172211be49cd": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "22e5c8b3-b704-0818-d282-a6ae2828774a": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "22e5c8b3-b704-0818-d282-a6ae2828774e": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "22e5c8b3-b704-0818-d282-a6ae28287752": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "22e5c8b3-b704-0818-d282-a6ae28287756": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "b9fc2a64-8108-2ca7-93ff-0ee6a6ce2a61": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "b9fc2a64-8108-2ca7-93ff-0ee6a6ce2a65": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "b9fc2a64-8108-2ca7-93ff-0ee6a6ce2a69": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "b9fc2a64-8108-2ca7-93ff-0ee6a6ce2a6d": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "30e7eeea-81f5-1b06-066c-953b668d6a6b": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "30e7eeea-81f5-1b06-066c-953b668d6a6f": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "30e7eeea-81f5-1b06-066c-953b668d6a73": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "30e7eeea-81f5-1b06-066c-953b668d6a77": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "a216533a-1ebd-9c69-6443-821961a3da9b": {
+    "actionId": "a-13",
+    "title": "Rotate Image Right",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "a216533a-1ebd-9c69-6443-821961a3da9f": {
+    "actionId": "a-5",
+    "title": "Shadow Text",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "6d92db2b-4f63-5607-1707-4992633cef64": {
+    "actionId": "a-38",
+    "title": "Sticky Scrolling 01",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "7a6f7d36-2d66-4666-1408-15c40fc26130": {
+    "actionId": "a-39",
+    "title": "Sticky Scrolling 02",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "5778e078-494f-7670-13a7-4161e6558792": {
+    "actionId": "a-40",
+    "title": "Sticky Scrolling 03",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "a74bce82-05d5-ca94-6ae1-e9f9e3561b36": {
+    "actionId": "a-42",
+    "title": "Blog Post - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "c81dd428-b8db-71bc-d933-6a88af3d1887": {
+    "actionId": "a-42",
+    "title": "Blog Post - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "59aa76f5-991e-47a7-aeb8-213c0352338f": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "59aa76f5-991e-47a7-aeb8-213c03523393": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "59aa76f5-991e-47a7-aeb8-213c03523397": {
+    "actionId": "a-37",
+    "title": "Social Media - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "2125e7d0-55a6-8b3c-7600-5156bc574274": {
+    "actionId": "a-11",
+    "title": "Main Button - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "d89a8baf-8215-856c-0742-89356d897f07": {
+    "actionId": "a-29",
+    "title": "Accordion Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "d89a8baf-8215-856c-0742-89356d897f15": {
+    "actionId": "a-32",
+    "title": "Accordion Track Line",
+    "eventType": "SCROLL_INTO_VIEW"
+  },
+  "6a3a721d-a715-453e-35cb-9028564ed86f": {
+    "actionId": "a-43",
+    "title": "Case Image Scroll",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "d1917932-5f03-9bc3-543a-6cc44cca9986": {
+    "actionId": "a-43",
+    "title": "Case Image Scroll",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "7d6e77a8-68df-0241-d9cd-53647ee6802a": {
+    "actionId": "a-43",
+    "title": "Case Image Scroll",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "ba61eb6b-8684-cdc4-496f-16d350b31cfe": {
+    "actionId": "a-11",
+    "title": "Main Button - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "ad89d72f-86de-e399-a897-b5b55b3d0710": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "ea2cbd47-4bd1-0915-92c9-287e32a37fda": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "ea2cbd47-4bd1-0915-92c9-287e32a37fe8": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "ea2cbd47-4bd1-0915-92c9-287e32a37ff6": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "ea2cbd47-4bd1-0915-92c9-287e32a38004": {
+    "actionId": "a-15",
+    "title": "Case Study Scrolling",
+    "eventType": "SCROLLING_IN_VIEW"
+  },
+  "03338763-b968-b03b-1bf8-2682196db501": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "cc723a99-e4d2-bf07-2354-da247a3b3216": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "84feffcb-ac2d-dff4-c6f6-92d1b6503cd5": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "b4629ef8-cc4d-9594-8e3f-2566602cf435": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "71b995cc-bab1-88b5-7a97-fa604f4797ef": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "76f985e2-5d33-5dd0-1eab-c7b40d23937d": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  },
+  "5593b211-210f-4297-a4fe-d714a53d7d40": {
+    "actionId": "a-45",
+    "title": "Case Name - Hover Out",
+    "eventType": "MOUSE_OUT"
+  }
+}

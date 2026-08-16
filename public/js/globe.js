@@ -1,32 +1,35 @@
-var c = document.getElementById('globe-canvas'),
-	s = c.width = c.height = 400,
-	ctx = c.getContext('2d'),
+(function () {
+  window.addEventListener('DOMContentLoaded', function () {
+    var c = document.getElementById('globe-canvas');
+    if (!c) return;
+    var s = c.width = c.height = 400,
+      ctx = c.getContext('2d'),
 
-	opts = {
-		globeRadius: 150,
-		depth: 300,
-		focalLength: 300,
-		center: s / 2,
+      opts = {
+        globeRadius: 150,
+        depth: 300,
+        focalLength: 300,
+        center: s / 2,
 
-		rotYVel: .01,
-		baseXRot: -0.41, // 23.5 deg
-		afterYRot: -2,//Math.PI / 2,
-	},
+        rotYVel: .01,
+        baseXRot: -0.41, // 23.5 deg
+        afterYRot: -2,//Math.PI / 2,
+      },
 
-	rot = {
-		y: {
-			cos: Math.cos(opts.rotYVel),
-			sin: Math.sin(opts.rotYVel)
-		},
-		z: {
-			cos: Math.cos(opts.baseXRot),
-			sin: Math.sin(opts.baseXRot)
-		},
-		ay: {
-			cos: Math.cos(opts.afterYRot),
-			sin: Math.sin(opts.afterYRot)
-		}
-	};
+      rot = {
+        y: {
+          cos: Math.cos(opts.rotYVel),
+          sin: Math.sin(opts.rotYVel)
+        },
+        z: {
+          cos: Math.cos(opts.baseXRot),
+          sin: Math.sin(opts.baseXRot)
+        },
+        ay: {
+          cos: Math.cos(opts.afterYRot),
+          sin: Math.sin(opts.afterYRot)
+        }
+      };
 
 function anim() {
 
@@ -237,3 +240,5 @@ deCanvas.addEventListener( 'click', function( e ){
 
 reparseLines();
 anim();
+  });
+})();

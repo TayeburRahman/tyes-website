@@ -378,10 +378,11 @@
             margin: 0 auto;
         }
 
-        .pricing h2 {
-            font-family: "League Spartan", sans-serif;
-            font-weight: 800;
-            color: #FFFFFF;
+        .pricing h2,
+        .pricing-section-container h2 {
+            font-family: "League Spartan", sans-serif !important;
+            font-weight: 800 !important;
+            color: #FFFFFF !important;
             font-size: clamp(32px, 4vw, 48px);
             text-align: center;
         }
@@ -809,8 +810,19 @@
             <!-- MAIN PRICING CONTENT -->
             <div class="pricing-section-container">
 
-                <h2>Find the <span class="accent">Perfect Package.</span></h2>
-                <p class="pay">Pay per campaign. Scale when ready.</p>
+                <div class="heading-wrapper center-wrapper scroll-reveal" style="margin-bottom:1.5rem;">
+                  <div class="heading-item">
+                    <h2 class="header-text _01">Find the</h2>
+                    <h2 class="shadow-text">Find the</h2>
+                  </div>
+                  <div class="heading-flex">
+                    <div class="heading-item">
+                      <h2 class="header-text _02"><span class="featured-text">Perfect Package.</span></h2>
+                      <h2 class="shadow-text"><span class="featured-text shadow">Perfect Package.</span></h2>
+                    </div>
+                  </div>
+                  <p class="pay" style="margin-top:0.75rem;">Pay per campaign. Scale when ready.</p>
+                </div>
 
                 <div class="group-label">Campaign Images</div>
                 <div class="tier-row img">
