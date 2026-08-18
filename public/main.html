@@ -912,6 +912,7 @@
     /* ============ COMPREHENSIVE MULTI-DEVICE RESPONSIVE SYSTEM ============ */
     /* 1. IPAD & TABLET SPECIFIC RESPONSIVE SYSTEM (768px - 1024px) */
     @media (min-width: 768px) and (max-width: 1024px) {
+
       /* iPad Navigation & Hero Header */
       .padding-top-header {
         padding-top: 1.5rem !important;
@@ -929,8 +930,9 @@
       /* iPad Hero 3D Showcase scaling & positioning */
       ._3d-block {
         transform: scale(0.72) !important;
-        margin-top: -1rem !important;
-        margin-bottom: -4rem !important;
+        margin-top: 5rem !important;
+        padding-top: 10rem !important;
+        margin-bottom: -1rem !important;
       }
 
       /* iPad Hero CTAs */
@@ -1047,8 +1049,8 @@
       }
     }
 
-    /* 3. MOBILE & PHONES (<= 768px) */
-    @media (max-width: 768px) {
+    /* 3. MOBILE & PHONES (<= 767px) */
+    @media (max-width: 767px) {
       .hero-br {
         display: block !important;
       }
@@ -1095,10 +1097,10 @@
       }
 
       ._3d-block {
-        transform: scale(0.55) !important;
-        padding-top: 3.5rem !important;
+        transform: scale(0.72) !important;
         margin-top: 0 !important;
-        margin-bottom: -6.5rem !important;
+        padding-top: 4rem !important;
+        margin-bottom: -4.5rem !important;
         position: relative !important;
         z-index: 1 !important;
       }
@@ -1197,6 +1199,13 @@
 
     /* 4. SMALL MOBILE / PHONES (<= 480px) */
     @media (max-width: 480px) {
+      ._3d-block {
+        transform: scale(0.68) !important;
+        padding-top: 7.5rem !important;
+        margin-top: 0 !important;
+        margin-bottom: -7rem !important;
+      }
+
       .hiw-grid {
         grid-template-columns: 1fr !important;
         padding: 0 16px !important;
@@ -1442,7 +1451,7 @@
           </div>
         </div>
       </header>
-      <section style="padding:3rem 0;">
+      <section style=" ">
         <div class="padding-global">
           <div class="container-large">
             <div class="hero-ctas" style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
