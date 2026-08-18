@@ -20,10 +20,26 @@
     <link href="images/tyes-logo-new.svg" rel="shortcut icon" type="image/x-icon">
     <link href="images/tyes-logo-new.svg" rel="apple-touch-icon">
     <style>
-        h1, h2, h3 {
-            font-family: 'League Spartan', sans-serif !important;
-            font-weight: 800 !important;
-            color: #FFFFFF !important;
+        /* ==========================================================================
+           TYES DESIGN SYSTEM - PRICING PAGE MASTER STYLESHEET
+           ========================================================================== */
+        :root {
+            --font-heading: 'League Spartan', -apple-system, sans-serif;
+            --font-body: 'Montserrat', -apple-system, sans-serif;
+            --font-brand: 'Gliker', serif;
+            --font-sans: 'Inter', sans-serif;
+
+            --color-brand: #2DD4BF;
+            --color-bg-dark: #050505;
+            --color-card-bg: #141414;
+            --color-card-bg-hover: #1A1A1A;
+            --color-text-muted: #C8C8C8;
+            --color-text-dim: #B8B8B8;
+
+            --lh-heading: 1.15;
+            --lh-subline: 1.5;
+            --lh-body: 1.6;
+            --tracking-heading: -0.025em;
         }
 
         @font-face {
@@ -34,177 +50,318 @@
         }
 
         body {
-            font-family: "Montserrat", -apple-system, sans-serif;
-            background: #050505;
+            font-family: var(--font-body);
+            background: var(--color-bg-dark);
             color: #EDEDED;
+            margin: 0;
+            padding: 0;
         }
 
-        .pricing-section-container {
-            max-width: 1300px;
-            margin: 40px auto 0;
-            padding: 80px 24px 60px;
+        /* ============ 3D HEADING REVEAL & SHADOW TEXT ANIMATION ============ */
+        .heading-item {
+            overflow: hidden;
+            position: relative;
+            display: inline-block;
         }
 
-        .accent {
-            font-family: "Montserrat", -apple-system, sans-serif;
-            font-style: italic;
-            font-weight: 700;
-            color: #2DD4BF;
+        .center-wrapper {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
         }
 
-        .tagline {
-            font-size: 10pt;
-            letter-spacing: 5pt;
+        .heading-wrapper .header-text,
+        .heading-wrapper .shadow-text {
+            font-family: var(--font-heading) !important;
+            font-weight: 800 !important;
+            font-size: clamp(2.2rem, 5vw, 4.2rem) !important;
+            line-height: var(--lh-heading) !important;
             text-transform: uppercase;
-            color: #2DD4BF;
-            font-weight: 600;
-            margin-bottom: 12px;
-            text-align: center;
+            margin-bottom: 0;
+            letter-spacing: var(--tracking-heading);
         }
 
-        .pricing-hero-h1 {
-            font-family: "League Spartan", -apple-system, sans-serif;
-            font-size: clamp(2.2rem, 4vw, 3.5rem);
+        .heading-wrapper .header-text {
+            position: relative;
+            z-index: 2;
+            color: #FFFFFF !important;
+        }
+
+        .heading-wrapper .shadow-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .heading-wrapper .featured-text.shadow {
+            color: rgba(45, 212, 191, 0.35) !important;
+        }
+
+        .heading-wrapper:not(.heading-revealed) .header-text,
+        .heading-wrapper:not(.heading-revealed) .shadow-text {
+            transform: translateY(115%);
+            opacity: 0;
+        }
+
+        .heading-wrapper.heading-revealed .header-text,
+        .scroll-reveal.is-visible .header-text {
+            transform: translateY(0%) rotate(0deg) !important;
+            opacity: 1 !important;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease !important;
+        }
+
+        .heading-wrapper.heading-revealed .shadow-text,
+        .scroll-reveal.is-visible .shadow-text {
+            transform: translateY(0%) translate(-3px, 3px) !important;
+            opacity: 0.4 !important;
+            transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.9s ease !important;
+        }
+
+        .heading-wrapper {
+            cursor: pointer;
+        }
+
+        .heading-wrapper:hover .header-text {
+            transform: translateY(-3px) scale(1.01) !important;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        .heading-wrapper:hover .shadow-text {
+            transform: translate(-7px, 7px) scale(1.02) !important;
+            opacity: 0.75 !important;
+            color: var(--color-brand) !important;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.4s ease, opacity 0.4s ease !important;
+        }
+
+        .heading-flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading) !important;
+            font-weight: 800 !important;
+            color: #FFFFFF !important;
+            line-height: var(--lh-heading);
+            letter-spacing: var(--tracking-heading);
+        }
+
+        .accent, .featured-text {
+            font-family: var(--font-body) !important;
+            font-style: italic !important;
+            font-weight: 700 !important;
+            color: var(--color-brand) !important;
+        }
+
+        /* ============ MAIN CONTAINER & TOP HEADERS ============ */
+        .pricing-section-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 110px 24px 60px;
+            box-sizing: border-box;
+        }
+
+        .pricing .pay,
+        .pay {
+            font-family: var(--font-body);
+            text-align: center;
+            color: var(--color-text-dim);
+            font-size: 1.05rem;
+            line-height: var(--lh-subline);
+            margin: 12px 0 40px;
+        }
+
+        .group-label {
+            font-family: var(--font-heading);
             font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -1pt;
-            color: #FFFFFF;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .sub-headline {
-            font-size: 13pt;
-            color: #B8B8B8;
-            line-height: 1.55;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .price-grid-main {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            font-size: 13px;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: var(--color-brand);
+            margin: 44px 0 20px;
+            display: flex;
+            align-items: center;
             gap: 16px;
-            margin: 24px 0;
         }
 
-        @media (max-width: 1200px) {
-            .price-grid-main {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .group-label::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #2A2A2A;
         }
 
-        @media (max-width: 768px) {
-            .price-grid-main {
-                grid-template-columns: 1fr;
-            }
+        /* ============ PRICING MATRIX & CARDS ============ */
+        .tier-row {
+            display: grid;
+            gap: 20px;
         }
 
-        .price-card {
-            background: #141414;
-            padding: 24px;
-            border-radius: 12px;
+        .tier-row.img {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .tier-row.strat {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .tier {
+            background: var(--color-card-bg);
             border: 1px solid #2A2A2A;
+            border-radius: 14px;
+            padding: 32px 26px;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            box-sizing: border-box;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
         }
 
-        .price-card.popular {
-            background: #1a1a1a;
-            border: 2px solid #2DD4BF;
+        .tier:hover {
+            transform: translateY(-6px);
+            border-color: var(--color-brand);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(45, 212, 191, 0.15);
         }
 
-        .price-card .tag {
-            font-size: 8pt;
-            letter-spacing: 3pt;
-            text-transform: uppercase;
-            color: #2DD4BF;
-            font-weight: 700;
-            margin-bottom: 12px;
+        .tier.popular {
+            border: 2px solid var(--color-brand);
+            background: var(--color-card-bg-hover);
+            box-shadow: 0 0 18px rgba(45, 212, 191, 0.2);
         }
 
-        .price-card h3 {
-            font-family: "League Spartan", sans-serif;
-            margin-top: 0;
-            font-size: 16pt;
-            color: #FFFFFF;
-            margin-bottom: 4px;
-        }
-
-        .price-value {
-            font-size: 34pt;
-            color: #FFFFFF;
+        .tier .badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--color-brand);
+            color: #0A0A0A;
+            font-family: var(--font-body);
+            font-size: 10px;
             font-weight: 800;
-            letter-spacing: -1pt;
-            line-height: 1;
-            margin: 12px 0 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(45, 212, 191, 0.4);
         }
 
-        .price-card ul {
+        .tier .tag {
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--color-brand);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .tier h3 {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            color: #FFFFFF;
+            font-size: 24px;
+            line-height: 1.2;
+            margin: 0 0 4px 0;
+
+        }
+
+        .tier .price {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 42px;
+            color: #FFFFFF;
+            margin: 12px 0 16px;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .tier .price small {
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: #888;
+            font-weight: 500;
+        }
+
+        .tier ul {
             list-style: none;
+            flex: 1;
+            margin: 16px 0 24px;
             padding: 0;
-            margin: 16px 0 0 0;
-            flex-grow: 1;
         }
 
-        .price-card ul li {
-            font-size: 10pt;
-            color: #C8C8C8;
-            margin-bottom: 12px;
-            padding-left: 18px;
+        .tier ul li {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            padding-left: 22px;
             position: relative;
-            line-height: 1.5;
+            margin-bottom: 10px;
+            line-height: 1.55;
         }
 
-        .price-card ul li::before {
+        .tier ul li::before {
             content: "✓";
-            color: #2DD4BF;
+            color: var(--color-brand);
             font-weight: 700;
             position: absolute;
             left: 0;
+            top: 0;
         }
 
-        .price-card .add-strategy {
-            border-top: 1px dashed #2DD4BF;
-            padding-top: 12px;
-            margin-top: 12px;
-            display: flex;
+        .tier .foot {
+            border-top: 1px dashed var(--color-brand);
+            margin-top: 16px;
+            padding-top: 14px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--color-brand);
+            font-weight: 700;
+        }
+
+        /* ============ ENTERPRISE CUSTOM TIER ============ */
+        .custom {
+            border: 2px solid var(--color-brand);
+            border-radius: 14px;
+            background: var(--color-card-bg-hover);
+            margin-top: 40px;
+            padding: 34px 38px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 28px;
             align-items: center;
-            justify-content: space-between;
-            gap: 8px;
+            box-sizing: border-box;
         }
 
-        .price-card .cta-btn {
-            background: #2DD4BF;
-            color: #0A0A0A;
-            font-weight: 800;
-            font-size: 9.5pt;
-            letter-spacing: 1pt;
-            text-transform: uppercase;
-            padding: 12px 16px;
-            border-radius: 6px;
-            text-align: center;
-            margin-top: 20px;
-            display: block;
-            text-decoration: none;
-            transition: opacity 0.2s;
+        .custom h3 {
+            font-size: 26px;
+            margin: 0;
         }
 
-        .price-card .cta-btn:hover {
-            opacity: 0.9;
-            text-decoration: none;
+        .custom .desc {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-top: 10px;
+            line-height: var(--lh-body);
         }
 
+        /* ============ DEEP DIVE BRAND STRATEGY SECTION ============ */
         .deep-dive-section {
             background: linear-gradient(135deg, #141414, #1a1a1a);
             border: 1px solid #2A2A2A;
-            border-radius: 12px;
-            padding: 40px;
+            border-radius: 14px;
+            padding: 42px 38px;
             margin: 40px 0;
             position: relative;
             overflow: hidden;
+            box-sizing: border-box;
         }
 
         .deep-dive-section::before {
@@ -214,62 +371,61 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #2DD4BF, transparent 60%);
+            background: linear-gradient(90deg, var(--color-brand), transparent 60%);
         }
 
         .deep-dive-section .eyebrow {
-            font-size: 8.5pt;
-            letter-spacing: 4pt;
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            color: #2DD4BF;
+            color: var(--color-brand);
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .deep-dive-section h3 {
-            font-family: "League Spartan", sans-serif;
-            margin-top: 0;
-            font-size: 28pt;
+            font-family: var(--font-heading);
+            font-size: clamp(24px, 3vw, 36px);
+            font-weight: 800;
             color: #FFFFFF;
-            letter-spacing: -0.8pt;
-            line-height: 1.1;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
             margin-bottom: 16px;
+            margin-top: 0;
         }
 
         .deep-dive-section .desc {
-            font-size: 12pt;
-            color: #B8B8B8;
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: var(--color-text-dim);
             line-height: 1.65;
-            max-width: 750px;
-            margin-bottom: 20px;
+            max-width: 780px;
+            margin-bottom: 24px;
         }
 
         .deep-dive-section .features-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px 24px;
+            gap: 12px 28px;
             margin: 24px 0;
-        }
-
-        @media (max-width: 768px) {
-            .deep-dive-section .features-grid {
-                grid-template-columns: 1fr;
-            }
+            padding: 0;
         }
 
         .deep-dive-section .features-grid li {
-            font-size: 10.5pt;
-            color: #C8C8C8;
-            padding-left: 20px;
+            font-family: var(--font-body);
+            font-size: 14.5px;
+            color: var(--color-text-muted);
+            padding-left: 22px;
             position: relative;
-            line-height: 1.55;
+            line-height: 1.6;
             margin-bottom: 8px;
             list-style: none;
         }
 
         .deep-dive-section .features-grid li::before {
             content: "→";
-            color: #2DD4BF;
+            color: var(--color-brand);
             font-weight: 700;
             position: absolute;
             left: 0;
@@ -279,57 +435,96 @@
             display: flex;
             gap: 16px;
             flex-wrap: wrap;
-            margin-top: 24px;
+            margin-top: 28px;
         }
 
-        .deep-dive-section .cta {
-            padding: 14px 28px;
-            border-radius: 999px;
-            font-weight: 700;
-            font-size: 11pt;
-            letter-spacing: 0.5pt;
-            display: inline-block;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .deep-dive-section .cta-primary {
-            background: #2DD4BF;
-            color: #0A0A0A;
-        }
-
-        .deep-dive-section .cta-secondary {
-            background: transparent;
-            color: #2DD4BF;
-            border: 2px solid #2DD4BF;
-        }
-
+        /* ============ FAQ ACCORDION BLOCK ============ */
         .faq-block {
-            margin-top: 30px;
+            margin-top: 50px;
         }
 
         .faq-item {
-            margin-bottom: 16px;
-            border-bottom: 1px solid #1A1A1A;
-            padding-bottom: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(45, 212, 191, 0.3);
         }
 
         .faq-item h3 {
-            font-family: "League Spartan", sans-serif;
+            font-family: var(--font-heading);
+            font-weight: 800;
             margin-top: 0;
-            font-size: 13pt;
+            font-size: 18px;
             color: #FFFFFF;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
         }
 
         .faq-item p {
-            font-size: 10.5pt;
-            color: #A8A8A8;
+            font-family: var(--font-body);
+            font-size: 14.5px;
+            color: var(--color-text-dim);
+            line-height: 1.65;
             margin-bottom: 0;
         }
 
-        /* FOOTER OVERRIDES - FIX HUGE WEBFLOW GAPS & RESPONSIVENESS */
+        /* ============ COMMON BUTTONS & CTAS ============ */
+        .cta-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-brand);
+            color: #0A0A0A;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 14px;
+            padding: 13px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .cta-pill:hover {
+            background: #FFFFFF;
+            color: #0A0A0A;
+            transform: translateY(-2px);
+        }
+
+        .cta-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 2px solid var(--color-brand);
+            color: var(--color-brand);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 14px;
+            padding: 11px 26px;
+            border-radius: 999px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .cta-ghost:hover {
+            background: var(--color-brand);
+            color: #000000;
+            transform: translateY(-2px);
+        }
+
+        /* ============ FOOTER STYLES ============ */
         footer.footer-component {
-            margin-top: 30px !important;
+            margin-top: 50px !important;
             padding-top: 40px !important;
             padding-bottom: 30px !important;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -348,291 +543,51 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .footer-grid-block {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-        }
-
-        @media (max-width: 768px) {
-
-            .footer-grid,
-            .footer-main-grid {
-                grid-template-columns: 1fr !important;
-                gap: 1.5rem !important;
-                margin-top: 1.5rem !important;
-            }
-
-            .horizontal-flex {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 0.5rem !important;
-            }
-        }
-    </style>
-
-    <style>
-        /* ============ 4. PRICING — grouped, NO carousel ============ */
-        .pricing {
-            padding: 90px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .pricing h2,
-        .pricing-section-container h2 {
-            font-family: "League Spartan", sans-serif !important;
-            font-weight: 800 !important;
-            color: #FFFFFF !important;
-            font-size: clamp(32px, 4vw, 48px);
-            text-align: center;
-        }
-
-        .pricing .pay {
-            font-family: "Montserrat", sans-serif;
-            text-align: center;
-            color: #B8B8B8;
-            margin: 8px 0 40px;
-        }
-
-        .group-label {
-            font-family: "League Spartan", sans-serif;
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #2DD4BF;
-            margin: 34px 0 14px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .group-label::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: #2A2A2A;
-        }
-
-        .tier-row {
-            display: grid;
-            gap: 16px;
-        }
-
-        .tier-row.img {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .tier-row.strat {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (max-width: 900px) {
-
-            .tier-row.img,
-            .tier-row.strat {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .tier {
-            background: #141414;
-            border: 1px solid #2A2A2A;
-            border-radius: 12px;
-            padding: 28px 24px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tier.popular {
-            border: 2px solid #2DD4BF;
-            background: #1a1a1a;
-        }
-
-        .tier .badge {
-            position: absolute;
-            top: -12px;
-            right: 18px;
-            background: #2DD4BF;
-            color: #0A0A0A;
-            font-family: "Montserrat", sans-serif;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        .tier .tag {
-            font-family: "Montserrat", sans-serif;
-            font-size: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #2DD4BF;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .tier h3 {
-            font-family: "League Spartan", sans-serif;
-            font-weight: 800;
-            color: #FFFFFF;
-            font-size: 22px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .tier .price {
-            font-family: "League Spartan", sans-serif;
-            font-weight: 800;
-            font-size: 40px;
-            color: #fff;
-            margin: 10px 0 14px;
-            letter-spacing: -1px;
-        }
-
-        .tier .price small {
-            font-family: "Montserrat", sans-serif;
-            font-size: 15px;
-            color: #888;
-            font-weight: 500;
-        }
-
-        .tier ul {
-            list-style: none;
-            flex: 1;
-            margin: 0;
-            padding: 0;
-        }
-
-        .tier ul li {
-            font-family: "Montserrat", sans-serif;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: #C8C8C8;
-            padding-left: 20px;
-            position: relative;
-            margin-bottom: 8px;
-        }
-
-        .tier ul li::before {
-            content: "✓";
-            color: #2DD4BF;
-            font-weight: 700;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        .tier .foot {
-            border-top: 1px dashed #2DD4BF;
-            margin-top: 14px;
-            padding-top: 12px;
-            font-family: "Montserrat", sans-serif;
-            font-size: 12.5px;
-            color: #2DD4BF;
-            font-weight: 700;
-        }
-
-        .tier .cta-pill,
-        .tier .cta-ghost {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 13px;
-            padding: 12px 20px;
-        }
-
-        .custom {
-            border: 2px solid #2DD4BF;
-            border-radius: 12px;
-            background: #1a1a1a;
-            margin-top: 34px;
-            padding: 30px 34px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .custom .desc {
-            font-family: "Montserrat", sans-serif;
-            font-size: 14px;
-            color: #C8C8C8;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 800px) {
-            .custom {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ============ COMPREHENSIVE RESPONSIVE STYLES ============ */
-        @media (max-width: 991px) {
+        /* ============ MULTI-DEVICE RESPONSIVE BREAKPOINTS ============ */
+        @media (max-width: 1024px) {
             .pricing-section-container {
-                padding: 100px 20px 40px !important;
-                margin-top: 0 !important;
+                padding: 120px 24px 40px !important;
             }
+
             .tier-row.img {
-                grid-template-columns: repeat(2, 1fr) !important;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .custom {
+                padding: 30px 28px;
             }
         }
 
         @media (max-width: 768px) {
             .pricing-section-container {
-                padding: 100px 16px 30px !important;
-                margin-top: 0 !important;
-            }
-
-            .pricing h2,
-            .pricing-hero-h1 {
-                font-size: clamp(26px, 7.5vw, 36px) !important;
-                line-height: 1.15 !important;
-                text-align: center !important;
-            }
-
-            .pay,
-            .sub-headline {
-                font-size: 14px !important;
-                margin-bottom: 24px !important;
-            }
-
-            .group-label {
-                font-size: 12px !important;
-                letter-spacing: 2.5px !important;
-                margin: 24px 0 12px !important;
+                padding: 130px 18px 30px !important;
             }
 
             .tier-row.img,
             .tier-row.strat {
                 grid-template-columns: 1fr !important;
-                gap: 16px !important;
+                max-width: 520px;
+                margin: 0 auto;
+                width: 100%;
             }
 
             .tier {
-                padding: 22px 18px !important;
+                padding: 26px 20px !important;
             }
 
             .tier h3 {
-                font-size: 20px !important;
+                font-size: 22px !important;
             }
 
             .tier .price {
-                font-size: 32px !important;
-                margin: 8px 0 12px !important;
+                font-size: 36px !important;
             }
 
             .custom {
                 grid-template-columns: 1fr !important;
-                padding: 20px 18px !important;
-                gap: 16px !important;
-                margin-top: 24px !important;
-            }
-
-            .custom h3 {
-                font-size: 22px !important;
+                padding: 26px 22px !important;
+                text-align: center;
+                gap: 20px !important;
             }
 
             .custom div[style*="flex"] {
@@ -642,86 +597,217 @@
 
             .custom div[style*="flex"] a {
                 width: 100% !important;
-                text-align: center !important;
-                box-sizing: border-box !important;
-            }
-
-            .tier div[style*="flex"] {
-                flex-direction: column !important;
-                width: 100% !important;
-                gap: 8px !important;
-            }
-
-            .tier div[style*="flex"] a {
-                width: 100% !important;
-                flex: none !important;
-                text-align: center !important;
                 box-sizing: border-box !important;
             }
 
             .deep-dive-section {
-                padding: 24px 18px !important;
-                margin: 28px 0 !important;
-                border-radius: 10px !important;
+                padding: 28px 20px !important;
+            }
+
+            .deep-dive-section .features-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .deep-dive-section .cta-row {
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+
+            .deep-dive-section .cta-row a {
+                width: 100% !important;
+                box-sizing: border-box !important;
+                text-align: center !important;
+            }
+
+            .footer-main-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                text-align: center !important;
+            }
+
+            .footer-flex-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* 4. SMALL MOBILE / PHONES (<= 480px) */
+        @media (max-width: 480px) {
+            .pricing-section-container {
+                padding: 135px 12px 24px !important;
+            }
+
+            .heading-wrapper .header-text,
+            .heading-wrapper .shadow-text {
+                font-size: clamp(1.6rem, 7vw, 2.4rem) !important;
+            }
+
+            .pay, .sub-headline {
+                font-size: 13.5px !important;
+                margin-top: 8px !important;
+                margin-bottom: 24px !important;
+                line-height: 1.5 !important;
+            }
+
+            .group-label {
+                font-size: 11px !important;
+                letter-spacing: 2px !important;
+                margin: 32px 0 14px !important;
+            }
+
+            .tier {
+                padding: 20px 16px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .tier .tag {
+                font-size: 10px !important;
+                letter-spacing: 2px !important;
+                margin-bottom: 6px !important;
+            }
+
+            .tier h3 {
+                font-size: 20px !important;
+                line-height: 1.25 !important;
+            }
+
+            .tier .price {
+                font-size: 32px !important;
+                margin: 8px 0 12px !important;
+            }
+
+            .tier .price small {
+                font-size: 13px !important;
+            }
+
+            .tier ul li {
+                font-size: 13px !important;
+                line-height: 1.5 !important;
+                margin-bottom: 8px !important;
+                padding-left: 18px !important;
+            }
+
+            .tier .foot {
+                font-size: 12px !important;
+                margin-top: 12px !important;
+                padding-top: 10px !important;
+            }
+
+            .tier .cta-pill,
+            .tier .cta-ghost,
+            .custom .cta-pill,
+            .custom .cta-ghost {
+                width: 100% !important;
+                box-sizing: border-box !important;
+                text-align: center !important;
+                justify-content: center !important;
+                padding: 12px 16px !important;
+                font-size: 13px !important;
+                margin-top: 14px !important;
+            }
+
+            .custom {
+                padding: 20px 16px !important;
+                border-radius: 12px !important;
+                margin-top: 24px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .custom h3 {
+                font-size: 20px !important;
+                line-height: 1.25 !important;
+            }
+
+            .custom .desc {
+                font-size: 13px !important;
+                line-height: 1.55 !important;
+                margin-top: 8px !important;
+            }
+
+            .deep-dive-section {
+                padding: 22px 16px !important;
+                margin: 32px 0 24px !important;
+                border-radius: 12px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .deep-dive-section .eyebrow {
+                font-size: 10px !important;
+                letter-spacing: 2px !important;
+                margin-bottom: 10px !important;
             }
 
             .deep-dive-section h3 {
-                font-size: 22px !important;
+                font-size: 20px !important;
+                line-height: 1.3 !important;
                 margin-bottom: 12px !important;
             }
 
             .deep-dive-section .desc {
                 font-size: 13.5px !important;
                 line-height: 1.6 !important;
+                margin-bottom: 18px !important;
             }
 
-            .deep-dive-section .cta-row {
-                flex-direction: column !important;
-                width: 100% !important;
-                gap: 10px !important;
+            .deep-dive-section .features-grid li {
+                font-size: 13px !important;
+                line-height: 1.55 !important;
+                padding-left: 18px !important;
+                margin-bottom: 6px !important;
             }
 
-            .deep-dive-section .cta {
+            .deep-dive-section .cta-row a {
                 width: 100% !important;
+                justify-content: center !important;
                 text-align: center !important;
+                padding: 12px 16px !important;
+                font-size: 13px !important;
                 box-sizing: border-box !important;
             }
 
             .faq-block {
-                margin-top: 20px !important;
+                margin-top: 36px !important;
             }
 
             .faq-item {
-                padding-bottom: 14px !important;
-                margin-bottom: 14px !important;
+                padding: 16px 16px !important;
+                border-radius: 10px !important;
+                margin-bottom: 10px !important;
             }
 
             .faq-item h3 {
                 font-size: 15px !important;
                 line-height: 1.35 !important;
+                margin-bottom: 6px !important;
             }
 
             .faq-item p {
-                font-size: 13.5px !important;
+                font-size: 13px !important;
                 line-height: 1.55 !important;
             }
         }
 
-        @media (max-width: 480px) {
+        /* 5. EXTRA SMALL PHONES (<= 380px) */
+        @media (max-width: 380px) {
             .pricing-section-container {
-                padding: 95px 12px 24px !important;
+                padding: 125px 10px 20px !important;
             }
 
-            .tier {
-                padding: 18px 14px !important;
+            .heading-wrapper .header-text,
+            .heading-wrapper .shadow-text {
+                font-size: clamp(1.4rem, 6.5vw, 2.1rem) !important;
             }
 
-            .tier ul li {
-                font-size: 13px !important;
+            .tier, .custom, .deep-dive-section {
+                padding: 18px 12px !important;
             }
 
-            .deep-dive-section {
-                padding: 18px 14px !important;
+            .tier .price {
+                font-size: 28px !important;
             }
         }
     </style>
@@ -918,10 +1004,19 @@
                 </div>
 
 
-                <!-- ======= DEEP DIVE SECTION ======= -->
-                <h2
-                    style="font-family:'League Spartan',sans-serif;font-size:18pt;font-weight:800;color:#FFF;margin-top:50px;margin-bottom:16px;">
-                    Ready for more? <span class="accent">Deep Dive Brand Strategy.</span></h2>
+                <!-- ======= DEEP DIVE SECTION TITLE ======= -->
+                <div class="heading-wrapper center-wrapper scroll-reveal" style="margin-top: 100px; margin-bottom: 32px;">
+                  <div class="heading-item">
+                    <h2 class="header-text _01">Ready for more?</h2>
+                    <h2 class="shadow-text">Ready for more?</h2>
+                  </div>
+                  <div class="heading-flex">
+                    <div class="heading-item">
+                      <h2 class="header-text _02"><span class="featured-text">Deep Dive Brand Strategy.</span></h2>
+                      <h2 class="shadow-text"><span class="featured-text shadow">Deep Dive Brand Strategy.</span></h2>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="deep-dive-section">
                     <div class="eyebrow">Beyond the snapshot</div>
@@ -1262,6 +1357,27 @@
         });
       });
     }, 500);
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible", "heading-revealed");
+        }
+      });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll(".scroll-reveal, .heading-wrapper").forEach((el) => {
+      observer.observe(el);
+    });
+
+    setTimeout(function () {
+      document.querySelectorAll(".scroll-reveal, .heading-wrapper").forEach((el) => {
+        el.classList.add("is-visible", "heading-revealed");
+      });
+    }, 100);
   });
 </script>
 </body>
