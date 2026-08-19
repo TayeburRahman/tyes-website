@@ -306,6 +306,422 @@
       transform: translateY(-100%) !important;
     }
 
+    /* ==========================================================================
+       ORIGINAL WEBFLOW PRELOADER STARTS & FINISHES SYSTEM (a-48 / a-49)
+       ========================================================================== */
+    .preloader {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 999999 !important;
+      background: #000000 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      opacity: 1 !important;
+      transition: opacity 1s ease 2s, visibility 1s ease 2s !important;
+      will-change: opacity, visibility !important;
+      pointer-events: auto !important;
+    }
+
+    .preloader-line {
+      width: 25% !important;
+      height: 3px !important;
+      background: rgba(255, 255, 255, 0.15) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      border-radius: 9999px !important;
+      transition: width 1s cubic-bezier(0.86, 0, 0.07, 1) 2s !important;
+    }
+
+    .preloader-progress-bar {
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+      height: 100% !important;
+      width: 0% !important;
+      background: var(--color-brand, #2DD4BF) !important;
+      border-radius: 9999px !important;
+      transition: width 2s cubic-bezier(0.86, 0, 0.07, 1) !important;
+      will-change: width !important;
+    }
+
+    /* Page Loaded State (Preloader Finishes a-49) */
+    body.is-loaded .preloader-progress-bar,
+    .preloader.is-finished .preloader-progress-bar {
+      width: 100% !important;
+    }
+
+    body.is-loaded .preloader-line,
+    .preloader.is-finished .preloader-line {
+      width: 0% !important;
+    }
+
+    body.is-loaded .preloader,
+    .preloader.is-finished {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* ==========================================================================
+       ORIGINAL WEBFLOW ROLL NUMBERS SLOT COUNTER SYSTEM (a-33 / a-34 / a-35)
+       ========================================================================== */
+    .roll-number-wrap,
+    .roll-numbers-wrap {
+      display: inline-block !important;
+      position: relative !important;
+      overflow: hidden !important;
+      height: 1.15em !important;
+      line-height: 1.15 !important;
+    }
+
+    .roll-numbers {
+      display: flex !important;
+      flex-direction: column !important;
+      transition: transform 2s ease !important;
+      will-change: transform !important;
+    }
+
+    .roll-numbers._01,
+    .roll-numbers._02 {
+      transform: translateY(0%) !important;
+    }
+
+    /* Active In-View Trigger State */
+    .numbers-section.is-active .first-stat .roll-numbers._01,
+    .numbers-grid.in-view .first-stat .roll-numbers._01,
+    .stat-card:hover .first-stat .roll-numbers._01 {
+      transform: translateY(-100%) !important;
+    }
+
+    .numbers-section.is-active .first-stat .roll-numbers._02,
+    .numbers-grid.in-view .first-stat .roll-numbers._02,
+    .stat-card:hover .first-stat .roll-numbers._02 {
+      transform: translateY(-500%) !important;
+    }
+
+    .numbers-section.is-active .second-stat .roll-numbers._01,
+    .numbers-grid.in-view .second-stat .roll-numbers._01,
+    .stat-card:hover .second-stat .roll-numbers._01 {
+      transform: translateY(-700%) !important;
+    }
+
+    .numbers-section.is-active .second-stat .roll-numbers._02,
+    .numbers-grid.in-view .second-stat .roll-numbers._02,
+    .stat-card:hover .second-stat .roll-numbers._02 {
+      transform: translateY(-500%) !important;
+    }
+
+    .numbers-section.is-active .third-stat .roll-numbers._01,
+    .numbers-grid.in-view .third-stat .roll-numbers._01,
+    .stat-card:hover .third-stat .roll-numbers._01 {
+      transform: translateY(-800%) !important;
+    }
+
+    /* ==========================================================================
+       ORIGINAL WEBFLOW TESTIMONIAL SLIDE IN/OUT VIEW SYSTEM (a-18 / a-19)
+       ========================================================================== */
+    .testimonial-slide-content {
+      transform: scale(0.7) !important;
+      transition: transform 1.8s cubic-bezier(0.86, 0, 0.07, 1) !important;
+      will-change: transform !important;
+    }
+
+    .testimonial-picture {
+      transform: scale(1.3) !important;
+      transition: transform 1.8s cubic-bezier(0.86, 0, 0.07, 1) !important;
+      will-change: transform !important;
+    }
+
+    .testimonial-name {
+      opacity: 0 !important;
+      transform: translateY(100%) skewY(5deg) !important;
+      transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1) 0.7s, opacity 0.9s ease 0.7s !important;
+      will-change: transform, opacity !important;
+    }
+
+    .testimonial-text-wrapper {
+      opacity: 0 !important;
+      transform: translateY(100%) skewY(5deg) !important;
+      transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1) 0.8s, opacity 0.9s ease 0.8s !important;
+      will-change: transform, opacity !important;
+    }
+
+    /* Active Slide State (Slide In View a-18) */
+    .w-slide.w--current .testimonial-slide-content,
+    .testimonial-slide.active .testimonial-slide-content,
+    .testimonial-card.active .testimonial-slide-content {
+      transform: scale(1) !important;
+    }
+
+    .w-slide.w--current .testimonial-picture,
+    .testimonial-slide.active .testimonial-picture,
+    .testimonial-card.active .testimonial-picture {
+      transform: scale(1) !important;
+    }
+
+    .w-slide.w--current .testimonial-name,
+    .testimonial-slide.active .testimonial-name,
+    .testimonial-card.active .testimonial-name {
+      opacity: 1 !important;
+      transform: translateY(0%) skewY(0deg) !important;
+    }
+
+    .w-slide.w--current .testimonial-text-wrapper,
+    .testimonial-slide.active .testimonial-text-wrapper,
+    .testimonial-card.active .testimonial-text-wrapper {
+      opacity: 1 !important;
+      transform: translateY(0%) skewY(0deg) !important;
+    }
+
+    /* ==========================================================================
+       ORIGINAL WEBFLOW PARTNER LOGO LOOP SYSTEM (a-9)
+       ========================================================================== */
+    .partner-component-grid,
+    .marquee-track {
+      display: flex !important;
+      gap: 52px !important;
+      align-items: center !important;
+      width: max-content !important;
+      animation: partnerLogoLoop 30s linear infinite !important;
+      will-change: transform !important;
+    }
+
+    .partner-component-grid img,
+    .marquee-track img {
+      height: 28px !important;
+      width: auto !important;
+      opacity: 0.6 !important;
+      filter: grayscale(100%) !important;
+      transition: opacity 0.3s ease, filter 0.3s ease !important;
+    }
+
+    .partner-component-grid img:hover,
+    .marquee-track img:hover {
+      opacity: 1 !important;
+      filter: grayscale(0%) !important;
+    }
+
+    @keyframes partnerLogoLoop {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ==========================================================================
+       ORIGINAL WEBFLOW BLOG POST HOVER SYSTEM (a-41 / a-42)
+       ========================================================================== */
+    .blog-post-item,
+    .blog-card,
+    .blog-item,
+    .blog-post-wrapper {
+      overflow: hidden !important;
+      border-radius: 1.25rem !important;
+      cursor: pointer !important;
+    }
+
+    .blog-post-image-wrapper {
+      overflow: hidden !important;
+      position: relative !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 1.25rem !important;
+    }
+
+    .blog-post-image,
+    .blog-image {
+      object-fit: cover !important;
+      width: 100% !important;
+      height: 100% !important;
+      transition: transform 0.5s ease !important;
+      will-change: transform !important;
+    }
+
+    .blog-post-item:hover .blog-post-image,
+    .blog-card:hover .blog-post-image,
+    .blog-item:hover .blog-post-image,
+    .blog-post-wrapper:hover .blog-post-image,
+    .blog-post-item:hover .blog-image,
+    .blog-card:hover .blog-image,
+    .blog-item:hover .blog-image,
+    .blog-post-wrapper:hover .blog-image {
+      transform: scale(1.05) !important;
+    }
+
+    /* ==========================================================================
+       ORIGINAL WEBFLOW CONTACT BUTTON HOVER SYSTEM (a-26 / a-27)
+       ========================================================================== */
+    .contact-button,
+    .nav-contact-btn,
+    .contact-btn-wrap {
+      position: relative !important;
+      overflow: hidden !important;
+      cursor: pointer !important;
+    }
+
+    .contact-text-wrap {
+      position: relative !important;
+      display: inline-block !important;
+      overflow: hidden !important;
+      height: 1.2em !important;
+      line-height: 1.2 !important;
+    }
+
+    .contact-text {
+      display: block !important;
+      transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+      will-change: transform !important;
+    }
+
+    .contact-text._01 {
+      position: relative !important;
+      transform: translateY(0%) !important;
+    }
+
+    .contact-text._02 {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      transform: translateY(100%) !important;
+    }
+
+    .contact-button:hover .contact-text,
+    .nav-contact-btn:hover .contact-text,
+    .contact-btn-wrap:hover .contact-text {
+      transform: translateY(-100%) !important;
+    }
+
+    /* ==========================================================================
+       ORIGINAL WEBFLOW 3D ROTATE CONTINUOUS ANIMATION SYSTEM (a-3)
+       ========================================================================== */
+    ._3d-object {
+      transform-style: preserve-3d !important;
+      animation: rotate3DContinuous 24s linear infinite !important;
+      will-change: transform !important;
+    }
+
+    @keyframes rotate3DContinuous {
+      0% {
+        transform: rotateX(20deg) rotateY(0deg) rotateZ(0deg);
+      }
+      100% {
+        transform: rotateX(20deg) rotateY(360deg) rotateZ(0deg);
+      }
+    }
+
+    /* ==========================================================================
+       ORIGINAL WEBFLOW ACCORDION HOVER SYSTEM (a-28 / a-29)
+       ========================================================================== */
+    .accordion-item,
+    .accordion-heading {
+      position: relative !important;
+      cursor: pointer !important;
+    }
+
+    .accordion-track-component {
+      justify-content: flex-end !important;
+      align-items: center !important;
+      margin-top: 2rem !important;
+      display: flex !important;
+      position: relative !important;
+      width: 100% !important;
+    }
+
+    .accordion-track-line {
+      background-color: rgba(242, 242, 242, 0.2) !important;
+      border-radius: 0.25rem !important;
+      width: 100% !important;
+      height: 1px !important;
+      position: relative !important;
+      overflow: hidden !important;
+    }
+
+    .accordion-track-progress {
+      background-color: var(--color-brand, #2DD4BF) !important;
+      width: 0% !important;
+      height: 1px !important;
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+      border-radius: 0.25rem !important;
+      transition: width 0.8s cubic-bezier(0.86, 0, 0.07, 1) !important;
+      will-change: width !important;
+    }
+
+    .accordion-title-item {
+      transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1) !important;
+      will-change: transform !important;
+    }
+
+    .plus-block {
+      transition: transform 0.6s cubic-bezier(0.86, 0, 0.07, 1) !important;
+      will-change: transform !important;
+    }
+
+    .accordion-answer-text {
+      transition: transform 0.6s cubic-bezier(0.86, 0, 0.07, 1) !important;
+      will-change: transform !important;
+    }
+
+    .accordion-item:hover .accordion-track-progress,
+    .accordion-heading:hover .accordion-track-progress {
+      width: 100% !important;
+    }
+
+    .accordion-item:hover .accordion-title-item,
+    .accordion-heading:hover .accordion-title-item {
+      transform: translateX(1.5rem) !important;
+    }
+
+    .accordion-item:hover .plus-block,
+    .accordion-heading:hover .plus-block {
+      transform: translateX(-1.5rem) !important;
+    }
+
+    .accordion-item:hover .accordion-answer-text,
+    .accordion-heading:hover .accordion-answer-text {
+      transform: translateX(1.5rem) !important;
+    }
+
+    /* SUBTITLE LOOP ANIMATION SYSTEM */
+    .use-cases-subtitle-wrap {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-weight: 500 !important;
+      font-size: 1.05rem !important;
+      color: rgba(255, 255, 255, 0.75) !important;
+      text-align: center !important;
+      margin-top: 1rem !important;
+      height: 1.6em !important;
+      position: relative !important;
+      overflow: hidden !important;
+    }
+
+    .use-cases-subtitle-item {
+      position: absolute !important;
+      left: 0 !important;
+      right: 0 !important;
+      top: 0 !important;
+      opacity: 0 !important;
+      transform: translateY(100%) !important;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease !important;
+      white-space: nowrap !important;
+    }
+
+    .use-cases-subtitle-item.active {
+      opacity: 1 !important;
+      transform: translateY(0%) !important;
+    }
+
+    .use-cases-subtitle-item.exit {
+      opacity: 0 !important;
+      transform: translateY(-100%) !important;
+    }
+
     /* BALANCED & ELEGANT CASE NAME TYPOGRAPHY */
     .case-name-wrap {
       perspective: 500px !important;
@@ -488,8 +904,9 @@
       width: 100%;
       height: 100%;
       min-height: 310px;
-      transition: transform .5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       transform-style: preserve-3d;
+      will-change: transform;
     }
 
     .flip:hover .flip-inner,
@@ -1662,9 +2079,12 @@
                   </div>
                 </div>
               </div>
-              <div
-                style="font-family:'Montserrat',sans-serif;font-weight:500;font-size:1rem;color:rgba(255,255,255,0.7);text-align:center;margin-top:1rem;">
-                See what's possible. Visuals + strategy, real brands, real outcomes.</div>
+              <div class="use-cases-subtitle-wrap">
+                <span class="use-cases-subtitle-item active">See what's possible.</span>
+                <span class="use-cases-subtitle-item">Visuals + strategy, real brands, real outcomes.</span>
+                <span class="use-cases-subtitle-item">Transforming beauty, skincare & personal care.</span>
+                <span class="use-cases-subtitle-item">AI precision meets designer touch.</span>
+              </div>
               <div class="spacer-xlarge"></div>
               <div data-w-id="856ad6d5-0509-5bb5-5b14-5b3d39c4fa02" class="use-case-wrapper">
                 <div class="use-case-content-wrapper">
@@ -2619,6 +3039,182 @@
         }
       });
     });
+  </script>
+
+  <script>
+    // Subtitle Loop Animator for AI in Action: Use Cases
+    document.addEventListener("DOMContentLoaded", function () {
+      const items = document.querySelectorAll('.use-cases-subtitle-item');
+      if (items.length <= 1) return;
+
+      let currentIndex = 0;
+      setInterval(function () {
+        const currentItem = items[currentIndex];
+        currentItem.classList.remove('active');
+        currentItem.classList.add('exit');
+
+        currentIndex = (currentIndex + 1) % items.length;
+        const nextItem = items[currentIndex];
+
+        nextItem.classList.remove('exit');
+        nextItem.classList.add('active');
+
+        setTimeout(function () {
+          currentItem.classList.remove('exit');
+        }, 600);
+      }, 3200);
+    });
+  </script>
+
+  <script>
+    // Real-Time Parallax Scroll Engine for "Case Image Scroll" (a-43)
+    (function () {
+      function updateCaseImageScroll() {
+        const images = document.querySelectorAll('.use-case-image');
+        const viewHeight = window.innerHeight;
+
+        images.forEach(function (img) {
+          const rect = img.getBoundingClientRect();
+          if (rect.bottom < -100 || rect.top > viewHeight + 100) return;
+
+          // Scroll progress through viewport (0 when top enters bottom, 1 when bottom exits top)
+          const progress = Math.max(0, Math.min(1, (viewHeight - rect.top) / (viewHeight + rect.height)));
+
+          // Keyframe 0% (y = -5%) to Keyframe 100% (y = +5%)
+          const translateY = -5 + (progress * 10);
+
+          const isHovered = img.closest('.use-case-content-wrapper')?.matches(':hover');
+          const scale = isHovered ? 1.15 : 1.1;
+
+          img.style.transform = 'scale(' + scale + ') translateY(' + translateY.toFixed(2) + '%)';
+        });
+      }
+
+      let ticking = false;
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          window.requestAnimationFrame(function () {
+            updateCaseImageScroll();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', updateCaseImageScroll);
+      document.addEventListener('DOMContentLoaded', updateCaseImageScroll);
+      setTimeout(updateCaseImageScroll, 100);
+    })();
+  </script>
+
+  <script>
+    // Real-Time Rotational Scroll Engine for "Rotate Image Left" (a-12) & "Rotate Image Right" (a-13)
+    (function () {
+      function updateRotateImageScroll() {
+        const viewHeight = window.innerHeight;
+
+        const left01 = document.querySelectorAll('.rotate-image-left-01');
+        const left02 = document.querySelectorAll('.rotate-image-left-02');
+        const right01 = document.querySelectorAll('.rotate-image-right-01');
+        const right02 = document.querySelectorAll('.rotate-image-right-02');
+
+        function processElements(elements, startAngle, endAngle) {
+          elements.forEach(function (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.bottom < -100 || rect.top > viewHeight + 100) return;
+
+            const progress = Math.max(0, Math.min(1, (viewHeight - rect.top) / (viewHeight + rect.height)));
+            const angle = startAngle + (progress * (endAngle - startAngle));
+
+            el.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)';
+          });
+        }
+
+        processElements(left01, 5, -5);   // +5deg -> -5deg
+        processElements(left02, -5, 5);   // -5deg -> +5deg
+        processElements(right01, -5, 5);  // -5deg -> +5deg
+        processElements(right02, 5, -5);  // +5deg -> -5deg
+      }
+
+      let ticking = false;
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          window.requestAnimationFrame(function () {
+            updateRotateImageScroll();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', updateRotateImageScroll);
+      document.addEventListener('DOMContentLoaded', updateRotateImageScroll);
+      setTimeout(updateRotateImageScroll, 100);
+    })();
+  </script>
+
+  <script>
+    // Real-Time 3D Card Depth Scroll Engine for "Sticky Scrolling 01 / 02 / 03" (a-38, a-39, a-40)
+    (function () {
+      function updateStickyScrollingDepth() {
+        const wrappers = document.querySelectorAll('.sticky-wrapper._01, .sticky-wrapper._02, .sticky-wrapper._03, .sticky-wrapper');
+        const viewHeight = window.innerHeight;
+
+        wrappers.forEach(function (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.bottom < -100 || rect.top > viewHeight + 100) return;
+
+          // Scroll progress through sticky depth zone (0 when at top, 1 when covered)
+          const progress = Math.max(0, Math.min(1, (-rect.top) / viewHeight));
+
+          // Keyframe 0% (scale 1.0, translateY 2%, blur 0px) to Keyframe 100% (scale 0.75, translateY 10%, blur 3px)
+          const scale = 1.0 - (progress * 0.25);        // 1.0 -> 0.75
+          const translateY = 2 + (progress * 8);         // 2% -> 10%
+          const blur = progress * 3;                     // 0px -> 3px
+
+          el.style.transform = 'scale(' + scale.toFixed(3) + ') translateY(' + translateY.toFixed(2) + '%)';
+          el.style.filter = 'blur(' + blur.toFixed(2) + 'px)';
+        });
+      }
+
+      let ticking = false;
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          window.requestAnimationFrame(function () {
+            updateStickyScrollingDepth();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', updateStickyScrollingDepth);
+      document.addEventListener('DOMContentLoaded', updateStickyScrollingDepth);
+      setTimeout(updateStickyScrollingDepth, 100);
+    })();
+  </script>
+
+  <script>
+    // Preloader Starts (a-48) & Preloader Finishes (a-49) Auto-Trigger
+    (function () {
+      function finishPreloader() {
+        document.body.classList.add('is-loaded');
+        const preloader = document.querySelector('.preloader');
+        if (preloader) {
+          preloader.classList.add('is-finished');
+          setTimeout(function () {
+            preloader.style.display = 'none';
+          }, 3000);
+        }
+      }
+
+      if (document.readyState === 'complete') {
+        setTimeout(finishPreloader, 100);
+      } else {
+        window.addEventListener('load', finishPreloader);
+        setTimeout(finishPreloader, 3500);
+      }
+    })();
   </script>
 
 </body>
