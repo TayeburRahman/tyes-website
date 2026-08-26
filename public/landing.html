@@ -77,32 +77,11 @@
   <div id="root"></div>
   <script>
     // Pre-cache images
-    const imageUrls = ['/images/landing-thumbs/4.jpg', '/images/landing-thumbs/6.jpg', '/images/landing-thumbs/8.jpg', '/images/landing-thumbs/3.jpg', '/images/landing-thumbs/beyond-cover.jpg', '/images/landing-thumbs/5.jpg', '/images/landing-thumbs/Untitled-design-158.jpg'];
+    const imageUrls = ['/images/transfer-landing/1.jpg', '/images/transfer-landing/3.jpg', '/images/transfer-landing/5.jpg', '/images/transfer-landing/7.jpg', '/images/transfer-landing/11.jpg', '/images/transfer-landing/12.jpg', '/images/transfer-landing/13.jpg', '/images/transfer-landing/14.jpg'];
     imageUrls.forEach(src => {
       const img = new Image(); img.src = src;
     });
 
-    // Auto-scroll logic to trigger scroll-linked animations automatically
-    (function () {
-      let scrollSpeed = 4.2; // Pixels per frame
-
-      function step() {
-        // Move down
-        window.scrollBy(0, scrollSpeed);
-
-        // If we hit the bottom, reset to top for an infinite loop effect
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
-          window.scrollTo(0, 0);
-        }
-
-        requestAnimationFrame(step);
-      }
-
-      // Start auto-scrolling after a short delay to let React render
-      setTimeout(() => {
-        requestAnimationFrame(step);
-      }, 1500);
-    })();
   </script>
 
   <script>

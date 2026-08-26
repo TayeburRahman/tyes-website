@@ -6792,7 +6792,11 @@ blockquote {
 .css3d-scene {
   overflow: hidden;
   perspective: 35em;
-  padding: 2rem 0;
+  padding-top: 90px;
+  padding-bottom: 90px;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
   mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
   -webkit-mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
 }
@@ -6805,7 +6809,7 @@ blockquote {
 
 @keyframes css3d-ry {
   to {
-    rotate: y 1turn;
+    transform: rotateY(360deg);
   }
 }
 
@@ -6819,6 +6823,12 @@ blockquote {
   border-radius: 1.2em;
   backface-visibility: hidden;
   transform: rotatey(calc(var(--i) * var(--ba))) translatez(calc(-1 * (.5 * var(--w) + .5em) / tan(.5 * var(--ba))));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  transition: filter 0.3s ease;
+}
+
+.css3d-card:hover {
+  filter: brightness(1.15);
 }
 
 .css3d-a3d:hover {
