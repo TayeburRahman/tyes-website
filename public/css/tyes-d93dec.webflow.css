@@ -6801,16 +6801,13 @@ blockquote {
   -webkit-mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
 }
 
+.css3d-scene:active {
+  cursor: grabbing;
+}
+
 .css3d-a3d {
   place-self: center;
   transform-style: preserve-3d;
-  animation: css3d-ry 13s linear infinite;
-}
-
-@keyframes css3d-ry {
-  to {
-    transform: rotateY(360deg);
-  }
 }
 
 .css3d-card {
@@ -6831,10 +6828,6 @@ blockquote {
   filter: brightness(1.15);
 }
 
-.css3d-a3d:hover {
-  animation-play-state: running;
-}
-
 @media (max-width: 767px) {
   .css3d-card {
     --w: 11em;
@@ -6842,6 +6835,8 @@ blockquote {
 
   .css3d-scene {
     perspective: 25em;
+    padding-top: 50px;
+    padding-bottom: 50px;
   }
 }
 
@@ -7102,7 +7097,7 @@ footer,
 }
 .brands-marquee .marquee-track {
   display: flex;
-  gap: 80px;
+  gap: 36px;
   align-items: center;
   width: max-content;
   animation: scrollLeft 30s linear infinite;
@@ -7111,13 +7106,18 @@ footer,
   animation-play-state: paused;
 }
 .brands-marquee img {
-  height: 60px;
-  width: auto;
-  filter: grayscale(100%) invert(1) opacity(0.55);
-  transition: filter 0.3s ease;
+  height: 52px;
+  width: 156px;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.85;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
 }
 .brands-marquee img:hover {
-  filter: grayscale(0%) invert(0) brightness(1.5) opacity(1);
+  opacity: 1;
+  filter: none;
+  transform: scale(1.06);
 }
 @keyframes scrollLeft {
   from { transform: translateX(0); }
