@@ -67,7 +67,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 # Stripe
 STRIPE_SECRET_KEY=your_stripe_secret_key
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_pub_key
+STRIPE_PUBLISHABLE_KEY=your_stripe_pub_key
 STRIPE_WEBHOOK_SECRET=your_webhook_secret
 
 # Emails (Resend)
