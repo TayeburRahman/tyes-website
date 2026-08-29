@@ -22,8 +22,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    const isLive = process.env.STRIPE_SECRET_KEY?.startsWith('sk_live_');
+    const customerIdKey = isLive ? 'stripe_customer_id_live' : 'stripe_customer_id_test';
+
     const metadata = userAuth.user.user_metadata || {};
-    let stripeCustomerId = metadata.stripe_customer_id;
+    let stripeCustomerId = metadata[customerIdKey] || metadata.stripe_customer_id;
+
+    if (stripeCustomerId) {
+      try {
+        const existingCustomer = await stripe.customers.retrieve(stripeCustomerId);
+        if ((existingCustomer as any).deleted) {
+          stripeCustomerId = null;
+        }
+      } catch (err) {
+        stripeCustomerId = null;
+      }
+    }
 
     if (!stripeCustomerId) {
       // If they don't have a Stripe customer ID, create one
@@ -35,7 +49,11 @@ export async function POST(req: Request) {
       stripeCustomerId = customer.id;
       
       await supabase.auth.admin.updateUserById(userId, {
-        user_metadata: { ...metadata, stripe_customer_id: stripeCustomerId }
+        user_metadata: { 
+          ...metadata, 
+          [customerIdKey]: stripeCustomerId,
+          stripe_customer_id: stripeCustomerId 
+        }
       });
     }
 

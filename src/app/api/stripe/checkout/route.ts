@@ -43,8 +43,27 @@ export async function POST(req: Request) {
     const fallbackCountry = userAuth?.user?.user_metadata?.country || 'RO';
     const selectedCountry = billingCountry || fallbackCountry;
 
-    // 4. Get or create Stripe Customer
-    let stripeCustomerId = userAuth?.user?.user_metadata?.stripe_customer_id;
+    // 4. Get or create Stripe Customer (Mode-aware for both Test and Live environments)
+    const isLive = process.env.STRIPE_SECRET_KEY?.startsWith('sk_live_');
+    const customerIdKey = isLive ? 'stripe_customer_id_live' : 'stripe_customer_id_test';
+
+    let stripeCustomerId = userAuth?.user?.user_metadata?.[customerIdKey] || userAuth?.user?.user_metadata?.stripe_customer_id;
+
+    if (stripeCustomerId) {
+      try {
+        const existingCustomer = await stripe.customers.retrieve(stripeCustomerId);
+        if ((existingCustomer as any).deleted) {
+          stripeCustomerId = null;
+        } else {
+          await stripe.customers.update(stripeCustomerId, {
+            address: { country: selectedCountry },
+          });
+        }
+      } catch (err) {
+        // If customer was created in test mode and now running in live mode (or vice versa)
+        stripeCustomerId = null;
+      }
+    }
 
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
@@ -55,14 +74,13 @@ export async function POST(req: Request) {
       
       stripeCustomerId = customer.id;
 
-      // Update auth metadata with the new Stripe Customer ID
+      // Update auth metadata with mode-specific and default Stripe Customer ID
       await supabase.auth.admin.updateUserById(order.user_id, {
-        user_metadata: { ...userAuth?.user?.user_metadata, stripe_customer_id: stripeCustomerId }
-      });
-    } else {
-      // Ensure customer has the default country set
-      await stripe.customers.update(stripeCustomerId, {
-        address: { country: selectedCountry },
+        user_metadata: { 
+          ...userAuth?.user?.user_metadata, 
+          [customerIdKey]: stripeCustomerId,
+          stripe_customer_id: stripeCustomerId 
+        }
       });
     }
 
