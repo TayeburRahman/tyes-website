@@ -547,8 +547,7 @@
     /* ==========================================================================
        ORIGINAL WEBFLOW PARTNER LOGO LOOP SYSTEM (a-9)
        ========================================================================== */
-    .partner-component-grid,
-    .marquee-track {
+    .partner-component-grid {
       display: flex !important;
       gap: 52px !important;
       align-items: center !important;
@@ -557,8 +556,7 @@
       will-change: transform !important;
     }
 
-    .partner-component-grid img,
-    .marquee-track img {
+    .partner-component-grid img {
       height: 28px !important;
       width: auto !important;
       opacity: 0.6 !important;
@@ -566,8 +564,7 @@
       transition: opacity 0.3s ease, filter 0.3s ease !important;
     }
 
-    .partner-component-grid img:hover,
-    .marquee-track img:hover {
+    .partner-component-grid img:hover {
       opacity: 1 !important;
       filter: grayscale(0%) !important;
     }
@@ -870,27 +867,38 @@
     }
 
     .marquee-track {
-      display: flex;
-      gap: 36px;
-      align-items: center;
-      width: max-content;
-      animation: marquee 25s linear infinite;
+      display: flex !important;
+      gap: 48px !important;
+      align-items: center !important;
+      width: max-content !important;
+      animation: marquee 35s linear infinite !important;
+      will-change: transform !important;
+    }
+
+    .brands-marquee:hover .marquee-track {
+      animation-play-state: paused !important;
     }
 
     .marquee-track img {
-      height: 52px;
-      width: 156px;
-      flex-shrink: 0;
-      object-fit: contain;
-      opacity: 0.85;
-      filter: brightness(0) invert(1);
-      transition: opacity 0.3s, filter 0.3s, transform 0.3s;
+      height: 70px !important;
+      width: auto !important;
+      max-width: 220px !important;
+      flex-shrink: 0 !important;
+      object-fit: contain !important;
+      opacity: 0.9 !important;
+      filter: brightness(0) invert(1) !important;
+      padding: 8px 14px !important;
+      border-radius: 10px !important;
+      background: transparent !important;
+      transition: all 0.3s ease !important;
     }
 
     .marquee-track img:hover {
-      opacity: 1;
-      filter: none;
-      transform: scale(1.06);
+      opacity: 1 !important;
+      filter: none !important;
+      background: #ffffff !important;
+      transform: scale(1.12) !important;
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3) !important;
     }
 
     @keyframes marquee {
@@ -2061,23 +2069,23 @@
                   <div class="_3d-container" style="padding-top: 50px;">
                     <div class="_3d-wrapper">
                       <div class="_3d-object">
-                        <div class="_3d-face _01"><img src="images/transfer-main/2.jpg" loading="lazy"
+                        <div class="_3d-face _01"><img src="images/transfer-main/1.jpg" loading="lazy"
                             id="w-node-_1c8c9783-bf90-5bee-fc68-92d0a1336a15-8ed3299f" alt="" class="_3d-front-image">
                         </div>
-                        <div class="_3d-face _02"><img src="images/transfer-main/4.jpg" loading="lazy" alt=""
+                        <div class="_3d-face _02"><img src="images/transfer-main/2.jpg" loading="lazy" alt=""
                             class="_3d-image"></div>
-                        <div class="_3d-face _03"><img src="images/transfer-main/6.jpg" loading="lazy" alt=""
+                        <div class="_3d-face _03"><img src="images/transfer-main/3.jpg" loading="lazy" alt=""
                             class="_3d-image"></div>
-                        <div class="_3d-face _04"><img src="images/transfer-main/8.jpg" loading="lazy" alt=""
+                        <div class="_3d-face _04"><img src="images/transfer-main/4.jpg" loading="lazy" alt=""
                             class="_3d-image"></div>
-                        <div class="_3d-face _05"><img src="images/transfer-main/9.jpg" loading="lazy"
+                        <div class="_3d-face _05"><img src="images/transfer-main/5.jpg" loading="lazy"
                             id="w-node-_6fad5648-67d9-5902-1805-d162beb6963c-8ed3299f" alt="" class="_3d-front-image">
                         </div>
-                        <div class="_3d-face _06"><img src="images/transfer-main/10.jpg" loading="lazy" alt=""
+                        <div class="_3d-face _06"><img src="images/transfer-main/6.jpg" loading="lazy" alt=""
                             class="_3d-image"></div>
-                        <div class="_3d-face _07"><img src="images/transfer-main/2.jpg" loading="lazy" alt=""
+                        <div class="_3d-face _07"><img src="images/transfer-main/7.jpg" loading="lazy" alt=""
                             class="_3d-image"></div>
-                        <div class="_3d-face _08"><img src="images/transfer-main/4.jpg" loading="lazy" alt=""
+                        <div class="_3d-face _08"><img src="images/transfer-main/8.jpg" loading="lazy" alt=""
                             class="_3d-image"></div>
                       </div>
                     </div>
@@ -2205,20 +2213,34 @@
       <section class="brands-marquee">
         <p class="eyebrow">Few of the brands we've worked with</p>
         <div class="marquee-track">
-          <img src="images/transfer-worked/15.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/16.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/17.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/18.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/19.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/20.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/Untitled design-13.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/15.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/16.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/17.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/18.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/19.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/20.svg" alt="Brand Logo" />
-          <img src="images/transfer-worked/Untitled design-13.svg" alt="Brand Logo" />
+          <img src="images/transfer-worked/1.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/2.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/3.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/4.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/5.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/6.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/7.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/1.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/2.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/3.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/4.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/5.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/6.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/7.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/1.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/2.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/3.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/4.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/5.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/6.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/7.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/1.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/2.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/3.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/4.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/5.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/6.png" alt="Brand Logo" />
+          <img src="images/transfer-worked/7.png" alt="Brand Logo" />
         </div>
       </section>
 
@@ -2245,10 +2267,10 @@
             <div style="display:flex; justify-content:center;">
               <div class="ba-slider-wrap"
                 style="position:relative;width:100%;max-width:550px;aspect-ratio:1/1;overflow:hidden;border-radius:12px;cursor:col-resize;user-select:none;box-shadow: 0 12px 35px rgba(0,0,0,0.6);border: 1px solid rgba(255,255,255,0.1);">
-                <img src="images/template-img-11_1template-img-11.webp" alt="Retouched"
+                <img src="images/transfer-afterbefor/AFTER.jpg" alt="Retouched"
                   style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
                 <div class="ba-before" style="position:absolute;inset:0;width:50%;overflow:hidden;">
-                  <img src="images/template-img-09_1template-img-09.webp" alt="AI Raw"
+                  <img src="images/transfer-afterbefor/BEFORE.jpg" alt="AI Raw"
                     style="width:550px;max-width:none;height:100%;object-fit:cover;">
                 </div>
                 <div class="ba-handle"
@@ -2883,19 +2905,16 @@
           <div class="cta-sticky">
             <div class="cta-image-wrap">
               <div class="w-layout-grid cta-image-grid"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c881-c386c87c"
-                  sizes="100vw" alt="Template Image - Starpify Webflow Template"
-                  src="images/template-img-02_1template-img-02.webp" loading="lazy"
-                  srcset="images/template-img-02_1template-img-02.webp 500w, images/template-img-02_1template-img-02.webp 800w, images/template-img-02_1template-img-02.webp 1080w, images/template-img-02_1template-img-02.webp 1600w, images/template-img-02_1template-img-02.webp 1920w"
+                  sizes="100vw" alt="Transform your business"
+                  src="images/transfer-bisness/string-top-left.png" loading="lazy"
                   class="cta-image-01"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c882-c386c87c" loading="lazy"
-                  alt="Template Image - Starpify Webflow Template" src="images/template-img-09_1template-img-09.webp"
+                  alt="Transform your business" src="images/transfer-bisness/string-top-right.png"
                   class="cta-image-02"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c883-c386c87c" sizes="100vw"
-                  alt="Template Image - Starpify Webflow Template" src="images/template-img-03_1template-img-03.webp"
+                  alt="Transform your business" src="images/transfer-bisness/string-bottom-left.png"
                   loading="lazy"
-                  srcset="images/template-img-03_1template-img-03.webp 500w, images/template-img-03_1template-img-03.webp 800w, images/template-img-03_1template-img-03.webp 1080w, images/template-img-03_1template-img-03.webp 1600w, images/template-img-03_1template-img-03.webp 1920w"
                   class="cta-image-03"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c884-c386c87c" sizes="100vw"
-                  alt="Template Image - Starpify Webflow Template" src="images/template-img-06_1template-img-06.webp"
+                  alt="Transform your business" src="images/transfer-bisness/string-bottom-right.png"
                   loading="lazy"
-                  srcset="images/template-img-06_1template-img-06.webp 500w, images/template-img-06_1template-img-06.webp 800w, images/template-img-06_1template-img-06.webp 1080w, images/template-img-06_1template-img-06.webp 1600w, images/template-img-06_1template-img-06.webp 1920w"
                   class="cta-image-04"></div>
             </div>
             <div class="cta-content-block">

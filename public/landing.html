@@ -77,11 +77,22 @@
   <div id="root"></div>
   <script>
     // Pre-cache images
-    const imageUrls = ['/images/transfer-landing/1.jpg', '/images/transfer-landing/3.jpg', '/images/transfer-landing/5.jpg', '/images/transfer-landing/7.jpg', '/images/transfer-landing/11.jpg', '/images/transfer-landing/12.jpg', '/images/transfer-landing/13.jpg', '/images/transfer-landing/14.jpg'];
-    imageUrls.forEach(src => {
+    window.TRANSFER_LANDING_IMAGES = [
+      '/images/transfer-landing/1.jpg',
+      '/images/transfer-landing/3.jpg',
+      '/images/transfer-landing/4.jpg',
+      '/images/transfer-landing/5.jpg',
+      '/images/transfer-landing/6.jpg',
+      '/images/transfer-landing/7.jpg',
+      '/images/transfer-landing/8.jpg',
+      '/images/transfer-landing/9.jpg',
+      '/images/transfer-landing/10.jpg',
+      '/images/transfer-landing/11.jpg',
+      '/images/transfer-landing/12.jpg'
+    ];
+    window.TRANSFER_LANDING_IMAGES.forEach(src => {
       const img = new Image(); img.src = src;
     });
-
   </script>
 
   <script>

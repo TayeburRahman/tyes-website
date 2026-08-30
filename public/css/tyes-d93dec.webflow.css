@@ -7096,28 +7096,35 @@ footer,
   margin-bottom: 24px;
 }
 .brands-marquee .marquee-track {
-  display: flex;
-  gap: 36px;
-  align-items: center;
-  width: max-content;
-  animation: scrollLeft 30s linear infinite;
+  display: flex !important;
+  gap: 48px !important;
+  align-items: center !important;
+  width: max-content !important;
+  animation: scrollLeft 35s linear infinite !important;
+  will-change: transform !important;
 }
 .brands-marquee:hover .marquee-track {
-  animation-play-state: paused;
+  animation-play-state: paused !important;
 }
 .brands-marquee img {
-  height: 52px;
-  width: 156px;
-  flex-shrink: 0;
-  object-fit: contain;
-  opacity: 0.85;
-  filter: brightness(0) invert(1);
-  transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+  height: 70px !important;
+  width: auto !important;
+  max-width: 220px !important;
+  flex-shrink: 0 !important;
+  object-fit: contain !important;
+  opacity: 0.9 !important;
+  filter: brightness(0) invert(1) !important;
+  padding: 8px 14px !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  transition: all 0.3s ease !important;
 }
 .brands-marquee img:hover {
-  opacity: 1;
-  filter: none;
-  transform: scale(1.06);
+  opacity: 1 !important;
+  filter: none !important;
+  background: #ffffff !important;
+  transform: scale(1.12) !important;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3) !important;
 }
 @keyframes scrollLeft {
   from { transform: translateX(0); }
