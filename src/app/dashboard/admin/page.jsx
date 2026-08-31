@@ -545,7 +545,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               to: clientEmail,
               customerName: clientName,
               orderTitle,
-              dashboardUrl: process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client` : 'https://tyes.app/dashboard/client',
+              dashboardUrl: (process.env.NEXT_APP_URL || process.env.NEXT_PUBLIC_APP_URL) ? `${process.env.NEXT_APP_URL || process.env.NEXT_PUBLIC_APP_URL}/dashboard/client` : 'https://tyes.app/dashboard/client',
               deliveredCount,
               totalImages,
               isRevision
