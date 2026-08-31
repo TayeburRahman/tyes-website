@@ -41,11 +41,56 @@
       letter-spacing: -0.5pt;
     }
 
-    .accent {
-      font-family: "Montserrat", -apple-system, sans-serif;
-      font-style: italic;
-      font-weight: 700;
-      color: #2DD4BF;
+    .accent,
+    .featured-text {
+      font-family: "Montserrat", -apple-system, sans-serif !important;
+      font-style: italic !important;
+      font-weight: 700 !important;
+      color: #2DD4BF !important;
+    }
+
+    .cta-content-block {
+      position: relative;
+      z-index: 10;
+    }
+
+    .cta-image-wrap {
+      z-index: 20 !important;
+      pointer-events: none !important;
+    }
+
+    .cta-text {
+      font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-weight: 800 !important;
+      font-size: clamp(1.6rem, 4vw, 2.4rem) !important;
+      line-height: 1.25 !important;
+      padding: 0 0.5rem;
+    }
+
+    .cta-button-wrap {
+      position: relative;
+      z-index: 10;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (max-width: 767px) {
+      .cta-container {
+        flex-direction: column !important;
+        padding: 2.5rem 1.25rem !important;
+        text-align: center;
+      }
+
+      .cta-image-wrap {
+        opacity: 0.15 !important;
+        position: absolute;
+        inset: 0;
+      }
+
+      .cta-content-block {
+        margin-top: 0 !important;
+      }
     }
 
     .tagline {
@@ -255,7 +300,8 @@
         <div class="container-large">
           <div class="w-layout-grid nav-component-grid">
             <a href="index.html" id="w-node-_3bbba632-e3d9-9b38-7010-fa4415a242ef-bf800947"
-              class="brand-link w-inline-block" data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800955">
+              data-w-id="3bbba632-e3d9-9b38-7010-fa4415a242ef"
+              class="brand-link w-inline-block">
               <div class="brand-wrapper">
                 <img src="images/tyes-wordmark.svg" alt="tyes" style="height:66px;">
               </div>
@@ -266,51 +312,64 @@
                 <div class="w-layout-grid nav-menu-grid">
                   <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800953-bf800947" class="nav-menu-content">
                     <div class="nav-link-overflow">
-                      <a href="index.html" class="nav-link w-inline-block" data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800955">
+                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800955" href="index.html"
+                        class="nav-link w-inline-block">
                         <div class="nav-link-text">Home</div>
                         <div class="nav-link-text is-hover">Home</div>
                       </a>
                     </div>
                     <div class="nav-link-overflow">
-                      <a href="about.html" aria-current="page" class="nav-link w-inline-block w--current" data-w-id="cd2531db-ef9f-2da8-59e8-8040bf80095d">
+                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf80096d" href="how-it-works.html"
+                        class="nav-link w-inline-block">
+                        <div class="nav-link-text">How It Works</div>
+                        <div class="nav-link-text is-hover">How It Works</div>
+                      </a>
+                    </div>
+                    <div class="nav-link-overflow">
+                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf80095d" href="about.html" aria-current="page"
+                        class="nav-link w-inline-block w--current">
                         <div class="nav-link-text">About</div>
                         <div class="nav-link-text is-hover">About</div>
                       </a>
                     </div>
                     <div class="nav-link-overflow">
-                      <a href="signin.html" class="nav-link w-inline-block" data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800965">
-                        <div class="nav-link-text">Sign In</div>
-                        <div class="nav-link-text is-hover">Sign In</div>
-                      </a>
-                    </div>
-                    <div class="nav-link-overflow">
-                      <a href="pricing.html" class="nav-link w-inline-block">
+                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf80096d" href="pricing.html"
+                        class="nav-link w-inline-block">
                         <div class="nav-link-text">Pricing</div>
                         <div class="nav-link-text is-hover">Pricing</div>
                       </a>
                     </div>
                     <div class="nav-link-overflow">
-                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800975" href=\"contact-us.html" class=\"nav-link w-inline-block">
+                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800965" href="signin.html"
+                        class="nav-link w-inline-block">
+                        <div class="nav-link-text">Sign In</div>
+                        <div class="nav-link-text is-hover">Sign In</div>
+                      </a>
+                    </div>
+                    <div class="nav-link-overflow">
+                      <a data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800975" href="contact-us.html"
+                        class="nav-link w-inline-block">
                         <div class="nav-link-text">Contact</div>
                         <div class="nav-link-text is-hover">Contact</div>
                       </a>
                     </div>
                   </div>
+
                 </div>
               </div>
             </nav>
             <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800990-bf800947"
               data-w-id="cd2531db-ef9f-2da8-59e8-8040bf800990" class="menu-button w-nav-button">
               <div class="w-layout-grid menu-icon-grid">
-                <div class="menu-dot left"></div>
-                <div class="menu-dot"></div>
-                <div class="menu-dot right"></div>
-                <div class="menu-dot left"></div>
-                <div class="menu-dot"></div>
-                <div class="menu-dot right"></div>
-                <div class="menu-dot left"></div>
-                <div class="menu-dot"></div>
-                <div class="menu-dot right"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800992-bf800947" class="menu-dot left"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800993-bf800947" class="menu-dot"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800994-bf800947" class="menu-dot right"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800995-bf800947" class="menu-dot left"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800996-bf800947" class="menu-dot"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800997-bf800947" class="menu-dot right"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800998-bf800947" class="menu-dot left"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf800999-bf800947" class="menu-dot"></div>
+                <div id="w-node-cd2531db-ef9f-2da8-59e8-8040bf80099a-bf800947" class="menu-dot right"></div>
               </div>
             </div>
           </div>
@@ -388,25 +447,46 @@
         <div data-w-id="d9c37744-b842-b892-d0e4-0369c386c87d" class="cta-container">
           <div class="cta-sticky">
             <div class="cta-image-wrap">
-              <div class="w-layout-grid cta-image-grid">
-                <img id="w-node-d9c37744-b842-b892-d0e4-0369c386c881-c386c87c"
-                  sizes="100vw" alt="Template Image - Starpify Webflow Template"
-                  src="images/template-img-02_1template-img-02.webp" loading="lazy"
-                  srcset="images/template-img-02_1template-img-02.webp 500w, images/template-img-02_1template-img-02.webp 800w, images/template-img-02_1template-img-02.webp 1080w, images/template-img-02_1template-img-02.webp 1600w, images/template-img-02_1template-img-02.webp 1920w"
-                  class="cta-image-01">
-                <img id="w-node-d9c37744-b842-b892-d0e4-0369c386c882-c386c87c" loading="lazy"
-                  alt="Template Image - Starpify Webflow Template" src="images/template-img-09_1template-img-09.webp"
-                  class="cta-image-02">
-                <img id="w-node-d9c37744-b842-b892-d0e4-0369c386c883-c386c87c" sizes="100vw"
-                  alt="Template Image - Starpify Webflow Template" src="images/template-img-03_1template-img-03.webp"
+              <div class="w-layout-grid cta-image-grid"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c881-c386c87c"
+                  sizes="100vw" alt="Transform your business"
+                  src="images/transfer-bisness/string-top-left.png" loading="lazy"
+                  class="cta-image-01"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c882-c386c87c" loading="lazy"
+                  alt="Transform your business" src="images/transfer-bisness/string-top-right.png"
+                  class="cta-image-02"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c883-c386c87c" sizes="100vw"
+                  alt="Transform your business" src="images/transfer-bisness/string-bottom-left.png"
                   loading="lazy"
-                  srcset="images/template-img-03_1template-img-03.webp 500w, images/template-img-03_1template-img-03.webp 800w, images/template-img-03_1template-img-03.webp 1080w, images/template-img-03_1template-img-03.webp 1600w, images/template-img-03_1template-img-03.webp 1920w"
-                  class="cta-image-03">
-                <img id="w-node-d9c37744-b842-b892-d0e4-0369c386c884-c386c87c" sizes="100vw"
-                  alt="Template Image - Starpify Webflow Template" src="images/template-img-06_1template-img-06.webp"
+                  class="cta-image-03"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c884-c386c87c" sizes="100vw"
+                  alt="Transform your business" src="images/transfer-bisness/string-bottom-right.png"
                   loading="lazy"
-                  srcset="images/template-img-06_1template-img-06.webp 500w, images/template-img-06_1template-img-06.webp 800w, images/template-img-06_1template-img-06.webp 1080w, images/template-img-06_1template-img-06.webp 1600w, images/template-img-06_1template-img-06.webp 1920w"
-                  class="cta-image-04">
+                  class="cta-image-04"></div>
+            </div>
+            <div class="cta-content-block">
+              <div class="cta-content">
+                <h2 class="cta-text">Transform your business <br><span class="featured-text"
+                    style="text-transform:none;">with tyes</span></h2>
+                <div class="spacer-small"></div>
+              </div>
+            </div>
+            <div class="cta-button-wrap">
+              <div class="button-wrapper">
+                <a data-w-id="d9c37744-b842-b892-d0e4-0369c386c88e" href="signin.html"
+                  class="main-button cta w-inline-block">
+                  <div class="button-icon-block">
+                    <div class="button-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
+                        fill="currentColor">
+                        <path
+                          d="M19.1642 12L12.9571 5.79291L11.5429 7.20712L16.3358 12L11.5429 16.7929L12.9571 18.2071L19.1642 12ZM13.5143 12L7.30722 5.79291L5.89301 7.20712L10.6859 12L5.89301 16.7929L7.30722 18.2071L13.5143 12Z">
+                        </path>
+                      </svg></div>
+                  </div>
+                  <div class="button-text-wrap">
+                    <div class="button-text">Get Started</div>
+                    <div class="button-text">Get Started</div>
+                  </div>
+                  <div class="button-bg-overflow">
+                    <div class="button-bg"></div>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -475,9 +555,9 @@
             </div>
 
             <div style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
-              <a href="https://facebook.com/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Facebook</div></div></a>
-              <a href="https://www.linkedin.com/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Linkedin</div></div></a>
-              <a href="https://www.instagram.com/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Instagram</div></div></a>
+              <a href="https://www.facebook.com/profile.php?id=61578742552795" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Facebook</div></div></a>
+              <a href="https://www.linkedin.com/company/tyes-app/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Linkedin</div></div></a>
+              <a href="https://www.instagram.com/tyes.app/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Instagram</div></div></a>
             </div>
 
             <div class="footer-bottom-content">

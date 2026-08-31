@@ -165,9 +165,9 @@ Kept apart from the main problem on purpose.
 **Real, needs fixing.** The footer social links point at the networks' own homepages, not at the tyes profiles:
 
 ```html
-href="https://facebook.com/"
-href="https://www.linkedin.com/"
-href="https://www.instagram.com/"
+href="https://www.facebook.com/profile.php?id=61578742552795"
+href="https://www.linkedin.com/company/tyes-app/"
+href="https://www.instagram.com/tyes.app/"
 ```
 
 **Real, but a design decision rather than a bug.** On the tunnel page, the headline and both buttons are not visible on load. They only appear after roughly 14 scroll ticks. A visitor who lands and does not scroll sees no message and no call to action — only the tunnel.

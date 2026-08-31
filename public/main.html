@@ -886,7 +886,7 @@
       flex-shrink: 0 !important;
       object-fit: contain !important;
       opacity: 0.9 !important;
-      filter: brightness(0) invert(1) !important;
+      filter: brightness(0) invert(0.65) !important;
       padding: 8px 14px !important;
       border-radius: 10px !important;
       background: transparent !important;
@@ -1815,10 +1815,11 @@
       }
 
       .cta-image-wrap {
-        opacity: 0.1 !important;
+        opacity: 0.15 !important;
         position: absolute;
         inset: 0;
-        z-index: 0;
+        z-index: 20 !important;
+        pointer-events: none !important;
       }
 
       .cta-content-block {
@@ -1828,7 +1829,8 @@
       }
 
       .cta-text {
-        font-size: clamp(1.5rem, 5vw, 2.2rem) !important;
+        font-size: clamp(1.6rem, 4vw, 2.4rem) !important;
+        line-height: 1.25 !important;
         padding: 0 0.5rem;
       }
 
@@ -2139,12 +2141,15 @@
 
         <!-- 3D Perspective Rotating Cylinder Carousel -->
         <div class="css3d-scene" style="padding-bottom: 90px; padding-top: 90px;">
-          <div class="css3d-a3d" style="--n:5">
+          <div class="css3d-a3d" style="--n:8">
             <img class="css3d-card" src="images/transfer-cursor/1.jpg" style="--i:0" alt="Category 1">
             <img class="css3d-card" src="images/transfer-cursor/2.jpg" style="--i:1" alt="Category 2">
             <img class="css3d-card" src="images/transfer-cursor/3.jpg" style="--i:2" alt="Category 3">
             <img class="css3d-card" src="images/transfer-cursor/4.jpg" style="--i:3" alt="Category 4">
             <img class="css3d-card" src="images/transfer-cursor/5.jpg" style="--i:4" alt="Category 5">
+            <img class="css3d-card" src="images/transfer-cursor/6.jpg" style="--i:5" alt="Category 6">
+            <img class="css3d-card" src="images/transfer-cursor/7.jpg" style="--i:6" alt="Category 7">
+            <img class="css3d-card" src="images/transfer-cursor/8.jpg" style="--i:7" alt="Category 8">
           </div>
         </div>
       </section>
@@ -2589,12 +2594,12 @@
               <div data-w-id="ac72b610-6439-73b4-b81b-ff85bf50f1c3" class="use-case-wrapper">
                 <div class="use-case-content-wrapper">
                   <a href="use-case/fintechpro.html" class="use-case-image-wrapper w-inline-block"><img
-                      src="images/transfer-macup/3.jpg" loading="lazy" alt="Personal Care" class="use-case-image"></a>
+                      src="images/transfer-macup/3.jpg" loading="lazy" alt="Haircare" class="use-case-image"></a>
                   <div class="case-content-wrapper">
                     <div class="use-case-name-wrap">
                       <div class="case-name-wrap">
-                        <div class="case-name _01">Personal Care</div>
-                        <div class="case-name _02">Personal Care</div>
+                        <div class="case-name _01">Haircare</div>
+                        <div class="case-name _02">Haircare</div>
                       </div>
                     </div>
                   </div>
@@ -2917,7 +2922,7 @@
             </div>
             <div class="cta-content-block">
               <div class="cta-content">
-                <h2 class="cta-text">Transform your business <span class="featured-text"
+                <h2 class="cta-text">Transform your business <br><span class="featured-text"
                     style="text-transform:none;">with tyes</span></h2>
                 <div class="spacer-small"></div>
               </div>
@@ -3059,19 +3064,19 @@
             </div>
             <!-- Social Links -->
             <div style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
-              <a href="https://facebook.com/" target="_blank" class="link-item w-inline-block">
+              <a href="https://www.facebook.com/profile.php?id=61578742552795" target="_blank" class="link-item w-inline-block">
                 <div class="link-wrap">
                   <div class="link-text">Facebook</div>
                   <div class="link-text is-hover">Facebook</div>
                 </div>
               </a>
-              <a href="https://www.linkedin.com/" target="_blank" class="link-item w-inline-block">
+              <a href="https://www.linkedin.com/company/tyes-app/" target="_blank" class="link-item w-inline-block">
                 <div class="link-wrap">
                   <div class="link-text">Linkedin</div>
                   <div class="link-text is-hover">Linkedin</div>
                 </div>
               </a>
-              <a href="https://www.instagram.com/" target="_blank" class="link-item w-inline-block">
+              <a href="https://www.instagram.com/tyes.app/" target="_blank" class="link-item w-inline-block">
                 <div class="link-wrap">
                   <div class="link-text">Instagram</div>
                   <div class="link-text is-hover">Instagram</div>
