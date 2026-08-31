@@ -1815,10 +1815,10 @@
       }
 
       .cta-image-wrap {
-        opacity: 0.15 !important;
+        opacity: 1 !important;
         position: absolute;
         inset: 0;
-        z-index: 20 !important;
+        z-index: 30 !important;
         pointer-events: none !important;
       }
 
@@ -1843,15 +1843,15 @@
       }
 
       .footer-main-grid {
-        grid-template-columns: 1fr !important;
-        gap: 28px !important;
-        text-align: center !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 16px !important;
+        text-align: left !important;
       }
 
       .footer-flex-item {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start !important;
       }
     }
 
@@ -1887,18 +1887,25 @@
       }
 
       .hero-ctas {
-        flex-direction: column;
-        width: 100%;
-        align-items: stretch;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        align-items: center !important;
       }
 
       .cta-pill,
       .cta-ghost {
-        width: 100%;
-        text-align: center;
-        box-sizing: border-box;
-        justify-content: center;
-        padding: 14px 20px;
+        width: auto !important;
+        max-width: 100% !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        justify-content: center !important;
+        padding: 10px 18px !important;
+        font-size: 13.5px !important;
+        white-space: nowrap !important;
       }
 
       .retail-cats-grid {
@@ -2608,12 +2615,12 @@
               <div data-w-id="70cfdaab-2e9e-4752-e3ac-a2d3a4cf11d1" class="use-case-wrapper">
                 <div class="use-case-content-wrapper">
                   <a href="use-case/innovatex.html" class="use-case-image-wrapper w-inline-block"><img
-                      src="images/transfer-macup/4.jpg" loading="lazy" alt="Haircare" class="use-case-image"></a>
+                      src="images/transfer-macup/4.jpg" loading="lazy" alt="Fragrance" class="use-case-image"></a>
                   <div class="case-content-wrapper">
                     <div class="use-case-name-wrap">
                       <div class="case-name-wrap">
-                        <div class="case-name _01">Haircare</div>
-                        <div class="case-name _02">Haircare</div>
+                        <div class="case-name _01">Fragrance</div>
+                        <div class="case-name _02">Fragrance</div>
                       </div>
                     </div>
                   </div>
@@ -2622,12 +2629,12 @@
               <div data-w-id="70cfdaab-2e9e-4752-e3ac-a2d3a4cf11d2" class="use-case-wrapper">
                 <div class="use-case-content-wrapper">
                   <a href="use-case/innovatex.html" class="use-case-image-wrapper w-inline-block"><img
-                      src="images/transfer-macup/5.jpg" loading="lazy" alt="Fragrance" class="use-case-image"></a>
+                      src="images/transfer-macup/5.jpg" loading="lazy" alt="Personal Care" class="use-case-image"></a>
                   <div class="case-content-wrapper">
                     <div class="use-case-name-wrap">
                       <div class="case-name-wrap">
-                        <div class="case-name _01">Fragrance</div>
-                        <div class="case-name _02">Fragrance</div>
+                        <div class="case-name _01">Personal Care</div>
+                        <div class="case-name _02">Personal Care</div>
                       </div>
                     </div>
                   </div>

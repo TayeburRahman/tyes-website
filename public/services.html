@@ -349,11 +349,17 @@
 
         @media (max-width: 768px) {
 
-            .footer-grid,
-            .footer-main-grid {
+            .footer-grid {
                 grid-template-columns: 1fr !important;
                 gap: 1.5rem !important;
                 margin-top: 1.5rem !important;
+            }
+
+            .footer-main-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 16px !important;
+                margin-top: 1.5rem !important;
+                text-align: left !important;
             }
 
             .horizontal-flex {
