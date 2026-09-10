@@ -115,14 +115,7 @@ function AuthContent() {
           (window as any).google?.accounts?.id?.initialize({
             client_id: clientId,
             callback: handleGoogleCredentialResponse,
-            // Do NOT use ux_mode:'popup' here — let renderButton handle the popup
           });
-          // Render hidden Google buttons into our placeholder divs
-          const el1 = document.getElementById('gis-btn-container-1');
-          const el2 = document.getElementById('gis-btn-container-2');
-          const btnConfig = { theme: 'outline', size: 'large', width: 1, type: 'standard' };
-          if (el1) (window as any).google.accounts.id.renderButton(el1, btnConfig);
-          if (el2) (window as any).google.accounts.id.renderButton(el2, btnConfig);
           setGisReady(true);
         };
         if ((window as any).google?.accounts?.id) {
@@ -140,6 +133,16 @@ function AuthContent() {
         }
       });
   }, [handleGoogleCredentialResponse]);
+
+  // ── After GIS is ready & DOM painted, render the hidden button ──────────────
+  useEffect(() => {
+    if (!gisReady) return;
+    const btnConfig = { theme: 'outline', size: 'large', width: 1, type: 'standard' };
+    const el = document.getElementById('gis-btn-container');
+    if (el && (window as any).google?.accounts?.id?.renderButton) {
+      (window as any).google.accounts.id.renderButton(el, btnConfig);
+    }
+  }, [gisReady]);
 
   const title = tab === "signin" ? "Welcome back" : tab === "signup" ? "Create account" : tab === "otp" || tab === "forgot_otp" ? "Check your email" : "Reset password";
   const subtitle = tab === "signin" ? "Sign in to your account or create a new one" : tab === "signup" ? "Get started with tyes today" : tab === "otp" ? "Enter the 6-digit code we sent to your email" : tab === "forgot_otp" ? "Enter the recovery code and your new password" : "We'll help you get back in";
@@ -358,14 +361,14 @@ function AuthContent() {
 
   // ── Trigger GIS popup via the hidden rendered Google button ──────────────
   const triggerGooglePopup = () => {
-    // Click the hidden Google-rendered button (this opens the real Google popup, not FedCM)
+    // Click the hidden Google-rendered button (opens real Google popup, not FedCM)
     const hiddenBtn = document.querySelector(
-      '#gis-btn-container-1 [role="button"], #gis-btn-container-1 div[tabindex], #gis-btn-container-2 [role="button"], #gis-btn-container-2 div[tabindex]'
+      '#gis-btn-container [role="button"], #gis-btn-container div[tabindex="0"]'
     ) as HTMLElement | null;
     if (hiddenBtn) {
       hiddenBtn.click();
     } else {
-      // Fallback to full-page redirect if GIS button not mounted yet
+      // Fallback to full-page redirect if GIS button not ready
       handleGoogleSignIn();
     }
   };
@@ -451,8 +454,6 @@ function AuthContent() {
               </svg>
               Continue with Google
             </button>
-            {/* Hidden container for GIS-rendered button — clicked programmatically to open real Google popup */}
-            <div id="gis-btn-container-1" style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', height: 0, overflow: 'hidden' }} aria-hidden="true" />
           </form>
         )}
 
@@ -573,8 +574,6 @@ function AuthContent() {
               </svg>
               Continue with Google
             </button>
-            {/* Hidden container for GIS-rendered button — Sign Up tab */}
-            <div id="gis-btn-container-2" style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', height: 0, overflow: 'hidden' }} aria-hidden="true" />
           </form>
         )}
 
@@ -628,6 +627,13 @@ function AuthContent() {
         <div style={{ textAlign: "center", marginTop: "2rem", fontSize: "0.8rem", color: "rgba(255,255,255,0.35)" }}>
           <a href="/main.html" className="auth-link">← Back to home</a>
         </div>
+
+        {/* Permanent hidden GIS button container — always in DOM so renderButton works on init */}
+        <div
+          id="gis-btn-container"
+          style={{ position: 'fixed', bottom: 0, left: 0, width: 1, height: 1, opacity: 0, overflow: 'hidden', pointerEvents: 'none' }}
+          aria-hidden="true"
+        />
 
       </div>
     </div>
