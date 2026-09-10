@@ -115,8 +115,14 @@ function AuthContent() {
           (window as any).google?.accounts?.id?.initialize({
             client_id: clientId,
             callback: handleGoogleCredentialResponse,
-            ux_mode: 'popup',
+            // Do NOT use ux_mode:'popup' here — let renderButton handle the popup
           });
+          // Render hidden Google buttons into our placeholder divs
+          const el1 = document.getElementById('gis-btn-container-1');
+          const el2 = document.getElementById('gis-btn-container-2');
+          const btnConfig = { theme: 'outline', size: 'large', width: 1, type: 'standard' };
+          if (el1) (window as any).google.accounts.id.renderButton(el1, btnConfig);
+          if (el2) (window as any).google.accounts.id.renderButton(el2, btnConfig);
           setGisReady(true);
         };
         if ((window as any).google?.accounts?.id) {
@@ -350,12 +356,16 @@ function AuthContent() {
     }
   };
 
-  // ── Trigger GIS popup programmatically (for custom button) ───────────────
+  // ── Trigger GIS popup via the hidden rendered Google button ──────────────
   const triggerGooglePopup = () => {
-    const gis = (window as any).google?.accounts?.id;
-    if (gis) {
-      gis.prompt();
+    // Click the hidden Google-rendered button (this opens the real Google popup, not FedCM)
+    const hiddenBtn = document.querySelector(
+      '#gis-btn-container-1 [role="button"], #gis-btn-container-1 div[tabindex], #gis-btn-container-2 [role="button"], #gis-btn-container-2 div[tabindex]'
+    ) as HTMLElement | null;
+    if (hiddenBtn) {
+      hiddenBtn.click();
     } else {
+      // Fallback to full-page redirect if GIS button not mounted yet
       handleGoogleSignIn();
     }
   };
@@ -441,6 +451,8 @@ function AuthContent() {
               </svg>
               Continue with Google
             </button>
+            {/* Hidden container for GIS-rendered button — clicked programmatically to open real Google popup */}
+            <div id="gis-btn-container-1" style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', height: 0, overflow: 'hidden' }} aria-hidden="true" />
           </form>
         )}
 
@@ -561,6 +573,8 @@ function AuthContent() {
               </svg>
               Continue with Google
             </button>
+            {/* Hidden container for GIS-rendered button — Sign Up tab */}
+            <div id="gis-btn-container-2" style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', height: 0, overflow: 'hidden' }} aria-hidden="true" />
           </form>
         )}
 
