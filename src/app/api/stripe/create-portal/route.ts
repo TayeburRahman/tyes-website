@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     }
 
     // Create the Stripe Customer Portal session
-    const returnUrl = `${req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'https://tyes-website-nu.vercel.app'}/dashboard/client`;
+    const returnUrl = `${req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tyes.app'}/dashboard/client`;
 
     const session = await stripe.billingPortal.sessions.create({
       customer: stripeCustomerId,

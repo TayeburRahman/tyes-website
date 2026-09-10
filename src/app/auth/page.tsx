@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback, useEffect, Suspense } from "react";
+import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,6 +46,9 @@ function AuthContent() {
   const supabase = createClient();
   const { toasts, addToast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const [gisReady, setGisReady] = useState(false);
+  const googleBtnRef1 = useRef<HTMLDivElement>(null);
+  const googleBtnRef2 = useRef<HTMLDivElement>(null);
 
   const initialTab = (searchParams.get("tab") as Tab) || "signin";
   const [tab, setTab] = useState<Tab>(initialTab);
@@ -68,10 +71,69 @@ function AuthContent() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ── Google credential response (called by GIS popup) ──────────────────────
+  const handleGoogleCredentialResponse = useCallback(async (response: any) => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: response.credential,
+      });
+      if (error) throw error;
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, country')
+          .eq('id', data.user.id)
+          .single();
+        if (!profile?.country) {
+          // New Google user — collect extra info
+          window.location.href = '/auth/complete-profile';
+          return;
+        }
+        const role = profile?.role || data.user.user_metadata?.role || 'client';
+        const isAdmin = ['admin', 'superAdmin'].includes(role);
+        addToast('Signed in successfully!', 'success');
+        window.location.href = isAdmin ? '/dashboard/admin' : '/dashboard/client';
+      }
+    } catch (err: any) {
+      addToast(err.message || 'Google sign-in failed', 'error');
+      setLoading(false);
+    }
+  }, [supabase, addToast]);
 
+  // ── Load Google Identity Services script and initialise ──────────────────
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // Fetch our server-side client ID
+    fetch('/api/auth/google-config')
+      .then(r => r.json())
+      .then(({ clientId }: { clientId: string }) => {
+        if (!clientId) return;
+        const existingScript = document.getElementById('gis-script');
+        const init = () => {
+          (window as any).google?.accounts?.id?.initialize({
+            client_id: clientId,
+            callback: handleGoogleCredentialResponse,
+            ux_mode: 'popup',
+          });
+          setGisReady(true);
+        };
+        if ((window as any).google?.accounts?.id) {
+          init();
+        } else if (!existingScript) {
+          const script = document.createElement('script');
+          script.id = 'gis-script';
+          script.src = 'https://accounts.google.com/gsi/client';
+          script.async = true;
+          script.defer = true;
+          script.onload = init;
+          document.head.appendChild(script);
+        } else {
+          existingScript.addEventListener('load', init);
+        }
+      });
+  }, [handleGoogleCredentialResponse]);
 
   const title = tab === "signin" ? "Welcome back" : tab === "signup" ? "Create account" : tab === "otp" || tab === "forgot_otp" ? "Check your email" : "Reset password";
   const subtitle = tab === "signin" ? "Sign in to your account or create a new one" : tab === "signup" ? "Get started with tyes today" : tab === "otp" ? "Enter the 6-digit code we sent to your email" : tab === "forgot_otp" ? "Enter the recovery code and your new password" : "We'll help you get back in";
@@ -271,6 +333,7 @@ function AuthContent() {
     }
   };
 
+  // ── Fallback: full-page OAuth redirect (used when GIS is unavailable) ─────
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
@@ -284,6 +347,16 @@ function AuthContent() {
     } catch (err: any) {
       addToast(err.message || "Failed to initiate Google sign-in", "error");
       setLoading(false);
+    }
+  };
+
+  // ── Trigger GIS popup programmatically (for custom button) ───────────────
+  const triggerGooglePopup = () => {
+    const gis = (window as any).google?.accounts?.id;
+    if (gis) {
+      gis.prompt();
+    } else {
+      handleGoogleSignIn();
     }
   };
 
@@ -353,7 +426,13 @@ function AuthContent() {
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0", color: "rgba(255,255,255,0.3)", fontSize: "0.8rem", fontWeight: 500 }}>
               <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} /> or <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
             </div>
-            <button type="button" className="auth-btn-outline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }} onClick={handleGoogleSignIn} disabled={loading}>
+            <button
+              type="button"
+              className="auth-btn-outline"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+              onClick={triggerGooglePopup}
+              disabled={loading}
+            >
               <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.64 9.20455C17.64 8.56636 17.5827 7.95273 17.4764 7.36364H9V10.845H13.8436C13.635 11.97 13.0009 12.9232 12.0477 13.5614V15.8195H14.9564C16.6582 14.2527 17.64 11.9455 17.64 9.20455Z" fill="#4285F4"/>
                 <path d="M9 18C11.43 18 13.4673 17.1941 14.9564 15.8195L12.0477 13.5614C11.2418 14.1014 10.2109 14.4205 9 14.4205C6.65591 14.4205 4.67182 12.8373 3.96409 10.71H0.957275V13.0418C2.43818 15.9832 5.48182 18 9 18Z" fill="#34A853"/>
@@ -467,7 +546,13 @@ function AuthContent() {
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0", color: "rgba(255,255,255,0.3)", fontSize: "0.8rem", fontWeight: 500 }}>
               <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} /> or <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
             </div>
-            <button type="button" className="auth-btn-outline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }} onClick={handleGoogleSignIn} disabled={loading}>
+            <button
+              type="button"
+              className="auth-btn-outline"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+              onClick={triggerGooglePopup}
+              disabled={loading}
+            >
               <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.64 9.20455C17.64 8.56636 17.5827 7.95273 17.4764 7.36364H9V10.845H13.8436C13.635 11.97 13.0009 12.9232 12.0477 13.5614V15.8195H14.9564C16.6582 14.2527 17.64 11.9455 17.64 9.20455Z" fill="#4285F4"/>
                 <path d="M9 18C11.43 18 13.4673 17.1941 14.9564 15.8195L12.0477 13.5614C11.2418 14.1014 10.2109 14.4205 9 14.4205C6.65591 14.4205 4.67182 12.8373 3.96409 10.71H0.957275V13.0418C2.43818 15.9832 5.48182 18 9 18Z" fill="#34A853"/>

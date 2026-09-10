@@ -79,15 +79,20 @@
       }
     }
   </script>
-  <script type="module" crossorigin src="/landing/assets/index-B2KUD1UC.js"></script>
-</head>
-
-<body>
-  <script>if (sessionStorage.getItem("tyes_auth") !== "1" && document.cookie.indexOf("tyes_auth=1") === -1) window.location.href = "index.html";</script>
-
-  <div id="root"></div>
+  <!-- Preload 3D tunnel textures for instant rendering -->
+  <link rel="preload" as="image" href="/images/transfer-landing/1.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/3.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/4.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/5.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/6.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/7.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/8.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/9.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/10.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/11.jpg">
+  <link rel="preload" as="image" href="/images/transfer-landing/12.jpg">
   <script>
-    // Pre-cache images
+    // Eagerly pre-cache images
     window.TRANSFER_LANDING_IMAGES = [
       '/images/transfer-landing/1.jpg',
       '/images/transfer-landing/3.jpg',
@@ -101,10 +106,18 @@
       '/images/transfer-landing/11.jpg',
       '/images/transfer-landing/12.jpg'
     ];
-    window.TRANSFER_LANDING_IMAGES.forEach(src => {
-      const img = new Image(); img.src = src;
+    window.TRANSFER_LANDING_IMAGES.forEach(function (src) {
+      var img = new Image();
+      img.src = src;
     });
   </script>
+  <script type="module" crossorigin src="/landing/assets/index-B2KUD1UC.js"></script>
+</head>
+
+<body>
+  <script>if (sessionStorage.getItem("tyes_auth") !== "1" && document.cookie.indexOf("tyes_auth=1") === -1) window.location.href = "index.html";</script>
+
+  <div id="root"></div>
 
   <script>
     // Intercept clicks on the React-rendered buttons and nav links on the splash page

@@ -53,8 +53,8 @@ export const sendOrderConfirmationEmail = async (props: OrderConfirmationEmailPr
  
       <div class="container">
         <div class="header">
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+           <img src="https://www.tyes.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
+           <img src="https://www.tyes.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
            <p>Order Confirmation</p>
         </div>
         
@@ -167,8 +167,8 @@ export const sendStrategySnapshotEmail = async (props: { to: string; brandName: 
     <body>
       <div class="container">
         <div class="header">
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+           <img src="https://www.tyes.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
+           <img src="https://www.tyes.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
            <p>Strategy Snapshot</p>
         </div>
         <div class="content">
@@ -223,8 +223,8 @@ export const sendDeepDiveNudgeEmail = async (props: { to: string; brandName: str
     <body>
       <div class="container">
         <div class="header">
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+           <img src="https://www.tyes.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
+           <img src="https://www.tyes.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
            <p>Brand Strategy Deep Dive</p>
         </div>
         <div class="content">
@@ -326,8 +326,8 @@ export const sendImageDeliveryEmail = async (props: { to: string; customerName: 
     <body>
       <div class="container">
         <div class="header">
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
-           <img src="https://tyes-website-nu.vercel.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
+           <img src="https://www.tyes.app/images/tyes-logo-new.svg" alt="tyes" style="height: 28px; display: block; margin: 0 auto 8px;" />
+           <img src="https://www.tyes.app/images/tyes-wordmark.svg" alt="tyes" style="height: 32px; display: block; margin: 0 auto;" />
            <p>${subtitle}</p>
         </div>
         <div class="content">
