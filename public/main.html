@@ -303,9 +303,11 @@
         grid-row-gap: 0.85rem !important;
         row-gap: 0.85rem !important;
       }
+
       .nav-link {
         height: 2.8rem !important;
       }
+
       .nav-link .nav-link-text {
         font-size: 2.3rem !important;
       }
@@ -316,9 +318,11 @@
         grid-row-gap: 0.75rem !important;
         row-gap: 0.75rem !important;
       }
+
       .nav-link {
         height: 2.4rem !important;
       }
+
       .nav-link .nav-link-text {
         font-size: 2rem !important;
       }
@@ -1758,6 +1762,32 @@
       }
     }
 
+    /* GLOBAL CTA SECTION LAYERING (ALL DEVICES) */
+    .cta-image-wrap {
+      z-index: 30 !important;
+      pointer-events: none !important;
+    }
+    .cta-image-wrap * {
+      pointer-events: none !important;
+    }
+    .cta-content-block {
+      z-index: 5 !important;
+      position: relative !important;
+    }
+    .cta-button-wrap {
+      z-index: 5 !important;
+      position: relative !important;
+    }
+    .cta-button-wrap a,
+    .cta-button-wrap .main-button {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+    .cta-title-line {
+      display: inline-block !important;
+      white-space: nowrap !important;
+    }
+
     /* 3. MOBILE & PHONES (<= 767px) */
     @media (max-width: 767px) {
       .hero-br {
@@ -1863,36 +1893,86 @@
 
       .cta-container {
         flex-direction: column !important;
-        padding: 2.5rem 1.25rem !important;
-        text-align: center;
+        padding: 2.25rem 1.25rem !important;
+        text-align: center !important;
+        height: auto !important;
+        min-height: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .cta-sticky {
+        position: relative !important;
+        top: auto !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 1.75rem 1rem !important;
+        width: 100% !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
 
       .cta-image-wrap {
         opacity: 1 !important;
-        position: absolute;
-        inset: 0;
+        position: absolute !important;
+        inset: 0 !important;
         z-index: 30 !important;
+        pointer-events: none !important;
+        overflow: hidden !important;
+      }
+
+      .cta-image-wrap * {
         pointer-events: none !important;
       }
 
       .cta-content-block {
-        position: relative;
-        z-index: 10;
+        position: relative !important;
+        z-index: 5 !important;
         margin-top: 0 !important;
+        padding-top: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .cta-content {
+        max-width: 100% !important;
+        width: 100% !important;
       }
 
       .cta-text {
-        font-size: clamp(1.6rem, 4vw, 2.4rem) !important;
+        font-size: clamp(1.1rem, 5.2vw, 2.2rem) !important;
         line-height: 1.25 !important;
-        padding: 0 0.5rem;
+        padding: 0 0.5rem !important;
+        margin: 0 !important;
+        text-align: center !important;
       }
 
       .cta-button-wrap {
-        position: relative;
-        z-index: 10;
-        margin-top: 1rem;
-        display: flex;
-        justify-content: center;
+        position: relative !important;
+        z-index: 5 !important;
+        margin-top: 1.25rem !important;
+        display: flex !important;
+        justify-content: center !important;
+      }
+
+      .cta-button-wrap a,
+      .cta-button-wrap .main-button {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+      }
+
+      .cta-image-01,
+      .cta-image-02,
+      .cta-image-03,
+      .cta-image-04 {
+        width: 25vw !important;
+        max-width: 100px !important;
+        height: auto !important;
+        opacity: 1 !important;
       }
 
       .footer-main-grid {
@@ -2007,6 +2087,24 @@
       .faq-a p {
         padding: 0 18px 16px;
         font-size: 0.875rem;
+      }
+
+      .cta-container {
+        padding: 1.5rem 0.5rem !important;
+      }
+
+      .cta-sticky {
+        padding: 1.25rem 0.25rem !important;
+      }
+
+      .cta-text {
+        font-size: clamp(0.95rem, 4.8vw, 1.55rem) !important;
+        line-height: 1.22 !important;
+        padding: 0 0.25rem !important;
+      }
+
+      .cta-button-wrap {
+        margin-top: 0.75rem !important;
       }
     }
 
@@ -2968,21 +3066,18 @@
           <div class="cta-sticky">
             <div class="cta-image-wrap">
               <div class="w-layout-grid cta-image-grid"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c881-c386c87c"
-                  sizes="100vw" alt="Transform your business"
-                  src="images/transfer-bisness/string-top-left.png" loading="lazy"
-                  class="cta-image-01"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c882-c386c87c" loading="lazy"
-                  alt="Transform your business" src="images/transfer-bisness/string-top-right.png"
+                  sizes="100vw" alt="Transform your business" src="images/transfer-bisness/string-top-left.png"
+                  loading="lazy" class="cta-image-01"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c882-c386c87c"
+                  loading="lazy" alt="Transform your business" src="images/transfer-bisness/string-top-right.png"
                   class="cta-image-02"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c883-c386c87c" sizes="100vw"
-                  alt="Transform your business" src="images/transfer-bisness/string-bottom-left.png"
-                  loading="lazy"
+                  alt="Transform your business" src="images/transfer-bisness/string-bottom-left.png" loading="lazy"
                   class="cta-image-03"><img id="w-node-d9c37744-b842-b892-d0e4-0369c386c884-c386c87c" sizes="100vw"
-                  alt="Transform your business" src="images/transfer-bisness/string-bottom-right.png"
-                  loading="lazy"
+                  alt="Transform your business" src="images/transfer-bisness/string-bottom-right.png" loading="lazy"
                   class="cta-image-04"></div>
             </div>
             <div class="cta-content-block">
               <div class="cta-content">
-                <h2 class="cta-text">Transform your business <br><span class="featured-text"
+                <h2 class="cta-text"><span class="cta-title-line">Transform your business</span><br><span class="featured-text cta-title-line"
                     style="text-transform:none;">with tyes</span></h2>
                 <div class="spacer-small"></div>
               </div>
@@ -3124,7 +3219,8 @@
             </div>
             <!-- Social Links -->
             <div style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
-              <a href="https://www.facebook.com/profile.php?id=61578742552795" target="_blank" class="link-item w-inline-block">
+              <a href="https://www.facebook.com/profile.php?id=61578742552795" target="_blank"
+                class="link-item w-inline-block">
                 <div class="link-wrap">
                   <div class="link-text">Facebook</div>
                   <div class="link-text is-hover">Facebook</div>

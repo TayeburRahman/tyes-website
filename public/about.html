@@ -50,12 +50,16 @@
     }
 
     .cta-content-block {
-      position: relative;
-      z-index: 10;
+      position: relative !important;
+      z-index: 5 !important;
     }
 
     .cta-image-wrap {
-      z-index: 20 !important;
+      z-index: 30 !important;
+      pointer-events: none !important;
+    }
+
+    .cta-image-wrap * {
       pointer-events: none !important;
     }
 
@@ -68,30 +72,127 @@
     }
 
     .cta-button-wrap {
-      position: relative;
-      z-index: 10;
+      position: relative !important;
+      z-index: 5 !important;
       margin-top: 1rem;
       display: flex;
       justify-content: center;
     }
 
+    .cta-button-wrap a,
+    .cta-button-wrap .main-button {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+
+    .cta-title-line {
+      display: inline-block !important;
+      white-space: nowrap !important;
+    }
+
     @media (max-width: 767px) {
       .cta-container {
         flex-direction: column !important;
-        padding: 2.5rem 1.25rem !important;
-        text-align: center;
+        padding: 2.25rem 1.25rem !important;
+        text-align: center !important;
+        height: auto !important;
+        min-height: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .cta-sticky {
+        position: relative !important;
+        top: auto !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 1.75rem 1rem !important;
+        width: 100% !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
 
       .cta-image-wrap {
         opacity: 1 !important;
-        position: absolute;
-        inset: 0;
+        position: absolute !important;
+        inset: 0 !important;
         z-index: 30 !important;
+        pointer-events: none !important;
+        overflow: hidden !important;
+      }
+
+      .cta-image-wrap * {
         pointer-events: none !important;
       }
 
       .cta-content-block {
+        position: relative !important;
+        z-index: 5 !important;
         margin-top: 0 !important;
+        padding-top: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .cta-content {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+
+      .cta-text {
+        font-size: clamp(1.1rem, 5.2vw, 2.2rem) !important;
+        line-height: 1.25 !important;
+        padding: 0 0.5rem !important;
+        margin: 0 !important;
+        text-align: center !important;
+      }
+
+      .cta-button-wrap {
+        position: relative !important;
+        z-index: 5 !important;
+        margin-top: 1.25rem !important;
+        display: flex !important;
+        justify-content: center !important;
+      }
+
+      .cta-button-wrap a,
+      .cta-button-wrap .main-button {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+      }
+
+      .cta-image-01,
+      .cta-image-02,
+      .cta-image-03,
+      .cta-image-04 {
+        width: 25vw !important;
+        max-width: 100px !important;
+        height: auto !important;
+        opacity: 1 !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cta-container {
+        padding: 1.5rem 0.5rem !important;
+      }
+
+      .cta-sticky {
+        padding: 1.25rem 0.25rem !important;
+      }
+
+      .cta-text {
+        font-size: clamp(0.95rem, 4.8vw, 1.55rem) !important;
+        line-height: 1.22 !important;
+        padding: 0 0.25rem !important;
+      }
+
+      .cta-button-wrap {
+        margin-top: 0.75rem !important;
       }
     }
 
@@ -158,31 +259,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 28px;
       margin: 36px 0;
-    }
-
-    @media (max-width: 991px) {
-      h1.about-h1 {
-        font-size: 34pt;
-      }
-      .lead-text {
-        font-size: 14pt;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .about-container {
-        padding: 40px 16px 40px;
-      }
-      .dual-engine {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      h1.about-h1 {
-        font-size: 28pt;
-      }
-      .about-p {
-        font-size: 11.5pt;
-      }
     }
 
     .engine {
@@ -289,6 +365,249 @@
 
     .cta-btn-primary:hover, .cta-btn-secondary:hover {
       opacity: 0.85;
+    }
+
+    /* ============ TABLET & SMALL LAPTOP (<= 991px) ============ */
+    @media (max-width: 991px) {
+      h1.about-h1 {
+        font-size: 32pt;
+        line-height: 1.15;
+      }
+
+      .lead-text {
+        font-size: 14pt;
+        line-height: 1.6;
+        margin-bottom: 36px;
+      }
+
+      h2.about-h2 {
+        font-size: 22pt;
+        margin-top: 44px;
+        margin-bottom: 18px;
+      }
+
+      .callout {
+        font-size: 18pt;
+        line-height: 1.45;
+        padding: 36px 20px;
+        margin: 44px 0;
+      }
+
+      .closer h3 {
+        font-size: 26pt;
+        line-height: 1.2;
+      }
+    }
+
+    /* ============ MOBILE SCREENS (<= 768px) ============ */
+    @media (max-width: 768px) {
+      .about-container {
+        margin: 0 auto !important;
+        padding: 105px 20px 40px !important;
+      }
+
+      .tagline {
+        font-size: 0.75rem !important;
+        letter-spacing: 2px !important;
+        margin-bottom: 14px !important;
+        font-weight: 700 !important;
+      }
+
+      h1.about-h1 {
+        font-size: clamp(1.85rem, 6.5vw, 2.25rem) !important;
+        line-height: 1.18 !important;
+        letter-spacing: -0.8px !important;
+        margin-bottom: 18px !important;
+      }
+
+      .lead-text {
+        font-size: 1.02rem !important;
+        line-height: 1.65 !important;
+        color: #D4D4D4 !important;
+        margin-bottom: 28px !important;
+      }
+
+      h2.about-h2 {
+        font-size: clamp(1.4rem, 5.5vw, 1.7rem) !important;
+        line-height: 1.25 !important;
+        letter-spacing: -0.3px !important;
+        margin-top: 36px !important;
+        margin-bottom: 14px !important;
+      }
+
+      .about-p {
+        font-size: 0.95rem !important;
+        line-height: 1.68 !important;
+        color: #C8C8C8 !important;
+        margin-bottom: 16px !important;
+      }
+
+      .dual-engine {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        margin: 24px 0 !important;
+      }
+
+      .engine {
+        padding: 22px 18px !important;
+        border-radius: 12px !important;
+      }
+
+      .engine .tag {
+        font-size: 0.75rem !important;
+        letter-spacing: 2px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .engine h3 {
+        font-size: 1.25rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 8px !important;
+      }
+
+      .engine p {
+        font-size: 0.9rem !important;
+        line-height: 1.6 !important;
+        color: #B0B0B0 !important;
+      }
+
+      .callout {
+        font-size: clamp(1.05rem, 4vw, 1.25rem) !important;
+        line-height: 1.55 !important;
+        padding: 24px 14px !important;
+        margin: 32px 0 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+      }
+
+      .closer {
+        margin-top: 36px !important;
+      }
+
+      .closer h3 {
+        font-size: clamp(1.55rem, 5.5vw, 1.95rem) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.4px !important;
+      }
+
+      .closer p {
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+        margin-top: 8px !important;
+      }
+
+      .cta-row {
+        margin-top: 24px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+        max-width: 320px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      .cta-btn-primary,
+      .cta-btn-secondary {
+        width: 100% !important;
+        padding: 13px 20px !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+      }
+    }
+
+    /* ============ SMALL MOBILE (<= 480px) ============ */
+    @media (max-width: 480px) {
+      .about-container {
+        margin: 0 auto !important;
+        padding: 95px 16px 30px !important;
+      }
+
+      .tagline {
+        font-size: 0.7rem !important;
+        letter-spacing: 2px !important;
+        margin-bottom: 12px !important;
+      }
+
+      h1.about-h1 {
+        font-size: clamp(1.65rem, 7.5vw, 1.95rem) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.5px !important;
+        margin-bottom: 14px !important;
+      }
+
+      .lead-text {
+        font-size: 0.95rem !important;
+        line-height: 1.55 !important;
+        margin-bottom: 22px !important;
+      }
+
+      h2.about-h2 {
+        font-size: 1.4rem !important;
+        line-height: 1.25 !important;
+        margin-top: 28px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .about-p {
+        font-size: 0.9rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 14px !important;
+      }
+
+      .dual-engine {
+        gap: 14px !important;
+        margin: 20px 0 !important;
+      }
+
+      .engine {
+        padding: 20px 16px !important;
+      }
+
+      .engine h3 {
+        font-size: 1.25rem !important;
+        line-height: 1.25 !important;
+      }
+
+      .engine p {
+        font-size: 0.88rem !important;
+        line-height: 1.55 !important;
+      }
+
+      .callout {
+        font-size: 1.05rem !important;
+        line-height: 1.5 !important;
+        padding: 20px 12px !important;
+        margin: 26px 0 !important;
+      }
+
+      .closer {
+        margin-top: 30px !important;
+      }
+
+      .closer h3 {
+        font-size: 1.55rem !important;
+        line-height: 1.22 !important;
+      }
+
+      .cta-row {
+        flex-direction: column !important;
+        width: 100% !important;
+      }
+
+      .cta-btn-primary,
+      .cta-btn-secondary {
+        width: 100% !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+      }
     }
   </style>
 </head>
@@ -438,8 +757,8 @@
           <h3>From brief <span class="accent">to shelf.</span></h3>
           <p>That's <span class="brand">tyes</span>.</p>
           <div class="cta-row">
-            <a href="pricing.html" class="cta-btn-primary">See pricing →</a>
-            <a href="how-it-works.html" class="cta-btn-secondary">How it works →</a>
+            <a href="pricing.html" class="cta-btn-primary">See pricing &rarr;</a>
+            <a href="how-it-works.html" class="cta-btn-secondary">How it works &rarr;</a>
           </div>
         </div>
       </div>
@@ -464,7 +783,7 @@
             </div>
             <div class="cta-content-block">
               <div class="cta-content">
-                <h2 class="cta-text">Transform your business <br><span class="featured-text"
+                <h2 class="cta-text"><span class="cta-title-line">Transform your business</span><br><span class="featured-text cta-title-line"
                     style="text-transform:none;">with tyes</span></h2>
                 <div class="spacer-small"></div>
               </div>
