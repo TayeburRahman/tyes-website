@@ -2219,107 +2219,162 @@ export default function TyesClient() {
                         if (!hasRealUrl) {
                           e.preventDefault();
                           const win = window.open("", "_blank");
-                          const netAmt = (inv.amount / 1.2).toFixed(2);
-                          const vatAmt = (inv.amount - Number(netAmt)).toFixed(2);
-                          win.document.write(`
-                            <!DOCTYPE html>
-                            <html>
-                              <head>
-                                <title>Official Tax Invoice ${inv.displayId} - tyes.app</title>
-                                <style>
-                                  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; background: #fff; color: #0f172a; margin: 0; }
-                                  .container { max-width: 700px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 36px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-                                  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #2dd4bf; padding-bottom: 20px; margin-bottom: 28px; }
-                                  .brand { font-size: 32px; font-weight: 800; color: #0f766e; letter-spacing: -1px; }
-                                  .inv-title { font-size: 22px; font-weight: 800; color: #0f172a; text-align: right; }
-                                  .inv-no { font-size: 13px; color: #0d9488; font-weight: 700; margin-top: 4px; }
-                                  .meta-grid { display: flex; justify-content: space-between; margin-bottom: 28px; font-size: 13px; color: #334155; line-height: 1.6; }
-                                  table { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 20px; }
-                                  th, td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-                                  th { background: #f8fafc; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
-                                  td { font-size: 13px; color: #1e293b; }
-                                  .tax-summary-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                                  .tax-summary-table td { padding: 6px 12px; border: none; font-size: 13px; }
-                                  .total-box { font-size: 18px; font-weight: 800; text-align: right; color: #0f766e; padding-top: 12px; border-top: 2px solid #0f766e; }
-                                  .tax-notice-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; margin-top: 24px; font-size: 11.5px; color: #334155; line-height: 1.6; }
-                                  .footer { margin-top: 36px; font-size: 12px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 20px; }
-                                  .btn-print { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #0d9488; color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; text-decoration: none; }
-                                  @media print { .btn-print { display: none; } .container { border: none; box-shadow: none; padding: 0; } }
-                                </style>
-                              </head>
-                              <body>
-                                <div class="container">
-                                  <div class="header">
-                                    <div>
-                                      <div class="brand">tyes</div>
-                                      <div style="font-size:12px;color:#64748b;margin-top:2px;">tyes.app · Campaign Visuals & Strategy</div>
-                                    </div>
-                                    <div class="inv-title">
-                                      OFFICIAL TAX INVOICE
-                                      <div class="inv-no">${inv.displayId}</div>
-                                    </div>
-                                  </div>
-                                  <div class="meta-grid">
-                                    <div>
-                                      <strong>Billed To:</strong><br/>
-                                      Valued Client<br/>
-                                      ${inv.stripeId ? `Stripe Ref: ${inv.stripeId}` : 'Payment via tyes Platform'}
-                                    </div>
-                                    <div style="text-align:right;">
-                                      <strong>Invoice Date:</strong> ${inv.date || new Date().toISOString().split('T')[0]}<br/>
-                                      <strong>Due Date:</strong> ${inv.due || 'Paid'}<br/>
-                                      <strong>Payment Status:</strong> <span style="color:#059669;font-weight:700;">${(inv.status || 'PAID').toUpperCase()}</span>
-                                    </div>
-                                  </div>
-                                  <table>
-                                    <thead>
-                                      <tr>
-                                        <th>Item Description</th>
-                                        <th>Service Type</th>
-                                        <th style="text-align:right;">Gross Amount</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <td>${inv.order}</td>
-                                        <td>Campaign Order / Strategy</td>
-                                        <td style="text-align:right;font-weight:700;">$${inv.amount}</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
 
-                                  <!-- TAX BREAKDOWN TABLE -->
-                                  <table class="tax-summary-table">
-                                    <tr>
-                                      <td style="color:#64748b;">Subtotal (Net Amount):</td>
-                                      <td style="text-align:right;font-weight:600;">$${netAmt}</td>
-                                    </tr>
-                                    <tr>
-                                      <td style="color:#64748b;">VAT / Sales Tax (20% EU OSS Rate):</td>
-                                      <td style="text-align:right;font-weight:600;">$${vatAmt}</td>
-                                    </tr>
-                                  </table>
+                          // Determine correct VAT based on client country
+                          const EU_RATES = { AT:20,BE:21,BG:20,HR:25,CY:19,CZ:21,DK:25,EE:22,FI:25.5,FR:20,DE:19,GR:24,HU:27,IE:23,IT:22,LV:21,LT:21,LU:17,MT:18,NL:21,PL:23,PT:23,RO:21,SK:20,SI:22,ES:21,SE:25 };
+                          const NON_EU_RATES = { GB:20,NO:25,CH:8.1,IS:24,BD:9,US:0,CA:5,AU:10 };
+                          const clientCountry = (clientInfo?.country || 'RO').toUpperCase();
+                          const isEU = Object.keys(EU_RATES).includes(clientCountry);
+                          const isRO = clientCountry === 'RO';
+                          const hasValidVat = clientInfo?.is_business && clientInfo?.vat_number && clientInfo.vat_number.trim().length > 4;
 
-                                  <div class="total-box">Total Amount Paid: $${inv.amount}</div>
+                          let vatRate = 0;
+                          let taxLabel = 'VAT';
+                          let isReverseCharge = false;
 
-                                  <!-- TAX & COMPLIANCE BOX -->
-                                  <div class="tax-notice-box">
-                                    <strong>Tax & Compliance Information:</strong><br/>
-                                    • Supplier Tax Registration (EU OSS): <strong>EU372101016</strong><br/>
-                                    • Tax Category: <strong>Standard Electronic Service VAT (20%)</strong><br/>
-                                    • Statutory B2B Notice: <em>Reverse charge — VAT to be accounted for by the recipient, Art. 196 Directive 2006/112/EC</em>
-                                  </div>
+                          if (isRO) {
+                            vatRate = 21; taxLabel = 'VAT (RO)';
+                          } else if (isEU && hasValidVat) {
+                            vatRate = 0; isReverseCharge = true;
+                          } else if (isEU) {
+                            vatRate = EU_RATES[clientCountry] || 21; taxLabel = 'VAT';
+                          } else {
+                            const nonEu = NON_EU_RATES[clientCountry];
+                            vatRate = nonEu !== undefined ? nonEu : 0;
+                            taxLabel = clientCountry === 'GB' ? 'UK VAT' : clientCountry === 'CA' ? 'GST' : clientCountry === 'AU' ? 'GST' : clientCountry === 'NO' ? 'MVA' : clientCountry === 'CH' ? 'MWST' : 'VAT';
+                          }
 
-                                  <div style="text-align:center;">
-                                    <button class="btn-print" onclick="window.print()">🖨️ Print / Save Tax PDF Invoice</button>
-                                  </div>
-                                  <div class="footer">
-                                    Thank you for choosing tyes.app · Official Tax Invoice
-                                  </div>
-                                </div>
-                              </body>
-                            </html>
-                          `);
+                          // Calculate amounts (price is net, tax exclusive)
+                          const netAmt = Number(inv.amount || 0).toFixed(2);
+                          const vatAmt = (Number(netAmt) * vatRate / 100).toFixed(2);
+                          const grandTotal = (Number(netAmt) + Number(vatAmt)).toFixed(2);
+
+                          // Client display info
+                          const clientName = (clientInfo?.is_business && clientInfo?.company_name)
+                            ? clientInfo.company_name
+                            : (clientInfo?.name || 'Client');
+                          const clientEmail = clientInfo?.email || '';
+                          const clientAddress = clientInfo?.registered_address || '';
+                          const clientVat = clientInfo?.vat_number || '';
+                          const invoiceDate = inv.date || new Date().toISOString().split('T')[0];
+
+                          // Tax notice
+                          const taxNoticeHtml = isReverseCharge
+                            ? `<strong>Tax &amp; Compliance Information:</strong><br/>
+                               &bull; Supplier EU OSS: <strong>EU372101016</strong><br/>
+                               &bull; Reverse Charge — 0% VAT (Art. 196 Directive 2006/112/EC)<br/>
+                               &bull; Your VAT Number: <strong>${clientVat}</strong><br/>
+                               &bull; <em>VAT to be accounted for by the recipient.</em>`
+                            : vatRate > 0
+                              ? `<strong>Tax &amp; Compliance Information:</strong><br/>
+                                 &bull; Supplier EU OSS: <strong>EU372101016</strong><br/>
+                                 &bull; Tax: <strong>${taxLabel} ${vatRate}% — Standard Rate</strong><br/>
+                                 &bull; Client Country: <strong>${clientCountry}</strong>`
+                              : `<strong>Tax &amp; Compliance Information:</strong><br/>
+                                 &bull; Supplier: <strong>TYES LLC</strong><br/>
+                                 &bull; Tax: <strong>0% — Outside taxable jurisdiction</strong><br/>
+                                 &bull; Client Country: <strong>${clientCountry}</strong>`;
+
+                          win.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Invoice ${inv.displayId} — tyes.app</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f8fafc;color:#0f172a;padding:40px 20px}
+.page{max-width:720px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:44px 48px;box-shadow:0 4px 24px rgba(0,0,0,0.07)}
+.header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #14b8a6;padding-bottom:24px;margin-bottom:32px}
+.brand{font-size:34px;font-weight:900;color:#0f766e;letter-spacing:-1.5px}
+.brand-sub{font-size:11px;color:#64748b;margin-top:4px;line-height:1.6}
+.inv-label{font-size:10px;font-weight:700;color:#14b8a6;text-transform:uppercase;letter-spacing:0.08em;text-align:right}
+.inv-number{font-size:22px;font-weight:800;color:#0f172a;text-align:right;margin-top:4px}
+.parties{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:28px}
+.party-label{font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.party-name{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.party-info{font-size:12px;color:#475569;line-height:1.8}
+.vat-badge{display:inline-block;margin-top:6px;padding:2px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:11px;font-weight:600;color:#15803d}
+.meta{display:flex;justify-content:space-between;background:#f8fafc;border-radius:8px;padding:12px 16px;margin-bottom:28px;font-size:12px;color:#475569;gap:16px;flex-wrap:wrap}
+.meta strong{color:#0f172a}
+.status-paid{padding:3px 10px;background:#dcfce7;color:#15803d;border-radius:20px;font-size:11px;font-weight:700}
+table{width:100%;border-collapse:collapse;margin-bottom:8px}
+thead th{background:#f1f5f9;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:0.06em;padding:10px 14px;text-align:left}
+tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e293b}
+.ar{text-align:right;font-weight:700}
+.totals-row{display:flex;justify-content:space-between;padding:7px 14px;font-size:13px;color:#475569}
+.totals-row.vat-row{color:#b45309}
+.totals-row.grand{border-top:2px solid #0f766e;padding-top:14px;margin-top:6px;font-size:17px;font-weight:800;color:#0f766e}
+.tax-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;margin-top:24px;font-size:11.5px;color:#334155;line-height:1.9}
+.footer{margin-top:32px;text-align:center;font-size:11px;color:#94a3b8;border-top:1px solid #f1f5f9;padding-top:20px}
+.btn-print{display:block;width:fit-content;margin:24px auto 0;padding:10px 28px;background:#0d9488;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer}
+@media print{.btn-print{display:none!important}body{background:#fff;padding:0}.page{border:none;box-shadow:none;padding:24px;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="brand">tyes</div>
+      <div class="brand-sub">tyes.app &middot; Campaign Visuals &amp; Strategy<br/>TYES LLC &middot; EU OSS: EU372101016</div>
+    </div>
+    <div>
+      <div class="inv-label">Official Tax Invoice</div>
+      <div class="inv-number">${inv.displayId}</div>
+    </div>
+  </div>
+
+  <div class="parties">
+    <div>
+      <div class="party-label">Billed To</div>
+      <div class="party-name">${clientName}</div>
+      <div class="party-info">
+        ${clientEmail}<br/>
+        ${clientAddress ? clientAddress + '<br/>' : ''}
+        ${clientCountry}
+        ${clientVat ? '<div class="vat-badge">VAT: ' + clientVat + '</div>' : ''}
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="party-label">Issued By</div>
+      <div class="party-name">TYES LLC</div>
+      <div class="party-info">billing@tyes.app<br/>tyes.app<br/>EU OSS: EU372101016</div>
+    </div>
+  </div>
+
+  <div class="meta">
+    <div><strong>Invoice Date:</strong> ${invoiceDate}</div>
+    <div><strong>Due:</strong> ${inv.due || 'Paid'}</div>
+    <div><strong>Status:</strong> <span class="status-paid">${(inv.status || 'PAID').toUpperCase()}</span></div>
+    ${inv.stripeId ? '<div><strong>Ref:</strong> ' + inv.stripeId + '</div>' : ''}
+  </div>
+
+  <table>
+    <thead><tr><th>Description</th><th>Service Type</th><th style="text-align:right">Net Amount (USD)</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>${inv.order || 'Campaign Service'}</td>
+        <td>Campaign Visuals / Strategy</td>
+        <td class="ar">$${netAmt}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <div class="totals-row"><span>Subtotal (Net)</span><span>$${netAmt}</span></div>
+    <div class="totals-row vat-row">
+      <span>${isReverseCharge ? 'VAT — Reverse Charge (0%)' : vatRate > 0 ? taxLabel + ' (' + vatRate + '%)' : 'Tax (0%)'}</span>
+      <span>$${vatAmt}</span>
+    </div>
+    <div class="totals-row grand"><span>Total ${inv.status === 'paid' ? 'Paid' : 'Due'}</span><span>$${grandTotal}</span></div>
+  </div>
+
+  <div class="tax-box">${taxNoticeHtml}</div>
+
+  <div style="text-align:center"><button class="btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button></div>
+  <div class="footer">Thank you for choosing tyes.app &middot; Official Tax Invoice &middot; ${inv.displayId}</div>
+</div>
+</body>
+</html>`);
                           win.document.close();
                         }
                       }}
