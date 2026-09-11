@@ -84,39 +84,15 @@ export async function POST(req: Request) {
       });
     }
 
-    // 5. Calculate VAT based on the selected country using custom engine
-    const vatResult = await calculateVAT(selectedCountry, profile.is_business || false, profile.vat_number || undefined);
-    let taxRatesToApply: string[] = [];
-
-    if (vatResult.vatRate > 0) {
-      // Find the tax rate we synced for this country
-      const existingRates = await stripe.taxRates.list({ active: true, limit: 100 });
-      let taxRate = existingRates.data.find(r => 
-        r.percentage === vatResult.vatRate && 
-        r.inclusive === false && 
-        r.country === selectedCountry
-      );
-      
-      if (!taxRate) {
-        // Fallback in case sync script missed it or it's a new rate
-        taxRate = await stripe.taxRates.create({
-          display_name: vatResult.taxName || 'VAT',
-          description: `Custom ${vatResult.vatRate}% VAT`,
-          percentage: vatResult.vatRate,
-          country: selectedCountry,
-          inclusive: false,
-          metadata: { source: 'tyes_vat_engine' }
-        });
-      }
-      taxRatesToApply.push(taxRate.id);
-    }
-
-    // 6. Create Checkout Session
+    // 5. Create Checkout Session with Stripe automatic_tax
+    //    Stripe calculates VAT dynamically based on the customer's actual billing address.
+    //    This means if the customer changes their country in checkout, the VAT updates automatically.
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       customer: stripeCustomerId,
       tax_id_collection: { enabled: true },
       billing_address_collection: 'required',
+      automatic_tax: { enabled: true },
       customer_update: {
         address: 'auto',
         name: 'auto',
@@ -128,6 +104,7 @@ export async function POST(req: Request) {
         {
           price_data: {
             currency: 'usd',
+            // 'exclusive' = tax added on top of the price shown
             tax_behavior: 'exclusive',
             product_data: {
               name: planName,
@@ -138,7 +115,6 @@ export async function POST(req: Request) {
             unit_amount: Math.round(price * 100),
           },
           quantity: 1,
-          tax_rates: taxRatesToApply.length > 0 ? taxRatesToApply : undefined,
         },
       ],
       mode: 'payment',
