@@ -318,28 +318,531 @@
       opacity: 0.85;
     }
 
+    .buyer-card-standalone {
+      margin-top: 24px;
+    }
+
     /* RESPONSIVE BREAKPOINTS */
     @media (max-width: 991px) {
+      .how-container {
+        margin-top: 60px;
+        padding: 60px 24px 50px;
+      }
       .grid-3 {
         grid-template-columns: 1fr;
+        gap: 18px;
       }
       .buyer-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
       }
       h1.how-h1 {
-        font-size: 34pt;
+        font-size: 38px;
+        line-height: 1.12;
+      }
+      h2.how-h2 {
+        font-size: 26px;
+        margin-top: 48px;
       }
     }
 
     @media (max-width: 768px) {
       .how-container {
-        padding: 40px 16px 40px;
+        margin: 0 auto !important;
+        padding: 7.25rem 16px 40px !important;
+        box-sizing: border-box;
       }
+
+      .tagline {
+        font-size: 11px;
+        letter-spacing: 3px;
+        margin-bottom: 12px;
+      }
+
+      h1.how-h1 {
+        font-size: 32px;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+        overflow-wrap: break-word;
+      }
+
+      .lead-text {
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: #a1a1aa;
+        margin-bottom: 30px;
+      }
+
+      h2.how-h2 {
+        font-size: 22px;
+        line-height: 1.22;
+        letter-spacing: -0.02em;
+        margin-top: 38px;
+        margin-bottom: 14px;
+        overflow-wrap: break-word;
+      }
+
+      .how-p {
+        font-size: 13.5px;
+        line-height: 1.55;
+        color: #d1d5db;
+        margin-bottom: 16px;
+      }
+
+      .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 16px 0 28px;
+      }
+
+      .card {
+        padding: 18px 16px;
+        border-radius: 10px;
+        background: #121212;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 3px solid #2DD4BF;
+        box-sizing: border-box;
+      }
+
+      .card .tag {
+        font-size: 10px;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+
+      .card h3 {
+        font-size: 17px;
+        line-height: 1.25;
+        margin-bottom: 8px;
+      }
+
+      .card p {
+        font-size: 13px;
+        line-height: 1.5;
+        color: #a1a1aa;
+      }
+
+      .card-pricing-note,
+      .card > p[style*="font-size: 9pt"] {
+        margin-top: 12px !important;
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+
+      .pricing-info-box {
+        padding: 16px 14px;
+        margin: 16px 0 30px;
+        font-size: 13px;
+        line-height: 1.55;
+        border-radius: 10px;
+        box-sizing: border-box;
+      }
+
+      .buyer-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 16px 0 10px;
+      }
+
+      .buyer-card {
+        padding: 16px 14px;
+        border-radius: 10px;
+        background: #121212;
+        border-left: 3px solid #2DD4BF;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        box-sizing: border-box;
+      }
+
+      .buyer-card .cat {
+        font-size: 10px;
+        letter-spacing: 2px;
+        margin-bottom: 6px;
+        font-weight: 700;
+      }
+
+      .buyer-card h3 {
+        font-size: 17px;
+        line-height: 1.25;
+        margin-bottom: 6px;
+      }
+
+      .buyer-card p {
+        font-size: 13px;
+        line-height: 1.5;
+        color: #a1a1aa;
+      }
+
+      .buyer-card-standalone {
+        margin-top: 10px !important;
+      }
+
       .geo-row {
         grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 16px 0 28px;
       }
+
+      .geo-block {
+        padding: 16px 14px;
+        border-radius: 10px;
+        background: #121212;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-sizing: border-box;
+      }
+
+      .geo-block .flag {
+        font-size: 11px;
+        letter-spacing: 2px;
+        margin-bottom: 6px;
+        font-weight: 700;
+      }
+
+      .geo-block p {
+        font-size: 13px;
+        line-height: 1.5;
+        color: #a1a1aa;
+      }
+
+      .fast-list {
+        margin: 14px 0 28px 16px;
+        padding-left: 0;
+      }
+
+      .fast-list li {
+        font-size: 13px;
+        line-height: 1.55;
+        margin-bottom: 10px;
+        color: #d1d5db;
+      }
+
+      .info-box {
+        padding: 16px 14px;
+        border-radius: 0 10px 10px 0;
+        margin: 16px 0 30px;
+        background: #121212;
+        border-left: 3px solid #2DD4BF;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        box-sizing: border-box;
+      }
+
+      .info-box p {
+        font-size: 13px;
+        line-height: 1.55;
+        margin-bottom: 10px;
+        color: #d1d5db;
+      }
+
+      .cta-row {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        align-items: stretch;
+      }
+
+      .cta-btn-primary,
+      .cta-btn-secondary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 13px 20px;
+        font-size: 13.5px;
+        font-weight: 700;
+        text-align: center;
+        box-sizing: border-box;
+      }
+
+      /* FOOTER RESPONSIVENESS */
+      footer,
+      .footer,
+      .footer-component {
+        padding-top: 2rem !important;
+        padding-bottom: 1.75rem !important;
+      }
+
+      .footer-top-grid,
+      .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+        text-align: center !important;
+        justify-items: center !important;
+      }
+
+      .footer-grid-block {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
+      }
+
+      .footer-logo-link {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        gap: 0.4rem !important;
+        text-decoration: none !important;
+      }
+
+      .footer-icon {
+        height: 1.75rem !important;
+        width: auto !important;
+      }
+
+      .footer-logo-link span {
+        font-size: 1.75rem !important;
+        line-height: 1 !important;
+        color: #FFFFFF !important;
+      }
+
+      .footer-grid-block .spacer-medium {
+        height: 0.4rem !important;
+      }
+
+      .footer-grid-block .text-size-medium {
+        font-family: 'Montserrat', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 12px !important;
+        letter-spacing: 1.5px !important;
+        text-transform: uppercase !important;
+        color: rgba(255, 255, 255, 0.75) !important;
+        text-align: center !important;
+        margin: 0 auto !important;
+      }
+
+      .newsletter-flex-wrap {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 440px !important;
+        margin: 0 auto !important;
+        gap: 8px !important;
+      }
+
+      .newsletter-flex-wrap .text-size-regular {
+        font-family: 'Montserrat', sans-serif !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        line-height: 1.38 !important;
+        text-align: center !important;
+      }
+
+      .newsletter-form-block {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+      }
+
+      .newsletter-form-wrapper {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 400px !important;
+        margin: 0 auto !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        border-radius: 999px !important;
+        padding: 4px 4px 4px 14px !important;
+        box-sizing: border-box !important;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
+      }
+
+      .newsletter-form-wrapper:focus-within {
+        border-color: #2DD4BF !important;
+        box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2) !important;
+      }
+
+      .newsletter-form-wrapper .form-text-field {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        width: auto !important;
+        background: transparent !important;
+        border: none !important;
+        color: #ffffff !important;
+        font-family: 'Montserrat', sans-serif !important;
+        font-size: 13px !important;
+        padding: 7px 4px !important;
+        margin: 0 !important;
+        outline: none !important;
+        text-align: left !important;
+        box-shadow: none !important;
+      }
+
+      .newsletter-form-wrapper .form-text-field::placeholder {
+        color: rgba(255, 255, 255, 0.45) !important;
+      }
+
+      .newsletter-form-wrapper .form-button {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        background: #2DD4BF !important;
+        color: #0A0A0A !important;
+        font-family: 'Montserrat', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        letter-spacing: 0.5px !important;
+        text-transform: uppercase !important;
+        border-radius: 999px !important;
+        border: none !important;
+        padding: 9px 18px !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+        transition: background 0.2s ease, transform 0.2s ease !important;
+      }
+
+      .footer-ai-disclaimer {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        gap: 0.35rem !important;
+        margin-top: 1.25rem !important;
+        margin-bottom: 1.25rem !important;
+        padding: 0.4rem 0 !important;
+        font-size: 0.82rem !important;
+        line-height: 1.35 !important;
+        width: 100% !important;
+      }
+
+      .footer-ai-disclaimer .ai-disclaimer-separator {
+        display: none !important;
+      }
+
+      .footer-ai-disclaimer a {
+        color: #2DD4BF !important;
+        text-decoration: underline !important;
+        font-weight: 600 !important;
+        margin-top: 2px !important;
+        font-size: 0.82rem !important;
+      }
+
+      .footer-main-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px !important;
+        margin-top: 1.25rem !important;
+        text-align: left !important;
+      }
+
+      .footer-main-grid a {
+        color: rgba(255, 255, 255, 0.5) !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+      }
+
+      .footer-main-grid a:hover {
+        color: #2DD4BF !important;
+      }
+
+      .footer-main-grid .link-text {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+        margin-bottom: 0.45rem !important;
+      }
+
+      .footer-main-grid .footer-flex-item > .link-text:first-child {
+        font-size: 12.5px !important;
+        margin-bottom: 0.65rem !important;
+      }
+
+      .footer-flex-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important;
+      }
+
+      .footer-social-links {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 1.5rem !important;
+        margin-top: 1.25rem !important;
+        width: 100% !important;
+      }
+
+      .footer-social-links .link-text {
+        font-size: 12.5px !important;
+      }
+
+      .footer-bottom-content,
+      .footer-bottom-content .horizontal-flex {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 0.5rem !important;
+        margin-top: 0.75rem !important;
+        font-size: 11.5px !important;
+        line-height: 1.4 !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .how-container {
+        margin: 0 auto !important;
+        padding: 6.75rem 14px 36px !important;
+      }
+
       h1.how-h1 {
-        font-size: 28pt;
+        font-size: 27px;
+        line-height: 1.15;
+        margin-bottom: 14px;
+      }
+
+      .lead-text {
+        font-size: 13.5px;
+        line-height: 1.5;
+        margin-bottom: 24px;
+      }
+
+      h2.how-h2 {
+        font-size: 20px;
+        line-height: 1.25;
+        margin-top: 34px;
+        margin-bottom: 12px;
+      }
+
+      .how-p {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .card {
+        padding: 16px 14px;
+      }
+
+      .card h3 {
+        font-size: 16px;
+      }
+
+      .buyer-card {
+        padding: 15px 13px;
+      }
+
+      .buyer-card h3 {
+        font-size: 16px;
+      }
+
+      .geo-block {
+        padding: 15px 13px;
+      }
+
+      .info-box {
+        padding: 15px 13px;
       }
     }
   </style>
@@ -468,7 +971,7 @@
               <h3>Snapshot</h3>
               <p>3-day scan of your brand: LLM visibility gaps, viral product angles, and a shortlist of retail buyers who fit your brand.</p>
             </div>
-            <p style="margin-top: 16px; font-size: 9pt; color: #2DD4BF; font-weight: 700;">$25 standalone · $25 add-on on Free Image · Free with any Campaign</p>
+            <p class="card-pricing-note" style="margin-top: 16px; font-size: 9pt; color: #2DD4BF; font-weight: 700;">$25 standalone · $25 add-on on Free Image · Free with any Campaign</p>
           </div>
           <div class="card">
             <div>
@@ -476,7 +979,7 @@
               <h3>Deep Dive</h3>
               <p>Full strategic package: positioning refinement, competitive map, product roadmap, and named retail buyers with contact context we already work with.</p>
             </div>
-            <p style="margin-top: 16px; font-size: 9pt; color: #FFFFFF; font-weight: 700;">Separate engagement · Priced per scope</p>
+            <p class="card-pricing-note" style="margin-top: 16px; font-size: 9pt; color: #FFFFFF; font-weight: 700;">Separate engagement · Priced per scope</p>
           </div>
           <div class="card">
             <div>
@@ -484,7 +987,7 @@
               <h3>Introduction &amp; Journey</h3>
               <p>When positioning is tight and product is ready, we introduce you to the right retail buyers and assist you through your journey to retail: pitch prep, buyer follow-through, and guidance at each step.</p>
             </div>
-            <p style="margin-top: 16px; font-size: 9pt; color: #FFFFFF; font-weight: 700;">Delivered as part of Deep Dive</p>
+            <p class="card-pricing-note" style="margin-top: 16px; font-size: 9pt; color: #FFFFFF; font-weight: 700;">Delivered as part of Deep Dive</p>
           </div>
         </div>
 
@@ -522,7 +1025,7 @@
           </div>
         </div>
 
-        <div class="buyer-card" style="margin-top: 24px;">
+        <div class="buyer-card buyer-card-standalone">
           <div class="cat">05 · Digital-First</div>
           <h3>Marketplaces</h3>
           <p>Curated online marketplaces, D2C wholesale platforms, and beauty-forward e-commerce destinations where discovery happens.</p>
@@ -632,7 +1135,7 @@
               </div>
             </div>
 
-            <div style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
+            <div class="footer-social-links" style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
               <a href="https://www.facebook.com/profile.php?id=61578742552795" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Facebook</div></div></a>
               <a href="https://www.linkedin.com/company/tyes-app/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Linkedin</div></div></a>
               <a href="https://www.instagram.com/tyes.app/" target="_blank" class="link-item w-inline-block"><div class="link-wrap"><div class="link-text">Instagram</div></div></a>

@@ -6980,8 +6980,8 @@ footer,
 
 /* AI Disclaimer Banner - Global Desktop */
 .footer-ai-disclaimer,
-footer div:has(> a[href*="ai-disclaimer"]),
-.footer div:has(> a[href*="ai-disclaimer"]) {
+footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]),
+.footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]) {
   margin-top: 1.5rem !important;
   margin-bottom: 2rem !important;
   padding: 0.75rem 0 !important;
@@ -6997,8 +6997,8 @@ footer div:has(> a[href*="ai-disclaimer"]),
 }
 
 .footer-ai-disclaimer a,
-footer div:has(> a[href*="ai-disclaimer"]) > a,
-.footer div:has(> a[href*="ai-disclaimer"]) > a {
+footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]) > a,
+.footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]) > a {
   color: #2DD4BF !important;
   text-decoration: underline !important;
 }
@@ -7169,8 +7169,8 @@ footer div:has(> a[href*="ai-disclaimer"]) > a,
 
   /* AI Disclaimer Banner inside footer on mobile */
   .footer-ai-disclaimer,
-  footer div:has(> a[href*="ai-disclaimer"]),
-  .footer div:has(> a[href*="ai-disclaimer"]),
+  footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]),
+  .footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]),
   footer div[style*="AI-generated"],
   .footer-component div[style*="AI-generated"] {
     display: flex !important;
@@ -7188,16 +7188,16 @@ footer div:has(> a[href*="ai-disclaimer"]) > a,
   }
 
   .footer-ai-disclaimer .ai-disclaimer-separator,
-  footer div:has(> a[href*="ai-disclaimer"]) > span:nth-of-type(2),
-  .footer div:has(> a[href*="ai-disclaimer"]) > span:nth-of-type(2),
+  footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]) > span:nth-of-type(2),
+  .footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]) > span:nth-of-type(2),
   footer div[style*="AI-generated"] > span:nth-of-type(2),
   .footer-component div[style*="AI-generated"] > span:nth-of-type(2) {
     display: none !important;
   }
 
   .footer-ai-disclaimer a,
-  footer div:has(> a[href*="ai-disclaimer"]) > a,
-  .footer div:has(> a[href*="ai-disclaimer"]) > a,
+  footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]) > a,
+  .footer div:not(.footer-flex-item):has(> a[href*="ai-disclaimer"]) > a,
   footer div[style*="AI-generated"] a,
   .footer-component div[style*="AI-generated"] a {
     color: #2DD4BF !important;
@@ -7205,6 +7205,16 @@ footer div:has(> a[href*="ai-disclaimer"]) > a,
     font-weight: 600 !important;
     margin-top: 2px !important;
     font-size: 0.85rem !important;
+  }
+
+  .footer-main-grid a {
+    color: rgba(255, 255, 255, 0.5) !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+  }
+
+  .footer-main-grid a:hover {
+    color: #2DD4BF !important;
   }
 
   .footer-main-grid {
