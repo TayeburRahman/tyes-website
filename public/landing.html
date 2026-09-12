@@ -59,7 +59,146 @@
     }
     h1, h2, h3, h4, h5, h6 { font-family: "League Spartan", sans-serif !important; font-weight: 800 !important; color: #FFFFFF !important; }
     .tyes-brand, .brand { font-family: "Gliker", serif !important; }
-</style>
+
+    /* Enforce 2-line hierarchy on hero heading across all screen sizes */
+    #root h1 {
+      white-space: pre-line !important;
+    }
+    #root h1 span::after {
+      content: "\A" !important;
+      white-space: pre !important;
+    }
+
+    /* =========================================================
+       RESPONSIVE ENHANCEMENTS FOR MOBILE & TABLET (LANDING)
+       ========================================================= */
+    @media (max-width: 767px) {
+      /* Navigation */
+      #root nav {
+        padding: 1rem 1.25rem !important;
+      }
+      #root nav img[src*="tyes-wordmark"] {
+        height: 42px !important;
+        width: auto !important;
+      }
+      #root nav a[href*="main.html"],
+      #root nav a {
+        padding: 0.5rem 1.15rem !important;
+        font-size: 0.8125rem !important;
+      }
+
+      /* Hero Content Container - subtle vignette backdrop for perfect text legibility */
+      #root .fixed.inset-0.z-10 > div {
+        padding: 1.5rem 1rem !important;
+        margin: 0 1rem !important;
+        background: radial-gradient(ellipse 95% 80% at 50% 50%, rgba(5, 5, 5, 0.88) 0%, rgba(5, 5, 5, 0.6) 55%, rgba(5, 5, 5, 0) 100%) !important;
+        border-radius: 28px !important;
+      }
+
+      /* Hero Heading - strictly 2 lines on mobile, proportional scaling */
+      #root h1 {
+        font-size: clamp(2.1rem, 8.2vw, 2.75rem) !important;
+        line-height: 1.1 !important;
+        letter-spacing: -0.035em !important;
+        margin-bottom: 0.875rem !important;
+        padding: 0 !important;
+        white-space: pre-line !important;
+        word-break: normal !important;
+      }
+      #root h1 span::after {
+        content: "\A" !important;
+        white-space: pre !important;
+      }
+
+      /* Subtitle - balanced 2 lines, no orphan words */
+      #root h1 + p {
+        font-size: clamp(0.875rem, 3.8vw, 0.975rem) !important;
+        line-height: 1.5 !important;
+        margin-bottom: 1.5rem !important;
+        max-width: 270px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-wrap: balance !important;
+        color: #d1d5db !important;
+      }
+
+      /* Buttons Flex Container */
+      #root .flex-col.items-center.gap-4 {
+        width: 100% !important;
+        max-width: 290px !important;
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        margin-bottom: 0.875rem !important;
+      }
+
+      /* CTA Buttons - equalized width, premium touch targets */
+      #root .flex-col.items-center.gap-4 > a {
+        width: 100% !important;
+        max-width: 290px !important;
+        height: 48px !important;
+        padding: 0 1.25rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 700 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+        border-radius: 9999px !important;
+      }
+
+      /* Second button (Outline) - Dark semi-transparent background so floating 3D textures never interfere with text */
+      #root .flex-col.items-center.gap-4 > a:nth-child(2) {
+        background: rgba(5, 5, 5, 0.75) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+      }
+
+      /* "No credit card required" */
+      #root .text-xs.text-gray-500 {
+        font-size: 0.75rem !important;
+        margin-top: 0.25rem !important;
+      }
+
+      /* Footer */
+      #root footer {
+        bottom: 1rem !important;
+        right: 1.25rem !important;
+        font-size: 0.6875rem !important;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      /* Tablet - ensure horizontal buttons don't wrap internally */
+      #root .flex-col.md\:flex-row > a {
+        white-space: nowrap !important;
+        padding: 0.875rem 1.75rem !important;
+      }
+      #root .flex-col.md\:flex-row > a:nth-child(2) {
+        background: rgba(5, 5, 5, 0.6) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      #root h1 {
+        font-size: 1.85rem !important;
+      }
+      #root nav img[src*="tyes-wordmark"] {
+        height: 38px !important;
+      }
+      #root .flex-col.items-center.gap-4 {
+        max-width: 260px !important;
+      }
+      #root .flex-col.items-center.gap-4 > a {
+        max-width: 260px !important;
+        font-size: 0.8125rem !important;
+        height: 44px !important;
+      }
+    }
+  </style>
   <script>
     tailwind.config = {
       safelist: ['h-[10000vh]'],
