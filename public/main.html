@@ -1767,139 +1767,605 @@
       z-index: 30 !important;
       pointer-events: none !important;
     }
+
     .cta-image-wrap * {
       pointer-events: none !important;
     }
+
     .cta-content-block {
       z-index: 5 !important;
       position: relative !important;
     }
+
     .cta-button-wrap {
       z-index: 5 !important;
       position: relative !important;
     }
+
     .cta-button-wrap a,
     .cta-button-wrap .main-button {
       pointer-events: auto !important;
       cursor: pointer !important;
     }
+
     .cta-title-line {
       display: inline-block !important;
       white-space: nowrap !important;
     }
 
-    /* 3. MOBILE & PHONES (<= 767px) */
+    .css3d-scene {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    .section-ba-comparison {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+
+    .hero-bottom-section {
+      padding-bottom: 2rem;
+    }
+
+    .faq-section {
+      padding-top: 50px;
+      padding-bottom: 60px;
+    }
+
+    /* ================================================================
+       3. MOBILE & TABLETS (<= 767px)
+       ================================================================ */
     @media (max-width: 767px) {
-      .hero-br {
-        display: block !important;
+
+      /* --- GLOBAL SECTION SPACING & PADDING --- */
+      .navbar {
+        padding-top: 1.1rem !important;
+        padding-bottom: 1.1rem !important;
       }
 
-      .header-content-block {
-        padding-top: 4.5rem !important;
-        position: relative !important;
-        z-index: 10 !important;
+      .section-home-header {
+        padding-bottom: 0 !important;
+        overflow: visible !important;
       }
 
-      .padding-top-header {
-        padding-top: 0.5rem !important;
+      .padding-section-large {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+      }
+
+      .padding-global {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+
+      .spacer-xlarge {
+        height: 1.25rem !important;
+        padding-top: 0 !important;
+      }
+
+      .spacer-large {
+        height: 1rem !important;
+      }
+
+      .spacer-medium {
+        height: 0.65rem !important;
+      }
+
+      .spacer-small {
+        height: 0.4rem !important;
+      }
+
+      /* --- HEADINGS & TYPOGRAPHY --- */
+      .heading-wrapper {
+        margin-bottom: 0.85rem !important;
+      }
+
+      .heading-item {
+        padding-bottom: 4px !important;
       }
 
       .heading-wrapper .header-text,
       .heading-wrapper .shadow-text {
-        font-size: clamp(1.8rem, 6.5vw, 3rem) !important;
+        font-size: clamp(25px, 7vw, 35px) !important;
+        line-height: 1.12 !important;
+        letter-spacing: -0.5px !important;
+        text-align: center !important;
+      }
+
+      .heading-flex {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
       }
 
       .heading-title {
         white-space: normal !important;
-        font-size: clamp(22px, 7vw, 36px) !important;
-        line-height: 1.15 !important;
+        font-size: clamp(22px, 6.5vw, 32px) !important;
+        line-height: 1.2 !important;
         text-align: center !important;
         letter-spacing: -0.5px !important;
         max-width: 100% !important;
         width: 100% !important;
         display: block !important;
-        margin: 0 auto 10px auto !important;
+        margin: 0 auto 8px auto !important;
       }
 
-      .heading-title span,
-      .heading-title .accent {
-        display: inline-block !important;
-        text-align: center !important;
-        white-space: normal !important;
-        word-break: normal !important;
-      }
-
-      .heading-wrap {
-        margin-bottom: 0 !important;
+      /* --- 1. HERO & 3D STACK --- */
+      .header-content-block {
+        padding-top: 3.5rem !important;
         position: relative !important;
         z-index: 10 !important;
       }
 
-      ._3d-block {
-        transform: scale(0.72) !important;
+      .padding-top-header {
+        padding-top: 0 !important;
+      }
+
+      .top-text-hero {
+        padding-top: 0 !important;
+      }
+
+      .mt-5-custom {
         margin-top: 0 !important;
-        padding-top: 4rem !important;
-        margin-bottom: -4.5rem !important;
+      }
+
+      ._3d-block {
+        transform: scale(0.66) !important;
+        transform-origin: center center !important;
+        padding-top: 11.25rem !important;
+        margin-top: 0 !important;
+        margin-bottom: 5.5rem !important;
         position: relative !important;
         z-index: 1 !important;
+        height: auto !important;
       }
 
-      .subtitle-wrapper {
-        margin-bottom: 2rem !important;
-        position: relative;
-        z-index: 10;
+      ._3d-container {
+        padding-top: 0 !important;
       }
 
-      .service-component-grid {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 1.25rem !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory !important;
+      .hero-bottom-section {
+        padding-top: 0 !important;
         padding-bottom: 1.5rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
       }
 
-      .service-component-grid::-webkit-scrollbar {
-        display: none;
+      .hero-ctas {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin-top: 0 !important;
+        margin-bottom: 0.4rem !important;
       }
 
-      .card-container {
-        min-width: 85vw !important;
-        width: 85vw !important;
-        flex-shrink: 0 !important;
-        scroll-snap-align: center !important;
+      .hero-ctas .cta-pill,
+      .hero-ctas .cta-ghost {
+        width: 100% !important;
+        max-width: 280px !important;
+        padding: 12px 20px !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        border-radius: 999px !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+      }
+
+      .cta-pill,
+      .cta-ghost {
+        width: auto !important;
+        max-width: 100% !important;
+        padding: 10px 20px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        border-radius: 999px !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+      }
+
+      /* --- 2. CATEGORIES 3D CAROUSEL --- */
+      .cats.center {
+        padding: 2rem 0 1.25rem !important;
+      }
+
+      .cats .heading-wrapper {
+        margin-bottom: 0.5rem !important;
+      }
+
+      .cats-subtitle-block {
+        margin-top: 0.5rem !important;
+        margin-bottom: 1rem !important;
+        padding: 0 12px !important;
+      }
+
+      .cats-subtitle-block div:first-child {
+        font-size: 12px !important;
+        letter-spacing: 1.8px !important;
+        line-height: 1.3 !important;
+      }
+
+      .cats-subtitle-block div:last-child {
+        font-size: 10.5px !important;
+        letter-spacing: 0.8px !important;
+        line-height: 1.4 !important;
+        margin-top: 0.35rem !important;
+      }
+
+      .css3d-scene {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        height: 275px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* --- 3. BRANDS MARQUEE --- */
+      .brands-marquee {
+        padding: 16px 0 20px !important;
+      }
+
+      .brands-marquee .eyebrow {
+        font-size: 10.5px !important;
+        letter-spacing: 1.8px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .brands-marquee .marquee-track {
+        gap: 20px !important;
+      }
+
+      .brands-marquee img {
+        height: 36px !important;
+        max-width: 110px !important;
+        padding: 3px 5px !important;
+      }
+
+      /* --- 4. BEFORE / AFTER COMPARISON --- */
+      .section-ba-comparison {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+      }
+
+      .section-ba-comparison h3 {
+        font-size: clamp(20px, 6vw, 26px) !important;
+        line-height: 1.15 !important;
+        margin-top: 0.35rem !important;
+        margin-bottom: 0.25rem !important;
+      }
+
+      .section-ba-comparison p {
+        font-size: 13px !important;
+        line-height: 1.45 !important;
+        max-width: 310px !important;
+        margin: 0 auto 1rem auto !important;
+      }
+
+      .ba-slider-wrap {
+        border-radius: 10px !important;
+        max-width: 94% !important;
+        margin: 0 auto !important;
+      }
+
+      /* --- 5. HOW IT WORKS FLIP CARDS --- */
+      .hiw {
+        padding: 2rem 0 1.5rem !important;
+      }
+
+      .hiw .badges {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px 10px !important;
+        margin: 6px auto 16px auto !important;
+        font-size: 11.5px !important;
+        line-height: 1.35 !important;
+        padding: 0 8px !important;
+      }
+
+      .hiw-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 0 12px !important;
+      }
+
+      .flip,
+      .flip-inner {
+        min-height: 135px !important;
+        height: auto !important;
+      }
+
+      .face {
+        padding: 13px 15px !important;
+        border-radius: 12px !important;
+      }
+
+      .face.front .num {
+        font-size: 11px !important;
+        margin-bottom: 2px !important;
+        letter-spacing: 1px !important;
+      }
+
+      .face.front .t {
+        font-size: 17.5px !important;
+        line-height: 1.15 !important;
+        letter-spacing: -0.01em !important;
+      }
+
+      .face.front .hint {
+        font-size: 12.5px !important;
+      }
+
+      .face.back {
+        padding: 13px 15px !important;
+      }
+
+      .face.back .bt {
+        font-size: 14.5px !important;
+        margin-bottom: 3px !important;
+        line-height: 1.2 !important;
+        font-weight: 700 !important;
+      }
+
+      .face.back p {
+        font-size: 12px !important;
+        line-height: 1.42 !important;
+        color: rgba(255, 255, 255, 0.85) !important;
         margin: 0 !important;
       }
 
-      .card-side {
-        max-width: 100% !important;
-        box-sizing: border-box;
+      /* --- 6. RETAIL NETWORK --- */
+      .section-home-retail-network {
+        padding: 2rem 0 1.5rem !important;
       }
 
-      .ap-scroll {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        gap: 1rem !important;
+      .section-home-retail-network .heading-wrapper {
+        margin-bottom: 0.65rem !important;
       }
 
-      .ap-card {
-        min-width: 85vw !important;
-        width: 85vw !important;
+      .section-home-retail-network .heading-wrapper>div:last-child {
+        font-size: 13px !important;
+        line-height: 1.45 !important;
+        max-width: 90% !important;
+        margin: 6px auto 0 auto !important;
       }
 
-      .cta-container {
-        flex-direction: column !important;
-        padding: 2.25rem 1.25rem !important;
+      #globe-canvas {
+        width: 230px !important;
+        height: 230px !important;
+      }
+
+      .retail-cats-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        padding: 0 4px !important;
+      }
+
+      .retail-cat-item {
+        padding: 11px 14px !important;
+        border-radius: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 0 !important;
+      }
+
+      .retail-cat-item .rc-num {
+        font-size: 10.5px !important;
+        margin-bottom: 0 !important;
+        margin-right: 10px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .retail-cat-item .rc-name {
+        font-size: 13px !important;
+        line-height: 1.2 !important;
+        text-align: right !important;
+      }
+
+      .coverage-badge-row {
+        margin-top: 1.25rem !important;
+        font-size: 12.5px !important;
+        line-height: 1.4 !important;
+      }
+
+      .coverage-badge-row .coverage-separator {
+        margin: 0 0.65rem !important;
+      }
+
+      /* --- 7. USE CASES --- */
+      .section-home-use-cases {
+        padding: 2rem 0 1.5rem !important;
+      }
+
+      .section-home-use-cases .padding-section-large {
+        padding-top: 0.75rem !important;
+        padding-bottom: 1rem !important;
+      }
+
+      .section-home-use-cases .heading-wrapper {
+        margin-bottom: 0.4rem !important;
+      }
+
+      .use-cases-subtitle-wrap {
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+        margin-bottom: 0.75rem !important;
+      }
+
+      .section-home-use-cases .spacer-xlarge {
+        display: none !important;
+      }
+
+      .use-case-wrapper {
+        margin-bottom: 10px !important;
+      }
+
+      .use-case-image {
+        border-radius: 8px !important;
+        aspect-ratio: 16 / 9 !important;
+        object-fit: cover !important;
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      /* --- 8. PRICING --- */
+      .pricing {
+        padding: 2rem 14px 1.5rem !important;
+      }
+
+      .pricing .heading-wrapper {
+        margin-bottom: 0.75rem !important;
+      }
+
+      .pricing p.pay {
+        font-size: 12.5px !important;
+        margin-top: 0.35rem !important;
+      }
+
+      .group-label {
+        font-size: 10px !important;
+        letter-spacing: 2px !important;
+        margin: 14px 0 8px !important;
+      }
+
+      .tier-row {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+
+      .tier {
+        padding: 15px 14px !important;
+        border-radius: 10px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .tier .tag {
+        font-size: 9.5px !important;
+        letter-spacing: 1px !important;
+        margin-bottom: 3px !important;
+      }
+
+      .tier h3 {
+        font-size: 17px !important;
+        line-height: 1.2 !important;
+        margin-bottom: 2px !important;
+      }
+
+      .tier .price {
+        font-size: 25px !important;
+        line-height: 1.1 !important;
+        margin-bottom: 6px !important;
+      }
+
+      .tier ul {
+        margin: 6px 0 10px !important;
+        padding-left: 0 !important;
+      }
+
+      .tier li {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+        margin-bottom: 3px !important;
+      }
+
+      .tier .foot {
+        font-size: 11px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .tier .cta-pill {
+        width: 100% !important;
         text-align: center !important;
+        padding: 10px 14px !important;
+        box-sizing: border-box !important;
+        font-size: 12.5px !important;
+      }
+
+      .custom {
+        padding: 16px 14px !important;
+        border-radius: 10px !important;
+        margin-top: 10px !important;
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+      }
+
+      .custom h3 {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+      }
+
+      .custom p.desc {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+        margin: 5px 0 10px !important;
+      }
+
+      .custom>div:last-child {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+      }
+
+      .custom>div:last-child .cta-pill,
+      .custom>div:last-child .cta-ghost {
+        width: 100% !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        padding: 10px 14px !important;
+        font-size: 12.5px !important;
+      }
+
+      /* --- 9. FAQ --- */
+      .faq-section {
+        padding-top: 2rem !important;
+        padding-bottom: 1.75rem !important;
+      }
+
+      .faq-list {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 0 !important;
+        margin-top: 0.85rem !important;
+      }
+
+      .faq-item {
+        border-radius: 8px !important;
+      }
+
+      .faq-q {
+        padding: 12px 14px !important;
+        gap: 8px !important;
+      }
+
+      .faq-q span {
+        font-size: 13px !important;
+        line-height: 1.35 !important;
+        text-align: left !important;
+      }
+
+      .faq-a p {
+        padding: 0 14px 10px !important;
+        font-size: 12px !important;
+        line-height: 1.45 !important;
+      }
+
+      /* --- 10. CTA BANNER --- */
+      .cta-container {
+        padding: 1.75rem 10px !important;
         height: auto !important;
         min-height: auto !important;
         display: flex !important;
+        flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
+        text-align: center !important;
       }
 
       .cta-sticky {
@@ -1907,7 +2373,7 @@
         top: auto !important;
         height: auto !important;
         min-height: auto !important;
-        padding: 1.75rem 1rem !important;
+        padding: 0.6rem 0 !important;
         width: 100% !important;
         overflow: hidden !important;
         display: flex !important;
@@ -1944,9 +2410,9 @@
       }
 
       .cta-text {
-        font-size: clamp(1.1rem, 5.2vw, 2.2rem) !important;
-        line-height: 1.25 !important;
-        padding: 0 0.5rem !important;
+        font-size: clamp(1rem, 5vw, 1.75rem) !important;
+        line-height: 1.22 !important;
+        padding: 0 !important;
         margin: 0 !important;
         text-align: center !important;
       }
@@ -1954,7 +2420,7 @@
       .cta-button-wrap {
         position: relative !important;
         z-index: 5 !important;
-        margin-top: 1.25rem !important;
+        margin-top: 0.85rem !important;
         display: flex !important;
         justify-content: center !important;
       }
@@ -1969,28 +2435,24 @@
       .cta-image-02,
       .cta-image-03,
       .cta-image-04 {
-        width: 25vw !important;
-        max-width: 100px !important;
+        width: 21vw !important;
+        max-width: 76px !important;
         height: auto !important;
         opacity: 1 !important;
       }
 
-      .footer-main-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 16px !important;
-        text-align: left !important;
-      }
-
-      .footer-flex-item {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start !important;
+      /* --- 11. FOOTER --- */
+      footer,
+      .footer,
+      .footer-component {
+        padding-top: 1.75rem !important;
+        padding-bottom: 1.5rem !important;
       }
 
       .footer-top-grid,
       .footer-grid {
         grid-template-columns: 1fr !important;
-        gap: 1.75rem !important;
+        gap: 1.25rem !important;
         text-align: center !important;
         justify-items: center !important;
       }
@@ -2009,27 +2471,29 @@
         align-items: center !important;
         justify-content: center !important;
         margin: 0 auto !important;
-        gap: 0.5rem !important;
+        gap: 0.4rem !important;
+        text-decoration: none !important;
       }
 
       .footer-icon {
-        height: 1.85rem !important;
+        height: 1.75rem !important;
         width: auto !important;
       }
 
       .footer-logo-link span {
-        font-size: 1.85rem !important;
+        font-size: 1.75rem !important;
         line-height: 1 !important;
+        color: #FFFFFF !important;
       }
 
       .footer-grid-block .spacer-medium {
-        height: 0.5rem !important;
+        height: 0.4rem !important;
       }
 
       .footer-grid-block .text-size-medium {
         font-family: 'Montserrat', sans-serif !important;
         font-weight: 600 !important;
-        font-size: 13px !important;
+        font-size: 12px !important;
         letter-spacing: 1.5px !important;
         text-transform: uppercase !important;
         color: rgba(255, 255, 255, 0.75) !important;
@@ -2045,15 +2509,15 @@
         width: 100% !important;
         max-width: 440px !important;
         margin: 0 auto !important;
-        gap: 10px !important;
+        gap: 8px !important;
       }
 
       .newsletter-flex-wrap .text-size-regular {
         font-family: 'Montserrat', sans-serif !important;
-        font-size: 14px !important;
+        font-size: 13.5px !important;
         font-weight: 500 !important;
         color: rgba(255, 255, 255, 0.85) !important;
-        line-height: 1.4 !important;
+        line-height: 1.38 !important;
         text-align: center !important;
       }
 
@@ -2068,13 +2532,19 @@
         flex-direction: row !important;
         align-items: center !important;
         width: 100% !important;
-        max-width: 420px !important;
+        max-width: 400px !important;
         margin: 0 auto !important;
         background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.18) !important;
         border-radius: 999px !important;
-        padding: 4px 4px 4px 16px !important;
+        padding: 4px 4px 4px 14px !important;
         box-sizing: border-box !important;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
+      }
+
+      .newsletter-form-wrapper:focus-within {
+        border-color: #2DD4BF !important;
+        box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2) !important;
       }
 
       .newsletter-form-wrapper .form-text-field {
@@ -2085,12 +2555,16 @@
         border: none !important;
         color: #ffffff !important;
         font-family: 'Montserrat', sans-serif !important;
-        font-size: 13.5px !important;
-        padding: 8px 4px !important;
+        font-size: 13px !important;
+        padding: 7px 4px !important;
         margin: 0 !important;
         outline: none !important;
         text-align: left !important;
         box-shadow: none !important;
+      }
+
+      .newsletter-form-wrapper .form-text-field::placeholder {
+        color: rgba(255, 255, 255, 0.45) !important;
       }
 
       .newsletter-form-wrapper .form-button {
@@ -2100,162 +2574,187 @@
         color: #0A0A0A !important;
         font-family: 'Montserrat', sans-serif !important;
         font-weight: 700 !important;
-        font-size: 12.5px !important;
+        font-size: 12px !important;
         letter-spacing: 0.5px !important;
         text-transform: uppercase !important;
         border-radius: 999px !important;
         border: none !important;
-        padding: 10px 20px !important;
+        padding: 9px 18px !important;
         margin: 0 !important;
         cursor: pointer !important;
+        transition: background 0.2s ease, transform 0.2s ease !important;
+      }
+
+      .newsletter-form-wrapper .form-button:hover {
+        background: #26b3a1 !important;
       }
 
       .footer-ai-disclaimer,
-      footer div:has(> a[href*="ai-disclaimer"]) {
+      footer div:has(> a[href*="ai-disclaimer"]),
+      .footer div:has(> a[href*="ai-disclaimer"]) {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
         text-align: center !important;
-        gap: 0.4rem !important;
-        margin-top: 1.25rem !important;
-        margin-bottom: 1.75rem !important;
-        padding: 0.5rem 0 !important;
-        font-size: 0.85rem !important;
-        line-height: 1.4 !important;
+        gap: 0.35rem !important;
+        margin-top: 1rem !important;
+        margin-bottom: 1.25rem !important;
+        padding: 0.4rem 0 !important;
+        font-size: 0.82rem !important;
+        line-height: 1.35 !important;
         width: 100% !important;
       }
 
       .footer-ai-disclaimer .ai-disclaimer-separator,
-      footer div:has(> a[href*="ai-disclaimer"]) > span:nth-of-type(2) {
+      footer div:has(> a[href*="ai-disclaimer"])>span:nth-of-type(2),
+      .footer div:has(> a[href*="ai-disclaimer"])>span:nth-of-type(2) {
         display: none !important;
       }
 
       .footer-ai-disclaimer a,
-      footer div:has(> a[href*="ai-disclaimer"]) > a {
+      footer div:has(> a[href*="ai-disclaimer"])>a,
+      .footer div:has(> a[href*="ai-disclaimer"])>a {
         color: #2DD4BF !important;
         text-decoration: underline !important;
         font-weight: 600 !important;
+        margin-top: 2px !important;
+        font-size: 0.82rem !important;
+      }
+
+      .footer-main-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px !important;
+        margin-top: 1.25rem !important;
+        text-align: left !important;
+      }
+
+      .footer-main-grid .link-text {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+        margin-bottom: 0.45rem !important;
+      }
+
+      .footer-main-grid .footer-flex-item>.link-text:first-child {
+        font-size: 12.5px !important;
+        margin-bottom: 0.65rem !important;
+      }
+
+      .footer-flex-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important;
+      }
+
+      .footer-social-links {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 1.5rem !important;
+        margin-top: 1.25rem !important;
+        width: 100% !important;
+      }
+
+      .footer-social-links .link-text {
+        font-size: 12.5px !important;
+      }
+
+      .footer-bottom-content,
+      .horizontal-flex {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 0.5rem !important;
+        margin-top: 0.75rem !important;
+        font-size: 11.5px !important;
+        line-height: 1.4 !important;
       }
     }
 
-    /* 4. SMALL MOBILE / PHONES (<= 480px) */
+    /* ================================================================
+       4. SMALL PHONES (<= 480px)
+       ================================================================ */
     @media (max-width: 480px) {
+      .header-content-block {
+        padding-top: 2rem !important;
+      }
+
       ._3d-block {
-        transform: scale(0.68) !important;
-        padding-top: 7.5rem !important;
-        margin-top: 0 !important;
-        margin-bottom: -7rem !important;
+        transform: scale(0.62) !important;
+        padding-top: 10.25rem !important;
+        margin-bottom: 4.0rem !important;
+        height: auto !important;
+      }
+
+      .hero-ctas .cta-pill,
+      .hero-ctas .cta-ghost {
+        max-width: 270px !important;
+        padding: 11px 18px !important;
+        font-size: 13px !important;
+      }
+
+      .heading-wrapper .header-text,
+      .heading-wrapper .shadow-text {
+        font-size: clamp(23px, 6.8vw, 30px) !important;
+        line-height: 1.12 !important;
       }
 
       .hiw-grid {
-        grid-template-columns: 1fr !important;
-        padding: 0 16px !important;
+        padding: 0 8px !important;
       }
 
       .flip,
       .flip-inner {
-        min-height: 260px;
+        min-height: 130px !important;
       }
 
       .face {
-        padding: 22px 18px;
+        padding: 11px 13px !important;
       }
 
-      .t {
-        font-size: 22px;
+      .face.front .t {
+        font-size: 16px !important;
       }
 
-      .bt {
-        font-size: 20px;
+      .face.back .bt {
+        font-size: 14px !important;
       }
 
-      .hero-ctas {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 10px !important;
-        width: 100% !important;
-        align-items: center !important;
-      }
-
-      .cta-pill,
-      .cta-ghost {
-        width: auto !important;
-        max-width: 100% !important;
-        text-align: center !important;
-        box-sizing: border-box !important;
-        justify-content: center !important;
-        padding: 10px 18px !important;
-        font-size: 13.5px !important;
-        white-space: nowrap !important;
-      }
-
-      .retail-cats-grid {
-        grid-template-columns: 1fr !important;
-      }
-
-      .retail-cat-item {
-        padding: 18px 16px;
+      .face.back p {
+        font-size: 11.5px !important;
+        line-height: 1.38 !important;
       }
 
       .tier {
-        padding: 24px 18px;
+        padding: 14px 12px !important;
       }
 
       .tier .price {
-        font-size: 36px;
+        font-size: 24px !important;
       }
 
       .custom {
-        padding: 24px 18px;
-      }
-
-      .custom h3 {
-        font-size: 20px !important;
-      }
-
-      .custom>div:last-child {
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .custom>div:last-child .cta-pill,
-      .custom>div:last-child .cta-ghost {
-        width: 100%;
+        padding: 14px 12px !important;
       }
 
       .faq-q {
-        padding: 16px 18px;
-        gap: 12px;
+        padding: 11px 12px !important;
       }
 
       .faq-q span {
-        font-size: 0.95rem;
-      }
-
-      .faq-a p {
-        padding: 0 18px 16px;
-        font-size: 0.875rem;
+        font-size: 12.5px !important;
       }
 
       .cta-container {
-        padding: 1.5rem 0.5rem !important;
-      }
-
-      .cta-sticky {
-        padding: 1.25rem 0.25rem !important;
+        padding: 1.5rem 8px !important;
       }
 
       .cta-text {
-        font-size: clamp(0.95rem, 4.8vw, 1.55rem) !important;
-        line-height: 1.22 !important;
-        padding: 0 0.25rem !important;
+        font-size: clamp(0.95rem, 4.8vw, 1.5rem) !important;
       }
 
-      .cta-button-wrap {
-        margin-top: 0.75rem !important;
+      .footer-logo-link span {
+        font-size: 1.65rem !important;
       }
     }
 
@@ -2377,7 +2876,7 @@
                   For brands that move fast: campaign visuals in hours, strategy in days.</p>
               </div> -->
                 <div class="_3d-block mt-5-custom  text-animation-height">
-                  <div class="_3d-container" style="padding-top: 50px;">
+                  <div class="_3d-container">
                     <div class="_3d-wrapper">
                       <div class="_3d-object">
                         <div class="_3d-face _01"><img src="images/transfer-main/1.jpg" loading="lazy"
@@ -2406,7 +2905,7 @@
             </div>
           </div>
       </header>
-      <section style=" ">
+      <section class="hero-bottom-section">
         <div class="padding-global">
           <div class="container-large">
             <div class="hero-ctas" style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
@@ -2437,7 +2936,7 @@
             </div>
           </div>
         </div>
-        <div style="text-align:center;margin-top:1rem;margin-bottom:1.5rem;">
+        <div class="cats-subtitle-block" style="text-align:center;margin-top:1rem;margin-bottom:1.5rem;">
           <div
             style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:clamp(0.9rem, 1.2vw, 1.15rem);letter-spacing:2px;color:var(--white);text-transform:uppercase;">
             ONE PLATFORM. EVERY CATEGORY.
@@ -2449,7 +2948,7 @@
         </div>
 
         <!-- 3D Perspective Rotating Cylinder Carousel -->
-        <div class="css3d-scene" style="padding-bottom: 90px; padding-top: 90px;">
+        <div class="css3d-scene">
           <div class="css3d-a3d" style="--n:8">
             <img class="css3d-card" src="images/transfer-cursor/1.jpg" style="--i:0" alt="Category 1">
             <img class="css3d-card" src="images/transfer-cursor/2.jpg" style="--i:1" alt="Category 2">
@@ -2559,8 +3058,7 @@
       <!-- ================================================================
       BEFORE / AFTER COMPARISON SLIDER (“AI RAW” vs “RETOUCHED”)
       ================================================================ -->
-      <section class="section-ba-comparison center"
-        style="padding-top: 60px !important; padding-bottom: 60px !important;">
+      <section class="section-ba-comparison center">
         <div class="padding-global">
           <div class="container-large">
             <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -2831,10 +3329,10 @@
               </div>
             </div>
 
-            <div
+            <div class="coverage-badge-row"
               style="text-align: center; font-family:'Montserrat',sans-serif; font-size: 1rem; color: rgba(255,255,255,0.7); margin-top: 3rem;">
               Coverage: <span style="font-size:1.2rem;margin-right:4px;">🇺🇸</span> <strong style="color:#fff;">United
-                States</strong> <span style="margin: 0 1.5rem; color: #444;">|</span> <span
+                States</strong> <span class="coverage-separator" style="margin: 0 1.5rem; color: #444;">|</span> <span
                 style="font-size:1.2rem;margin-right:4px;">🇪🇺</span> <strong style="color:#fff;">Europe</strong>
             </div>
 
@@ -3055,9 +3553,9 @@
           </div>
         </div>
       </section>
-      <section class="padding-global">
+      <section class="faq-section padding-global" id="faq">
         <div class="container-large">
-          <div class=" ">
+          <div class="faq-content-wrapper">
             <div class="header-content-wrapper scroll-reveal">
               <div data-w-id="a5a50423-105b-9d88-e05d-66c6ff304d70" class="heading-wrapper">
                 <div class="heading-item">
@@ -3228,8 +3726,8 @@
             </div>
             <div class="cta-content-block">
               <div class="cta-content">
-                <h2 class="cta-text"><span class="cta-title-line">Transform your business</span><br><span class="featured-text cta-title-line"
-                    style="text-transform:none;">with tyes</span></h2>
+                <h2 class="cta-text"><span class="cta-title-line">Transform your business</span><br><span
+                    class="featured-text cta-title-line" style="text-transform:none;">with tyes</span></h2>
                 <div class="spacer-small"></div>
               </div>
             </div>
@@ -3368,7 +3866,8 @@
               </div>
             </div>
             <!-- Social Links -->
-            <div style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
+            <div class="footer-social-links"
+              style="display:flex;gap:2rem;margin-top:2rem;font-family:'Montserrat',sans-serif;font-weight:500;">
               <a href="https://www.facebook.com/profile.php?id=61578742552795" target="_blank"
                 class="link-item w-inline-block">
                 <div class="link-wrap">
