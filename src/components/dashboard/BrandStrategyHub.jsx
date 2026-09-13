@@ -208,7 +208,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
       </div>
 
       {requests.length === 0 ? (
-        <div style={{ background: '#0A0A0A', padding: '32px 24px', borderRadius: 6, margin: '16px 0', textAlign: 'center', border: '1px solid #141414' }}>
+        <div style={{ background: '#0A0A0A', padding: '24px 16px', borderRadius: 6, margin: '16px 0', textAlign: 'center', border: '1px solid #141414', boxSizing: 'border-box' }}>
           <div style={{ fontSize: 10, letterSpacing: '3pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 16 }}>Get Your First Snapshot</div>
           <div style={{ fontSize: 24, color: '#FFFFFF', fontWeight: 800, marginBottom: 12, fontFamily: '"League Spartan", sans-serif' }}>You don't have a strategy yet.</div>
           <div style={{ fontSize: 13, color: '#B8B8B8', maxWidth: 400, margin: '0 auto 20px', lineHeight: 1.55 }}>
@@ -231,9 +231,9 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
           </div>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {/* Section A: Status Hero */}
-          <div style={{ background: 'rgba(45,212,191,0.05)', border: '1px solid rgba(45,212,191,0.2)', padding: '20px 24px', borderRadius: 6 }}>
+          <div style={{ background: 'rgba(45,212,191,0.05)', border: '1px solid rgba(45,212,191,0.2)', padding: '16px 16px', borderRadius: 6, boxSizing: 'border-box' }}>
             <div style={{ fontSize: 16, color: '#fff', fontFamily: '"League Spartan", sans-serif' }}>
               You have <strong style={{ color: '#2DD4BF' }}>{delivered} Snapshots delivered</strong> &middot; {inProgress} in progress.
             </div>
@@ -245,12 +245,12 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
           </div>
 
           {/* Section E: Retail Network Access */}
-          <div style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', padding: '24px', borderRadius: 6 }}>
+          <div style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', padding: '18px 16px', borderRadius: 6, boxSizing: 'border-box' }}>
             <div style={{ display: 'inline-block', background: 'rgba(45,212,191,0.15)', color: '#2DD4BF', padding: '4px 10px', borderRadius: 999, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1pt', marginBottom: 12 }}>Unlocked with your Strategy</div>
             <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>Your <span style={{ color: '#2DD4BF' }}>Retail Network</span> access</div>
             <div style={{ fontSize: 11, color: '#B8B8B8', marginBottom: 20 }}>Based on your Brand Info, we've mapped which retail categories fit your brand. Deep Dive introductions target these buyers.</div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 8, marginBottom: 8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 8, marginBottom: 8 }}>
               {RETAIL_TYPES.filter(rt => {
                 if (isPremiumOrHighEnd || isBeauty) {
                   return ['Premium Retail', 'Hyperpharmacies', 'Marketplaces'].includes(rt.label) || userRetailPresence.some(p => typeof p === 'string' && p.toLowerCase().includes(rt.label.toLowerCase()));
@@ -284,7 +284,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
 
           {/* Section C: My Snapshots Archive */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
               <h3 style={{ fontSize: 14, color: '#fff', textTransform: 'uppercase', letterSpacing: '1.5pt', margin: 0, fontWeight: 700 }}>My Snapshots</h3>
               <button onClick={() => setShowStandaloneForm(!showStandaloneForm)} style={{ background: 'transparent', border: 'none', color: '#2DD4BF', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
                 {showStandaloneForm ? '- Close Request Form' : '+ Request another Snapshot ($25)'}
@@ -292,7 +292,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
             </div>
 
             {showStandaloneForm && (
-              <div style={{ background: '#111', padding: '24px', borderRadius: 6, marginBottom: 16, border: '1px solid #222' }}>
+              <div style={{ background: '#111', padding: '16px 14px', borderRadius: 6, marginBottom: 16, border: '1px solid #222', boxSizing: 'border-box' }}>
                 <h3 style={{ fontSize: 16, color: '#fff', marginBottom: 16 }}>Request a New Snapshot</h3>
                 <BrandInfoForm onComplete={handleStandaloneSubmit} hideSubmit={false} submitLabel="Submit Request ($25)" />
                 {isSubmitting && <p style={{ color: '#2DD4BF', marginTop: 12 }}>Redirecting to secure checkout...</p>}
@@ -304,7 +304,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
                 const badgeInfo = getStatusBadge(req.status);
                 const reqBrandName = req.brand_data?.brandName || req.brand_info?.brandName || 'Brand Strategy';
                 return (
-                  <div key={req.id} style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', borderRadius: 6, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                  <div key={req.id} style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', borderRadius: 6, padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, boxSizing: 'border-box' }}>
                     <div>
                       <h4 style={{ color: '#fff', fontWeight: 600, fontSize: 14, margin: '0 0 6px', fontFamily: '"League Spartan", sans-serif' }}>{reqBrandName}</h4>
                       <div style={{ color: '#9ca3af', fontSize: 11, margin: 0, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
@@ -327,7 +327,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
 
           {/* Section D: Deep Dive Upsell */}
           {delivered > 0 && (
-            <div style={{ background: 'linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(10, 10, 10, 1))', border: '1px solid rgba(45, 212, 191, 0.3)', borderRadius: 12, padding: '24px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
+            <div style={{ background: 'linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(10, 10, 10, 1))', border: '1px solid rgba(45, 212, 191, 0.3)', borderRadius: 12, padding: '20px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20, boxSizing: 'border-box' }}>
               <div style={{ maxWidth: 500 }}>
                 <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 12, fontFamily: '"League Spartan", sans-serif', lineHeight: 1.3 }}>
                   Ready for more? The <span style={{ color: '#2DD4BF' }}>full playbook</span> that puts you in front of the buyer who says yes.

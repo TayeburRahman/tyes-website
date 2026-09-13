@@ -316,7 +316,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
   const displayRevenue = computedRevenue;
 
   return (
-    <div style={{ padding: '0 12px', maxWidth: 1400, margin: '0 auto', fontFamily: '"Montserrat", sans-serif' }}>
+    <div style={{ padding: '0 4px', maxWidth: 1400, margin: '0 auto', fontFamily: '"Montserrat", sans-serif' }}>
       {errorMsg && (
         <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: 10, padding: '12px 16px', color: '#f87171', fontSize: 13, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
           <span>⚠️</span> <span>{errorMsg === 'Unauthorized' ? 'Unauthorized: Please log in to your admin account to view strategy requests.' : errorMsg}</span>
@@ -324,19 +324,19 @@ export default function AdminStrategyHub({ supabase, addToast }) {
       )}
 
       {/* Analytics KPIs - Responsive Auto-fit Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(135px, 1fr))', gap: 10, marginBottom: 20 }}>
         {['Strategy Requests', 'Avg Delivery', 'Free → Paid', 'Strategy Revenue'].map((title, i) => (
-          <div key={i} style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.05)', padding: 16, borderRadius: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <div key={i} style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.05)', padding: '14px 12px', borderRadius: 12, boxSizing: 'border-box' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
               <div style={{ color: '#2DD4BF' }}>{i === 0 ? '✦' : i === 1 ? '⏱' : i === 2 ? '%' : '$'}</div>
-              <div style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>
                 {i === 0 ? displayTotalRequests :
                  i === 1 ? `${displayAvgDelivery}d` :
                  i === 2 ? `${displayConversion}%` :
                  `$${displayRevenue}`}
               </div>
             </div>
-            <div style={{ fontSize: 12, color: '#9ca3af' }}>{title}</div>
+            <div style={{ fontSize: 11, color: '#9ca3af' }}>{title}</div>
             {i === 3 && <div style={{ fontSize: 10, color: '#6b7280', marginTop: 4 }}>$25 add-ons + standalones</div>}
           </div>
         ))}
@@ -479,10 +479,10 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                     {/* Detail View */}
                     {isExpanded && (
                       <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                        <td colSpan="11" style={{ padding: '0 24px 24px 24px' }}>
-                          <div style={{ background: '#0A0A0A', padding: '20px 24px', borderRadius: 4 }}>
+                        <td colSpan="11" style={{ padding: '0 8px 16px 8px' }}>
+                          <div style={{ background: '#0A0A0A', padding: '16px 14px', borderRadius: 8, boxSizing: 'border-box' }}>
                             <div style={{ fontSize: 10, color: sFormat.color, letterSpacing: '2pt', textTransform: 'uppercase', fontWeight: 700, marginBottom: 8 }}>Status · {sFormat.label}</div>
-                            <div style={{ fontSize: 20, color: '#FFFFFF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', marginBottom: 8 }}>{getBrandName(req)} · Strategy Request</div>
+                            <div style={{ fontSize: 18, color: '#FFFFFF', fontWeight: 700, fontFamily: '"League Spartan", sans-serif', marginBottom: 8 }}>{getBrandName(req)} · Strategy Request</div>
                             <div style={{ fontSize: 11, color: '#888', marginBottom: 20 }}>Submitted {new Date(req.created_at).toLocaleDateString()} · From Order {req.order_id || 'N/A'} ({req.tier}) · {req.profiles?.full_name || req.orders?.customer_name || 'Unknown'} ({req.profiles?.email || req.orders?.customer_email || 'No email'})</div>
 
                             <div style={{ borderTop: '1px solid #2A2A2A', paddingTop: 16, marginBottom: 16 }}>
@@ -518,7 +518,7 @@ export default function AdminStrategyHub({ supabase, addToast }) {
                               <div style={{ fontSize: 10, letterSpacing: '2pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Admin Actions</div>
                               <div style={{ fontSize: 10, color: '#B8B8B8', marginBottom: 12, fontFamily: '"Montserrat", sans-serif' }}>Auto-assigned to <strong style={{ color: '#FFFFFF' }}>Raluca — Brand Growth &amp; AI Strategy Lead</strong>. No &quot;assign strategist&quot; step — she is the only strategist.</div>
 
-                              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                                 
                                 <select 
                                   value={req.status} 

@@ -31,9 +31,9 @@ const ToastContainer = ({ toasts }) => (
 const Modal = ({ open, onClose, title, children, width }) => {
   if (!open) return null;
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28, width: width || 440, maxWidth: "90vw", maxHeight: "80vh", overflow: "auto" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)", padding: "12px" }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: "20px 18px", width: width || 440, maxWidth: "calc(100vw - 24px)", maxHeight: "88vh", overflow: "auto", boxSizing: "border-box" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: 0 }}>{title}</h3>
           <button onClick={onClose} style={{ background: "rgba(255,255,255,0.05)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer", color: "#6b7280" }}><X size={14} /></button>
         </div>
@@ -122,17 +122,17 @@ const StatusBadge = ({ status }) => {
 const StatCard = ({ icon: Icon, label, value, change, positive, sub, onClick }) => (
   <div
     onClick={onClick}
-    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 22px", flex: 1, minWidth: 200, cursor: onClick ? "pointer" : "default", transition: "all 0.2s" }}
+    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 16px", flex: 1, minWidth: 130, cursor: onClick ? "pointer" : "default", transition: "all 0.2s", boxSizing: "border-box" }}
     onMouseEnter={e => { if (onClick) e.currentTarget.style.background = "rgba(255,255,255,0.06)" }}
     onMouseLeave={e => { if (onClick) e.currentTarget.style.background = "rgba(255,255,255,0.03)" }}
   >
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-      <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={16} color="#fff" /></div>
-      {change && <span style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 11, fontWeight: 600, color: positive ? "#34d399" : "#f87171" }}>{positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />} {change}</span>}
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+      <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={15} color="#fff" /></div>
+      {change && <span style={{ display: "flex", alignItems: "center", gap: 2, fontSize: 10, fontWeight: 600, color: positive ? "#34d399" : "#f87171" }}>{positive ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />} {change}</span>}
     </div>
-    <div style={{ fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 2 }}>{value}</div>
+    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 2, lineHeight: 1.1 }}>{value}</div>
     <div style={{ fontSize: 12, color: "#6b7280" }}>{label}</div>
-    {sub && <div style={{ fontSize: 11, color: "#4b5563", marginTop: 4 }}>{sub}</div>}
+    {sub && <div style={{ fontSize: 10, color: "#4b5563", marginTop: 4 }}>{sub}</div>}
   </div>
 );
 
@@ -208,12 +208,14 @@ const DashboardPage = ({ toast, goTo, orders, users, strategyRequests }) => {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
-        <div><h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Dashboard</h1><p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>Welcome back. Here's what's happening today.</p></div>
-
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
+        <div>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Dashboard</h1>
+          <p style={{ fontSize: 13, color: "#6b7280", margin: "2px 0 0" }}>Welcome back. Here's what's happening today.</p>
+        </div>
       </div>
 
-      <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 20 }}>
         <StatCard icon={DollarSign} label="Total Revenue" value={fmt(totalRevenue)} sub="Direct from database" />
         <StatCard icon={ShoppingCart} label="Total Orders" value={orders.length} sub={`${orders.filter(o => o.status === 'completed' || o.status === 'delivered').length} completed`} />
         <StatCard icon={Users} label="Total Clients" value={activeClients} sub="Registered users" />
@@ -227,33 +229,37 @@ const DashboardPage = ({ toast, goTo, orders, users, strategyRequests }) => {
         />
       </div>
 
-      <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
-        <div style={{ flex: 2, minWidth: 400, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+      <div style={{ display: "flex", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
+        <div style={{ flex: "2 1 320px", minWidth: 0, width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "18px 16px", boxSizing: "border-box" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Revenue Trend</h3>
             <span style={{ fontSize: 11, color: "#6b7280" }}>Historical Growth</span>
           </div>
-          <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={dynRevenueData.length ? dynRevenueData : [{ month: "No data", revenue: 0 }]}>
-              <defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4ecdc4" stopOpacity={0.3} /><stop offset="100%" stopColor="#4ecdc4" stopOpacity={0} /></linearGradient></defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis dataKey="month" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`} />
-              <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
-              <Area type="monotone" dataKey="revenue" stroke="#4ecdc4" fill="url(#gr)" strokeWidth={2.5} dot={{ fill: "#4ecdc4", r: 4, strokeWidth: 0 }} />
-            </AreaChart>
-          </ResponsiveContainer>
+          <div style={{ width: "100%", height: 220 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={dynRevenueData.length ? dynRevenueData : [{ month: "No data", revenue: 0 }]}>
+                <defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4ecdc4" stopOpacity={0.3} /><stop offset="100%" stopColor="#4ecdc4" stopOpacity={0} /></linearGradient></defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                <XAxis dataKey="month" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`} />
+                <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
+                <Area type="monotone" dataKey="revenue" stroke="#4ecdc4" fill="url(#gr)" strokeWidth={2.5} dot={{ fill: "#4ecdc4", r: 4, strokeWidth: 0 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div style={{ flex: 1, minWidth: 260, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 18px" }}>Orders by Category</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <PieChart>
-              <Pie data={dynCategoryData.length ? dynCategoryData : [{ name: "No Data", value: 1, color: "rgba(255,255,255,0.05)" }]} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value" stroke="none">
-                {dynCategoryData.map((d, i) => <Cell key={i} fill={d.color} />)}
-              </Pie>
-              <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
-            </PieChart>
-          </ResponsiveContainer>
+        <div style={{ flex: "1 1 260px", minWidth: 0, width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "18px 16px", boxSizing: "border-box" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Orders by Category</h3>
+          <div style={{ width: "100%", height: 180 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={dynCategoryData.length ? dynCategoryData : [{ name: "No Data", value: 1, color: "rgba(255,255,255,0.05)" }]} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value" stroke="none">
+                  {dynCategoryData.map((d, i) => <Cell key={i} fill={d.color} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
             {dynCategoryData.length ? dynCategoryData.map((d, i) => (
               <span key={i} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#9ca3af" }}>
@@ -266,19 +272,21 @@ const DashboardPage = ({ toast, goTo, orders, users, strategyRequests }) => {
       </div>
 
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-        <div style={{ flex: 2, minWidth: 400, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 18px" }}>This Week</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={last7Days} barSize={28}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis dataKey="name" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
-              <Bar dataKey="orders" fill="#4ecdc4" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <div style={{ flex: "2 1 320px", minWidth: 0, width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "18px 16px", boxSizing: "border-box" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>This Week</h3>
+          <div style={{ width: "100%", height: 200 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={last7Days} barSize={20}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                <XAxis dataKey="name" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
+                <Bar dataKey="orders" fill="#4ecdc4" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div style={{ flex: 1, minWidth: 260, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22 }}>
+        <div style={{ flex: "1 1 260px", minWidth: 0, width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "18px 16px", boxSizing: "border-box" }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Recent Activity</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {orders.slice(0, 5).map((o, i) => {
@@ -651,26 +659,26 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
 
             {/* ADMIN PRICING & PAYMENT CONTROLS (ONLY FOR CUSTOM ORDERS) */}
             {(viewOrder.plan?.includes('Custom') || viewOrder.is_custom || viewOrder.plan?.includes('Deep Dive')) && (
-              <div style={{ marginTop: 16, padding: 16, background: "rgba(255,255,255,0.03)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)" }}>
+              <div style={{ marginTop: 16, padding: 14, background: "rgba(255,255,255,0.03)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 10 }}>Order Pricing & Controls</div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ fontSize: 11, color: "#9ca3af", display: "block", marginBottom: 4 }}>Set Custom Quote / Price ($)</label>
+                <div style={{ marginBottom: 12 }}>
+                  <label style={{ fontSize: 11, color: "#9ca3af", display: "block", marginBottom: 4 }}>Set Custom Quote / Price ($)</label>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <input
                       type="number"
                       value={priceInput}
                       onChange={(e) => setPriceInput(e.target.value)}
-                      style={{ width: "100%", padding: "8px 12px", borderRadius: 8, background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 13, outline: "none" }}
+                      style={{ flex: 1, minWidth: 120, padding: "8px 12px", borderRadius: 8, background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 13, outline: "none" }}
                       placeholder="e.g. 350"
                     />
+                    <button
+                      onClick={() => updateOrderPrice(viewOrder.id, priceInput)}
+                      style={{ padding: "8px 16px", borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}
+                    >
+                      Save Price
+                    </button>
                   </div>
-                  <button
-                    onClick={() => updateOrderPrice(viewOrder.id, priceInput)}
-                    style={{ marginTop: 16, padding: "8px 16px", borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
-                  >
-                    Save Price
-                  </button>
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
@@ -681,7 +689,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                     </span>
                   </div>
 
-                  <div style={{ display: "flex", gap: 8 }}>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <button
                       onClick={() => togglePaymentStatus(viewOrder.id, viewOrder.payment_status === 'paid' ? 'unpaid' : 'paid')}
                       style={{ padding: "5px 12px", borderRadius: 8, background: "rgba(255,255,255,0.06)", color: "#e5e7eb", border: "1px solid rgba(255,255,255,0.1)", fontSize: 11, fontWeight: 600, cursor: "pointer" }}
@@ -704,13 +712,13 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               </div>
             )}
 
-            <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap", alignItems: "center" }}>
               <span style={{ fontSize: 11, color: "#6b7280" }}>Quick Status:</span>
-              {Object.keys(statusConfig).map(s => <button key={s} onClick={() => { updateStatus(viewOrder.id, s); setViewOrder({ ...viewOrder, status: s }); }} style={{ padding: "4px 10px", borderRadius: 16, border: `1px solid ${statusConfig[s].color}33`, background: viewOrder.status === s ? statusConfig[s].bg : "transparent", color: statusConfig[s].color, fontSize: 11, cursor: "pointer" }}>{statusConfig[s].label}</button>)}
+              {Object.keys(statusConfig).map(s => <button key={s} onClick={() => { updateStatus(viewOrder.id, s); setViewOrder({ ...viewOrder, status: s }); }} style={{ padding: "4px 9px", borderRadius: 16, border: `1px solid ${statusConfig[s].color}33`, background: viewOrder.status === s ? statusConfig[s].bg : "transparent", color: statusConfig[s].color, fontSize: 11, cursor: "pointer" }}>{statusConfig[s].label}</button>)}
             </div>
 
             {Boolean(viewOrder.plan === 'Brand Strategy' || viewOrder.plan?.includes('Brand Strategy') || viewOrder.images_count === 0) ? (
-              <div style={{ marginTop: 16, padding: 16, background: "rgba(45,212,191,0.05)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 12 }}>
+              <div style={{ marginTop: 16, padding: 14, background: "rgba(45,212,191,0.05)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 12 }}>
                 <div style={{ fontSize: 11, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>
                   ✦ Brand Strategy Deliverable Order
                 </div>
@@ -743,7 +751,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               viewOrder.items && viewOrder.items.length > 0 && (
                 <div style={{ marginTop: 16 }}>
                   <span style={{ fontSize: 11, color: "#6b7280", display: "block", marginBottom: 8, textTransform: "uppercase" }}>Order Items</span>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 8 }}>
                     {viewOrder.items.map((item, i) => (
                       <div key={i} style={{ padding: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12 }}>
                         <div style={{ fontSize: 12, color: "#fff", fontWeight: 600, marginBottom: 8, display: "flex", justifyContent: "space-between" }}>
@@ -831,13 +839,13 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       </Modal>
 
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 14, overflowX: "auto", paddingBottom: 6, scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
         {["all", "pending", "in_progress", "revision", "delivered"].map(s => (
           <button
             key={s}
             onClick={() => setFilter(s)}
             style={{
-              padding: "6px 14px",
+              padding: "6px 12px",
               borderRadius: 20,
               border: "1px solid",
               borderColor: filter === s ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)",
@@ -845,15 +853,17 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
               color: filter === s ? "#4ecdc4" : "#6b7280",
               fontSize: 12,
               fontWeight: 500,
-              cursor: "pointer"
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              flexShrink: 0
             }}
           >
             {s === "all" ? "All" : statusConfig[s]?.label} ({counts[s] || 0})
           </button>
         ))}
       </div>
-      <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={searchInput} onChange={e => { setSearchInput(e.target.value); }} placeholder="Search orders or clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }} /></div>
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto" }}>
+      <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={searchInput} onChange={e => { setSearchInput(e.target.value); }} placeholder="Search orders or clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none", boxSizing: "border-box" }} /></div>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
         <table style={{ minWidth: 720, width: "100%", borderCollapse: "collapse" }}>
           <thead><tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{["Order", "Client", "Plan", "Imgs", "Status", "Progress", "Revenue", "Payment", "Date", ""].map((h, i) => <th key={i} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>)}</tr></thead>
           <tbody>{paginatedOrders.map((o, idx) => (
@@ -911,34 +921,21 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       </div>
 
       {totalPages > 1 && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, padding: "0 4px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, padding: "0 4px", flexWrap: "wrap", gap: 10 }}>
           <div style={{ fontSize: 12, color: "#4b5563" }}>
             Showing <span style={{ color: "#9ca3af" }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: "#9ca3af" }}>{Math.min(currentPage * itemsPerPage, filtered.length)}</span> of <span style={{ color: "#9ca3af" }}>{filtered.length}</span> orders
           </div>
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", color: currentPage === 1 ? "#374151" : "#9ca3af", fontSize: 12, cursor: currentPage === 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 4 }}
             >
-              <ChevronLeft size={14} /> Previous
+              <ChevronLeft size={14} /> Prev
             </button>
-            {[...Array(totalPages)].map((_, i) => {
-              const p = i + 1;
-              if (totalPages > 5 && Math.abs(p - currentPage) > 1 && p !== 1 && p !== totalPages) {
-                if (Math.abs(p - currentPage) === 2) return <span key={p} style={{ color: "#374151", padding: "0 4px" }}>...</span>;
-                return null;
-              }
-              return (
-                <button
-                  key={p}
-                  onClick={() => setCurrentPage(p)}
-                  style={{ width: 32, height: 32, borderRadius: 8, border: "1px solid", borderColor: currentPage === p ? "rgba(78,205,196,0.3)" : "rgba(255,255,255,0.06)", background: currentPage === p ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.02)", color: currentPage === p ? "#4ecdc4" : "#9ca3af", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
-                >
-                  {p}
-                </button>
-              );
-            })}
+            <span style={{ fontSize: 12, color: "#9ca3af", padding: "0 6px" }}>
+              {currentPage} / {totalPages}
+            </span>
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
@@ -1045,18 +1042,18 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
         )}
       </Modal>
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Clients</h1>
         <button onClick={exportToCSV} style={{ padding: "8px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#9ca3af", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={13} /> Export CSV</button>
       </div>
-      <div style={{ display: "flex", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 20 }}>
         <StatCard icon={Users} label="Total Clients" value={counts.total} />
         <StatCard icon={UserCheck} label="Active" value={counts.active} />
         <StatCard icon={Star} label="Enterprise" value={counts.enterprise} />
         <StatCard icon={DollarSign} label="Total Revenue" value={fmt(counts.revenue)} />
       </div>
-      <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none" }} /></div>
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto" }}>
+      <div style={{ marginBottom: 16, position: "relative" }}><Search size={14} style={{ position: "absolute", left: 12, top: 10, color: "#4b5563" }} /><input value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search clients..." style={{ width: "100%", maxWidth: 360, padding: "8px 12px 8px 34px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none", boxSizing: "border-box" }} /></div>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
         <table style={{ minWidth: 720, width: "100%", borderCollapse: "collapse" }}>
           <thead><tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{["Client", "Email", "Tier", "Orders", "Spent", "Joined", "Status", ""].map((h, i) => <th key={i} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>)}</tr></thead>
           <tbody>{paginatedClients.map((u, idx) => (
@@ -1084,35 +1081,22 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
       </div>
 
       {filtered.length > 0 && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, padding: "0 4px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, padding: "0 4px", flexWrap: "wrap", gap: 10 }}>
           <div style={{ fontSize: 12, color: "#4b5563" }}>
             Showing <span style={{ color: "#9ca3af" }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: "#9ca3af" }}>{Math.min(currentPage * itemsPerPage, filtered.length)}</span> of <span style={{ color: "#9ca3af" }}>{filtered.length}</span> clients
           </div>
           {totalPages > 1 && (
-            <div style={{ display: "flex", gap: 6 }}>
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", color: currentPage === 1 ? "#374151" : "#9ca3af", fontSize: 12, cursor: currentPage === 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 4 }}
               >
-                <ChevronLeft size={14} /> Previous
+                <ChevronLeft size={14} /> Prev
               </button>
-              {[...Array(totalPages)].map((_, i) => {
-                const p = i + 1;
-                if (totalPages > 5 && Math.abs(p - currentPage) > 1 && p !== 1 && p !== totalPages) {
-                  if (Math.abs(p - currentPage) === 2) return <span key={p} style={{ color: "#374151", padding: "0 4px" }}>...</span>;
-                  return null;
-                }
-                return (
-                  <button
-                    key={p}
-                    onClick={() => setCurrentPage(p)}
-                    style={{ width: 32, height: 32, borderRadius: 8, border: "1px solid", borderColor: currentPage === p ? "rgba(78,205,196,0.3)" : "rgba(255,255,255,0.06)", background: currentPage === p ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.02)", color: currentPage === p ? "#4ecdc4" : "#9ca3af", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
-                  >
-                    {p}
-                  </button>
-                );
-              })}
+              <span style={{ fontSize: 12, color: "#9ca3af", padding: "0 6px" }}>
+                {currentPage} / {totalPages}
+              </span>
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
@@ -1344,17 +1328,17 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
         <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Pricing Plans</h1>
         <button onClick={addPlan} style={{ padding: "8px 16px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>+ Add Plan</button>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
         {plans.map(p => (
-          <div key={p.id} style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${p.active ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)"}`, borderRadius: 16, padding: 24, opacity: p.active ? 1 : 0.5, transition: "all 0.2s" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <div key={p.id} style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${p.active ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)"}`, borderRadius: 16, padding: "20px 18px", opacity: p.active ? 1 : 0.5, transition: "all 0.2s" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
               <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: 0 }}>{p.name}</h3>
               <div style={{ display: "flex", gap: 4 }}>
                 <button onClick={() => openEdit(p)} style={{ background: "rgba(255,255,255,0.05)", border: "none", borderRadius: 6, padding: 6, cursor: "pointer", color: "#6b7280" }} title="Edit plan"><Edit size={12} /></button>
                 <button onClick={() => deletePlan(p.id)} style={{ background: "rgba(255,255,255,0.05)", border: "none", borderRadius: 6, padding: 6, cursor: "pointer", color: "#6b7280" }} title="Delete plan"><Trash2 size={12} /></button>
               </div>
             </div>
-            <div style={{ fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 4 }}>{p.price === 0 ? "Free" : `$${p.price}`}</div>
+            <div style={{ fontSize: 30, fontWeight: 900, color: "#fff", marginBottom: 4 }}>{p.price === 0 ? "Free" : `$${p.price}`}</div>
             <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 16 }}>{p.images === 0 ? (p.price > 0 ? "Strategy access" : "Custom pricing") : `${p.images} image${p.images > 1 ? "s" : ""}`}</div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span onClick={() => togglePlan(p.id)} style={{ fontSize: 11, color: p.active ? "#34d399" : "#f87171", cursor: "pointer" }}><span style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block", background: p.active ? "#34d399" : "#f87171", marginRight: 6 }} />{p.active ? "Active" : "Inactive"}</span>
@@ -1363,25 +1347,35 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
           </div>
         ))}
       </div>
-      <div style={{ marginTop: 24, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ marginTop: 24, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
         <div>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 4px" }}>Strategy Pricing Config</h3>
           <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>Global $25 fee shared by Free Image add-on and Standalone tier.</p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ fontSize: 20, fontWeight: 800, color: "#fff" }}>$25</div>
-          <button onClick={() => setStrategyConfigActive(!strategyConfigActive)} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: strategyConfigActive ? "#34d399" : "#f87171", color: strategyConfigActive ? "#000" : "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>{strategyConfigActive ? "ON" : "OFF"}</button>
+          <button onClick={() => setStrategyConfigActive(!strategyConfigActive)} style={{ padding: "6px 14px", borderRadius: 8, border: "none", background: strategyConfigActive ? "#34d399" : "#f87171", color: strategyConfigActive ? "#000" : "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>{strategyConfigActive ? "ON" : "OFF"}</button>
         </div>
       </div>
-      <div style={{ marginTop: 32, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+      <div style={{ marginTop: 28, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "18px 16px", boxSizing: "border-box" }}>
         <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Revenue by Plan (YTD)</h3>
-        <ResponsiveContainer width="100%" height={220}><BarChart data={revenueByPlan} barSize={36}><CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" /><XAxis dataKey="plan" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} /><YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} /><Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} /><Bar dataKey="revenue" fill="#2ab7a9" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer>
+        <div style={{ width: "100%", height: 220 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={revenueByPlan} barSize={26}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+              <XAxis dataKey="plan" tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "#6b7280", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
+              <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, fontSize: 12, color: "#fff" }} />
+              <Bar dataKey="revenue" fill="#2ab7a9" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
-      <div style={{ marginTop: 32 }}>
+      <div style={{ marginTop: 28 }}>
         <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Recent Transactions</h3>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+          <table style={{ minWidth: 620, width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 {["Transaction ID", "Customer", "Plan", "Amount", "Date", ""].map((h, i) => (
@@ -1413,34 +1407,21 @@ const PricingPage = ({ plans, setPlans, toast, supabase, orders, goTo, setTarget
         </div>
 
         {totalPages > 1 && (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, padding: "0 4px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, padding: "0 4px", flexWrap: "wrap", gap: 10 }}>
             <div style={{ fontSize: 12, color: "#4b5563" }}>
               Showing <span style={{ color: "#9ca3af" }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: "#9ca3af" }}>{Math.min(currentPage * itemsPerPage, transactions.length)}</span> of <span style={{ color: "#9ca3af" }}>{transactions.length}</span> transactions
             </div>
-            <div style={{ display: "flex", gap: 6 }}>
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", color: currentPage === 1 ? "#374151" : "#9ca3af", fontSize: 12, cursor: currentPage === 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 4 }}
               >
-                <ChevronLeft size={14} /> Previous
+                <ChevronLeft size={14} /> Prev
               </button>
-              {[...Array(totalPages)].map((_, i) => {
-                const p = i + 1;
-                if (totalPages > 5 && Math.abs(p - currentPage) > 1 && p !== 1 && p !== totalPages) {
-                  if (Math.abs(p - currentPage) === 2) return <span key={p} style={{ color: "#374151", padding: "0 4px" }}>...</span>;
-                  return null;
-                }
-                return (
-                  <button
-                    key={p}
-                    onClick={() => setCurrentPage(p)}
-                    style={{ width: 32, height: 32, borderRadius: 8, border: "1px solid", borderColor: currentPage === p ? "rgba(78,205,196,0.3)" : "rgba(255,255,255,0.06)", background: currentPage === p ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.02)", color: currentPage === p ? "#4ecdc4" : "#9ca3af", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
-                  >
-                    {p}
-                  </button>
-                );
-              })}
+              <span style={{ fontSize: 12, color: "#9ca3af", padding: "0 6px" }}>
+                {currentPage} / {totalPages}
+              </span>
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
@@ -1526,13 +1507,13 @@ const AnalyticsPage = ({ users, orders }) => {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 20px", fontFamily: "'League Spartan', sans-serif" }}>Analytics</h1>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 20 }}>
         <StatCard icon={Clock} label="Avg Delivery Time" value={`${displayAvgHrs} hrs`} change={avgDeliveryHrs > 24 ? "+12%" : "-5%"} positive={avgDeliveryHrs < 24} sub="Target: 24 hrs" />
         <StatCard icon={RefreshCw} label="Avg Revisions/Img" value={displayAvgRevs} change={avgRevisionsPerImg > 0.5 ? "+0.1" : "-0.1"} positive={avgRevisionsPerImg < 0.5} sub="Target: <0.5" />
       </div>
 
       <div style={{ display: "flex", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
-        <div style={{ flex: "1 1 300px", minWidth: 280, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px", boxSizing: "border-box" }}>
+        <div style={{ flex: "1 1 300px", minWidth: 0, width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px", boxSizing: "border-box" }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Orders vs Revenue</h3>
           <div style={{ width: "100%", height: 260 }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -1550,7 +1531,7 @@ const AnalyticsPage = ({ users, orders }) => {
           </div>
         </div>
 
-        <div style={{ flex: "1 1 280px", minWidth: 280, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px", boxSizing: "border-box" }}>
+        <div style={{ flex: "1 1 280px", minWidth: 0, width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px", boxSizing: "border-box" }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Top Clients by Revenue</h3>
           {[...users].filter(u => (u.spent || 0) > 0).sort((a, b) => (b.spent || 0) - (a.spent || 0)).slice(0, 6).map((u, i) => (
             <div key={u.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: i < 5 ? "1px solid rgba(255,255,255,0.03)" : "none" }}>
@@ -1796,9 +1777,13 @@ const SettingsPage = ({ toast, studioInfo, setStudioInfo, supabase, users, setUs
     {
       id: "profile", title: "My Profile", desc: "Your personal information and account details", icon: User, content: (
         <div style={{ padding: "16px 0" }}>
-          <div style={{ display: "flex", gap: 12 }}>
-            <InputField label="First Name" value={form.firstName} onChange={v => setForm({ ...form, firstName: v })} />
-            <InputField label="Last Name" value={form.lastName} onChange={v => setForm({ ...form, lastName: v })} />
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 200px" }}>
+              <InputField label="First Name" value={form.firstName} onChange={v => setForm({ ...form, firstName: v })} />
+            </div>
+            <div style={{ flex: "1 1 200px" }}>
+              <InputField label="Last Name" value={form.lastName} onChange={v => setForm({ ...form, lastName: v })} />
+            </div>
           </div>
           <div style={{ opacity: 0.7 }}>
             <InputField label="Account Email (Read-only)" value={form.email} onChange={() => { }} disabled />
@@ -1846,25 +1831,29 @@ const SettingsPage = ({ toast, studioInfo, setStudioInfo, supabase, users, setUs
                 }];
               }
               return teamMembers.map((m, i) => (
-                <div key={m.id || i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 12 }}>{m.name?.charAt(0) || m.first_name?.charAt(0) || "A"}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500 }}>{m.name || `${m.first_name || ''} ${m.last_name || ''}`.trim() || m.email}</div>
-                    <div style={{ fontSize: 11, color: "#4b5563" }}>{m.email}</div>
+                <div key={m.id || i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 160, flex: 1 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{m.name?.charAt(0) || m.first_name?.charAt(0) || "A"}</div>
+                    <div style={{ overflow: "hidden" }}>
+                      <div style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.name || `${m.first_name || ''} ${m.last_name || ''}`.trim() || m.email}</div>
+                      <div style={{ fontSize: 11, color: "#4b5563", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.email}</div>
+                    </div>
                   </div>
-                  <select
-                    value={m.role}
-                    onChange={e => updateUserRole(m.id, e.target.value)}
-                    style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.02em", color: m.role === 'superAdmin' || m.role === 'super_admin' ? "#f472b6" : "#4ecdc4", background: m.role === 'superAdmin' || m.role === 'super_admin' ? "rgba(244,114,182,0.1)" : "rgba(78,205,196,0.1)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, padding: "2px 6px", outline: "none", cursor: "pointer", textTransform: "uppercase" }}
-                  >
-                    <option value="admin" style={{ background: "#1f2937", color: "#fff" }}>ADMIN</option>
-                    <option value="superAdmin" style={{ background: "#1f2937", color: "#fff" }}>SUPER ADMIN</option>
-                  </select>
-                  {m.email !== adminUser.email && (
-                    <button onClick={() => deleteUser(m.id, m.name || m.email)} style={{ background: "rgba(239,68,68,0.05)", border: "none", borderRadius: 6, padding: 6, color: "#ef4444", cursor: "pointer", opacity: 0.6, transition: "opacity 0.2s" }} title="Remove from team" onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.6}>
-                      <Trash2 size={14} />
-                    </button>
-                  )}
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <select
+                      value={m.role}
+                      onChange={e => updateUserRole(m.id, e.target.value)}
+                      style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.02em", color: m.role === 'superAdmin' || m.role === 'super_admin' ? "#f472b6" : "#4ecdc4", background: m.role === 'superAdmin' || m.role === 'super_admin' ? "rgba(244,114,182,0.1)" : "rgba(78,205,196,0.1)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, padding: "4px 8px", outline: "none", cursor: "pointer", textTransform: "uppercase" }}
+                    >
+                      <option value="admin" style={{ background: "#1f2937", color: "#fff" }}>ADMIN</option>
+                      <option value="superAdmin" style={{ background: "#1f2937", color: "#fff" }}>SUPER ADMIN</option>
+                    </select>
+                    {m.email !== adminUser.email && (
+                      <button onClick={() => deleteUser(m.id, m.name || m.email)} style={{ background: "rgba(239,68,68,0.05)", border: "none", borderRadius: 6, padding: 6, color: "#ef4444", cursor: "pointer", opacity: 0.8, transition: "opacity 0.2s" }} title="Remove from team">
+                        <Trash2 size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               ));
             })()}
@@ -1913,9 +1902,21 @@ export default function TyesAdmin() {
   const supabase = createClient();
   const { toasts, addToast } = useToast();
   const [page, setPageInternal] = useState("dashboard");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const setPage = (newPage, orderId = null) => {
     setPageInternal(newPage);
+    setMobileMenuOpen(false);
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       url.searchParams.set('tab', newPage);
@@ -2190,12 +2191,16 @@ export default function TyesAdmin() {
         __html: `
           @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
           @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+          @keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
           .animate-spin { animation: spin 1s linear infinite; }
+          @media (max-width: 768px) {
+            .admin-desktop-sidebar { display: none !important; }
+          }
         `
       }} />
 
-      {/* Sidebar */}
-      <div style={{ width: collapsed ? 64 : 220, borderRight: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", padding: collapsed ? "16px 8px" : "16px 12px", flexShrink: 0, transition: "width 0.2s", overflow: "hidden" }}>
+      {/* Desktop Sidebar */}
+      <aside className="admin-desktop-sidebar" style={{ width: collapsed ? 64 : 220, borderRight: "1px solid rgba(255,255,255,0.06)", display: isMobile ? "none" : "flex", flexDirection: "column", padding: collapsed ? "16px 8px" : "16px 12px", flexShrink: 0, transition: "width 0.2s", overflow: "hidden", background: "#0a0a0a" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "4px 6px", marginBottom: 24 }}>
           <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 13, flexShrink: 0 }}>
             {(adminUser?.user_metadata?.first_name?.charAt(0) || adminUser?.email?.charAt(0) || "A").toUpperCase()}
@@ -2216,17 +2221,112 @@ export default function TyesAdmin() {
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 12, marginTop: 8 }}>
           <SidebarItem icon={LogOut} label="Log Out" onClick={handleLogout} collapsed={collapsed} />
         </div>
-      </div>
+      </aside>
+
+      {/* Mobile Slide-Over Drawer */}
+      {isMobile && mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.75)",
+            backdropFilter: "blur(4px)",
+            zIndex: 9990,
+            display: "flex"
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              width: 280,
+              maxWidth: "82vw",
+              height: "100%",
+              background: "#111",
+              borderRight: "1px solid rgba(255,255,255,0.1)",
+              display: "flex",
+              flexDirection: "column",
+              padding: "20px 14px",
+              boxShadow: "10px 0 30px rgba(0,0,0,0.8)",
+              animation: "slideInLeft 0.25s ease-out"
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, paddingBottom: 14, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 13 }}>
+                  {(adminUser?.user_metadata?.first_name?.charAt(0) || adminUser?.email?.charAt(0) || "A").toUpperCase()}
+                </div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
+                    {`${adminUser?.user_metadata?.first_name || ''} ${adminUser?.user_metadata?.last_name || ''}`.trim() || adminUser?.email?.split('@')[0] || "Admin"}
+                  </div>
+                  <div style={{ fontSize: 10, color: "#4ecdc4", fontStyle: "italic" }}>
+                    {adminUser?.user_metadata?.role === 'superAdmin' ? 'Super Admin' : 'Administrator'}
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 8, padding: 8, color: "#9ca3af", cursor: "pointer" }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, overflowY: "auto" }}>
+              {navPages.map(p => (
+                <SidebarItem
+                  key={p.id}
+                  icon={p.icon}
+                  label={p.label}
+                  active={page === p.id}
+                  onClick={() => { setPage(p.id); setMobileMenuOpen(false); }}
+                  collapsed={false}
+                />
+              ))}
+            </div>
+
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 14, marginTop: 8 }}>
+              <SidebarItem icon={LogOut} label="Log Out" onClick={handleLogout} collapsed={false} />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 28px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {collapsed && <button onClick={() => setCollapsed(false)} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}><Menu size={18} /></button>}
-            <div style={{ position: "relative" }}><Search size={14} style={{ position: "absolute", left: 10, top: 9, color: "#4b5563" }} /><input placeholder="Search orders..." value={globalSearch} onChange={e => setGlobalSearch(e.target.value)} style={{ padding: "7px 12px 7px 32px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none", width: 260 }} /></div>
-            <button onClick={fetchDashboardData} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer", padding: 4, display: "flex", alignItems: "center" }} title="Refresh data"><RefreshCw size={14} className={loading ? "animate-spin" : ""} /></button>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: isMobile ? "10px 14px" : "12px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0, gap: 10, background: "#0a0a0a" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
+            {isMobile ? (
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "7px 8px", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+                aria-label="Open menu"
+              >
+                <Menu size={18} />
+              </button>
+            ) : (
+              collapsed && <button onClick={() => setCollapsed(false)} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}><Menu size={18} /></button>
+            )}
+
+            {isMobile ? (
+              <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {navPages.find(p => p.id === page)?.label || "Admin"}
+              </div>
+            ) : (
+              <div style={{ position: "relative", flex: 1, maxWidth: 300 }}>
+                <Search size={14} style={{ position: "absolute", left: 10, top: 9, color: "#4b5563" }} />
+                <input placeholder="Search orders..." value={globalSearch} onChange={e => setGlobalSearch(e.target.value)} style={{ padding: "7px 12px 7px 32px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 12, outline: "none", width: "100%", boxSizing: "border-box" }} />
+              </div>
+            )}
+
+            <button onClick={fetchDashboardData} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer", padding: 4, display: "flex", alignItems: "center", flexShrink: 0 }} title="Refresh data">
+              <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+            </button>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 16, flexShrink: 0 }}>
+            {/* Notifications */}
             <div style={{ position: "relative" }}>
               <button onClick={() => { 
                 setNotifOpen(!notifOpen); 
@@ -2236,27 +2336,27 @@ export default function TyesAdmin() {
                   setAdminReadNotifs(newReadIds);
                   if (typeof window !== 'undefined') localStorage.setItem('tyes_admin_read_notifs', JSON.stringify(newReadIds));
                 }
-              }} style={{ position: "relative", background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}>
+              }} style={{ position: "relative", background: "none", border: "none", color: "#6b7280", cursor: "pointer", padding: 4 }}>
                 <Bell size={17} />
                 {orders.slice(0, 7).filter(o => !adminReadNotifs.includes(o.id)).length > 0 && (
-                  <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: "50%", background: "#ef4444" }} />
+                  <span style={{ position: "absolute", top: 1, right: 1, width: 7, height: 7, borderRadius: "50%", background: "#ef4444" }} />
                 )}
               </button>
               {notifOpen && (
-                <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, width: 320, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, zIndex: 100, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
+                <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, width: "min(320px, calc(100vw - 20px))", background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, zIndex: 9999, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
                   <div style={{ padding: "8px 12px", fontSize: 13, fontWeight: 700, color: "#fff", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4 }}>Recent Notifications</div>
                   <div style={{ maxHeight: 300, overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
                     {orders.length ? orders.slice(0, 15).map((o, i) => {
                       const isCustom = o.plan?.includes('Custom');
                       return (
                         <div key={i} onClick={() => { setPage("orders"); setNotifOpen(false); setAdminTargetOrder(o); }} style={{ display: "flex", gap: 10, padding: "10px 12px", cursor: "pointer", borderRadius: 8, background: isCustom ? "rgba(251,191,36,0.05)" : "transparent" }} onMouseEnter={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.1)" : "rgba(255,255,255,0.03)"} onMouseLeave={e => e.currentTarget.style.background = isCustom ? "rgba(251,191,36,0.05)" : "transparent"}>
-                          <div style={{ width: 8, height: 8, borderRadius: "50%", marginTop: 4, background: isCustom ? "#fbbf24" : (statusConfig[o.status || 'pending']?.color || '#34d399') }} />
-                          <div style={{ flex: 1 }}>
+                          <div style={{ width: 8, height: 8, borderRadius: "50%", marginTop: 4, background: isCustom ? "#fbbf24" : (statusConfig[o.status || 'pending']?.color || '#34d399'), flexShrink: 0 }} />
+                          <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: 12, color: "#d1d5db", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                               <span>{statusConfig[o.status || 'pending']?.label || 'Pending'}: {o.id}</span>
                               {isCustom && <span style={{ fontSize: 9, padding: "1px 6px", borderRadius: 4, background: "rgba(251, 191, 36, 0.2)", color: "#fbbf24", fontWeight: 700 }}>Custom</span>}
                             </div>
-                            <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 2 }}>{o.customer} · {o.plan}</div>
+                            <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.customer} · {o.plan}</div>
                             <div style={{ fontSize: 10, color: "#4b5563", marginTop: 2 }}>{o.date} {o.created_at ? `at ${new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}</div>
                           </div>
                         </div>
@@ -2267,18 +2367,22 @@ export default function TyesAdmin() {
                 </div>
               )}
             </div>
+
+            {/* Profile Dropdown */}
             <div style={{ position: "relative" }}>
               <div onClick={() => { setProfileOpen(!profileOpen); setNotifOpen(false); }} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-                <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 11 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 11, flexShrink: 0 }}>
                   {(adminUser?.user_metadata?.first_name?.charAt(0) || adminUser?.email?.charAt(0) || "A").toUpperCase()}
                 </div>
-                <span style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 500 }}>
-                  {adminUser?.user_metadata?.first_name || adminUser?.email?.split('@')[0] || "Admin"}
-                </span>
+                {!isMobile && (
+                  <span style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 500 }}>
+                    {adminUser?.user_metadata?.first_name || adminUser?.email?.split('@')[0] || "Admin"}
+                  </span>
+                )}
                 <ChevronDown size={12} color="#6b7280" />
               </div>
               {profileOpen && (
-                <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, width: 180, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: 4, zIndex: 100, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
+                <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, width: 170, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: 4, zIndex: 9999, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
                   {[{ icon: User, label: "Profile", action: () => { setPage("settings"); setProfileOpen(false); } }, { icon: Settings, label: "Settings", action: () => { setPage("settings"); setProfileOpen(false); } }, { divider: true }, { icon: LogOut, label: "Log Out", action: () => { handleLogout(); setProfileOpen(false); }, danger: true }].map((item, i) => item.divider ? <div key={i} style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} /> : (
                     <button key={i} onClick={item.action} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", border: "none", background: "transparent", color: item.danger ? "#f87171" : "#d1d5db", fontSize: 12, cursor: "pointer", borderRadius: 6 }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}><item.icon size={13} />{item.label}</button>
                   ))}
@@ -2287,7 +2391,9 @@ export default function TyesAdmin() {
             </div>
           </div>
         </div>
-        <div style={{ flex: 1, overflow: "auto", padding: "16px 12px" }} onClick={() => { setNotifOpen(false); setProfileOpen(false); }}>
+
+        {/* Content scroll area */}
+        <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "14px 10px" : "18px 20px" }} onClick={() => { setNotifOpen(false); setProfileOpen(false); }}>
           {renderPage()}
         </div>
       </div>

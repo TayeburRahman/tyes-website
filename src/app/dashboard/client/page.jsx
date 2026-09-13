@@ -73,9 +73,9 @@ const ToastContainer = ({ toasts }) => (
 const Modal = ({ open, onClose, title, children, width }) => {
   if (!open) return null;
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28, width: width || 440, maxWidth: "90vw", maxHeight: "80vh", overflow: "auto" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)", padding: 12 }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: "20px 18px", width: width || 440, maxWidth: "calc(100vw - 24px)", maxHeight: "88vh", overflow: "auto", boxSizing: "border-box" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: 0 }}>{title}</h3>
           <button onClick={onClose} style={{ background: "rgba(255,255,255,0.05)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer", color: "#6b7280" }}><X size={14} /></button>
         </div>
@@ -183,11 +183,11 @@ const StatusBadge = ({ status }) => {
 };
 
 const StatCard = ({ icon: Icon, label, value, sub, accent, onClick }) => (
-  <div onClick={onClick} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 22px", flex: 1, minWidth: 180, cursor: onClick ? "pointer" : "default", transition: "all 0.2s" }} onMouseEnter={e => { if (onClick) e.currentTarget.style.borderColor = "rgba(78,205,196,0.2)"; }} onMouseLeave={e => { if (onClick) e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}>
-    <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+  <div onClick={onClick} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 14px", flex: 1, minWidth: 130, boxSizing: "border-box", cursor: onClick ? "pointer" : "default", transition: "all 0.2s" }} onMouseEnter={e => { if (onClick) e.currentTarget.style.borderColor = "rgba(78,205,196,0.2)"; }} onMouseLeave={e => { if (onClick) e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}>
+    <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
       <Icon size={16} color="#fff" />
     </div>
-    <div style={{ fontSize: 26, fontWeight: 800, color: accent || "#fff", marginBottom: 2 }}>{value}</div>
+    <div style={{ fontSize: 22, fontWeight: 800, color: accent || "#fff", marginBottom: 2 }}>{value}</div>
     <div style={{ fontSize: 12, color: "#6b7280" }}>{label}</div>
     {sub && <div style={{ fontSize: 11, color: "#4b5563", marginTop: 4 }}>{sub}</div>}
   </div>
@@ -543,7 +543,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 8px" }}>New Order</h1>
         <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 32px" }}>Fill in your brief and we'll get started right away.</p>
 
-        <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap", overflowX: "auto", scrollbarWidth: "none" }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 24, overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", paddingBottom: 4 }}>
           {(() => {
             const selectedPlan = plans.find(p => p.id === plan);
             const showUploadBrief = selectedPlan ? (selectedPlan.name !== 'Brand Strategy' && selectedPlan.name !== 'Brand Strategy (Only)') : true;
@@ -558,12 +558,12 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             const currentStepName = steps[step - 1] || steps[0];
 
             return steps.map((s, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, background: step > i + 1 ? "#34d399" : step === i + 1 ? "linear-gradient(135deg,#4ecdc4,#2ab7a9)" : "rgba(255,255,255,0.06)", color: step >= i + 1 ? "#fff" : "#4b5563" }}>
-                  {step > i + 1 ? <Check size={13} /> : i + 1}
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                <div style={{ width: 26, height: 26, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, background: step > i + 1 ? "#34d399" : step === i + 1 ? "linear-gradient(135deg,#4ecdc4,#2ab7a9)" : "rgba(255,255,255,0.06)", color: step >= i + 1 ? "#fff" : "#4b5563", flexShrink: 0 }}>
+                  {step > i + 1 ? <Check size={12} /> : i + 1}
                 </div>
-                <span style={{ fontSize: 12, color: step === i + 1 ? "#fff" : "#4b5563", fontWeight: step === i + 1 ? 600 : 400 }}>{s}</span>
-                {i < steps.length - 1 && <div style={{ flex: 1, height: 1, background: step > i + 1 ? "#34d399" : "rgba(255,255,255,0.06)", margin: "0 8px" }} />}
+                <span style={{ fontSize: 12, color: step === i + 1 ? "#fff" : "#4b5563", fontWeight: step === i + 1 ? 600 : 400, whiteSpace: "nowrap" }}>{s}</span>
+                {i < steps.length - 1 && <div style={{ width: 24, minWidth: 16, height: 1, background: step > i + 1 ? "#34d399" : "rgba(255,255,255,0.06)", margin: "0 6px" }} />}
               </div>
             ));
           })()}
@@ -587,7 +587,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
             <>
               {currentStepName === "Choose Plan" && (
                 <div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
                     {displayedPlans.length === 0 ? (
                       <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#6b7280" }}>
                         <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 12px", opacity: 0.5 }} />
@@ -880,9 +880,9 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                 }
                 const finalPrice = (selectedPlan.price || 0) + (addStrategy && selectedPlan.name === 'Free Image' ? 25 : 0);
                 return (
-                  <div style={{ display: "grid", gridTemplateColumns: isPaid ? "1fr 1fr" : "1fr", gap: 24, width: "100%" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: isPaid ? "repeat(auto-fit, minmax(280px, 1fr))" : "1fr", gap: 20, width: "100%" }}>
                     {/* LEFT: Order Summary */}
-                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
                       <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Order Summary</h3>
                       {orderSummary.map((r, i) => (
                         <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 14 }}>
@@ -944,7 +944,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
                     </div>
                     {/* RIGHT: Payment action for paid plans */}
                     {isPaid && (
-                      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                         <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Secure Checkout</h3>
 
                         <div style={{ marginBottom: 20 }}>
@@ -1127,6 +1127,20 @@ export default function TyesClient() {
 
   const [strategyRequests, setStrategyRequests] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) setMobileMenuOpen(false);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const [showNotifDrop, setShowNotifDrop] = useState(false);
   const [showProfileDrop, setShowProfileDrop] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -1467,6 +1481,7 @@ export default function TyesClient() {
   const [updatingCountry, setUpdatingCountry] = useState(false);
 
   const handlePageChange = (newPage) => {
+    setMobileMenuOpen(false);
     if (newPage === "new-order" && !clientInfo?.country) {
       setShowMissingCountryModal(true);
     } else {
@@ -1636,7 +1651,7 @@ export default function TyesClient() {
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0, fontFamily: '"League Spartan", sans-serif' }}>Welcome back, {companyName.split(" ")[0]}.</h1>
           <p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>Here's an overview of your account.</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))", gap: 10, marginBottom: 24 }}>
           <StatCard icon={Package} label="Total Orders" value={orders.length} onClick={() => setPage("orders")} />
           {(() => {
             const totalDeliveredImages = orders.reduce((sum, o) => {
@@ -1660,7 +1675,7 @@ export default function TyesClient() {
         </div>
 
         {activeOrder && (
-          <div style={{ background: "#0A0A0A", borderLeft: "2px solid #2DD4BF", borderRadius: 4, padding: "16px 20px", marginBottom: 16, cursor: "pointer" }} onClick={() => { setPage("orders"); }}>
+          <div style={{ background: "#0A0A0A", borderLeft: "2px solid #2DD4BF", borderRadius: 4, padding: "16px 16px", marginBottom: 16, cursor: "pointer" }} onClick={() => { setPage("orders"); }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
@@ -1681,7 +1696,7 @@ export default function TyesClient() {
           </div>
         )}
 
-        <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 8, padding: "16px 20px", marginBottom: 24 }}>
+        <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 8, padding: "16px 16px", marginBottom: 24 }}>
           <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", marginBottom: 8 }}>✦ Brand Strategy</div>
           {latestStrategy ? (
             <>
@@ -1704,7 +1719,7 @@ export default function TyesClient() {
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ flex: "1 1 300px", minWidth: 280, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 16, boxSizing: "border-box" }}>
+          <div style={{ flex: "1 1 280px", minWidth: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 14px", boxSizing: "border-box" }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 18px" }}>Spending Overview</h3>
             <div style={{ width: "100%", height: 200 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -1724,7 +1739,7 @@ export default function TyesClient() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div style={{ flex: "1 1 260px", minWidth: 260, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 16, boxSizing: "border-box" }}>
+          <div style={{ flex: "1 1 260px", minWidth: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 14px", boxSizing: "border-box" }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Quick Actions</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
@@ -1861,9 +1876,9 @@ export default function TyesClient() {
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0, fontFamily: '"League Spartan", sans-serif' }}>My Orders</h1>
           <button onClick={() => handlePageChange("new-order")} style={{ padding: "8px 18px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Plus size={13} /> New Order</button>
         </div>
-        <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 20, overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", paddingBottom: 4 }}>
           {[{ key: "all", label: "All" }, { key: "in_progress", label: "In Progress" }, { key: "revision", label: "Revision" }, { key: "delivered", label: "Delivered" }].map(f => (
-            <button key={f.key} onClick={() => { setFilter(f.key); setCurrentPage(1); }} style={{ padding: "6px 14px", borderRadius: 20, border: "1px solid", borderColor: filter === f.key ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)", background: filter === f.key ? "rgba(78,205,196,0.15)" : "transparent", color: filter === f.key ? "#4ecdc4" : "#6b7280", fontSize: 12, fontWeight: 500, cursor: "pointer" }}>
+            <button key={f.key} onClick={() => { setFilter(f.key); setCurrentPage(1); }} style={{ padding: "6px 14px", borderRadius: 20, border: "1px solid", borderColor: filter === f.key ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)", background: filter === f.key ? "rgba(78,205,196,0.15)" : "transparent", color: filter === f.key ? "#4ecdc4" : "#6b7280", fontSize: 12, fontWeight: 500, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
               {f.label} {f.key !== "all" && `(${orders.filter(o => filter === "all" ? true : f.key === "in_progress" ? ['pending', 'in_progress', 'in progress', 'paid', 'new'].includes(String(o.status || '').toLowerCase()) : String(o.status || '').toLowerCase() === f.key).length})`}
             </button>
           ))}
@@ -1873,7 +1888,7 @@ export default function TyesClient() {
             const paid = isOrderPaid(o);
             return (
               <div key={o.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden", transition: "all 0.2s" }}>
-                <div style={{ display: "flex", alignItems: "center", padding: "16px 20px", cursor: "pointer", gap: 12, flexWrap: "wrap" }} onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
+                <div style={{ display: "flex", alignItems: "center", padding: "14px 14px", cursor: "pointer", gap: 12, flexWrap: "wrap" }} onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
                   <div style={{ flex: "1 1 200px", minWidth: 180 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                       <span style={{ fontSize: 11, color: "#7dd8d0", fontWeight: 600 }}>{o.id}</span>
@@ -1929,7 +1944,7 @@ export default function TyesClient() {
                         </button>
                       </div>
                     ) : o.items && o.items.length > 0 ? (
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 8 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 8 }}>
                         {o.items.map((item, i) => (
                           <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)", transition: "all 0.2s" }}>
                             <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -1984,7 +1999,7 @@ export default function TyesClient() {
                     ) : (
                       <div style={{ fontSize: 13, color: "#4b5563", textAlign: "center", padding: 16 }}>No item details available for this order.</div>
                     )}
-                    <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
+                    <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end", flexWrap: "wrap" }}>
                       <button onClick={() => setShowOrderDetailModal(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Eye size={12} /> View Details</button>
                       {!paid && o.revenue > 0 && o.status !== 'cancelled' && (
                         <button onClick={() => handlePayOrderInvoice(o)} style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#34d399,#10b981)", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><CreditCard size={13} /> Pay Invoice (${o.revenue})</button>
@@ -2014,7 +2029,7 @@ export default function TyesClient() {
         </div>
 
         {filtered.length > 0 && (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 24, padding: "0 4px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 24, padding: "0 4px", flexWrap: "wrap", gap: 10 }}>
             <div style={{ fontSize: 12, color: "#4b5563" }}>
               Showing <span style={{ color: "#9ca3af" }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: "#9ca3af" }}>{Math.min(currentPage * itemsPerPage, filtered.length)}</span> of <span style={{ color: "#9ca3af" }}>{filtered.length}</span> orders
             </div>
@@ -2170,12 +2185,12 @@ export default function TyesClient() {
 
     return (
       <div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: 0 }}>Invoices</h1>
           <button onClick={exportToCSV} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#9ca3af", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}><Download size={12} /> Export CSV</button>
         </div>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto" }}>
-          <table style={{ minWidth: 720, width: "100%", borderCollapse: "collapse" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+          <table style={{ minWidth: 640, width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 {["Invoice", "Order", "Amount", "Status", "Date", "Due", "Action"].map((h, i) => (
@@ -2441,7 +2456,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
     };
 
     return (
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Country & Tax</h3>
           <button onClick={() => { if (editing) { handleSave(); } else { setEditing(true); setSelectedCode(clientInfo.country || "RO"); } }} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
@@ -2519,7 +2534,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
     };
 
     return (
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Business Details</h3>
           <button onClick={() => { if (editing) { handleSave(); } else { setEditing(true); } }} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
@@ -2593,8 +2608,8 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
       <div style={{ width: "100%", display: "flex", justifyContent: "center", paddingBottom: 40 }}>
         <div style={{ width: "100%", maxWidth: 1200 }}>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 24px" }}>Account Settings</h1>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}>
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Company Info</h3>
                 <button onClick={() => {
@@ -2646,7 +2661,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
             <AccountBusinessSection supabase={supabase} user={user} addToast={addToast} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24, height: "100%" }}>
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box", height: "100%" }}>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Preferences</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {[
@@ -2681,7 +2696,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
                 </div>
               </div>
 
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 24 }}>
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 16px" }}>Payment Method</h3>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <CreditCard size={18} color="#6b7280" />
@@ -2775,7 +2790,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}><StatusBadge status={showOrderDetailModal.status} /></div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, background: "rgba(255,255,255,0.02)", padding: 16, borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12, background: "rgba(255,255,255,0.02)", padding: "14px 16px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
               {[
                 { label: "Plan", val: showOrderDetailModal.plan },
                 { label: "Images", val: showOrderDetailModal.images },
@@ -2813,7 +2828,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
 
             <div>
               <div style={{ fontSize: 11, color: "#6b7280", fontWeight: 600, textTransform: "uppercase", marginBottom: 8 }}>Product Photos</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 8 }}>
                 {showOrderDetailModal.attachments?.photos?.length > 0 ? showOrderDetailModal.attachments.photos.map((url, i) => (
                   <a key={i} href={url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", background: "rgba(255,255,255,0.03)", borderRadius: 8, color: "#fff", fontSize: 12, textDecoration: "none", border: "1px solid rgba(255,255,255,0.05)" }}>
                     <Camera size={14} color="#6b7280" /> <span>Product Image {i + 1}</span>
@@ -2822,7 +2837,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 16 }}>
               <div>
                 <div style={{ fontSize: 11, color: "#6b7280", fontWeight: 600, textTransform: "uppercase", marginBottom: 8 }}>Reference Images</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -2950,8 +2965,81 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
         )}
       </Modal>
 
-      {/* Sidebar */}
-      <div style={{ width: collapsed ? 64 : 220, borderRight: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", padding: collapsed ? "16px 8px" : "16px 12px", flexShrink: 0, transition: "width 0.2s", overflow: "hidden" }}>
+      {/* Mobile Backdrop Overlay */}
+      {isMobile && mobileMenuOpen && (
+        <div 
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.65)",
+            backdropFilter: "blur(4px)",
+            zIndex: 99990
+          }}
+        />
+      )}
+
+      {/* Mobile Off-Canvas Drawer */}
+      {isMobile && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width: 260,
+          maxWidth: "80vw",
+          background: "#0d0d0d",
+          borderRight: "1px solid rgba(255,255,255,0.08)",
+          zIndex: 99995,
+          display: "flex",
+          flexDirection: "column",
+          padding: "18px 14px",
+          transform: mobileMenuOpen ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
+          boxShadow: mobileMenuOpen ? "10px 0 40px rgba(0,0,0,0.8)" : "none",
+          boxSizing: "border-box"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 6px", marginBottom: 24 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 13, flexShrink: 0 }}>T</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: "#fff", lineHeight: 1.1, fontFamily: '"Gliker", sans-serif', letterSpacing: "-0.5pt" }}>tyes</div>
+            </div>
+            <button onClick={() => setMobileMenuOpen(false)} style={{ background: "rgba(255,255,255,0.05)", border: "none", borderRadius: 8, padding: 6, color: "#9ca3af", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <X size={16} />
+            </button>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, overflowY: "auto" }}>
+            {navPages.map(p => (
+              <SidebarItem 
+                key={p.id} 
+                icon={p.icon} 
+                label={p.label} 
+                active={page === p.id} 
+                onClick={() => {
+                  handlePageChange(p.id);
+                  setMobileMenuOpen(false);
+                }} 
+                collapsed={false} 
+                badge={p.id === "messages" && unreadMsgs > 0 ? String(unreadMsgs) : p.badge && p.id !== "messages" ? p.badge : null} 
+              />
+            ))}
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 14, marginTop: 8 }}>
+            <SidebarItem 
+              icon={LogOut} 
+              label="Log Out" 
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setShowLogoutModal(true);
+              }} 
+              collapsed={false} 
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Sidebar */}
+      <div style={{ width: collapsed ? 64 : 220, borderRight: "1px solid rgba(255,255,255,0.06)", display: isMobile ? "none" : "flex", flexDirection: "column", padding: collapsed ? "16px 8px" : "16px 12px", flexShrink: 0, transition: "width 0.2s", overflow: "hidden" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "4px 6px", marginBottom: 24 }}>
           <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 13, flexShrink: 0 }}>T</div>
           {!collapsed && (
@@ -2976,19 +3064,42 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
       {/* Main */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {/* Top Bar */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 28px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {collapsed && <button onClick={() => setCollapsed(false)} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}><Menu size={18} /></button>}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: isMobile ? "10px 14px" : "12px 28px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {isMobile ? (
+              <button 
+                onClick={() => setMobileMenuOpen(true)} 
+                style={{ 
+                  background: "rgba(255,255,255,0.04)", 
+                  border: "1px solid rgba(255,255,255,0.08)", 
+                  borderRadius: 8, 
+                  padding: "6px 8px", 
+                  color: "#e5e7eb", 
+                  cursor: "pointer", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center" 
+                }}
+                aria-label="Toggle menu"
+              >
+                <Menu size={18} />
+              </button>
+            ) : (
+              collapsed && <button onClick={() => setCollapsed(false)} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}><Menu size={18} /></button>
+            )}
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", textTransform: "capitalize", letterSpacing: "0.2px" }}>
+              {navPages.find(p => p.id === page)?.label || (page === "brand-strategy" ? "Brand Strategy" : page)}
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 16 }}>
             {/* Notification Bell */}
             <div style={{ position: "relative" }}>
-              <button onClick={() => { setShowNotifDrop(!showNotifDrop); setShowProfileDrop(false); if (!showNotifDrop) markNotifsRead(); }} style={{ position: "relative", background: "none", border: "none", color: "#6b7280", cursor: "pointer" }}>
+              <button onClick={() => { setShowNotifDrop(!showNotifDrop); setShowProfileDrop(false); if (!showNotifDrop) markNotifsRead(); }} style={{ position: "relative", background: "none", border: "none", color: "#6b7280", cursor: "pointer", display: "flex", alignItems: "center" }}>
                 <Bell size={17} />
                 {unreadNotifs > 0 && <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: "50%", background: "#ef4444" }} />}
               </button>
               {showNotifDrop && (
-                <div style={{ position: "absolute", right: 0, top: "100%", zIndex: 100, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, minWidth: 280, maxWidth: 340, boxShadow: "0 12px 40px rgba(0,0,0,0.5)", marginTop: 8 }}>
+                <div style={{ position: "absolute", right: isMobile ? -50 : 0, top: "100%", zIndex: 100, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, width: "min(320px, calc(100vw - 24px))", boxShadow: "0 12px 40px rgba(0,0,0,0.5)", marginTop: 8 }}>
                   <div style={{ padding: "8px 12px", fontSize: 12, fontWeight: 700, color: "#fff", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span>Notifications</span>
                     {notifications.length > 0 && <span style={{ fontSize: 10, color: "#6b7280", fontWeight: 400 }}>{notifications.length} total</span>}
@@ -3020,7 +3131,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
             <div style={{ position: "relative" }}>
               <div onClick={() => { setShowProfileDrop(!showProfileDrop); setShowNotifDrop(false); }} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
                 <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg,#4ecdc4,#2ab7a9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 11 }}>{companyName[0]}</div>
-                <span style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 500 }}>{companyName.split(" ")[0]}</span>
+                <span style={{ fontSize: 12, color: "#e5e7eb", fontWeight: 500, maxWidth: isMobile ? 80 : 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{companyName.split(" ")[0]}</span>
                 <ChevronDown size={12} color="#6b7280" />
               </div>
               {showProfileDrop && (
@@ -3041,7 +3152,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, overflow: "auto", padding: "16px 12px" }} onClick={() => { setShowNotifDrop(false); setShowProfileDrop(false); }}>
+        <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "14px 10px" : "20px 24px" }} onClick={() => { setShowNotifDrop(false); setShowProfileDrop(false); }}>
           {renderPage()}
         </div>
       </div>
