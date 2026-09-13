@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const CATEGORIES = ["Beauty", "Personal Care", "Fragrance", "Fashion"];
 const POSITIONING_OPTIONS = ["Mass market", "Masstige", "Premium", "High-end"];
@@ -36,43 +36,46 @@ function getChannelStatus(channel, positioning, category) {
   return raw;
 }
 
-export default function BrandInfoForm({ onComplete, hideSubmit = true, submitLabel = "Save Brand Info" }) {
-  const [formData, setFormData] = useState({
-    brandName: '',
-    website: '',
-    category: '',
-    positioning: '',
-    skuCount: '',
-    annualRevenue: '',
-    marketingBudget: '',
-    retailPresence: [],
-    countriesSelling: '',
-    distributors: '',
-    // Bonus fields
-    brandAge: '',
-    countriesExpand: '',
-    targetAudience: '',
-    competitors: '',
-    socialMedia: '',
-    usp: '',
-    goals: []
-  });
+const INITIAL_FORM_DATA = {
+  brandName: '',
+  website: '',
+  category: '',
+  positioning: '',
+  skuCount: '',
+  annualRevenue: '',
+  marketingBudget: '',
+  retailPresence: [],
+  countriesSelling: '',
+  distributors: '',
+  // Bonus fields
+  brandAge: '',
+  countriesExpand: '',
+  targetAudience: '',
+  competitors: '',
+  socialMedia: '',
+  usp: '',
+  goals: []
+};
 
-  const [showBonus, setShowBonus] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('tyes_brand_info');
-    if (saved) {
-      try {
-        setFormData(JSON.parse(saved));
-      } catch (e) { }
+export default function BrandInfoForm({ userId, onComplete, hideSubmit = true, submitLabel = "Save Brand Info" }) {
+  const [formData, setFormData] = useState(() => {
+    if (!userId || typeof window === 'undefined') {
+      return INITIAL_FORM_DATA;
     }
-  }, []);
+    try {
+      const saved = localStorage.getItem(`tyes_brand_info_${userId}`);
+      if (saved) return JSON.parse(saved);
+    } catch { }
+    return INITIAL_FORM_DATA;
+  });
+  const [showBonus, setShowBonus] = useState(false);
 
   const handleChange = (field, value) => {
     const newData = { ...formData, [field]: value };
     setFormData(newData);
-    localStorage.setItem('tyes_brand_info', JSON.stringify(newData));
+    if (userId && typeof window !== 'undefined') {
+      localStorage.setItem(`tyes_brand_info_${userId}`, JSON.stringify(newData));
+    }
   };
 
   const toggleArrayItem = (field, item) => {

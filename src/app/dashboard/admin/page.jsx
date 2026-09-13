@@ -2157,6 +2157,14 @@ export default function TyesAdmin() {
 
   const handleLogout = async () => {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('tyes_admin_read_notifs');
+        localStorage.removeItem('tyes_brand_info');
+        localStorage.removeItem('tyes_read_notifs');
+        localStorage.removeItem('tyes_preselect_plan_name');
+        localStorage.removeItem('tyes_preselect_strategy_addon');
+        localStorage.removeItem('tyes_active_user_id');
+      }
       await supabase.auth.signOut();
       router.push("/auth");
     } catch (error) {

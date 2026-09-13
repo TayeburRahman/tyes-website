@@ -8,15 +8,17 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    let ignore = false;
+    const fetchRequests = async () => {
+      const { data } = await supabase.from('brand_strategy_requests').select('*').order('created_at', { ascending: false });
+      if (!ignore) {
+        if (data) setRequests(data);
+        setLoading(false);
+      }
+    };
     fetchRequests();
-  }, []);
-
-  const fetchRequests = async () => {
-    setLoading(true);
-    const { data } = await supabase.from('brand_strategy_requests').select('*').order('created_at', { ascending: false });
-    if (data) setRequests(data);
-    setLoading(false);
-  };
+    return () => { ignore = true; };
+  }, [supabase]);
 
   const delivered = requests.filter(r => r.status === 'sent' || r.status === 'delivered').length;
   const inProgress = requests.length - delivered;
@@ -97,6 +99,15 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
       });
       const checkoutData = await checkoutRes.json();
       if (!checkoutRes.ok) throw new Error(checkoutData.error || 'Failed to initialize checkout');
+
+      // Clear draft brand info for this user upon order/request submission
+      if (typeof window !== 'undefined') {
+        if (clientInfo?.id) {
+          localStorage.removeItem(`tyes_brand_info_${clientInfo.id}`);
+        }
+        localStorage.removeItem('tyes_brand_info');
+      }
+
       if (checkoutData.url) {
         window.location.href = checkoutData.url;
       } else {
@@ -109,13 +120,14 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
     }
   };
 
-  // Find latest request with valid brand_data or brand_info
+  // Find latest request with valid brand_data or brand_info (scoped to clientInfo.id from database)
   const reqWithData = requests.find(r => (r.brand_data && Object.keys(r.brand_data).length > 0) || (r.brand_info && Object.keys(r.brand_info).length > 0));
   let savedLocal = null;
   try {
-    const rawLocal = typeof window !== 'undefined' ? localStorage.getItem('tyes_brand_info') : null;
+    const storageKey = clientInfo?.id ? `tyes_brand_info_${clientInfo.id}` : null;
+    const rawLocal = (typeof window !== 'undefined' && storageKey) ? localStorage.getItem(storageKey) : null;
     if (rawLocal) savedLocal = JSON.parse(rawLocal);
-  } catch (e) { }
+  } catch { }
 
   const activeBrandData = (reqWithData ? (reqWithData.brand_data || reqWithData.brand_info) : null) || savedLocal || {};
 
@@ -210,7 +222,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
       {requests.length === 0 ? (
         <div style={{ background: '#0A0A0A', padding: '24px 16px', borderRadius: 6, margin: '16px 0', textAlign: 'center', border: '1px solid #141414', boxSizing: 'border-box' }}>
           <div style={{ fontSize: 10, letterSpacing: '3pt', color: '#2DD4BF', textTransform: 'uppercase', fontWeight: 700, marginBottom: 16 }}>Get Your First Snapshot</div>
-          <div style={{ fontSize: 24, color: '#FFFFFF', fontWeight: 800, marginBottom: 12, fontFamily: '"League Spartan", sans-serif' }}>You don't have a strategy yet.</div>
+          <div style={{ fontSize: 24, color: '#FFFFFF', fontWeight: 800, marginBottom: 12, fontFamily: '"League Spartan", sans-serif' }}>You don&apos;t have a strategy yet.</div>
           <div style={{ fontSize: 13, color: '#B8B8B8', maxWidth: 400, margin: '0 auto 20px', lineHeight: 1.55 }}>
             Get a custom 3-5 page Snapshot in 3 business days. Free with any Campaign order · $25 add-on on Free Image · $25 standalone Brand Strategy tier.
           </div>
@@ -248,7 +260,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
           <div style={{ background: '#0A0A0A', border: '1px solid #1A1A1A', padding: '18px 16px', borderRadius: 6, boxSizing: 'border-box' }}>
             <div style={{ display: 'inline-block', background: 'rgba(45,212,191,0.15)', color: '#2DD4BF', padding: '4px 10px', borderRadius: 999, fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1pt', marginBottom: 12 }}>Unlocked with your Strategy</div>
             <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>Your <span style={{ color: '#2DD4BF' }}>Retail Network</span> access</div>
-            <div style={{ fontSize: 11, color: '#B8B8B8', marginBottom: 20 }}>Based on your Brand Info, we've mapped which retail categories fit your brand. Deep Dive introductions target these buyers.</div>
+            <div style={{ fontSize: 11, color: '#B8B8B8', marginBottom: 20 }}>Based on your Brand Info, we&apos;ve mapped which retail categories fit your brand. Deep Dive introductions target these buyers.</div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 8, marginBottom: 8 }}>
               {RETAIL_TYPES.filter(rt => {
@@ -294,7 +306,7 @@ export default function BrandStrategyHub({ supabase, clientInfo, setPage }) {
             {showStandaloneForm && (
               <div style={{ background: '#111', padding: '16px 14px', borderRadius: 6, marginBottom: 16, border: '1px solid #222', boxSizing: 'border-box' }}>
                 <h3 style={{ fontSize: 16, color: '#fff', marginBottom: 16 }}>Request a New Snapshot</h3>
-                <BrandInfoForm onComplete={handleStandaloneSubmit} hideSubmit={false} submitLabel="Submit Request ($25)" />
+                <BrandInfoForm key={clientInfo?.id || 'standalone'} userId={clientInfo?.id} onComplete={handleStandaloneSubmit} hideSubmit={false} submitLabel="Submit Request ($25)" />
                 {isSubmitting && <p style={{ color: '#2DD4BF', marginTop: 12 }}>Redirecting to secure checkout...</p>}
               </div>
             )}

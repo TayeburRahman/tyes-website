@@ -383,7 +383,9 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
 
       // Ensure Brand Info is completed and valid category exists
-      const savedBrandInfo = localStorage.getItem('tyes_brand_info');
+      const uid = currentUser?.id || clientInfo?.id;
+      const storageKey = uid ? `tyes_brand_info_${uid}` : 'tyes_brand_info';
+      const savedBrandInfo = typeof window !== 'undefined' ? (localStorage.getItem(storageKey) || localStorage.getItem('tyes_brand_info')) : null;
       let parsedBrandData = null;
       if (savedBrandInfo) {
         try { parsedBrandData = JSON.parse(savedBrandInfo); } catch (e) {}
@@ -475,8 +477,13 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
         }
       }
 
-      // Always clear local brand info upon successful order creation
-      localStorage.removeItem('tyes_brand_info');
+      // Always clear user's local brand info upon successful order creation
+      if (typeof window !== 'undefined') {
+        if (currentUser?.id) {
+          localStorage.removeItem(`tyes_brand_info_${currentUser.id}`);
+        }
+        localStorage.removeItem('tyes_brand_info');
+      }
 
       if (isPaid) {
         // Redirect to Stripe Checkout Session
@@ -834,11 +841,16 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
 
               {currentStepName === "Brand Info" && (
                 <div style={{ width: "100%" }}>
-                  <BrandInfoForm onComplete={(data) => {
-                    // Store locally but proceed to next step
-                    localStorage.setItem('tyes_brand_info', JSON.stringify(data));
-                    setStep(step + 1);
-                  }} />
+                  <BrandInfoForm
+                    key={clientInfo?.id || 'new-order'}
+                    userId={clientInfo?.id}
+                    onComplete={(data) => {
+                      if (clientInfo?.id && typeof window !== 'undefined') {
+                        localStorage.setItem(`tyes_brand_info_${clientInfo.id}`, JSON.stringify(data));
+                      }
+                      setStep(step + 1);
+                    }}
+                  />
 
                   {plans.find(p => p.id === plan)?.name?.includes('Custom') && (
                     <div style={{ marginTop: 32, padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
@@ -1163,6 +1175,22 @@ export default function TyesClient() {
       }
       setUser(authUser);
 
+      // Clean up previous user's cached data if account switched
+      if (typeof window !== 'undefined') {
+        const lastUserId = localStorage.getItem('tyes_active_user_id');
+        if (lastUserId && lastUserId !== authUser.id) {
+          localStorage.removeItem(`tyes_brand_info_${lastUserId}`);
+          localStorage.removeItem(`tyes_read_notifs_${lastUserId}`);
+          localStorage.removeItem('tyes_brand_info');
+          localStorage.removeItem('tyes_read_notifs');
+          localStorage.removeItem('tyes_preselect_plan_name');
+          localStorage.removeItem('tyes_preselect_strategy_addon');
+        }
+        // Always purge legacy un-scoped brand info to prevent cross-account leak
+        localStorage.removeItem('tyes_brand_info');
+        localStorage.setItem('tyes_active_user_id', authUser.id);
+      }
+
       // 2. Fetch Profile
       const { data: profile } = await supabase
         .from('profiles')
@@ -1320,10 +1348,11 @@ export default function TyesClient() {
         setStrategyRequests(stratData);
       }
 
-      // Load read notifications from local storage
+      // Load read notifications from local storage (scoped to user)
       let readNotifs = [];
       if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem('tyes_read_notifs');
+        const notifsKey = `tyes_read_notifs_${authUser.id}`;
+        const stored = localStorage.getItem(notifsKey) || localStorage.getItem('tyes_read_notifs');
         if (stored) {
           try { readNotifs = JSON.parse(stored); } catch(e){}
         }
@@ -1463,6 +1492,18 @@ export default function TyesClient() {
 
   const handleLogout = async () => {
     try {
+      if (typeof window !== 'undefined') {
+        const uid = user?.id || clientInfo?.id;
+        if (uid) {
+          localStorage.removeItem(`tyes_brand_info_${uid}`);
+          localStorage.removeItem(`tyes_read_notifs_${uid}`);
+        }
+        localStorage.removeItem('tyes_brand_info');
+        localStorage.removeItem('tyes_read_notifs');
+        localStorage.removeItem('tyes_preselect_plan_name');
+        localStorage.removeItem('tyes_preselect_strategy_addon');
+        localStorage.removeItem('tyes_active_user_id');
+      }
       await supabase.auth.signOut();
       router.push("/auth");
     } catch (error) {
@@ -1565,7 +1606,9 @@ export default function TyesClient() {
   const markNotifsRead = () => {
     setNotifications(n => n.map(x => ({ ...x, read: true })));
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('tyes_read_notifs');
+      const uid = user?.id || clientInfo?.id;
+      const notifsKey = uid ? `tyes_read_notifs_${uid}` : 'tyes_read_notifs';
+      const stored = localStorage.getItem(notifsKey);
       let readNotifs = [];
       if (stored) {
         try { readNotifs = JSON.parse(stored); } catch(e){}
@@ -1575,7 +1618,7 @@ export default function TyesClient() {
           readNotifs.push(n.id);
         }
       });
-      localStorage.setItem('tyes_read_notifs', JSON.stringify(readNotifs));
+      localStorage.setItem(notifsKey, JSON.stringify(readNotifs));
     }
   };
 
