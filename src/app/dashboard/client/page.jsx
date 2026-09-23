@@ -1303,7 +1303,7 @@ export default function TyesClient() {
             ...o,
             id: o.id,
             title: o.title || `Order ${o.id.slice(0, 8)}`,
-            date: new Date(o.created_at).toISOString().split('T')[0],
+            date: o.created_at ? new Date(o.created_at).toLocaleDateString('en-CA') : 'N/A',
             images: o.images_count || 0,
             status: derivedStatus,
             progress: o.progress || 0,
@@ -1331,7 +1331,7 @@ export default function TyesClient() {
           order_id: i.order_id,
           amount: i.amount,
           status: i.status,
-          date: i.created_at ? new Date(i.created_at).toISOString().split('T')[0] : i.due_date,
+          date: i.created_at ? new Date(i.created_at).toLocaleDateString('en-CA') : i.due_date,
           due: i.due_date,
           url: i.invoice_url
         })));
@@ -1740,7 +1740,14 @@ export default function TyesClient() {
         )}
 
         <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 8, padding: "16px 16px", marginBottom: 24 }}>
-          <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", marginBottom: 8 }}>✦ Brand Strategy</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <div style={{ fontSize: 10, color: "#2DD4BF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px" }}>✦ Brand Strategy</div>
+            {latestStrategy?.order_id && (
+              <div style={{ fontSize: 9, color: '#4b5563', fontFamily: 'monospace', background: 'rgba(255,255,255,0.04)', padding: '2px 7px', borderRadius: 4 }}>
+                {latestStrategy.order_id.toUpperCase().startsWith('ORD-') ? latestStrategy.order_id.toUpperCase() : `ORD-${latestStrategy.order_id.slice(0, 8).toUpperCase()}`}
+              </div>
+            )}
+          </div>
           {latestStrategy ? (
             <>
               <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 8, fontFamily: '"League Spartan", sans-serif' }}>
@@ -1922,7 +1929,7 @@ export default function TyesClient() {
         <div style={{ display: "flex", gap: 8, marginBottom: 20, overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", paddingBottom: 4 }}>
           {[{ key: "all", label: "All" }, { key: "in_progress", label: "In Progress" }, { key: "revision", label: "Revision" }, { key: "delivered", label: "Delivered" }].map(f => (
             <button key={f.key} onClick={() => { setFilter(f.key); setCurrentPage(1); }} style={{ padding: "6px 14px", borderRadius: 20, border: "1px solid", borderColor: filter === f.key ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)", background: filter === f.key ? "rgba(78,205,196,0.15)" : "transparent", color: filter === f.key ? "#4ecdc4" : "#6b7280", fontSize: 12, fontWeight: 500, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
-              {f.label} {f.key !== "all" && `(${orders.filter(o => filter === "all" ? true : f.key === "in_progress" ? ['pending', 'in_progress', 'in progress', 'paid', 'new'].includes(String(o.status || '').toLowerCase()) : String(o.status || '').toLowerCase() === f.key).length})`}
+              {f.label} {f.key !== "all" && `(${orders.filter(o => f.key === "in_progress" ? ['pending', 'in_progress', 'in progress', 'paid', 'new'].includes(String(o.status || '').toLowerCase()) : String(o.status || '').toLowerCase() === f.key).length})`}
             </button>
           ))}
         </div>

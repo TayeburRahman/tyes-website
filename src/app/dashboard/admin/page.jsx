@@ -1978,74 +1978,56 @@ export default function TyesAdmin() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) setAdminUser(user);
 
-      // 0.5. Fetch Studio Info
-      const { data: sData } = await supabase
-        .from('studio_settings')
-        .select('*')
-        .eq('id', 1)
-        .single();
-      if (sData) setStudioInfo(sData);
+      const dashboardRes = await fetch('/api/admin/dashboard');
+      if (dashboardRes.ok) {
+        const { studioSettings, pricingPlans, orders: ordersData, profiles: profilesData } = await dashboardRes.json();
+        
+        if (studioSettings) setStudioInfo(studioSettings);
+        if (pricingPlans) setPlans(pricingPlans);
+        
+        if (ordersData) {
+          const mappedOrders = ordersData.map(o => {
+            let items = o.items || [];
+            if (items.length === 0 && o.attachments && o.attachments.photos) {
+              items = o.attachments.photos.map((url, idx) => ({
+                name: `Product Photo ${idx + 1}`,
+                mainImage: url,
+                status: o.status || "pending"
+              }));
+            }
+            return {
+              ...o,
+              customer: o.customer_name || o.customer_email,
+              email: o.customer_email,
+              images: o.images_count,
+              date: new Date(o.created_at).toISOString().split('T')[0],
+              items: items
+            };
+          });
+          setOrders(mappedOrders);
+        }
 
-      // 1. Fetch Pricing Plans
-      const { data: plansData } = await supabase
-        .from('pricing_plans')
-        .select('*')
-        .order('created_at', { ascending: true });
-      if (plansData) setPlans(plansData);
+        if (profilesData) {
+          const rawOrders = ordersData || [];
+          const mappedUsers = profilesData.map(u => {
+            const clientOrders = rawOrders.filter(o =>
+              (o.user_id && o.user_id === u.id) ||
+              (o.customer_email && u.email && o.customer_email.toLowerCase().trim() === u.email.toLowerCase().trim())
+            );
+            const totalSpent = clientOrders.reduce((sum, o) => sum + Number(o.revenue || 0), 0);
 
-      // 2. Fetch Orders
-      const { data: ordersData } = await supabase
-        .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (ordersData) {
-        const mappedOrders = ordersData.map(o => {
-          let items = o.items || [];
-          if (items.length === 0 && o.attachments && o.attachments.photos) {
-            items = o.attachments.photos.map((url, idx) => ({
-              name: `Product Photo ${idx + 1}`,
-              mainImage: url,
-              status: o.status || "pending"
-            }));
-          }
-          return {
-            ...o,
-            customer: o.customer_name || o.customer_email,
-            email: o.customer_email,
-            images: o.images_count,
-            date: new Date(o.created_at).toISOString().split('T')[0],
-            items: items
-          };
-        });
-        setOrders(mappedOrders);
-      }
-
-      // 3. Fetch Clients (Profiles)
-      const { data: profilesData } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { descending: true });
-
-      if (profilesData) {
-        const rawOrders = ordersData || [];
-        const mappedUsers = profilesData.map(u => {
-          const clientOrders = rawOrders.filter(o =>
-            (o.user_id && o.user_id === u.id) ||
-            (o.customer_email && u.email && o.customer_email.toLowerCase().trim() === u.email.toLowerCase().trim())
-          );
-          const totalSpent = clientOrders.reduce((sum, o) => sum + Number(o.revenue || 0), 0);
-
-          return {
-            ...u,
-            name: `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email,
-            spent: totalSpent > 0 ? totalSpent : (u.total_spent || 0),
-            orders: clientOrders.length > 0 ? clientOrders.length : (u.orders_count || 0),
-            joined: new Date(u.created_at).toISOString().split('T')[0]
-          };
-        });
-        setUsers(mappedUsers);
-      } else {
-        setUsers([]);
+            return {
+              ...u,
+              name: `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email,
+              spent: totalSpent > 0 ? totalSpent : (u.total_spent || 0),
+              orders: clientOrders.length > 0 ? clientOrders.length : (u.orders_count || 0),
+              joined: new Date(u.created_at).toISOString().split('T')[0]
+            };
+          });
+          setUsers(mappedUsers);
+        } else {
+          setUsers([]);
+        }
       }
       // 4. Fetch Strategy Requests
       try {
