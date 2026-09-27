@@ -1294,7 +1294,8 @@ export default function TyesClient() {
           if (items.length > 0) {
             const allDelivered = items.every(i => i.status === "delivered" || i.status === "completed");
             const anyRevision = items.some(i => i.status === "revision");
-            if (allDelivered) derivedStatus = "delivered";
+            if (o.status === "completed") derivedStatus = "completed";
+            else if (allDelivered) derivedStatus = "delivered";
             else if (anyRevision) derivedStatus = "revision";
             else if (items.some(i => i.status === "in_progress")) derivedStatus = "in_progress";
           }
@@ -1475,18 +1476,38 @@ export default function TyesClient() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
         console.log('Real-time order change received!', payload);
         fetchData(true);
-        addToast("An order update was received!", "info");
       })
       .subscribe();
 
-    // Fallback polling every 30 seconds to guarantee UI updates
+    // Fallback polling every 8 seconds to guarantee UI updates
     const pollInterval = setInterval(() => {
       fetchData(true);
-    }, 30000);
+    }, 8000);
+
+    // Instant refresh when user switches back to this tab
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchData(true);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    // Instant cross-tab update from admin dashboard (BroadcastChannel)
+    let bc = null;
+    try {
+      bc = new BroadcastChannel('tyes_order_updates');
+      bc.onmessage = (event) => {
+        if (event.data?.type === 'order_updated') {
+          fetchData(true);
+        }
+      };
+    } catch(e) {}
 
     return () => {
       supabase.removeChannel(ordersSubscription);
       clearInterval(pollInterval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      try { bc?.close(); } catch(e) {}
     };
   }, [supabase, router, addToast]);
 

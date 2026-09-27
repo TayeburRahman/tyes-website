@@ -44,18 +44,28 @@ const Modal = ({ open, onClose, title, children, width }) => {
 };
 
 // DROPDOWN MENU
-const Dropdown = ({ items, onClose, up }) => (
-  <div style={{ position: "absolute", right: 0, [up ? "bottom" : "top"]: "100%", zIndex: 100, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: 4, minWidth: 160, boxShadow: "0 12px 40px rgba(0,0,0,0.5)", marginBottom: up ? 8 : 0, marginTop: up ? 0 : 8 }}>
-    {items.map((item, i) => item.divider ? (
-      <div key={i} style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
-    ) : (
-      <button key={i} onClick={() => { item.action(); onClose(); }} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", border: "none", background: "transparent", color: item.danger ? "#f87171" : "#d1d5db", fontSize: 12, cursor: "pointer", borderRadius: 6, textAlign: "left" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-        {item.icon && <item.icon size={13} />}
-        {item.label}
-      </button>
-    ))}
-  </div>
-);
+const Dropdown = ({ items, onClose, coords }) => {
+  const MENU_WIDTH = 160;
+  const left = coords ? Math.min(coords.right - MENU_WIDTH, window.innerWidth - MENU_WIDTH - 8) : 0;
+  const spaceBelow = coords ? window.innerHeight - coords.bottom : 999;
+  const openUp = coords ? spaceBelow < 220 : false;
+  const top = coords ? (openUp ? coords.top - 4 : coords.bottom + 4) : 0;
+  return (
+    <>
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 9998 }} />
+      <div style={{ position: "fixed", left, top, transform: openUp ? "translateY(-100%)" : "none", zIndex: 9999, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: 4, minWidth: MENU_WIDTH, boxShadow: "0 12px 40px rgba(0,0,0,0.6)" }}>
+        {items.map((item, i) => item.divider ? (
+          <div key={i} style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
+        ) : (
+          <button key={i} onClick={() => { item.action(); onClose(); }} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", border: "none", background: "transparent", color: item.danger ? "#f87171" : "#d1d5db", fontSize: 12, cursor: "pointer", borderRadius: 6, textAlign: "left" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+            {item.icon && <item.icon size={13} />}
+            {item.label}
+          </button>
+        ))}
+      </div>
+    </>
+  );
+};
 
 // MOCK DATA
 const initPlans = [
@@ -72,7 +82,8 @@ const normalizeStatus = (raw) => {
   if (['pending', 'new', 'paid', 'awaiting', 'queued'].includes(s)) return 'pending';
   if (['in_progress', 'processing', 'working'].includes(s)) return 'in_progress';
   if (['revision', 'revisions'].includes(s)) return 'revision';
-  if (['completed', 'complete', 'done', 'delivered', 'sent', 'approved'].includes(s)) return 'delivered';
+  if (['completed', 'complete', 'done', 'approved'].includes(s)) return 'completed';
+  if (['delivered', 'sent'].includes(s)) return 'delivered';
   return 'pending';
 };
 
@@ -310,7 +321,8 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState(initialSearch);
   const [searchInput, setSearchInput] = useState(initialSearch);
-  const [menuOpen, setMenuOpen] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(null); // { id, coords }
+  const [menuCoords, setMenuCoords] = useState(null);
   const [viewOrder, setViewOrder] = useState(null);
   const [priceInput, setPriceInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -354,16 +366,13 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       const newStatus = targetOrderObj?.status;
       const updatedAttachments = { ...(targetOrderObj?.attachments || {}), payment_status: newPayStatus };
 
-      const { error } = await supabase
-        .from('orders')
-        .update({
-          revenue: numericPrice,
-          status: newStatus,
-          attachments: updatedAttachments
-        })
-        .eq('id', orderId);
-
-      if (error) throw error;
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, updates: { revenue: numericPrice, status: newStatus, attachments: updatedAttachments } })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Update failed');
 
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, revenue: numericPrice, payment_status: newPayStatus, attachments: updatedAttachments, status: newStatus } : o));
       if (viewOrder && viewOrder.id === orderId) {
@@ -381,12 +390,13 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       const targetOrderObj = orders.find(o => o.id === orderId) || viewOrder;
       const updatedAttachments = { ...(targetOrderObj?.attachments || {}), payment_status: newStatus };
 
-      const { error } = await supabase
-        .from('orders')
-        .update({ attachments: updatedAttachments })
-        .eq('id', orderId);
-
-      if (error) throw error;
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, updates: { attachments: updatedAttachments } })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Update failed');
 
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, payment_status: newStatus, attachments: updatedAttachments } : o));
       if (viewOrder && viewOrder.id === orderId) {
@@ -402,12 +412,13 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
   const cancelOrder = async (orderId) => {
     if (!confirm("Are you sure you want to cancel this order?")) return;
     try {
-      const { error } = await supabase
-        .from('orders')
-        .update({ status: 'cancelled' })
-        .eq('id', orderId);
-
-      if (error) throw error;
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, updates: { status: 'cancelled' } })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Update failed');
 
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'cancelled' } : o));
       if (viewOrder && viewOrder.id === orderId) {
@@ -439,23 +450,29 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
     pending: orders.filter(o => normalizeStatus(o.status) === "pending").length,
     in_progress: orders.filter(o => normalizeStatus(o.status) === "in_progress").length,
     revision: orders.filter(o => normalizeStatus(o.status) === "revision").length,
-    delivered: orders.filter(o => normalizeStatus(o.status) === "delivered").length
+    delivered: orders.filter(o => normalizeStatus(o.status) === "delivered").length,
+    completed: orders.filter(o => normalizeStatus(o.status) === "completed").length
   };
 
   const updateStatus = async (id, newStatus) => {
     try {
-      const { error } = await supabase
-        .from('orders')
-        .update({
-          status: newStatus,
-          progress: newStatus === "delivered" || newStatus === "completed" ? 100 : undefined
-        })
-        .eq('id', id);
-
-      if (error) throw error;
+      const updates = {
+        status: newStatus,
+        ...(newStatus === "delivered" || newStatus === "completed" ? { progress: 100 } : {})
+      };
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: id, updates })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Update failed');
 
       setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus, progress: newStatus === "delivered" ? 100 : newStatus === "completed" ? 100 : o.progress } : o));
       toast(`${id} marked as ${statusConfig[newStatus].label}`);
+
+      // Notify client dashboard in other tabs
+      try { new BroadcastChannel('tyes_order_updates').postMessage({ type: 'order_updated', orderId: id }); } catch(e) {}
     } catch (err) {
       console.error("Error updating order status:", err);
       toast("Failed to update status", "error");
@@ -464,12 +481,9 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
 
   const deleteOrder = async (id) => {
     try {
-      const { error } = await supabase
-        .from('orders')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      const res = await fetch(`/api/admin/orders?id=${id}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Delete failed');
 
       setOrders(prev => prev.filter(o => o.id !== id));
       toast(`${id} deleted`, "warning");
@@ -493,8 +507,8 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", uploadPreset);
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, { method: "POST", body: formData });
-      const data = await res.json();
+      const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, { method: "POST", body: formData });
+      const data = await cloudRes.json();
       const url = data.secure_url;
 
       if (!url) throw new Error("Upload failed");
@@ -519,22 +533,25 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
       const newOrderStatus = allDelivered ? "delivered" : "in_progress";
       const newProgress = allDelivered ? 100 : Math.round((newItems.filter(i => i.status === "delivered" || i.status === "completed").length / newItems.length) * 100);
 
-      const { error } = await supabase
-        .from('orders')
-        .update({
-          items: newItems,
-          status: newOrderStatus,
-          progress: newProgress
+      const updateRes = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          updates: { items: newItems, status: newOrderStatus, progress: newProgress }
         })
-        .eq('id', orderId);
-
-      if (error) throw error;
+      });
+      const updateJson = await updateRes.json();
+      if (!updateRes.ok) throw new Error(updateJson.error || 'Delivery update failed');
 
       const updateFunc = (prev) => prev.map(o => o.id === orderId ? { ...o, items: newItems, status: newOrderStatus, progress: newProgress } : o);
       setOrders(updateFunc);
       if (viewOrder && viewOrder.id === orderId) {
         setViewOrder({ ...viewOrder, items: newItems, status: newOrderStatus, progress: newProgress });
       }
+
+      // Notify client dashboard in other tabs instantly
+      try { new BroadcastChannel('tyes_order_updates').postMessage({ type: 'order_updated', orderId }); } catch(e) {}
 
       // Send image delivery email to client for every delivery (partial or full, or revision)
       try {
@@ -840,7 +857,7 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
 
 
       <div style={{ display: "flex", gap: 6, marginBottom: 14, overflowX: "auto", paddingBottom: 6, scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
-        {["all", "pending", "in_progress", "revision", "delivered"].map(s => (
+        {["all", "pending", "in_progress", "revision", "delivered", "completed"].map(s => (
           <button
             key={s}
             onClick={() => setFilter(s)}
@@ -900,9 +917,9 @@ const OrdersPage = ({ orders, setOrders, toast, goTo, supabase, targetOrder, set
                 })()}
               </td>
               <td style={{ padding: "12px 16px", fontSize: 11, color: "#6b7280" }}>{o.date}</td>
-              <td style={{ padding: "12px 16px", position: "relative" }}>
-                <button onClick={() => setMenuOpen(menuOpen === o.id ? null : o.id)} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", padding: 4 }}><MoreVertical size={14} /></button>
-                {menuOpen === o.id && <Dropdown onClose={() => setMenuOpen(null)} up={idx > 4} items={[
+              <td style={{ padding: "12px 16px" }}>
+                <button onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); if (menuOpen === o.id) { setMenuOpen(null); setMenuCoords(null); } else { setMenuOpen(o.id); setMenuCoords(r); } }} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", padding: 4 }}><MoreVertical size={14} /></button>
+                {menuOpen === o.id && <Dropdown onClose={() => { setMenuOpen(null); setMenuCoords(null); }} coords={menuCoords} items={[
                   { icon: Eye, label: "View Details", action: () => setViewOrder(o) },
                   // { icon: Mail, label: "Email Client", action: () => toast(`Email draft opened for ${o.customer}`, "info") },
                   { divider: true },
@@ -954,6 +971,7 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
   const [search, setSearch] = useState("");
   const [viewUser, setViewUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(null);
+  const [menuCoords, setMenuCoords] = useState(null);
   // Show all client accounts (excluding admin/super_admin team members)
   const clients = users.filter(u => u.role !== "admin" && u.role !== "super_admin" && u.role !== "superAdmin");
   const filtered = clients.filter(u => !search || u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()));
@@ -1065,9 +1083,9 @@ const UsersPage = ({ users, setUsers, toast, supabase }) => {
               <td style={{ padding: "12px 16px", fontSize: 12, color: "#34d399", fontWeight: 600 }}>{u.spent > 0 ? `$${u.spent.toLocaleString()}` : "$0"}</td>
               <td style={{ padding: "12px 16px", fontSize: 11, color: "#6b7280" }}>{u.joined}</td>
               <td style={{ padding: "12px 16px" }}><span onClick={() => toggleStatus(u.id)} style={{ cursor: "pointer" }}><span style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block", background: u.status === "active" ? "#34d399" : "#4b5563", marginRight: 6 }} /><span style={{ fontSize: 11, color: u.status === "active" ? "#34d399" : "#6b7280" }}>{u.status}</span></span></td>
-              <td style={{ padding: "12px 16px", position: "relative" }}>
-                <button onClick={() => setMenuOpen(menuOpen === u.id ? null : u.id)} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", padding: 4 }}><MoreVertical size={14} /></button>
-                {menuOpen === u.id && <Dropdown onClose={() => setMenuOpen(null)} up={idx > 4} items={[
+              <td style={{ padding: "12px 16px" }}>
+                <button onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); if (menuOpen === u.id) { setMenuOpen(null); setMenuCoords(null); } else { setMenuOpen(u.id); setMenuCoords(r); } }} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", padding: 4 }}><MoreVertical size={14} /></button>
+                {menuOpen === u.id && <Dropdown onClose={() => { setMenuOpen(null); setMenuCoords(null); }} coords={menuCoords} items={[
                   { icon: Eye, label: "View Profile", action: () => setViewUser(u) },
                   { icon: Mail, label: "Send Email", action: () => toast(`Email draft opened for ${u.name}`, "info") },
                   { divider: true },
@@ -1902,6 +1920,7 @@ export default function TyesAdmin() {
   const supabase = createClient();
   const { toasts, addToast } = useToast();
   const [page, setPageInternal] = useState("dashboard");
+  const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -1930,6 +1949,7 @@ export default function TyesAdmin() {
   };
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tab = params.get('tab');
@@ -2131,9 +2151,18 @@ export default function TyesAdmin() {
       })
       .subscribe();
 
+    // Refresh data when admin switches back to this tab
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchDashboardData();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
     return () => {
       supabase.removeChannel(profileChannel);
       supabase.removeChannel(orderChannel);
+      document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, []);
 
@@ -2174,6 +2203,9 @@ export default function TyesAdmin() {
     }
   };
 
+  // Use 'dashboard' as the active page for sidebar until after hydration
+  const activePage = mounted ? page : 'dashboard';
+
   return (
     <div suppressHydrationWarning style={{ display: "flex", height: "100vh", background: "#0a0a0a", fontFamily: "'Inter',-apple-system,sans-serif", color: "#fff", overflow: "hidden" }}>
       <ToastContainer toasts={toasts} />
@@ -2206,7 +2238,7 @@ export default function TyesAdmin() {
           <button onClick={() => setCollapsed(!collapsed)} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", padding: 2, display: collapsed ? "none" : "block" }}><ChevronLeft size={14} /></button>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-          {navPages.map(p => <SidebarItem key={p.id} icon={p.icon} label={p.label} active={page === p.id} onClick={() => setPage(p.id)} collapsed={collapsed} />)}
+          {navPages.map(p => <SidebarItem key={p.id} icon={p.icon} label={p.label} active={activePage === p.id} onClick={() => setPage(p.id)} collapsed={collapsed} />)}
         </div>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 12, marginTop: 8 }}>
           <SidebarItem icon={LogOut} label="Log Out" onClick={handleLogout} collapsed={collapsed} />
@@ -2269,7 +2301,7 @@ export default function TyesAdmin() {
                   key={p.id}
                   icon={p.icon}
                   label={p.label}
-                  active={page === p.id}
+                  active={activePage === p.id}
                   onClick={() => { setPage(p.id); setMobileMenuOpen(false); }}
                   collapsed={false}
                 />
