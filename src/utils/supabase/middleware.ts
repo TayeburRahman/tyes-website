@@ -59,11 +59,14 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    // Redirect from auth page if already logged in
-    if (pathname.startsWith('/auth')) {
-      const url = request.nextUrl.clone()
-      url.pathname = isAdmin ? '/dashboard/admin' : '/dashboard/client'
-      return NextResponse.redirect(url)
+    // Redirect from auth page if already logged in (unless explicitly switching accounts or completing profile)
+    if (pathname === '/auth') {
+      const isSwitching = request.nextUrl.searchParams.has('switch') || request.nextUrl.searchParams.has('logout');
+      if (!isSwitching) {
+        const url = request.nextUrl.clone()
+        url.pathname = isAdmin ? '/dashboard/admin' : '/dashboard/client'
+        return NextResponse.redirect(url)
+      }
     }
   }
 

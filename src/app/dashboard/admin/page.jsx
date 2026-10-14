@@ -2175,9 +2175,12 @@ export default function TyesAdmin() {
         localStorage.removeItem('tyes_preselect_plan_name');
         localStorage.removeItem('tyes_preselect_strategy_addon');
         localStorage.removeItem('tyes_active_user_id');
+        try {
+          window.google?.accounts?.id?.disableAutoSelect?.();
+        } catch (e) {}
       }
       await supabase.auth.signOut();
-      router.push("/auth");
+      window.location.href = "/auth?switch=1";
     } catch (error) {
       addToast("Error logging out", "error");
     }

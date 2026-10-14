@@ -105,6 +105,17 @@ function AuthContent() {
   // ── Load Google Identity Services script and initialise ──────────────────
   useEffect(() => {
     setMounted(true);
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('switch') === '1' || params.get('logout') === '1') {
+        supabase.auth.signOut();
+        try {
+          (window as any).google?.accounts?.id?.disableAutoSelect();
+        } catch (e) {}
+      }
+    }
+
     // Fetch our server-side client ID
     fetch('/api/auth/google-config')
       .then(r => r.json())
@@ -342,34 +353,28 @@ function AuthContent() {
     }
   };
 
-  // ── Fallback: full-page OAuth redirect (used when GIS is unavailable) ─────
+  // ── Google OAuth sign-in with account chooser prompt ─────────────────────
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
+      try {
+        (window as any).google?.accounts?.id?.disableAutoSelect();
+      } catch (e) {}
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            prompt: 'select_account',
+            access_type: 'offline',
+          },
         },
       });
       if (error) throw error;
     } catch (err: any) {
       addToast(err.message || "Failed to initiate Google sign-in", "error");
       setLoading(false);
-    }
-  };
-
-  // ── Trigger GIS popup via the hidden rendered Google button ──────────────
-  const triggerGooglePopup = () => {
-    // Click the hidden Google-rendered button (opens real Google popup, not FedCM)
-    const hiddenBtn = document.querySelector(
-      '#gis-btn-container [role="button"], #gis-btn-container div[tabindex="0"]'
-    ) as HTMLElement | null;
-    if (hiddenBtn) {
-      hiddenBtn.click();
-    } else {
-      // Fallback to full-page redirect if GIS button not ready
-      handleGoogleSignIn();
     }
   };
 
@@ -443,7 +448,7 @@ function AuthContent() {
               type="button"
               className="auth-btn-outline"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
-              onClick={triggerGooglePopup}
+              onClick={handleGoogleSignIn}
               disabled={loading}
             >
               <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -563,7 +568,7 @@ function AuthContent() {
               type="button"
               className="auth-btn-outline"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
-              onClick={triggerGooglePopup}
+              onClick={handleGoogleSignIn}
               disabled={loading}
             >
               <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">

@@ -17,7 +17,7 @@ export async function GET() {
       supabaseAdmin.from('studio_settings').select('*').eq('id', 1).single(),
       supabaseAdmin.from('pricing_plans').select('*').order('created_at', { ascending: true }),
       supabaseAdmin.from('orders').select('*').order('created_at', { ascending: false }),
-      supabaseAdmin.from('profiles').select('*').order('created_at', { descending: true })
+      supabaseAdmin.from('profiles').select('*').order('created_at', { ascending: false })
     ]);
 
     return NextResponse.json({

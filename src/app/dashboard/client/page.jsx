@@ -201,12 +201,30 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, collapsed, badge }) =
   </button>
 );
 
-const InputField = ({ label, value, onChange, placeholder, type, required = false }) => (
+const InputField = ({ label, value, onChange, placeholder, type, required = false, disabled = false }) => (
   <div style={{ marginBottom: 14 }}>
     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>
       {label} {required && <span style={{ color: "#ef4444" }}>*</span>}
     </label>
-    <input type={type || "text"} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+    <input
+      type={type || "text"}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      disabled={disabled}
+      style={{
+        width: "100%",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: "1px solid rgba(255,255,255,0.08)",
+        background: disabled ? "rgba(255,255,255,0.01)" : "rgba(255,255,255,0.03)",
+        color: disabled ? "#9ca3af" : "#fff",
+        fontSize: 13,
+        outline: "none",
+        boxSizing: "border-box",
+        cursor: disabled ? "not-allowed" : "text"
+      }}
+    />
   </div>
 );
 
@@ -388,7 +406,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
       const savedBrandInfo = typeof window !== 'undefined' ? (localStorage.getItem(storageKey) || localStorage.getItem('tyes_brand_info')) : null;
       let parsedBrandData = null;
       if (savedBrandInfo) {
-        try { parsedBrandData = JSON.parse(savedBrandInfo); } catch (e) {}
+        try { parsedBrandData = JSON.parse(savedBrandInfo); } catch (e) { }
       }
 
       if (!parsedBrandData || !parsedBrandData.category || parsedBrandData.category === 'N/A' || parsedBrandData.category.trim() === '' || parsedBrandData.category === 'Other ') {
@@ -1098,14 +1116,400 @@ const SuccessPage = ({ setPage, isInvoicePayment }) => {
   );
 };
 
+// ══════════════════════════════════════
+// ACCOUNT SETTINGS SECTIONS (TOP-LEVEL)
+// ══════════════════════════════════════
+const AccountCompanySection = ({ supabase, user, clientInfo, setClientInfo, addToast, onNameUpdated }) => {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(clientInfo?.name || "");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!editing && clientInfo?.name) {
+      setName(clientInfo.name);
+    }
+  }, [clientInfo?.name, editing]);
+
+  const handleStartEdit = () => {
+    setName(clientInfo?.name || "");
+    setEditing(true);
+  };
+
+  const handleCancel = () => {
+    setName(clientInfo?.name || "");
+    setEditing(false);
+  };
+
+  const handleSave = async () => {
+    const trimmed = (name || "").trim();
+    if (!trimmed) {
+      addToast("Name cannot be empty", "warning");
+      return;
+    }
+    setSaving(true);
+    const parts = trimmed.split(" ");
+    const firstName = parts[0] || "";
+    const lastName = parts.slice(1).join(" ") || "";
+
+    try {
+      if (user?.id) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ first_name: firstName, last_name: lastName })
+          .eq('id', user.id);
+        if (error) throw error;
+      }
+
+      await supabase.auth.updateUser({
+        data: { first_name: firstName, last_name: lastName }
+      });
+
+      if (setClientInfo) {
+        setClientInfo(prev => ({ ...prev, name: trimmed }));
+      }
+      if (onNameUpdated) onNameUpdated(trimmed);
+      addToast("Account name updated successfully!", "success");
+      setEditing(false);
+    } catch (err) {
+      console.error("Error updating account:", err);
+      addToast("Failed to update account", "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Account Info</h3>
+        {editing ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button onClick={handleCancel} disabled={saving} style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: 12, fontWeight: 500 }}>
+              Cancel
+            </button>
+            <button onClick={handleSave} disabled={saving} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+              {saving ? "Saving..." : <><Save size={12} /> Save</>}
+            </button>
+          </div>
+        ) : (
+          <button onClick={handleStartEdit} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+            <Edit size={12} /> Edit
+          </button>
+        )}
+      </div>
+      {editing ? (
+        <div>
+          <InputField label="Company Name" value={name} onChange={setName} placeholder="Your name or company" />
+          <div style={{ opacity: 0.6 }}>
+            <InputField label="Email (Read-only)" value={clientInfo?.email || ""} onChange={() => { }} disabled />
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+            <span style={{ fontSize: 13, color: "#6b7280" }}>Tier</span>
+            <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, textTransform: "capitalize" }}>{clientInfo?.tier || "starter"}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+            <span style={{ fontSize: 13, color: "#6b7280" }}>Member Since</span>
+            <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500 }}>{clientInfo?.joined || "New Member"}</span>
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {[
+            { label: "Company Name", value: clientInfo?.name || "—" },
+            { label: "Email", value: clientInfo?.email || "—" },
+            { label: "Tier", value: clientInfo?.tier || "starter" },
+            { label: "Member Since", value: clientInfo?.joined || "New Member" },
+          ].map((f, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "#6b7280" }}>{f.label}</span>
+              <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, textTransform: f.label === "Tier" ? "capitalize" : "none" }}>{f.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const AccountCountrySection = ({ supabase, user, clientInfo, setClientInfo, addToast }) => {
+  const [editing, setEditing] = useState(false);
+  const [selectedCode, setSelectedCode] = useState(clientInfo?.country || "RO");
+  const [search, setSearch] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (!editing && clientInfo?.country) {
+      setSelectedCode(clientInfo.country);
+    }
+  }, [clientInfo?.country, editing]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
+  const currentCountry = ALL_COUNTRIES_LIST.find(c => c.code === (clientInfo?.country || selectedCode));
+  const currentName = currentCountry?.name || "Not set";
+
+  const handleStartEdit = () => {
+    setSelectedCode(clientInfo?.country || "RO");
+    setSearch("");
+    setDropdownOpen(false);
+    setEditing(true);
+  };
+
+  const handleCancel = () => {
+    setSelectedCode(clientInfo?.country || "RO");
+    setSearch("");
+    setDropdownOpen(false);
+    setEditing(false);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await supabase.auth.updateUser({ data: { country: selectedCode } });
+      if (user?.id) {
+        await supabase.from('profiles').update({ country: selectedCode }).eq('id', user.id);
+      }
+      if (setClientInfo) {
+        setClientInfo(prev => ({ ...prev, country: selectedCode }));
+      }
+      addToast("Country updated!", "success");
+      setEditing(false);
+      setDropdownOpen(false);
+    } catch (err) {
+      console.error("Failed to update country:", err);
+      addToast("Failed to update country", "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Country & Tax</h3>
+        {editing ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button onClick={handleCancel} disabled={saving} style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: 12, fontWeight: 500 }}>
+              Cancel
+            </button>
+            <button onClick={handleSave} disabled={saving} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+              {saving ? "Saving..." : <><Save size={12} /> Save</>}
+            </button>
+          </div>
+        ) : (
+          <button onClick={handleStartEdit} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+            <Edit size={12} /> Edit
+          </button>
+        )}
+      </div>
+      {editing ? (
+        <div style={{ position: "relative" }} ref={dropdownRef}>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country</label>
+          <div
+            style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <span>{ALL_COUNTRIES_LIST.find(c => c.code === selectedCode)?.name || "Select country"}</span>
+            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", transform: dropdownOpen ? "rotate(180deg)" : "none", display: "inline-block", transition: "transform 0.2s" }}>▼</span>
+          </div>
+          {dropdownOpen && (
+            <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, background: "#111", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, marginTop: 4, padding: 8, boxShadow: "0 10px 30px rgba(0,0,0,0.85)" }}>
+              <input type="text" placeholder="Search country..." value={search} onChange={e => setSearch(e.target.value)} onClick={e => e.stopPropagation()} style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#fff", outline: "none", marginBottom: 6, fontSize: 13, boxSizing: "border-box" }} autoFocus />
+              <div style={{ maxHeight: 180, overflowY: "auto" }}>
+                {ALL_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(search.toLowerCase())).map(c => (
+                  <div key={c.code} onClick={() => { setSelectedCode(c.code); setDropdownOpen(false); setSearch(""); }} style={{ padding: "8px 10px", cursor: "pointer", borderRadius: 6, background: selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent", color: selectedCode === c.code ? "#4ecdc4" : "#fff", fontSize: 13, display: "flex", justifyContent: "space-between" }} onMouseEnter={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.2)" : "rgba(255,255,255,0.05)"} onMouseLeave={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent"}>
+                    {c.name} {selectedCode === c.code && <span>✓</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <p style={{ fontSize: 11, color: "#6b7280", marginTop: 8, marginBottom: 0 }}>Used for VAT calculation and invoicing.</p>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 13, color: "#6b7280" }}>Country</span>
+            <span style={{ fontSize: 13, color: clientInfo?.country ? "#e5e7eb" : "#ef4444", fontWeight: 500 }}>{currentName}</span>
+          </div>
+          {clientInfo?.country && (
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "#6b7280" }}>VAT Rate</span>
+              <span style={{ fontSize: 13, color: "#4ecdc4", fontWeight: 600 }}>{ALL_COUNTRIES_LIST.find(c => c.code === clientInfo.country)?.vatRate || "—"}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const AccountBusinessSection = ({ supabase, user, clientInfo, setClientInfo, addToast }) => {
+  const [editing, setEditing] = useState(false);
+  const [isBiz, setIsBiz] = useState(clientInfo?.is_business ?? user?.user_metadata?.is_business ?? false);
+  const [bizName, setBizName] = useState(clientInfo?.company_name || user?.user_metadata?.company_name || "");
+  const [vatNum, setVatNum] = useState(clientInfo?.vat_number || user?.user_metadata?.vat_number || "");
+  const [regAddr, setRegAddr] = useState(clientInfo?.registered_address || user?.user_metadata?.registered_address || "");
+  const [billEmail, setBillEmail] = useState(clientInfo?.billing_email || user?.user_metadata?.billing_email || "");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!editing) {
+      setIsBiz(clientInfo?.is_business ?? user?.user_metadata?.is_business ?? false);
+      setBizName(clientInfo?.company_name || user?.user_metadata?.company_name || "");
+      setVatNum(clientInfo?.vat_number || user?.user_metadata?.vat_number || "");
+      setRegAddr(clientInfo?.registered_address || user?.user_metadata?.registered_address || "");
+      setBillEmail(clientInfo?.billing_email || user?.user_metadata?.billing_email || "");
+    }
+  }, [clientInfo, user, editing]);
+
+  const handleStartEdit = () => {
+    setIsBiz(clientInfo?.is_business ?? user?.user_metadata?.is_business ?? false);
+    setBizName(clientInfo?.company_name || user?.user_metadata?.company_name || "");
+    setVatNum(clientInfo?.vat_number || user?.user_metadata?.vat_number || "");
+    setRegAddr(clientInfo?.registered_address || user?.user_metadata?.registered_address || "");
+    setBillEmail(clientInfo?.billing_email || user?.user_metadata?.billing_email || "");
+    setEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsBiz(clientInfo?.is_business ?? user?.user_metadata?.is_business ?? false);
+    setBizName(clientInfo?.company_name || user?.user_metadata?.company_name || "");
+    setVatNum(clientInfo?.vat_number || user?.user_metadata?.vat_number || "");
+    setRegAddr(clientInfo?.registered_address || user?.user_metadata?.registered_address || "");
+    setBillEmail(clientInfo?.billing_email || user?.user_metadata?.billing_email || "");
+    setEditing(false);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const updates = {
+        is_business: !!isBiz,
+        company_name: isBiz ? (bizName?.trim() || null) : null,
+        vat_number: isBiz ? (vatNum?.trim().toUpperCase() || null) : null,
+        registered_address: isBiz ? (regAddr?.trim() || null) : null,
+        billing_email: isBiz ? (billEmail?.trim() || null) : null,
+      };
+
+      await supabase.auth.updateUser({
+        data: updates
+      });
+
+      if (user?.id) {
+        await supabase.from('profiles').update(updates).eq('id', user.id);
+      }
+
+      if (setClientInfo) {
+        setClientInfo(prev => ({
+          ...prev,
+          ...updates
+        }));
+      }
+
+      addToast("Business details updated!", "success");
+      setEditing(false);
+    } catch (err) {
+      console.error("Failed to update business details:", err);
+      addToast("Failed to update business details", "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const displayIsBiz = clientInfo?.is_business ?? user?.user_metadata?.is_business ?? false;
+  const displayBizName = clientInfo?.company_name || user?.user_metadata?.company_name;
+  const displayVatNum = clientInfo?.vat_number || user?.user_metadata?.vat_number;
+  const displayRegAddr = clientInfo?.registered_address || user?.user_metadata?.registered_address;
+  const displayBillEmail = clientInfo?.billing_email || user?.user_metadata?.billing_email;
+
+  return (
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Business Details</h3>
+        {editing ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button onClick={handleCancel} disabled={saving} style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: 12, fontWeight: 500 }}>
+              Cancel
+            </button>
+            <button onClick={handleSave} disabled={saving} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+              {saving ? "Saving..." : <><Save size={12} /> Save</>}
+            </button>
+          </div>
+        ) : (
+          <button onClick={handleStartEdit} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
+            <Edit size={12} /> Edit
+          </button>
+        )}
+      </div>
+      {editing ? (
+        <div>
+          <div onClick={() => setIsBiz(!isBiz)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", cursor: "pointer", marginBottom: 12, userSelect: "none" }}>
+            <div style={{ width: 36, height: 20, borderRadius: 10, background: isBiz ? "#4ecdc4" : "rgba(255,255,255,0.1)", padding: 2, transition: "background 0.2s", flexShrink: 0, boxSizing: "border-box" }}>
+              <div style={{ width: 16, height: 16, borderRadius: "50%", background: "#fff", transform: isBiz ? "translateX(16px)" : "translateX(0)", transition: "transform 0.2s" }} />
+            </div>
+            <span style={{ fontSize: 13, color: "#d1d5db" }}>I'm buying for a business</span>
+          </div>
+          {isBiz && (
+            <div style={{ animation: "fadeIn 0.2s ease" }}>
+              <InputField label="Company Name" value={bizName} onChange={setBizName} placeholder="Company legal name" />
+              <InputField label="VAT / Tax Number" value={vatNum} onChange={setVatNum} placeholder="e.g. RO12345678 or DE123456789" />
+              <InputField label="Registered Address" value={regAddr} onChange={setRegAddr} placeholder="Registered legal address" />
+              <InputField label="Billing Email (optional)" value={billEmail} onChange={setBillEmail} placeholder="billing@company.com" type="email" />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 13, color: "#6b7280" }}>Business Account</span>
+            <span style={{ fontSize: 13, color: displayIsBiz ? "#34d399" : "#6b7280", fontWeight: 500 }}>{displayIsBiz ? "Yes" : "No"}</span>
+          </div>
+          {displayIsBiz && [
+            { label: "Company Name", value: displayBizName },
+            { label: "VAT / Tax Number", value: displayVatNum },
+            { label: "Registered Address", value: displayRegAddr },
+            { label: "Billing Email", value: displayBillEmail || "—" },
+          ].map((f, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "#6b7280" }}>{f.label}</span>
+              <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, textAlign: "right", maxWidth: "60%", wordBreak: "break-word" }}>{f.value || "—"}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function TyesClient() {
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const { toasts, addToast } = useToast();
   const [page, setPageInternal] = useState("overview");
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const [ordersFilter, setOrdersFilter] = useState("all");
+  const [ordersCurrentPage, setOrdersCurrentPage] = useState(1);
 
   const setPage = (newPage, orderId = null) => {
     setPageInternal(newPage);
+    if (orderId) {
+      setExpandedOrderId(orderId);
+    }
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       url.searchParams.set('tab', newPage);
@@ -1122,15 +1526,23 @@ export default function TyesClient() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tab = params.get('tab');
+      const orderId = params.get('id');
       if (tab) {
         setPageInternal(tab);
+      }
+      if (orderId) {
+        setExpandedOrderId(orderId);
       }
     }
 
     const handlePopstate = () => {
       const params = new URLSearchParams(window.location.search);
       const tab = params.get('tab') || 'overview';
+      const orderId = params.get('id');
       setPageInternal(tab);
+      if (orderId) {
+        setExpandedOrderId(orderId);
+      }
     };
 
     window.addEventListener('popstate', handlePopstate);
@@ -1162,7 +1574,7 @@ export default function TyesClient() {
   const [pricingPlans, setPricingPlans] = useState([]);
   const [orders, setOrders] = useState([]);
 
-  const fetchData = async (silent = false) => {
+  const fetchData = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     try {
       // 1. Get User
@@ -1355,7 +1767,7 @@ export default function TyesClient() {
         const notifsKey = `tyes_read_notifs_${authUser.id}`;
         const stored = localStorage.getItem(notifsKey) || localStorage.getItem('tyes_read_notifs');
         if (stored) {
-          try { readNotifs = JSON.parse(stored); } catch(e){}
+          try { readNotifs = JSON.parse(stored); } catch (e) { }
         }
       }
 
@@ -1428,7 +1840,7 @@ export default function TyesClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase, router, addToast]);
 
   useEffect(() => {
     fetchData();
@@ -1501,15 +1913,15 @@ export default function TyesClient() {
           fetchData(true);
         }
       };
-    } catch(e) {}
+    } catch (e) { }
 
     return () => {
       supabase.removeChannel(ordersSubscription);
       clearInterval(pollInterval);
       document.removeEventListener('visibilitychange', handleVisibility);
-      try { bc?.close(); } catch(e) {}
+      try { bc?.close(); } catch (e) { }
     };
-  }, [supabase, router, addToast]);
+  }, [fetchData, supabase, router, addToast]);
 
   const handleLogout = async () => {
     try {
@@ -1523,10 +1935,12 @@ export default function TyesClient() {
         localStorage.removeItem('tyes_read_notifs');
         localStorage.removeItem('tyes_preselect_plan_name');
         localStorage.removeItem('tyes_preselect_strategy_addon');
-        localStorage.removeItem('tyes_active_user_id');
+        try {
+          window.google?.accounts?.id?.disableAutoSelect?.();
+        } catch (e) { }
       }
       await supabase.auth.signOut();
-      router.push("/auth");
+      window.location.href = "/auth?switch=1";
     } catch (error) {
       addToast("Error logging out", "error");
     }
@@ -1581,6 +1995,7 @@ export default function TyesClient() {
     { id: 2, from: "client", name: "You", text: "Yes, it's Futura PT Bold for the headline and Futura PT Book for body text. File attached in the brief.", time: "1 hr ago", read: true },
     { id: 3, from: "team", name: "Tyes Team", text: "Perfect, thank you! We'll have the revision ready within the hour.", time: "45 min ago", read: false },
   ]);
+  const [msg, setMsg] = useState("");
 
   // ── Invoices State ──
   const [invoices, setInvoices] = useState([]);
@@ -1602,7 +2017,7 @@ export default function TyesClient() {
       const monthLabel = d.toLocaleString('default', { month: 'short' });
       data.push({ month: monthLabel, spent: 0, yearMonth: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` });
     }
-    
+
     invoices.filter(inv => inv.status === 'paid').forEach(inv => {
       const invDate = new Date(inv.date || inv.created_at || new Date());
       const ym = `${invDate.getFullYear()}-${String(invDate.getMonth() + 1).padStart(2, '0')}`;
@@ -1632,7 +2047,7 @@ export default function TyesClient() {
       const stored = localStorage.getItem(notifsKey);
       let readNotifs = [];
       if (stored) {
-        try { readNotifs = JSON.parse(stored); } catch(e){}
+        try { readNotifs = JSON.parse(stored); } catch (e) { }
       }
       notifications.forEach(n => {
         if (!readNotifs.includes(n.id)) {
@@ -1700,7 +2115,7 @@ export default function TyesClient() {
   // ══════════════════════════════════════
   // OVERVIEW PAGE
   // ══════════════════════════════════════
-  const OverviewPage = () => {
+  const renderOverviewPage = () => {
     const activeOrder = orders.find(o => o.status !== "delivered" && o.status !== "completed");
     // Use both 'sent' and 'delivered' as terminal statuses for the snapshot counter
     const snapshotsDelivered = strategyRequests.filter(s => s.status === 'sent' || s.status === 'delivered').length;
@@ -1891,17 +2306,14 @@ export default function TyesClient() {
   // ══════════════════════════════════════
   // ORDERS PAGE
   // ══════════════════════════════════════
-  const OrdersPage = () => {
-    const [expanded, setExpanded] = useState(null);
-    const [filter, setFilter] = useState("all");
-    const [currentPage, setCurrentPage] = useState(1);
+  const renderOrdersPage = () => {
     const itemsPerPage = 5;
-    const filtered = orders.filter(o => filter === "all" || o.status === filter);
+    const filtered = orders.filter(o => ordersFilter === "all" || o.status === ordersFilter);
     const totalPages = Math.ceil(filtered.length / itemsPerPage);
-    const paginatedOrders = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const paginatedOrders = filtered.slice((ordersCurrentPage - 1) * itemsPerPage, ordersCurrentPage * itemsPerPage);
 
     const handleDownloadAll = (order) => {
-      const links = order.items.filter(i => i.finishImage).map(i => i.finishImage);
+      const links = (order.items || []).map(i => i.v2Image || i.finishImage).filter(Boolean);
       if (links.length === 0) {
         addToast("No images delivered yet", "info");
         return;
@@ -1909,13 +2321,30 @@ export default function TyesClient() {
       downloadAsZip(links, `Tyes_Order_${order.id}.zip`);
     };
 
-    const handleDownloadItem = (name, url) => {
+    const handleDownloadItem = async (name, url) => {
       if (!url) {
         addToast("Download link not available", "error");
         return;
       }
-      addToast(`Downloading ${name}...`, "info");
-      window.open(url, '_blank');
+      addToast(`Downloading ${name || "image"}...`, "info");
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Fetch failed");
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        const safeName = (name || "image").replace(/[^a-zA-Z0-9_\-\s]/g, "").trim().replace(/\s+/g, "_");
+        a.download = `${safeName || "deliverable"}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+        addToast(`${name || "Image"} downloaded!`, "success");
+      } catch (err) {
+        console.warn("Direct download failed, opening in new tab:", err);
+        window.open(url, "_blank");
+      }
     };
 
     const handleRequestRevision = (order, itemIndex = null) => {
@@ -1949,7 +2378,7 @@ export default function TyesClient() {
         </div>
         <div style={{ display: "flex", gap: 8, marginBottom: 20, overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", paddingBottom: 4 }}>
           {[{ key: "all", label: "All" }, { key: "in_progress", label: "In Progress" }, { key: "revision", label: "Revision" }, { key: "delivered", label: "Delivered" }].map(f => (
-            <button key={f.key} onClick={() => { setFilter(f.key); setCurrentPage(1); }} style={{ padding: "6px 14px", borderRadius: 20, border: "1px solid", borderColor: filter === f.key ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)", background: filter === f.key ? "rgba(78,205,196,0.15)" : "transparent", color: filter === f.key ? "#4ecdc4" : "#6b7280", fontSize: 12, fontWeight: 500, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
+            <button key={f.key} onClick={() => { setOrdersFilter(f.key); setOrdersCurrentPage(1); }} style={{ padding: "6px 14px", borderRadius: 20, border: "1px solid", borderColor: ordersFilter === f.key ? "rgba(78,205,196,0.5)" : "rgba(255,255,255,0.06)", background: ordersFilter === f.key ? "rgba(78,205,196,0.15)" : "transparent", color: ordersFilter === f.key ? "#4ecdc4" : "#6b7280", fontSize: 12, fontWeight: 500, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
               {f.label} {f.key !== "all" && `(${orders.filter(o => f.key === "in_progress" ? ['pending', 'in_progress', 'in progress', 'paid', 'new'].includes(String(o.status || '').toLowerCase()) : String(o.status || '').toLowerCase() === f.key).length})`}
             </button>
           ))}
@@ -1957,9 +2386,10 @@ export default function TyesClient() {
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {paginatedOrders.map(o => {
             const paid = isOrderPaid(o);
+            const isExpanded = expandedOrderId === o.id;
             return (
               <div key={o.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden", transition: "all 0.2s" }}>
-                <div style={{ display: "flex", alignItems: "center", padding: "14px 14px", cursor: "pointer", gap: 12, flexWrap: "wrap" }} onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
+                <div style={{ display: "flex", alignItems: "center", padding: "14px 14px", cursor: "pointer", gap: 12, flexWrap: "wrap" }} onClick={() => setExpandedOrderId(isExpanded ? null : o.id)}>
                   <div style={{ flex: "1 1 200px", minWidth: 180 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                       <span style={{ fontSize: 11, color: "#7dd8d0", fontWeight: 600 }}>{o.id}</span>
@@ -1996,9 +2426,9 @@ export default function TyesClient() {
                     </div>
                     <div style={{ fontSize: 10, color: "#6b7280", textAlign: "center", marginTop: 2 }}>{o.progress}%</div>
                   </div>
-                  <ChevronDown size={16} color="#4b5563" style={{ transform: expanded === o.id ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }} />
+                  <ChevronDown size={16} color="#4b5563" style={{ transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }} />
                 </div>
-                {expanded === o.id && (
+                {isExpanded && (
                   <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", padding: "16px 20px" }}>
                     {Boolean(o.plan === 'Brand Strategy' || o.plan === 'Brand Strategy (Only)' || (o.images_count === 0 && !o.plan?.includes('Campaign'))) ? (
                       <div style={{ background: "rgba(45, 212, 191, 0.05)", border: "1px solid rgba(45, 212, 191, 0.2)", borderRadius: 12, padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
@@ -2015,57 +2445,199 @@ export default function TyesClient() {
                         </button>
                       </div>
                     ) : o.items && o.items.length > 0 ? (
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 8 }}>
-                        {o.items.map((item, i) => (
-                          <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)", transition: "all 0.2s" }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                              <Image size={16} color="#6b7280" />
-                            </div>
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                              <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</div>
-                              <div style={{ marginTop: 4 }}><StatusBadge status={item.status} /></div>
-                              {item.status === "delivered" && (() => {
-                                const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
-                                const revsUsed = item.revisionsUsed || 0;
-                                if (revsUsed >= maxRevisions && maxRevisions > 0) {
-                                  return <a href="mailto:office@tyes.app" onClick={(e) => e.stopPropagation()} style={{ fontSize: 10, color: "#6b7280", textDecoration: "underline", display: "inline-block", marginTop: 6 }}>Revision limit reached — contact us</a>;
-                                }
-                                return null;
-                              })()}
-                            </div>
-                            {(item.status === "delivered" || item.status === "revision") && item.finishImage && (
-                              <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-                                <div style={{ position: 'relative' }}>
-                                  <div
-                                    onClick={() => item.status === "delivered" && window.open(item.finishImage, '_blank')}
-                                    style={{ width: 36, height: 36, borderRadius: 8, background: `url(${item.finishImage}) center/cover`, border: "2px solid rgba(16,185,129,0.3)", cursor: item.status === "delivered" ? "pointer" : "default", boxShadow: "0 4px 12px rgba(0,0,0,0.2)", filter: item.status === "revision" ? "grayscale(100%) opacity(0.5)" : "none" }}
-                                    title={item.status === "revision" ? "Revision in progress" : "Preview"}
-                                  />
-                                  {item.status === "revision" && (
-                                    <div style={{ position: 'absolute', top: -4, right: -4, background: '#fbbf24', color: '#000', fontSize: 8, fontWeight: 800, padding: '2px 4px', borderRadius: 4, whiteSpace: 'nowrap', zIndex: 10 }}>
-                                      IN REVISION
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
+                        {o.items.map((item, i) => {
+                          const deliverableUrl = item.v2Image || item.finishImage;
+                          const previewUrl = deliverableUrl || item.mainImage;
+                          const isDelivered = item.status === "delivered" || item.status === "completed" || Boolean(deliverableUrl);
+                          const isRevision = item.status === "revision";
+                          const selectedPlan = pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name);
+                          const maxRevisions = selectedPlan?.max_revisions ?? 0;
+                          const revsUsed = item.revisionsUsed || 0;
+                          const deliveredDate = item.deliveredAt ? new Date(item.deliveredAt) : (o.created_at ? new Date(o.created_at) : new Date());
+                          const isExpired = (new Date() - deliveredDate) > 7 * 24 * 60 * 60 * 1000;
+                          const canRequestRevision = isDelivered && !isRevision && revsUsed < maxRevisions && !isExpired && maxRevisions > 0;
+
+                          return (
+                            <div
+                              key={i}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: 14,
+                                padding: "14px 16px",
+                                borderRadius: 14,
+                                background: "rgba(255,255,255,0.03)",
+                                border: `1px solid ${isDelivered ? "rgba(78,205,196,0.2)" : isRevision ? "rgba(251,191,36,0.25)" : "rgba(255,255,255,0.06)"}`,
+                                transition: "all 0.2s",
+                                flexWrap: "wrap",
+                              }}
+                            >
+                              {/* Left: Thumbnail & Details */}
+                              <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 160, flex: "1 1 180px" }}>
+                                <div style={{ position: "relative", flexShrink: 0 }}>
+                                  {previewUrl ? (
+                                    <div
+                                      onClick={() => deliverableUrl && window.open(deliverableUrl, '_blank')}
+                                      style={{
+                                        width: 52,
+                                        height: 52,
+                                        borderRadius: 10,
+                                        background: `#111 url(${previewUrl}) center/cover no-repeat`,
+                                        border: `2px solid ${isDelivered ? "rgba(52,211,153,0.5)" : isRevision ? "rgba(251,191,36,0.6)" : "rgba(255,255,255,0.1)"}`,
+                                        cursor: deliverableUrl ? "pointer" : "default",
+                                        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                                        filter: isRevision ? "grayscale(40%)" : "none",
+                                      }}
+                                      title={deliverableUrl ? "Click to view full image in high resolution" : (item.mainImage ? "Product reference" : "Image")}
+                                    />
+                                  ) : (
+                                    <div style={{ width: 52, height: 52, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,0.08)" }}>
+                                      <Image size={20} color="#6b7280" />
+                                    </div>
+                                  )}
+                                  {isRevision && (
+                                    <div style={{ position: "absolute", top: -5, right: -5, background: "#fbbf24", color: "#000", fontSize: 8, fontWeight: 800, padding: "2px 5px", borderRadius: 4, letterSpacing: "0.5px", boxShadow: "0 2px 6px rgba(0,0,0,0.4)" }}>
+                                      REV
                                     </div>
                                   )}
                                 </div>
-                                {item.status === "delivered" && (
-                                  <div style={{ display: "flex", gap: 4 }}>
-                                    <button onClick={(e) => { e.stopPropagation(); handleDownloadItem(item.name, item.finishImage); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(78,205,196,0.1)", border: "none", color: "#4ecdc4", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Download"><Download size={14} /></button>
-                                    {(() => {
-                                      const maxRevisions = (pricingPlans.find(p => p.id === o.plan || p.name === o.plan || p.name === o.plan_name)?.max_revisions) ?? 0;
-                                      const revsUsed = item.revisionsUsed || 0;
-                                      const deliveredDate = item.deliveredAt ? new Date(item.deliveredAt) : new Date();
-                                      const isExpired = (new Date() - deliveredDate) > 7 * 24 * 60 * 60 * 1000;
-                                      if (revsUsed < maxRevisions && !isExpired && maxRevisions > 0) {
-                                        return <button onClick={(e) => { e.stopPropagation(); handleRequestRevision(o, i); }} style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(251,191,36,0.1)", border: "none", color: "#fbbf24", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Request Revision"><RefreshCw size={14} /></button>;
-                                      }
-                                      return null;
-                                    })()}
+
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ fontSize: 13, color: "#fff", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 4 }} title={item.name || `Image #${i + 1}`}>
+                                    {item.name || `Image #${i + 1}`}
+                                  </div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                                    <StatusBadge status={item.status} />
+                                    {item.deliveredAt && (
+                                      <span style={{ fontSize: 11, color: "#6b7280" }}>
+                                        {new Date(item.deliveredAt).toLocaleDateString()}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {isDelivered && revsUsed >= maxRevisions && maxRevisions > 0 && (
+                                    <a href="mailto:office@tyes.app" onClick={(e) => e.stopPropagation()} style={{ fontSize: 10, color: "#6b7280", textDecoration: "underline", display: "inline-block", marginTop: 4 }}>
+                                      Revision limit reached — contact us
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Right: Actions */}
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, marginLeft: "auto" }}>
+                                {deliverableUrl ? (
+                                  <>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDownloadItem(item.name || `Image_${i + 1}`, deliverableUrl);
+                                      }}
+                                      style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: 6,
+                                        padding: "7px 14px",
+                                        borderRadius: 8,
+                                        background: "linear-gradient(135deg, rgba(78,205,196,0.18), rgba(42,183,169,0.18))",
+                                        border: "1px solid rgba(78,205,196,0.35)",
+                                        color: "#4ecdc4",
+                                        fontSize: 12,
+                                        fontWeight: 600,
+                                        cursor: "pointer",
+                                        transition: "all 0.2s",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = "linear-gradient(135deg, rgba(78,205,196,0.28), rgba(42,183,169,0.28))";
+                                        e.currentTarget.style.transform = "translateY(-1px)";
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = "linear-gradient(135deg, rgba(78,205,196,0.18), rgba(42,183,169,0.18))";
+                                        e.currentTarget.style.transform = "none";
+                                      }}
+                                      title="Download full resolution image"
+                                    >
+                                      <Download size={13} />
+                                      <span>Download</span>
+                                    </button>
+
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        window.open(deliverableUrl, '_blank');
+                                      }}
+                                      style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 8,
+                                        background: "rgba(255,255,255,0.05)",
+                                        border: "1px solid rgba(255,255,255,0.1)",
+                                        color: "#9ca3af",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s",
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.color = "#fff";
+                                        e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.color = "#9ca3af";
+                                        e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                                      }}
+                                      title="Preview in new tab"
+                                    >
+                                      <Eye size={13} />
+                                    </button>
+
+                                    {canRequestRevision && (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleRequestRevision(o, i);
+                                        }}
+                                        style={{
+                                          display: "inline-flex",
+                                          alignItems: "center",
+                                          gap: 5,
+                                          padding: "7px 11px",
+                                          borderRadius: 8,
+                                          background: "rgba(251,191,36,0.12)",
+                                          border: "1px solid rgba(251,191,36,0.3)",
+                                          color: "#fbbf24",
+                                          fontSize: 12,
+                                          fontWeight: 600,
+                                          cursor: "pointer",
+                                          transition: "all 0.2s",
+                                          whiteSpace: "nowrap",
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.background = "rgba(251,191,36,0.22)";
+                                          e.currentTarget.style.transform = "translateY(-1px)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.background = "rgba(251,191,36,0.12)";
+                                          e.currentTarget.style.transform = "none";
+                                        }}
+                                        title="Request a revision for this deliverable"
+                                      >
+                                        <RefreshCw size={12} />
+                                        <span>Revision</span>
+                                      </button>
+                                    )}
+                                  </>
+                                ) : (
+                                  <div style={{ display: "inline-flex", alignItems: "center", gap: 5, color: "#6b7280", fontSize: 12, fontWeight: 500 }}>
+                                    <Clock size={12} /> In Progress
                                   </div>
                                 )}
                               </div>
-                            )}
-                          </div>
-                        ))}
+                            </div>
+                          );
+                        })}
                       </div>
                     ) : (
                       <div style={{ fontSize: 13, color: "#4b5563", textAlign: "center", padding: 16 }}>No item details available for this order.</div>
@@ -2102,37 +2674,37 @@ export default function TyesClient() {
         {filtered.length > 0 && (
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 24, padding: "0 4px", flexWrap: "wrap", gap: 10 }}>
             <div style={{ fontSize: 12, color: "#4b5563" }}>
-              Showing <span style={{ color: "#9ca3af" }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: "#9ca3af" }}>{Math.min(currentPage * itemsPerPage, filtered.length)}</span> of <span style={{ color: "#9ca3af" }}>{filtered.length}</span> orders
+              Showing <span style={{ color: "#9ca3af" }}>{(ordersCurrentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: "#9ca3af" }}>{Math.min(ordersCurrentPage * itemsPerPage, filtered.length)}</span> of <span style={{ color: "#9ca3af" }}>{filtered.length}</span> orders
             </div>
             {totalPages > 1 && (
               <div style={{ display: "flex", gap: 6 }}>
                 <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", color: currentPage === 1 ? "#374151" : "#9ca3af", fontSize: 12, cursor: currentPage === 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 4 }}
+                  onClick={() => setOrdersCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={ordersCurrentPage === 1}
+                  style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", color: ordersCurrentPage === 1 ? "#374151" : "#9ca3af", fontSize: 12, cursor: ordersCurrentPage === 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 4 }}
                 >
                   <ChevronLeft size={14} />
                 </button>
                 {[...Array(totalPages)].map((_, i) => {
                   const p = i + 1;
-                  if (totalPages > 5 && Math.abs(p - currentPage) > 1 && p !== 1 && p !== totalPages) {
-                    if (Math.abs(p - currentPage) === 2) return <span key={p} style={{ color: "#374151", padding: "0 4px" }}>...</span>;
+                  if (totalPages > 5 && Math.abs(p - ordersCurrentPage) > 1 && p !== 1 && p !== totalPages) {
+                    if (Math.abs(p - ordersCurrentPage) === 2) return <span key={p} style={{ color: "#374151", padding: "0 4px" }}>...</span>;
                     return null;
                   }
                   return (
                     <button
                       key={p}
-                      onClick={() => setCurrentPage(p)}
-                      style={{ width: 32, height: 32, borderRadius: 8, border: "1px solid", borderColor: currentPage === p ? "rgba(78,205,196,0.3)" : "rgba(255,255,255,0.06)", background: currentPage === p ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.02)", color: currentPage === p ? "#4ecdc4" : "#9ca3af", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
+                      onClick={() => setOrdersCurrentPage(p)}
+                      style={{ width: 32, height: 32, borderRadius: 8, border: "1px solid", borderColor: ordersCurrentPage === p ? "rgba(78,205,196,0.3)" : "rgba(255,255,255,0.06)", background: ordersCurrentPage === p ? "rgba(78,205,196,0.15)" : "rgba(255,255,255,0.02)", color: ordersCurrentPage === p ? "#4ecdc4" : "#9ca3af", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
                     >
                       {p}
                     </button>
                   );
                 })}
                 <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", color: currentPage === totalPages ? "#374151" : "#9ca3af", fontSize: 12, cursor: currentPage === totalPages ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 4 }}
+                  onClick={() => setOrdersCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={ordersCurrentPage === totalPages}
+                  style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", color: ordersCurrentPage === totalPages ? "#374151" : "#9ca3af", fontSize: 12, cursor: ordersCurrentPage === totalPages ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 4 }}
                 >
                   <ChevronRight size={14} />
                 </button>
@@ -2147,9 +2719,7 @@ export default function TyesClient() {
   // ══════════════════════════════════════
   // MESSAGES PAGE
   // ══════════════════════════════════════
-  const MessagesPage = () => {
-    const [msg, setMsg] = useState("");
-
+  const renderMessagesPage = () => {
     const handleSend = () => {
       if (!msg.trim()) return;
       setMessagesList(prev => [...prev, { id: Date.now(), from: "client", name: "You", text: msg, time: "Just now", read: true }]);
@@ -2194,7 +2764,7 @@ export default function TyesClient() {
   // ══════════════════════════════════════
   // INVOICES PAGE
   // ══════════════════════════════════════
-  const InvoicesPage = () => {
+  const renderInvoicesPage = () => {
     const combinedInvoices = [
       ...invoices.map((i, idx) => ({
         displayId: `INV-${String(idx + 1).padStart(4, '0')}`,
@@ -2226,7 +2796,7 @@ export default function TyesClient() {
 
     const exportToCSV = () => {
       addToast("Exporting all invoices as CSV...", "info");
-      
+
       const headers = ["Invoice ID", "Order", "Amount", "Status", "Date", "Due Date", "Stripe ID"];
       const csvRows = [headers.join(',')];
 
@@ -2307,8 +2877,8 @@ export default function TyesClient() {
                           const win = window.open("", "_blank");
 
                           // Determine correct VAT based on client country
-                          const EU_RATES = { AT:20,BE:21,BG:20,HR:25,CY:19,CZ:21,DK:25,EE:22,FI:25.5,FR:20,DE:19,GR:24,HU:27,IE:23,IT:22,LV:21,LT:21,LU:17,MT:18,NL:21,PL:23,PT:23,RO:21,SK:20,SI:22,ES:21,SE:25 };
-                          const NON_EU_RATES = { GB:20,NO:25,CH:8.1,IS:24,BD:9,US:0,CA:5,AU:10 };
+                          const EU_RATES = { AT: 20, BE: 21, BG: 20, HR: 25, CY: 19, CZ: 21, DK: 25, EE: 22, FI: 25.5, FR: 20, DE: 19, GR: 24, HU: 27, IE: 23, IT: 22, LV: 21, LT: 21, LU: 17, MT: 18, NL: 21, PL: 23, PT: 23, RO: 21, SK: 20, SI: 22, ES: 21, SE: 25 };
+                          const NON_EU_RATES = { GB: 20, NO: 25, CH: 8.1, IS: 24, BD: 9, US: 0, CA: 5, AU: 10 };
                           const clientCountry = (clientInfo?.country || 'RO').toUpperCase();
                           const isEU = Object.keys(EU_RATES).includes(clientCountry);
                           const isRO = clientCountry === 'RO';
@@ -2500,236 +3070,39 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
   // ══════════════════════════════════════
   // ACCOUNT PAGE
   // ══════════════════════════════════════
-  // ──────────────────────────────────────
-  // ACCOUNT: COUNTRY SECTION
-  // ──────────────────────────────────────
-  const AccountCountrySection = ({ supabase, user, clientInfo, setClientInfo, addToast }) => {
-    const [editing, setEditing] = useState(false);
-    const [selectedCode, setSelectedCode] = useState(clientInfo.country || "RO");
-    const [search, setSearch] = useState("");
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [saving, setSaving] = useState(false);
-
-    const currentName = ALL_COUNTRIES_LIST.find(c => c.code === (clientInfo.country || selectedCode))?.name || "Not set";
-
-    const handleSave = async () => {
-      setSaving(true);
-      try {
-        await supabase.auth.updateUser({ data: { country: selectedCode } });
-        setClientInfo(prev => ({ ...prev, country: selectedCode }));
-        addToast("Country updated!", "success");
-        setEditing(false);
-      } catch (err) {
-        addToast("Failed to update country", "error");
-      } finally {
-        setSaving(false);
-      }
-    };
-
-    return (
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Country & Tax</h3>
-          <button onClick={() => { if (editing) { handleSave(); } else { setEditing(true); setSelectedCode(clientInfo.country || "RO"); } }} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
-            {editing ? (saving ? "Saving..." : <><Save size={12} /> Save</>) : <><Edit size={12} /> Edit</>}
-          </button>
-        </div>
-        {editing ? (
-          <div style={{ position: "relative" }}>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#d1d5db", marginBottom: 6 }}>Country</label>
-            <div
-              style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              <span>{ALL_COUNTRIES_LIST.find(c => c.code === selectedCode)?.name || "Select country"}</span>
-              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", transform: dropdownOpen ? "rotate(180deg)" : "none", display: "inline-block", transition: "transform 0.2s" }}>▼</span>
-            </div>
-            {dropdownOpen && (
-              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 20, background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, marginTop: 4, padding: 8, boxShadow: "0 10px 30px rgba(0,0,0,0.8)" }}>
-                <input type="text" placeholder="Search country..." value={search} onChange={e => setSearch(e.target.value)} onClick={e => e.stopPropagation()} style={{ width: "100%", padding: "8px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#fff", outline: "none", marginBottom: 6, fontSize: 13 }} autoFocus />
-                <div style={{ maxHeight: 180, overflowY: "auto" }}>
-                  {ALL_COUNTRIES_LIST.filter(c => c.name.toLowerCase().includes(search.toLowerCase())).map(c => (
-                    <div key={c.code} onClick={() => { setSelectedCode(c.code); setDropdownOpen(false); setSearch(""); }} style={{ padding: "8px 10px", cursor: "pointer", borderRadius: 6, background: selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent", color: selectedCode === c.code ? "#4ecdc4" : "#fff", fontSize: 13, display: "flex", justifyContent: "space-between" }} onMouseEnter={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.2)" : "rgba(255,255,255,0.05)"} onMouseLeave={e => e.currentTarget.style.background = selectedCode === c.code ? "rgba(78,205,196,0.15)" : "transparent"}>
-                      {c.name} {selectedCode === c.code && <span>✓</span>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <p style={{ fontSize: 11, color: "#6b7280", marginTop: 8 }}>Used for VAT calculation and invoicing.</p>
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: 13, color: "#6b7280" }}>Country</span>
-              <span style={{ fontSize: 13, color: clientInfo.country ? "#e5e7eb" : "#ef4444", fontWeight: 500 }}>{currentName}</span>
-            </div>
-            {clientInfo.country && (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: 13, color: "#6b7280" }}>VAT Rate</span>
-                <span style={{ fontSize: 13, color: "#4ecdc4", fontWeight: 600 }}>{ALL_COUNTRIES_LIST.find(c => c.code === clientInfo.country)?.vatRate || "—"}</span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // ──────────────────────────────────────
-  // ACCOUNT: BUSINESS DETAILS SECTION
-  // ──────────────────────────────────────
-  const AccountBusinessSection = ({ supabase, user, addToast }) => {
-    const meta = user?.user_metadata || {};
-    const [editing, setEditing] = useState(false);
-    const [isBiz, setIsBiz] = useState(meta.is_business || false);
-    const [bizName, setBizName] = useState(meta.company_name || "");
-    const [vatNum, setVatNum] = useState(meta.vat_number || "");
-    const [regAddr, setRegAddr] = useState(meta.registered_address || "");
-    const [billEmail, setBillEmail] = useState(meta.billing_email || "");
-    const [saving, setSaving] = useState(false);
-
-    const handleSave = async () => {
-      setSaving(true);
-      try {
-        await supabase.auth.updateUser({
-          data: { is_business: isBiz, company_name: isBiz ? bizName : null, vat_number: isBiz ? vatNum : null, registered_address: isBiz ? regAddr : null, billing_email: isBiz ? billEmail : null }
-        });
-        addToast("Business details updated!", "success");
-        setEditing(false);
-      } catch (err) {
-        addToast("Failed to update business details", "error");
-      } finally {
-        setSaving(false);
-      }
-    };
-
-    return (
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Business Details</h3>
-          <button onClick={() => { if (editing) { handleSave(); } else { setEditing(true); } }} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
-            {editing ? (saving ? "Saving..." : <><Save size={12} /> Save</>) : <><Edit size={12} /> Edit</>}
-          </button>
-        </div>
-        {editing ? (
-          <div>
-            <div onClick={() => setIsBiz(!isBiz)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", cursor: "pointer", marginBottom: 12 }}>
-              <div style={{ width: 36, height: 20, borderRadius: 10, background: isBiz ? "#4ecdc4" : "rgba(255,255,255,0.1)", padding: 2, transition: "background 0.2s", flexShrink: 0 }}>
-                <div style={{ width: 16, height: 16, borderRadius: "50%", background: "#fff", transform: isBiz ? "translateX(16px)" : "translateX(0)", transition: "transform 0.2s" }} />
-              </div>
-              <span style={{ fontSize: 13, color: "#d1d5db" }}>I'm buying for a business</span>
-            </div>
-            {isBiz && (
-              <>
-                <InputField label="Company Name" value={bizName} onChange={setBizName} placeholder="Company name" />
-                <InputField label="VAT / Tax Number" value={vatNum} onChange={setVatNum} placeholder="VAT number" />
-                <InputField label="Registered Address" value={regAddr} onChange={setRegAddr} placeholder="Registered address" />
-                <InputField label="Billing Email (optional)" value={billEmail} onChange={setBillEmail} placeholder="billing@company.com" type="email" />
-              </>
-            )}
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: 13, color: "#6b7280" }}>Business Account</span>
-              <span style={{ fontSize: 13, color: meta.is_business ? "#34d399" : "#6b7280", fontWeight: 500 }}>{meta.is_business ? "Yes" : "No"}</span>
-            </div>
-            {meta.is_business && [
-              { label: "Company Name", value: meta.company_name },
-              { label: "VAT / Tax Number", value: meta.vat_number },
-              { label: "Registered Address", value: meta.registered_address },
-              { label: "Billing Email", value: meta.billing_email || "—" },
-            ].map((f, i) => (
-              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: 13, color: "#6b7280" }}>{f.label}</span>
-                <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, textAlign: "right", maxWidth: "60%", wordBreak: "break-word" }}>{f.value || "—"}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const AccountPage = () => {
-    const saveAccount = async () => {
-      const parts = companyName.split(" ");
-      const firstName = parts[0];
-      const lastName = parts.slice(1).join(" ");
-
-      try {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ first_name: firstName, last_name: lastName })
-          .eq('id', user.id);
-
-        if (error) throw error;
-
-        setClientInfo(prev => ({ ...prev, name: companyName }));
-        addToast("Account name updated successfully!");
-        setEditingCompany(false);
-      } catch (err) {
-        console.error("Error updating account:", err);
-        addToast("Failed to update account", "error");
-      }
-    };
-
+  const renderAccountPage = () => {
     return (
       <div style={{ width: "100%", display: "flex", justifyContent: "center", paddingBottom: 40 }}>
         <div style={{ width: "100%", maxWidth: 1200 }}>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 24px" }}>Account Settings</h1>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Company Info</h3>
-                <button onClick={() => {
-                  if (editingCompany) {
-                    saveAccount();
-                  } else {
-                    setEditingCompany(true);
-                  }
-                }} style={{ background: "none", border: "none", color: "#4ecdc4", cursor: "pointer", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}>
-                  {editingCompany ? <><Save size={12} /> Save</> : <><Edit size={12} /> Edit</>}
-                </button>
-              </div>
-              {editingCompany ? (
-                <div>
-                  <InputField label="Company Name" value={companyName} onChange={setCompanyName} />
-                  <div style={{ opacity: 0.6 }}>
-                    <InputField label="Email (Read-only)" value={companyEmail} onChange={() => { }} disabled />
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-                    <span style={{ fontSize: 13, color: "#6b7280" }}>Tier</span>
-                    <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, textTransform: "capitalize" }}>{clientInfo.tier}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-                    <span style={{ fontSize: 13, color: "#6b7280" }}>Member Since</span>
-                    <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500 }}>{clientInfo.joined}</span>
-                  </div>
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                  {[
-                    { label: "Company Name", value: companyName },
-                    { label: "Email", value: companyEmail },
-                    { label: "Tier", value: clientInfo.tier },
-                    { label: "Member Since", value: clientInfo.joined },
-                  ].map((f, i) => (
-                    <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 13, color: "#6b7280" }}>{f.label}</span>
-                      <span style={{ fontSize: 13, color: "#e5e7eb", fontWeight: 500, textTransform: f.label === "Tier" ? "capitalize" : "none" }}>{f.value}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Company Info */}
+            <AccountCompanySection
+              supabase={supabase}
+              user={user}
+              clientInfo={clientInfo}
+              setClientInfo={setClientInfo}
+              addToast={addToast}
+              onNameUpdated={setCompanyName}
+            />
 
             {/* Country & Tax */}
-            <AccountCountrySection supabase={supabase} user={user} clientInfo={clientInfo} setClientInfo={setClientInfo} addToast={addToast} />
+            <AccountCountrySection
+              supabase={supabase}
+              user={user}
+              clientInfo={clientInfo}
+              setClientInfo={setClientInfo}
+              addToast={addToast}
+            />
 
             {/* Business Details */}
-            <AccountBusinessSection supabase={supabase} user={user} addToast={addToast} />
+            <AccountBusinessSection
+              supabase={supabase}
+              user={user}
+              clientInfo={clientInfo}
+              setClientInfo={setClientInfo}
+              addToast={addToast}
+            />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 18px", boxSizing: "border-box", height: "100%" }}>
@@ -2754,7 +3127,6 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
                       } catch (err) {
                         console.error("Error saving preference:", err);
                         addToast("Failed to save preference", "error");
-                        // Rollback on error
                         setPrefs(prev => ({ ...prev, [p.key]: !newVal }));
                       }
                     }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", cursor: "pointer" }}>
@@ -2775,8 +3147,8 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
                     <div style={{ fontSize: 13, color: "#e5e7eb" }}>Visa ending in 4242</div>
                     <div style={{ fontSize: 11, color: "#4b5563" }}>Expires 08/2028</div>
                   </div>
-                  <button 
-                    onClick={async () => { 
+                  <button
+                    onClick={async () => {
                       addToast("Redirecting to billing portal...", "info");
                       try {
                         const res = await fetch('/api/stripe/create-portal', {
@@ -2793,7 +3165,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
                       } catch (err) {
                         addToast("Network error", "error");
                       }
-                    }} 
+                    }}
                     style={{ fontSize: 12, color: "#4ecdc4", background: "none", border: "none", cursor: "pointer", fontWeight: 500 }}
                   >
                     Change
@@ -2808,22 +3180,20 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
     );
   };
 
-
-
   // ══════════════════════════════════════
   // RENDER
   // ══════════════════════════════════════
   const renderPage = () => {
     switch (page) {
-      case "overview": return <OverviewPage />;
-      case "orders": return <OrdersPage />;
+      case "overview": return renderOverviewPage();
+      case "orders": return renderOrdersPage();
       case "new-order": return <NewOrderPage supabase={supabase} addToast={addToast} clientInfo={clientInfo} pricingPlans={pricingPlans} setPage={setPage} fetchData={fetchData} orders={orders} />;
-      case "messages": return <MessagesPage />;
-      case "invoices": return <InvoicesPage />;
-      case "account": return <AccountPage />;
+      case "messages": return renderMessagesPage();
+      case "invoices": return renderInvoicesPage();
+      case "account": return renderAccountPage();
       case "success": return <SuccessPage setPage={setPage} isInvoicePayment={isInvoicePayment} />;
       case "brand-strategy": return <BrandStrategyHub supabase={supabase} clientInfo={clientInfo} setPage={setPage} />;
-      default: return <OverviewPage />;
+      default: return renderOverviewPage();
     }
   };
 
@@ -3038,7 +3408,7 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
 
       {/* Mobile Backdrop Overlay */}
       {isMobile && mobileMenuOpen && (
-        <div 
+        <div
           onClick={() => setMobileMenuOpen(false)}
           style={{
             position: "fixed",
@@ -3081,29 +3451,29 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, overflowY: "auto" }}>
             {navPages.map(p => (
-              <SidebarItem 
-                key={p.id} 
-                icon={p.icon} 
-                label={p.label} 
-                active={page === p.id} 
+              <SidebarItem
+                key={p.id}
+                icon={p.icon}
+                label={p.label}
+                active={page === p.id}
                 onClick={() => {
                   handlePageChange(p.id);
                   setMobileMenuOpen(false);
-                }} 
-                collapsed={false} 
-                badge={p.id === "messages" && unreadMsgs > 0 ? String(unreadMsgs) : p.badge && p.id !== "messages" ? p.badge : null} 
+                }}
+                collapsed={false}
+                badge={p.id === "messages" && unreadMsgs > 0 ? String(unreadMsgs) : p.badge && p.id !== "messages" ? p.badge : null}
               />
             ))}
           </div>
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 14, marginTop: 8 }}>
-            <SidebarItem 
-              icon={LogOut} 
-              label="Log Out" 
+            <SidebarItem
+              icon={LogOut}
+              label="Log Out"
               onClick={() => {
                 setMobileMenuOpen(false);
                 setShowLogoutModal(true);
-              }} 
-              collapsed={false} 
+              }}
+              collapsed={false}
             />
           </div>
         </div>
@@ -3138,18 +3508,18 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: isMobile ? "10px 14px" : "12px 28px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {isMobile ? (
-              <button 
-                onClick={() => setMobileMenuOpen(true)} 
-                style={{ 
-                  background: "rgba(255,255,255,0.04)", 
-                  border: "1px solid rgba(255,255,255,0.08)", 
-                  borderRadius: 8, 
-                  padding: "6px 8px", 
-                  color: "#e5e7eb", 
-                  cursor: "pointer", 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center" 
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: 8,
+                  padding: "6px 8px",
+                  color: "#e5e7eb",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
                 }}
                 aria-label="Toggle menu"
               >
