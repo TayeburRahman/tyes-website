@@ -1063,33 +1063,7 @@ const NewOrderPage = ({ supabase, addToast, clientInfo, pricingPlans, setPage, f
   );
 };
 
-// ══════════════════════════════════════
-// TAWK.TO CHAT COMPONENT
-// ══════════════════════════════════════
-const TawkToChat = () => {
-  useEffect(() => {
-    if (window.Tawk_API) {
-      if (window.Tawk_API.showWidget) window.Tawk_API.showWidget();
-    } else {
-      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-      s1.async = true;
-      s1.src = 'https://embed.tawk.to/622aee3ba34c2456412a8539/1ftrr56e8';
-      s1.charset = 'UTF-8';
-      s1.setAttribute('crossorigin', '*');
-      if (s0 && s0.parentNode) {
-        s0.parentNode.insertBefore(s1, s0);
-      } else {
-        document.head.appendChild(s1);
-      }
-    }
-    return () => {
-      if (window.Tawk_API && window.Tawk_API.hideWidget) {
-        window.Tawk_API.hideWidget();
-      }
-    };
-  }, []);
-  return null;
-};
+
 
 // ══════════════════════════════════════
 // SUCCESS PAGE
@@ -3597,7 +3571,6 @@ tbody td{padding:14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#1e29
           {renderPage()}
         </div>
       </div>
-      <TawkToChat />
     </div>
   );
 }
